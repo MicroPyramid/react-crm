@@ -1911,27 +1911,52 @@ pre {
 	color: #a7a7a7a7
 }
 
-.actions .edit svg path,
-.actions .delete svg path {
-	fill: white
+.action__btn-view-a {
+	background: #28a745;	
+}
+.action__btn-edit-a {
+	background: #099cbe;
+}
+.action__btn-delete-a {
+	background: #ffc107;
 }
 
-.btn-danger {
-	background-color: #ffc107;
-	border-color: #ffc107;
-	color: #fff!important
+.action__btn-view-a, 
+.action__btn-edit-a,
+.action__btn-delete-a {
+	padding: 7px 13px;	
+	border-radius: 5px;
+}
+.action__btn-view-a:hover {
+	background: #067d97;
+}
+.action__btn-edit-a:hover {
+	background: #079b29;
+}
+.action__btn-delete-a:hover {
+	background: rgb(215, 41, 41);
 }
 
-.btn-success {
-	color: #fff!important;
-	background-color: #099cbe;
-	border-color: #099cbe
+.action__btn {
+	width: 20px;			
 }
 
-.btn-info {
-	color: #fff!important;
-	background: #28a745;
-	border-color: #35a745
+.svg-size {
+	font-size: 5px;
+	height: 15px;
+	width: 15px;
+}
+.svg-inline--fa {
+	width: 15px;
+}
+.action__btn-view,
+.action__btn-edit,
+.action__btn-delete {		
+	color: #fff;
+}
+.fa-plus-svg {
+	margin-top: -1px;	
+	padding-right: 2px;
 }
 
 .mention-wrapper {
@@ -2008,3 +2033,85 @@ pre {
 .mention-options .mention-option.show {
 	display: block
 }
+
+/*------------------------------------------------
+# Contacts
+--------------------------------------------------*/
+
+.display-filters {
+	display: block;
+}
+
+label {
+	font-weight: 600;
+}
+
+
+/*------------------------------------------------
+# General
+--------------------------------------------------*/
+
+input[type="text"],
+input[type="tel"],
+input[type="email"]{
+	border-radius: 0;
+}
+textarea:hover, 
+input:hover, 
+textarea:active, 
+input:active, 
+select:active,
+textarea:focus, 
+input:focus,
+button:focus,
+select:focus,
+button:active,
+button:hover,
+label:focus,
+.btn:active,
+.btn.active {
+  outline: 0px !important;
+  -webkit-appearance: none;
+  box-shadow: none !important;
+}
+::placeholder {
+	font-size: 14px;
+}
+.action-flex {
+	display: flex;
+	border-top: 1px solid #fff !important;
+	margin-bottom: -1px;
+}
+.card-title-bg {
+	background: #e5e5e5;
+	padding: 6px 10px;
+	font-weight: 600;
+	font-size: 1rem
+}
+/*------------------------------------------------
+# Componenet CSS
+--------------------------------------------------*/
+
+	/* Component: react-select */
+	.react_select div {
+		border-radius: 0;
+	}
+
+	/* Component: react-tel-input-2 */
+	.react-tel-input .form-control{
+		border-radius: 0 !important;
+		width: 100% !important;
+	}
+	.react-tel-input .form-control:focus {
+		border: 1px solid #80bfff;
+	}
+	.react-tel-input .flag-dropdown {
+		margin-top: 1px;
+		margin-bottom: 1px;
+		margin-left: 1px;		
+		border: none !important;
+		width: 45px;
+	}	
+	
+
+	
