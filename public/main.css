@@ -2055,6 +2055,7 @@ input[type="text"],
 input[type="tel"],
 input[type="email"]{
 	border-radius: 0;
+	font-size: 14px;
 }
 textarea:hover, 
 input:hover, 
@@ -2111,7 +2112,7 @@ label:focus,
 		margin-left: 1px;		
 		border: none !important;
 		width: 45px;
-	}	
+	}
 	
 
 	
