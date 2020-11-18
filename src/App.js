@@ -11,6 +11,7 @@ import Accounts from './crm/Accounts';
 import Contacts from './crm/Contacts/Contacts';
 import AddContact from './crm/Contacts/AddContact';
 import EditContact from './crm/Contacts/EditContact';
+import ViewContact from './crm/Contacts/ViewContact';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route sensitive exact path={'/contacts'} component={Contacts} />
           <Route sensitive path={'/contacts/create'} component={AddContact} />
           <Route sensitive path={'/contacts/:id/edit'} component={EditContact} />
+          <Route sensitive path={'/contacts/:id/view'} component={ViewContact} />
           <Route exact sensitive path={'/'} component={Home} />
         </div>
       </Router>

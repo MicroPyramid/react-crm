@@ -2046,6 +2046,39 @@ label {
 	font-weight: 600;
 }
 
+.btn_action,
+.btn_edit {
+		display: block;
+		position: absolute;
+		right: 0;
+		font-size: 14px;
+		border: none;
+		color: #fff;
+		cursor: pointer;
+}
+.btn_action {
+	background-color: rgb(224, 72, 72);
+	padding: 6px 9px;		
+}	
+.btn_edit {		
+	top: 28px;
+	background-color: #099CBE;				
+	padding: 5px 28.5px;		
+	color: #fff;
+}
+.btn_edit:hover {
+	color: #fff;
+}
+
+.overview {
+	padding-bottom: 30px;
+}
+.hide {
+	display: none;
+}
+.display_edit {
+	display: block;
+}
 
 /*------------------------------------------------
 # General

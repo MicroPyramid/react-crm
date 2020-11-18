@@ -40,7 +40,7 @@ export default class AddContact extends Component {
       }
     })
     .then(res => res.json())
-    .then(res => {            
+    .then(res => {
       this.setState({first_name: res.contact_obj.first_name});
       this.setState({last_name: res.contact_obj.last_name});
       this.setState({phone: res.contact_obj.phone});
