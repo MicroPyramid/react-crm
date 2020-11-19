@@ -13,16 +13,18 @@ import Contacts from './crm/Contacts/Contacts';
 import AddContact from './crm/Contacts/AddContact';
 import EditContact from './crm/Contacts/EditContact';
 import ViewContact from './crm/Contacts/ViewContact';
-import { CONTACTS, LEADS } from './common/apiUrls';
+import { ACCOUNTS, CONTACTS, LEADS } from './common/apiUrls';
 import { useState, useEffect } from 'react';
 
 function App() {
 
   const [contacts, setContacts] = useState([]);
   const [leads, setLeads] = useState([]);
+  const [accounts, setAccounts] = useState([]);
 
   useEffect(() => {
     getContacts();
+    getAccounts();
     getLeads();
   }, []);
 
@@ -39,6 +41,22 @@ function App() {
     .then(res => res.json())
     .then (  async res => {
        await setContacts(res);      
+    });    
+  }
+
+  const getAccounts =  () => {    
+    fetch(`${ACCOUNTS}`, {
+      method: 'GET',
+      headers:
+        {
+          'Content-Type': 'application/json',
+          Authorization: `jwt ${localStorage.getItem('Token')}`,
+          company: `${localStorage.getItem('SubDomain')}`,
+        },
+    })
+    .then(res => res.json())
+    .then (  async res => {
+       await setAccounts(res);      
     });    
   }
 
@@ -69,8 +87,9 @@ function App() {
           <Route sensitive path={'/login'} component={Login} />
           <Route sensitive path={'/register'} component={Register} />
           <Route sensitive path={'/password-reset'} component={ForgotPassword} />
-          <Route sensitive path={'/dashboard'} component={Dashboard} />
-          <Route sensitive exact path={'/accounts'} component={Accounts} />
+          <Route sensitive path={'/dashboard'} component={Dashboard} />          
+          <Route sensitive exact path={'/accounts'} 
+                  component={ (routerProps) => <Accounts {...routerProps} accounts={accounts}/>} />
           <Route sensitive path={'/accounts/create'} 
                   component={ (routerProps) => <AddAccount {...routerProps} contacts={contacts} leads={leads}/>} />
           <Route sensitive exact path={'/contacts'} component={Contacts} />

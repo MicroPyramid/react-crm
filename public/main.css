@@ -1920,10 +1920,13 @@ pre {
 .action__btn-delete-a {
 	background: #ffc107;
 }
-
+.action__btn-email-a {
+	background: #3385ff;
+}
 .action__btn-view-a, 
 .action__btn-edit-a,
-.action__btn-delete-a {
+.action__btn-delete-a,
+.action__btn-email-a {
 	padding: 7px 13px;	
 	border-radius: 5px;
 }
@@ -1935,6 +1938,9 @@ pre {
 }
 .action__btn-delete-a:hover {
 	background: rgb(215, 41, 41);
+}
+.action__btn-email-a:hover {
+	background: #0066ff;
 }
 
 .action__btn {
@@ -1951,7 +1957,8 @@ pre {
 }
 .action__btn-view,
 .action__btn-edit,
-.action__btn-delete {		
+.action__btn-delete,
+.action__btn-email {		
 	color: #fff;
 }
 .fa-plus-svg {
@@ -2146,6 +2153,4 @@ label:focus,
 		border: none !important;
 		width: 45px;
 	}
-	
-
 	
