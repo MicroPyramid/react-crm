@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {useEffect, useState} from 'react';
 import Select from 'react-select';
 import { ACCOUNTS } from '../../common/apiUrls';
+import { Validations } from './Validations';
 
 const AddAccount = (props) => {
   
@@ -10,11 +11,12 @@ const AddAccount = (props) => {
       billing_address_line: '', billing_street: '', billing_postcode: '',
       billing_city: '', billing_state: '', billing_country: '',
       description: '', status: 'open',
-      contacts: [] 
+      contacts: []
     });    
   const [leads, setLeads] = useState([]);
   const [contacts, setContacts] = useState([]);
-  
+  const [isValidations, setIsValidations] = useState('true');
+  const [errors, setErrors] = useState({});
 
   /**
    * @method      useEffect
@@ -25,12 +27,12 @@ const AddAccount = (props) => {
     let leadsArray = [];
     let contactsArray = [];
     props.leads.open_leads && props.leads.open_leads.map( lead => {
-      console.log(lead);
+      // console.log(lead);
       leadsArray.push({label: lead.title, value: lead.title, lead: lead});
     })
     setLeads(leadsArray);    
     props.contacts.contact_obj_list && props.contacts.contact_obj_list.map ( contact => {
-      console.log(contact);
+      // console.log(contact);
       contactsArray.push({label: contact.first_name, value: contact.first_name, id: contact.id, contact: contact});
     })
     setContacts(contactsArray);
@@ -71,37 +73,49 @@ const AddAccount = (props) => {
   const saveAccount = (e) => { 
     e.preventDefault();
     let targetName = e.target.name;
-    fetch(`${ACCOUNTS}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',      
-        Authorization: `jwt ${localStorage.getItem('Token')}`,
-        company: `${localStorage.getItem('SubDomain')}`
-      },
-      body: JSON.stringify({
-        name: accountObject.name,
-        website: accountObject.website,
-        phone: accountObject.phone,
-        email: accountObject.email,
-        lead: accountObject.lead,
-        billing_address_line: accountObject.billing_address_line,
-        billing_street: accountObject.billing_street,
-        billing_postcode: accountObject.billing_postcode, 
-        billing_city: accountObject.billing_city,
-        billing_state: accountObject.billing_state,
-        billing_country: accountObject.billing_country,
-        status: accountObject.status,
-        contacts: accountObject.contacts,
-        description: accountObject.description
-      })
-    })
-    .then (res => res.json())
-    .then (res => {
-      console.log(res);
-      if (!res.error) {
-        if (targetName === 'save') props.history.push('/accounts');
+
+    // Validation
+    let validationResults = Validations(accountObject);    
+    setErrors(validationResults);
+    for (let i in validationResults) {      
+      if (validationResults[i].length > 0) {
+          setIsValidations(false);
+          break;
       }
-    });
+    }    
+
+    if (isValidations) {
+      fetch(`${ACCOUNTS}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',      
+          Authorization: `jwt ${localStorage.getItem('Token')}`,
+          company: `${localStorage.getItem('SubDomain')}`
+        },
+        body: JSON.stringify({
+          name: accountObject.name,
+          website: accountObject.website,
+          phone: accountObject.phone,
+          email: accountObject.email,
+          lead: accountObject.lead,
+          billing_address_line: accountObject.billing_address_line,
+          billing_street: accountObject.billing_street,
+          billing_postcode: accountObject.billing_postcode, 
+          billing_city: accountObject.billing_city,
+          billing_state: accountObject.billing_state,
+          billing_country: accountObject.billing_country,
+          status: accountObject.status,
+          contacts: accountObject.contacts,
+          description: accountObject.description
+        })
+      })
+      .then (res => res.json())
+      .then (res => {                
+        if (!res.errors) {
+          if (targetName === 'save') props.history.push('/accounts');
+        }
+      });
+    }    
   }
 
     return (
@@ -126,7 +140,7 @@ const AddAccount = (props) => {
                       <label for="exampleInputEmail1" class="required">Name<span class="error_marker" style={{color:"red"}}>*</span></label>
                       <input type="text" name="name" class="form-control" placeholder="Name" required="" id="id_name"
                         onChange={handleChange}></input>
-                      <span class="error" id="id__name"></span>
+                      <span class="error" id="id__name">{errors.name}</span>
                     </div>
                   </div>
                   <div class="filter_col col-md-12">
@@ -142,7 +156,7 @@ const AddAccount = (props) => {
                       <label for="exampleInputEmail1" class="required">Phone<span class="error_marker" style={{color:"red"}}>*</span></label>
                       <input type="tel" name="phone" class="form-control" placeholder="+911234567890" required="" id="id_phone"
                         onChange={handleChange}></input>
-                      <span class="error" id="id__phone"></span>
+                      <span class="error" id="id__phone">{errors.phone}</span>
                     </div>
                   </div>
                   <div class="filter_col col-md-12">
@@ -151,7 +165,7 @@ const AddAccount = (props) => {
                         Address<span class="error_marker" style={{color:"red"}}>*</span></label>
                       <input type="email" name="email" class="form-control" placeholder="Email" required="" id="id_email"
                         onChange={handleChange}></input>
-                      <span class="error" id="id__email"></span>
+                      <span class="error" id="id__email">{errors.email}</span>
                     </div>
                   </div>
                   <div class="filter_col col-md-12">
@@ -173,7 +187,7 @@ const AddAccount = (props) => {
                               <span class="error_marker" style={{color:"red"}}>*</span></label>
                             <input type="text" name="billing_address_line" class="form-control" placeholder="Address Line" required="" id="id_billing_address_line"
                               onChange={handleChange}></input>
-                            <span class="error" id="id__billing_address_line"></span>
+                            <span class="error" id="id__billing_address_line">{errors.billing_address_line}</span>
                           </div>
                           <div class="row" style={{marginTop: "10px"}}>
                             <div class="col-md-6">
@@ -181,7 +195,7 @@ const AddAccount = (props) => {
                                 <label for="exampleInputEmail1">Street <span class="error_marker" style={{color:"red"}}>*</span></label>
                                 <input type="text" name="billing_street" class="form-control" placeholder="Street" required="" id="id_billing_street"
                                   onChange={handleChange}></input>
-                                <span class="error" id="id__billing_street"></span>
+                                <span class="error" id="id__billing_street">{errors.billing_street}</span>
                               </div>
                             </div>
                             <div class="col-md-6">
@@ -190,7 +204,7 @@ const AddAccount = (props) => {
                                   <span class="error_marker" style={{color:"red"}}>*</span></label>
                                 <input type="text" name="billing_postcode" class="form-control" placeholder="Postcode" required="" id="id_billing_postcode"
                                   onChange={handleChange}></input>
-                                <span class="error" id="id__billing_postcode"></span>
+                                <span class="error" id="id__billing_postcode">{errors.billing_postcode}</span>
                               </div>
                             </div>
                             <div class="col-md-6">
@@ -198,7 +212,7 @@ const AddAccount = (props) => {
                                 <label for="exampleInputEmail1">City <span class="error_marker" style={{color:"red"}}>*</span></label>
                                 <input type="text" name="billing_city" class="form-control" placeholder="City" required="" id="id_billing_city"
                                   onChange={handleChange}></input>
-                                <span class="error" id="id__billing_city"></span>
+                                <span class="error" id="id__billing_city">{errors.billing_city}</span>
                               </div>
                             </div>
                             <div class="col-md-6">
@@ -206,7 +220,7 @@ const AddAccount = (props) => {
                                 <label for="exampleInputEmail1">State <span class="error_marker" style={{color:"red"}}>*</span></label>
                                 <input type="text" name="billing_state" class="form-control" placeholder="State" required="" id="id_billing_state"
                                   onChange={handleChange}></input>
-                                <span class="error" id="id__billing_state"></span>
+                                <span class="error" id="id__billing_state">{errors.billing_state}</span>
                               </div>
                             </div>
                             <div class="col-md-12" style={{marginTop: "10px"}}>
@@ -462,7 +476,7 @@ const AddAccount = (props) => {
                                   <option value="ZM">Zambia</option>
                                   <option value="ZW">Zimbabwe</option>
                                 </select>
-                                <span class="error" id="id__billing_country"></span>
+                                <span class="error" id="id__billing_country">{errors.billing_country}</span>
                               </div>
                             </div>
                             <div class="filter_col col-md-12">
@@ -474,7 +488,7 @@ const AddAccount = (props) => {
                                   options={contacts}
                                   onChange={updateContacts}                                  
                                   />
-                                <span class="error" id="id__contacts"></span>
+                                <span class="error" id="id__contacts">{errors.contacts}</span>
                               </div>
                             </div>
                           </div>
