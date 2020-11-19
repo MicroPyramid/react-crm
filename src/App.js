@@ -7,14 +7,60 @@ import ValidateDomain from './auth/ValidateDomain';
 import Register from './auth/Register';
 import ForgotPassword from './auth/ForgotPassword';
 import Dashboard from './crm/Dashboard';
-import Accounts from './crm/Accounts';
+import Accounts from './crm/Accounts/Accounts';
+import AddAccount from './crm/Accounts/AddAccount';
 import Contacts from './crm/Contacts/Contacts';
 import AddContact from './crm/Contacts/AddContact';
 import EditContact from './crm/Contacts/EditContact';
 import ViewContact from './crm/Contacts/ViewContact';
+import { CONTACTS, LEADS } from './common/apiUrls';
+import { useState, useEffect } from 'react';
 
 function App() {
-  return (
+
+  const [contacts, setContacts] = useState([]);
+  const [leads, setLeads] = useState([]);
+
+  useEffect(() => {
+    getContacts();
+    getLeads();
+  }, []);
+
+  const getContacts =  () => {    
+    fetch(`${CONTACTS}`, {
+      method: 'GET',
+      headers:
+        {
+          'Content-Type': 'application/json',
+          Authorization: `jwt ${localStorage.getItem('Token')}`,
+          company: `${localStorage.getItem('SubDomain')}`,
+        },
+    })
+    .then(res => res.json())
+    .then (  async res => {
+       await setContacts(res);      
+    });    
+  }
+
+  const getLeads =  () => {    
+    fetch(`${LEADS}`, {
+      method: 'GET',
+      headers:
+        {
+          'Content-Type': 'application/json',
+          Authorization: `jwt ${localStorage.getItem('Token')}`,
+          company: `${localStorage.getItem('SubDomain')}`,
+        },
+    })
+    .then(res => res.json())
+    .then (  res => {
+       setLeads(res);      
+    });    
+  }
+
+  
+  
+  return (    
     <div className="App">
       <Router>
         <div>
@@ -24,7 +70,9 @@ function App() {
           <Route sensitive path={'/register'} component={Register} />
           <Route sensitive path={'/password-reset'} component={ForgotPassword} />
           <Route sensitive path={'/dashboard'} component={Dashboard} />
-          <Route sensitive path={'/accounts'} component={Accounts} />
+          <Route sensitive exact path={'/accounts'} component={Accounts} />
+          <Route sensitive path={'/accounts/create'} 
+                  component={ (routerProps) => <AddAccount {...routerProps} contacts={contacts} leads={leads}/>} />
           <Route sensitive exact path={'/contacts'} component={Contacts} />
           <Route sensitive path={'/contacts/create'} component={AddContact} />
           <Route sensitive path={'/contacts/:id/edit'} component={EditContact} />
@@ -32,7 +80,7 @@ function App() {
           <Route exact sensitive path={'/'} component={Home} />
         </div>
       </Router>
-    </div>
+    </div>    
   );
 }
 

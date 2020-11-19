@@ -1,39 +1,25 @@
 import React, { Component } from 'react';
-import { ACCOUNTS } from '../common';
+import { ACCOUNTS } from '../../common';
 
-export default class Accounts extends Component {
-  componentDidMount() {
-    // this.getAccounts()
+export default class Accounts extends Component {  
+  constructor(props){
+    super(props);            
   }
-
-  getAccounts(){
-    fetch(`${ACCOUNTS}accounts-list/`,
-    { method: 'GET',
-      headers:
-        {
-          'Content-Type': 'application/json',
-          Authorization: `jwt ${localStorage.getItem('Token')}`,
-          company: `${localStorage.getItem('SubDomain')}`,
-        },
-    })
-      .then((res) => res.json())
-      .then((res) => {
-      })
-  }
-
+    
   render() {
+    
     return (
       <div id="mainbody" className="main_container" style={{ marginTop: '65px' }}>
         <div className="main_container">
-          <div className="row marl">
+
+        <div className="row marl">
             <div className="col-lg-12 text-right">
               <span className="d-inline">
-                <a className="primary_btn">
-                  Add New Account
-                </a>
+                <a className="primary_btn" href="/accounts/create/"><svg className="svg-inline--fa fa-plus fa-w-14 svg-size fa-plus-svg" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="plus" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"></path></svg>Add New Account</a>
               </span>
             </div>
           </div>
+
           <div className="filter_row list_filter_row row marl">
             <div className="col-md-12">
               <div className="card">
@@ -102,7 +88,7 @@ export default class Accounts extends Component {
                           <div className="panel-heading-list card-title text-right">
                             <span className="total_count float-left">Open Accounts - 0</span>
                             <span className="filter_toggle ">
-                              <a className="primary_btn"><svg className="svg-inline--fa fa-filter fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="filter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M487.976 0H24.028C2.71 0-8.047 25.866 7.058 40.971L192 225.941V432c0 7.831 3.821 15.17 10.237 19.662l80 55.98C298.02 518.69 320 507.493 320 487.98V225.941l184.947-184.97C520.021 25.896 509.338 0 487.976 0z"></path></svg>
+                              <a href="#" className="primary_btn"><svg className="svg-inline--fa fa-filter fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="filter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M487.976 0H24.028C2.71 0-8.047 25.866 7.058 40.971L192 225.941V432c0 7.831 3.821 15.17 10.237 19.662l80 55.98C298.02 518.69 320 507.493 320 487.98V225.941l184.947-184.97C520.021 25.896 509.338 0 487.976 0z"></path></svg>
                               </a>
                             </span>
                           </div>
