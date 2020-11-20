@@ -121,7 +121,7 @@ const Accounts = (props) => {
                                     let tags = (account.tags.length !== 0 ) ?
                                     account.tags.map( (tag, index) => {
                                         return(
-                                          <span className={`text-left color${index+1} tag_class_acc`} data-link="28" id="list_tag">RaghuTag1</span>
+                                          <span className={`text-left color${index+1} tag_class_acc`} data-link="28" id="list_tag">{tag.name}</span>
                                         )
                                     }): 'No Tags';
 
@@ -198,7 +198,7 @@ const Accounts = (props) => {
                                     let tags = (account.tags.length !== 0 ) ?
                                     account.tags.map( (tag, index) => {
                                         return(
-                                          <span className={`text-left color${index+1} tag_class_acc`} data-link="28" id="list_tag">RaghuTag1</span>
+                                          <span className={`text-left color${index+1} tag_class_acc`} data-link="28" id="list_tag">{tag.name}</span>
                                         )
                                     }): 'No Tags';
 
@@ -252,6 +252,8 @@ const Accounts = (props) => {
         </div>
         
         {/* Modal Container */}
+
+        {/* Open Accounts */}
         {
           (openAccounts && openAccounts.map( (account, index) => {
             let createdDate = new Date(account.created_on);
@@ -392,7 +394,148 @@ const Accounts = (props) => {
             )
           }))                  
         }
+        
+        {/* Closed Accounts */}
+        {
+          (closedAccounts && closedAccounts.map( (account, index) => {
+            let createdDate = new Date(account.created_on);
+            let date = createdDate.getFullYear() + '' + (createdDate.getMonth()+1) + '' + createdDate.getUTCDate();
 
+            return(
+              <div className="modal fade" id={`exampleModalCenter_account${account.id}`} tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title" id="exampleModalLongTitle">{account.name}</h5>
+                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                    </button>
+                  </div>
+                  <div className="modal-body">
+                    <div id="modal_body_ajax">
+                    </div>
+                    <div className="" id="">
+                        <div className="">
+                          <div className="col-md-12" id="">
+                              <div className="card">
+                                <div className="card-body" id="datashow" style={{margin: "0", padding: "0"}}>
+                                    <div className="card-title text-right">
+                                      <h5>
+                                          <span style={{marginTop: "0px"}}>
+                                          </span>
+                                      </h5>
+                                    </div>
+                                    <div className="row marl">
+                                      <div className="col-md-4">
+                                          <div className="filter_col col-md-12" id="iname">
+                                            <div className="form-group">
+                                                <label className="acc_field_label" for="id_name" data-name="name">Name</label>
+                                                <div className="account_field" id="account_name" data-name="name">{account.name}</div>
+                                            </div>
+                                          </div>
+                                          <div className="filter_col col-md-12">
+                                            <div className="form-group">
+                                                <label className="acc_field_label" for="id_phone" data-name="name">Phone</label>
+                                                <div className="account_field" id="account_phone" data-name="name">{account.phone}
+                                                </div>
+                                            </div>
+                                          </div>
+                                          <div className="filter_col col-md-12">
+                                            <div className="form-group">
+                                                <label className="acc_field_label" for="id_status" data-name="name">Status</label>
+                                                <div className="account_field" id="account_status" data-name="name">{account.status}
+                                                </div>
+                                            </div>
+                                          </div>
+                                      </div>
+
+                                      <div className="col-md-4">
+
+                                        <div className="filter_col col-md-12">
+                                            <div className="form-group">                                            
+                                              <label className="acc_field_label" for="id_email" data-name="name">Email</label>
+                                              <div className="account_field" id="account_email" data-name="name">{account.email}</div>
+                                          </div>                                                                                    
+                                        </div>
+                                          
+                                          <div className="filter_col col-md-12">
+                                            <div className="form-group">
+                                              <label className="acc_field_label" for="id_website" data-name="name">Website</label>
+                                              <div className="account_field" id="account_website" data-name="name">{account.website}</div>
+                                            </div>
+                                          </div>
+
+                                          <div className="filter_col col-md-12">
+                                            <div className="form-group">
+                                              <label className="acc_field_label" for="id_website" data-name="name">lead</label>
+                                              <div className="account_field" id="account_website" data-name="name">{account.lead.title}
+                                              </div>
+                                            </div>
+                                          </div> 
+
+                                        </div>  
+                                      
+                                      <div className="col-md-4">
+
+                                        <div className="filter_col col-md-12">
+                                          <div className="form-group">
+                                            <label className="acc_field_label" for="id_billing_address" data-name="name">Billing Address</label>
+                                            <div className="account_field" id="account_billing_address" data-name="name">
+                                                    {account.billing_address_line} {account.billing_street}
+                                                    {account.billing_city} {account.billing_state}
+                                                    {account.billing_postcode} {account.country}
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        <div className="filter_col col-md-12">                        
+                                          <div className="form-group">
+                                            <label className="case_field_label" for="id_contact" data-name="name">Assigned To</label>                                            
+                                              {
+                                                (account.assignedTo && account.assignedTo.map( assignee => {
+                                                  return(
+                                                    <a href="/users/1044/view/">{assignee.email}</a>
+                                                  )
+                                                }))
+                                              }                                            
+                                          </div>                            
+                                        </div>
+
+                                        <div className="filter_col col-md-12">                        
+                                          <div className="form-group">
+                                            <label className="case_field_label" for="id_contact" data-name="name">Contacts</label>                                            
+                                              {
+                                                (account.contacts && account.contacts.map( contact => {
+                                                  return(
+                                                    <p className="modal_contact_name">{contact.first_name}</p>
+                                                  )
+                                                }))
+                                              }
+                                          </div>                            
+                                        </div>
+                                        
+
+                                      </div>                                    
+                                    </div>  
+
+                                      <div className="col-md-12">
+                                          <div className="created_information">
+                                              Created by <b>{account.email}</b> created on <b title="Nov. 19, 2020, 10:16 a.m.">{`${moment(date, "YYYYMMDD").fromNow()}`}</b>
+                                          </div>
+                                      </div>
+
+                                    </div>
+                                </div>
+                              </div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>            
+              </div>                        
+            )
+          }))                  
+        }
         
       </div>
 
