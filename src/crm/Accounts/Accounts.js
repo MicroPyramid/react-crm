@@ -1,17 +1,154 @@
 import React, { Component } from 'react';
 import { useState, useEffect } from 'react';
 import moment from 'moment';
+import Select, { createFilter } from 'react-select';
 
 const Accounts = (props) => {
-    
+  
+  
+  const [isTabActive, setIsTabActive] = useState(true);
   const [openAccounts, setOpenAccounts] = useState([]);
   const [closedAccounts, setClosedAccounts] = useState([]);  
+  const [filterObject, setFilterObject] = useState({ name: '', city: '', tags: []});
+  const [isFilterAvailable, setIsFilterAvailable] = useState(false);
+  const [tags, setTags] = useState([]);    
+  const [isDisplayFilteredObjects, setIsDisplayFilteredObjects] = useState(true);
+  const [displayOpenAccounts, setDisplayOpenAccounts] = useState([]);
+  const [displayClosedAccounts, setDisplayClosedAccounts] = useState([]);
 
   useEffect(() => {        
     setOpenAccounts(props.accounts.open_accounts);
-    setClosedAccounts(props.accounts.close_accounts);
+    setClosedAccounts(props.accounts.close_accounts);    
   }, []);  
 
+  const getTags = () => {
+    let tagsArray = [];    
+    let newOpenAccounts = [...openAccounts];
+    newOpenAccounts.map(account => {
+      account.tags.map(tag => {
+        tagsArray.push({value: tag.name, label: tag.name, tag: tag.name});
+      })
+    })
+
+    let newClosedAccounts = [...closedAccounts];
+    newClosedAccounts.map(account => {
+      account.tags.map(tag => {
+        tagsArray.push({value: tag.name, label: tag.name, tag: tag.name});
+      })
+    })    
+    setTags(tagsArray);
+  }
+  
+  const toggleFilter = () => {       
+    setIsFilterAvailable(!isFilterAvailable);
+
+    // Retrieve tags only when filters are available
+    if (!isFilterAvailable) getTags();
+  }
+  
+  const handleChange = (e) => {    
+    setFilterObject({...filterObject, [e.target.name]: e.target.value});
+  }
+
+  const handleChangeTag = (e) => {   
+    setFilterObject({...filterObject, tags: e});
+  }
+
+  const getFilteredAccounts = (e) => {
+    e.preventDefault();                
+    
+    setOpenAccounts(props.accounts.open_accounts);
+    setClosedAccounts(props.accounts.close_accounts);
+    
+    let filteredResults, newOpenAccounts, newClosedAccounts, accounts, trimmedName, trimmedCity, tags, finalFilter = []; 
+    let results;
+    
+    newOpenAccounts = [...openAccounts];
+    newClosedAccounts = [...closedAccounts]; 
+    let mergedAccounts = newOpenAccounts.concat(newClosedAccounts);            
+
+    trimmedName = filterObject.name.trim("").toLowerCase();
+    trimmedCity = filterObject.city.trim("").toLowerCase();        
+
+    if (trimmedName && trimmedCity) {
+      filteredResults = mergedAccounts.filter(account => (account.name.toLowerCase().includes(trimmedName)) && (account.billing_city.toLowerCase().includes(trimmedCity)));
+    } else if (trimmedName) {
+      filteredResults = mergedAccounts.filter(account => (account.name.toLowerCase().includes(trimmedName)));
+    } else if (trimmedCity){
+      filteredResults = mergedAccounts.filter(account => (account.billing_city.toLowerCase().includes(trimmedCity)));
+    }        
+
+    tags = filterObject.tags && filterObject.tags.map( tag => tag.value);
+               
+    if (tags === null) tags = [];    
+
+    // Only filtered Results are available
+    if (filteredResults !== undefined && tags.length === 0) {            
+      results = filteredResults;
+    }
+
+    // Only tags are available
+    if (filteredResults === undefined && tags.length !== 0) {
+      mergedAccounts.map ( result => {
+        result.tags.filter(tag => {        
+          tags.map( oTag => {
+            if (oTag === tag.name) {  
+              finalFilter.push(result);              
+            }
+          })
+        })
+      });           
+      results = finalFilter;           
+    }
+
+    // Both filtered results and tags are available
+    if (filteredResults !== undefined && tags.length !== 0) {
+      filteredResults.map ( result => {
+        result.tags.filter(tag => {        
+          tags.map( oTag => {
+            if (oTag === tag.name) {  
+              finalFilter.push(result);
+            }
+          })
+        })
+      });        
+      results = finalFilter;
+    }
+
+    // Both filtered results and tags are not available
+    if (filteredResults === undefined && tags === null) {            
+      results = mergedAccounts;
+    }
+            
+    let displayOpenAccounts = [];
+    let displayClosedAccounts = [];
+
+    if (results !== undefined) {
+      results.map( result => {        
+        if (result.status === 'open') {
+          displayOpenAccounts.push(result);
+        } else {
+          displayClosedAccounts.push(result);
+        }      
+      })
+    } else {
+      displayOpenAccounts = props.accounts.open_accounts;
+      displayClosedAccounts = props.accounts.close_accounts;
+    }
+
+    setDisplayOpenAccounts(displayOpenAccounts);
+    setDisplayClosedAccounts(displayClosedAccounts);
+
+    setIsDisplayFilteredObjects(false);
+  }    
+
+  const clearSearchResults = () => {    
+    setIsDisplayFilteredObjects(true);
+  }
+
+  let resDisplayOpenAccounts  = (isDisplayFilteredObjects) ? openAccounts : displayOpenAccounts;
+  let resDisplayClosedAccounts  = (isDisplayFilteredObjects) ? closedAccounts : displayClosedAccounts;
+    
   return(
     <div id="mainbody" className="main_container" style={{ marginTop: '65px' }}>
         
@@ -24,9 +161,9 @@ const Accounts = (props) => {
                 <a className="primary_btn" href="/accounts/create/"><svg className="svg-inline--fa fa-plus fa-w-14 svg-size fa-plus-svg" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="plus" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"></path></svg>Add New Account</a>
               </span>
             </div>
-          </div>
-
-          <div className="filter_row list_filter_row row marl">
+        </div>
+          
+        <div className="filter_row list_filter_row row marl" style={{display: (isFilterAvailable) ? 'block': 'none'}}>
             <div className="col-md-12">
               <div className="card">
                 <div className="card-body">
@@ -37,35 +174,33 @@ const Accounts = (props) => {
                         <div className="filter_col col-md-2">
                           <div className="form-group">
                             <label htmlFor="exampleInputEmail1">Name</label>
-                            <input type="text" className="form-control" placeholder="Account Name" name="name" />
+                            <input type="text" className="form-control" placeholder="Account Name" name="name" 
+                                   onChange={handleChange}/>
                           </div>
                         </div>
                         <div className="filter_col col-md-2">
                           <div className="form-group">
                             <label htmlFor="exampleInputEmail1">City</label>
-                            <input type="text" className="form-control" placeholder="City" name="city" />
+                            <input type="text" className="form-control" placeholder="City" name="city" 
+                            onChange={handleChange}/>
                           </div>
                         </div>
                         <input type="hidden" name="tab_status" id="tab_status" value="Open" />
                         <div className="filter_col col-md-2">
                           <div className="form-group">
                             <label htmlFor="exampleInputEmail1">Tags</label>
-                            <select className="form-control select2-hidden-accessible" id="id_tag" name="tag" multiple="" data-select2-id="id_tag" tabIndex="-1" aria-hidden="true">
-                            </select><span className="select2 select2-container select2-container--default" dir="ltr" data-select2-id="3" style={{ width: 'auto' }}><span className="selection">
-                            <span className="select2-selection select2-selection--multiple" role="combobox" aria-haspopup="true" aria-expanded="false" tabIndex="-1" aria-disabled="false">
-                              <ul className="select2-selection__rendered">
-                                <li className="select2-search select2-search--inline">
-                                  <input className="select2-search__field" type="search" tabIndex="0" autoComplete="off" autoCorrect="off" autoCapitalize="none" spellCheck="false" role="searchbox" aria-autocomplete="list" placeholder="" style={{ width: '0.75em' }} />
-                                </li>
-                              </ul>
-                            </span>
-                            </span><span className="dropdown-wrapper" aria-hidden="true"></span></span>
+                            <Select 
+                            className="react_select"
+                            isMulti 
+                            options={tags}
+                            onChange={handleChangeTag}
+                            />
                           </div>
                         </div>
                         <div className="filter_col col-lg-2">
                           <div className="form-group buttons_row">
-                            <button className="btn btn-primary save" type="submit">Search</button>
-                            <a className="btn btn-default clear">Clear</a>
+                            <button className="btn btn-primary mr-1 save" type="submit" onClick={getFilteredAccounts}>Search</button>
+                            <a className="btn btn-default clear" onClick={clearSearchResults}>Clear</a>
                           </div>
                         </div>
                       </div>
@@ -75,26 +210,29 @@ const Accounts = (props) => {
               </div>
             </div>
           </div>
+                                                
+          
           <div className="filter_row row marl">
             <div className="col-md-12 col-lg-12 col-xl-12">
               <div className="table_container_row row marl no-gutters">
                 <div className="col-md-12">
-                  <ul className="nav nav-tabs" id="myTab" role="tablist">
-                    <li className="nav-item">
-                      <a className="nav-link active" id="open-tab" data-toggle="tab" href="#open" role="tab" aria-controls="open" aria-selected="true">Active ({(openAccounts) ? openAccounts.length: 0})</a>
-                    </li>
-                    <li className="nav-item">
-                      <a className="nav-link" id="close-tab" data-toggle="tab" href="#close" role="tab" aria-controls="close" aria-selected="false">Closed ({(closedAccounts) ? closedAccounts.length: 0})</a>
+                  <ul className="nav nav-tabs" id="myTab" role="tablist">                    
+                    <li className="nav-item" onClick={() => {setIsTabActive(true)}}>                      
+                      <a className="nav-link active" id="open-tab" data-toggle="tab" href="#open" role="tab" aria-controls="open" aria-selected="true">Active ({(resDisplayOpenAccounts) ? resDisplayOpenAccounts.length: 0})</a>
+                    </li>                    
+                    <li className="nav-item" onClick={() => {setIsTabActive(false)}}>                      
+                      <a className="nav-link" id="close-tab" data-toggle="tab" href="#close" role="tab" aria-controls="close" aria-selected="false">Closed ({(resDisplayClosedAccounts) ? resDisplayClosedAccounts.length: 0})</a>
                     </li>
                   </ul>
+                  
                   <div className="tab-content" id="myTabContent">
                     <div className="tab-pane fade show active" id="open" role="tabpanel" aria-labelledby="open">
                       <div className="card">
                         <div className="card-body">
-                          <div className="panel-heading-list card-title text-right">
-                            <span className="total_count float-left">Open Accounts - {(openAccounts) ? openAccounts.length: 0}</span>
-                            <span className="filter_toggle ">
-                              <a href="#" className="primary_btn"><svg className="svg-inline--fa fa-filter fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="filter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M487.976 0H24.028C2.71 0-8.047 25.866 7.058 40.971L192 225.941V432c0 7.831 3.821 15.17 10.237 19.662l80 55.98C298.02 518.69 320 507.493 320 487.98V225.941l184.947-184.97C520.021 25.896 509.338 0 487.976 0z"></path></svg>
+                          <div className="panel-heading-list card-title text-right">                            
+                            <span className="total_count float-left">Open Accounts - {(resDisplayOpenAccounts) ? resDisplayOpenAccounts.length: 0}</span>
+                            <span className="filter_toggle">
+                              <a href="#" className="primary_btn" onClick={toggleFilter}><svg className="svg-inline--fa fa-filter fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="filter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M487.976 0H24.028C2.71 0-8.047 25.866 7.058 40.971L192 225.941V432c0 7.831 3.821 15.17 10.237 19.662l80 55.98C298.02 518.69 320 507.493 320 487.98V225.941l184.947-184.97C520.021 25.896 509.338 0 487.976 0z"></path></svg>
                               </a>
                             </span>
                           </div>
@@ -113,8 +251,8 @@ const Accounts = (props) => {
                                 </tr>
                               </thead>
                               <tbody>
-                                {
-                                  (openAccounts && openAccounts.map( (account, index) => {                                    
+                                {                                                                    
+                                  (resDisplayOpenAccounts && resDisplayOpenAccounts.map( (account, index) => {                                    
                                     let createdDate = new Date(account.created_on);
                                     let date = createdDate.getFullYear() + '' + (createdDate.getMonth()+1) + '' + createdDate.getUTCDate()                                      
                                     
@@ -168,10 +306,10 @@ const Accounts = (props) => {
                     <div className="tab-pane fade" id="close" role="tabpanel" aria-labelledby="close">
                       <div className="card">
                         <div className="card-body">
-                          <div className="panel-heading-list card-title text-right">
-                            <span className="total_count float-left">Closed Accounts - {(closedAccounts) ? closedAccounts.length: 0} </span>
+                          <div className="panel-heading-list card-title text-right">                            
+                            <span className="total_count float-left">Closed Accounts - {(resDisplayClosedAccounts) ? resDisplayClosedAccounts.length: 0}</span>
                             <span className="filter_toggle ">
-                              <a href="#" className="primary_btn"><svg className="svg-inline--fa fa-filter fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="filter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M487.976 0H24.028C2.71 0-8.047 25.866 7.058 40.971L192 225.941V432c0 7.831 3.821 15.17 10.237 19.662l80 55.98C298.02 518.69 320 507.493 320 487.98V225.941l184.947-184.97C520.021 25.896 509.338 0 487.976 0z"></path></svg>                              
+                              <a href="#" className="primary_btn" onClick={toggleFilter}><svg className="svg-inline--fa fa-filter fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="filter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M487.976 0H24.028C2.71 0-8.047 25.866 7.058 40.971L192 225.941V432c0 7.831 3.821 15.17 10.237 19.662l80 55.98C298.02 518.69 320 507.493 320 487.98V225.941l184.947-184.97C520.021 25.896 509.338 0 487.976 0z"></path></svg>                              
                               </a>
                             </span>
                           </div>
@@ -191,7 +329,7 @@ const Accounts = (props) => {
                               </thead>
                               <tbody>
                                 {
-                                  (closedAccounts && closedAccounts.map( (account, index) => { 
+                                  (resDisplayClosedAccounts && resDisplayClosedAccounts.map( (account, index) => { 
                                     let createdDate = new Date(account.created_on);
                                     let date = createdDate.getFullYear() + '' + (createdDate.getMonth()+1) + '' + createdDate.getUTCDate()                                    
 
@@ -326,7 +464,8 @@ const Accounts = (props) => {
                                           <div className="filter_col col-md-12">
                                             <div className="form-group">
                                               <label className="acc_field_label" for="id_website" data-name="name">lead</label>
-                                              <div className="account_field" id="account_website" data-name="name">{account.lead.title}
+                                              <div className="account_field" id="account_website" data-name="name">
+                                              {(account.lead !== null) ? account.lead.title: ''}
                                               </div>
                                             </div>
                                           </div> 
@@ -467,8 +606,9 @@ const Accounts = (props) => {
 
                                           <div className="filter_col col-md-12">
                                             <div className="form-group">
-                                              <label className="acc_field_label" for="id_website" data-name="name">lead</label>
-                                              <div className="account_field" id="account_website" data-name="name">{account.lead.title}
+                                              <label className="acc_field_label" for="id_website" data-name="name">Lead</label>
+                                              <div className="account_field" id="account_website" data-name="name">
+                                                {(account.lead !== null) ? account.lead.title: ''}
                                               </div>
                                             </div>
                                           </div> 
