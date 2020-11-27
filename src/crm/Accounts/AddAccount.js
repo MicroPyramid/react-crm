@@ -6,6 +6,8 @@ import { Validations } from './Validations';
 
 const AddAccount = (props) => {
   
+  // console.log(props);
+
   const [accountObject, setAccountObject] = useState({
       name: '', website: '', phone: '', email: '', lead:[], 
       billing_address_line: '', billing_street: '', billing_postcode: '',
@@ -15,6 +17,8 @@ const AddAccount = (props) => {
     });    
   const [leads, setLeads] = useState([]);
   const [contacts, setContacts] = useState([]);
+  const [tags, setTags] = useState([]);
+  const [file, setFile] = useState(null);
   const [isValidations, setIsValidations] = useState('true');
   const [errors, setErrors] = useState({});
 
@@ -44,11 +48,9 @@ const AddAccount = (props) => {
    * @description updates the state property based on the name attribute
    */
 
-  const handleChange = (e) => {
-    console.log(e);
+  const handleChange = (e) => {    
     setAccountObject({...accountObject, [e.target.name]: e.target.value})    
   }  
-
 
   /**
    * @method      updateContacts
@@ -56,12 +58,29 @@ const AddAccount = (props) => {
    */
 
   const updateContacts = (e) => {    
-    let contactArray = [];
-    console.log(e);
+    let contactArray = [];    
     e.map(contact => {
       contactArray.push(contact.id);
     })
     setAccountObject({...accountObject, contacts: contactArray});    
+  }
+
+  const addTags = event => {    
+    if (event.key === 'Enter' && event.target.value !== "") {
+      // setTags([...tags, {name: event.target.value, slug: event.target.value}]);
+      setTags([...tags, event.target.value]);
+      event.target.value="";
+    }
+  }
+
+  const removeTags = index => {        
+    setTags([...tags.filter(tag => tags.indexOf(tag) !== index)]);
+  }
+  
+
+  const fileUpload = (e) => {
+    console.log(e.target.files[0]);
+    setFile(e.target.files[0]);
   }
 
 
@@ -71,9 +90,18 @@ const AddAccount = (props) => {
    */
 
   const saveAccount = (e) => { 
-    e.preventDefault();
-    let targetName = e.target.name;
+    e.preventDefault();    
+    let targetName = e.target.name;    
+    let finalTags = tags.join(',');
 
+    const formData = new FormData();
+    formData.append(
+      "account_attachment",
+      file,
+      file.name
+    )
+    console.log(file);
+    console.log(formData);
     // Validation
     let validationResults = Validations(accountObject);    
     setErrors(validationResults);
@@ -83,7 +111,7 @@ const AddAccount = (props) => {
           break;
       }
     }    
-
+    
     if (isValidations) {
       fetch(`${ACCOUNTS}`, {
         method: 'POST',
@@ -106,11 +134,14 @@ const AddAccount = (props) => {
           billing_country: accountObject.billing_country,
           status: accountObject.status,
           contacts: accountObject.contacts,
-          description: accountObject.description
+          description: accountObject.description,
+          tags: finalTags,
+          account_attachment: formData
         })
       })
       .then (res => res.json())
-      .then (res => {                
+      .then (res => {   
+        console.log(res.errors);             
         if (!res.errors) {
           if (targetName === 'save') props.history.push('/accounts');
         }
@@ -126,7 +157,8 @@ const AddAccount = (props) => {
             <li class="breadcrumb-item active">Create</li>
           </ol>
         </nav>
-        <form id="formid" action="" method="POST" novalidate="" enctype="multipart/form-data">
+        {/* <form id="formid" action="" method="POST" novalidate="" enctype="multipart/form-data"> */}
+        <form id="formid">
           <div class="overview_form_block row marl justify-content-center">
             <div class="col-md-9">
               {/* card */}
@@ -174,7 +206,8 @@ const AddAccount = (props) => {
                       <Select
                         className="react_select"
                         options={leads}
-                        onChange={(e) => setAccountObject({...accountObject, lead: e.lead.id})}                        
+                        onChange={(e) => setAccountObject({...accountObject, lead: e.lead.id})} 
+                                               
                         />
                       <span class="error" id="id__lead"></span>
                     </div>
@@ -501,16 +534,23 @@ const AddAccount = (props) => {
                         <div class="filter_col col-12" data-select2-id="10">
                           <div class="form-group">
                             <label for="id_sattus">Teams</label>
+
                             <Select
-                                  className="react_select"/>                 
+                                  className="react_select"
+                                  />                 
+
                             <span class="error" id="id__teams"></span>
                           </div>
                         </div>
                         <div class="filter_col col-12">
                           <div class="form-group">
                             <label for="id_sattus">Users</label>
+
                             <Select
-                                  className="react_select"/>
+                                  className="react_select"
+                                  isDisabled
+                                  />
+
                             <span className="error" id="id__teams"></span>
                           </div>
                         </div>              
@@ -536,22 +576,38 @@ const AddAccount = (props) => {
                         <div class="filter_col col-12">
                           <div class="form-group">
                             <label>Tags</label>
-                            <div class="txt-box-div" id="tag-div">                              
-                              <div id="tags_1_tagsinput" class="tagsinput" style={{width: "auto", minHeight: "100px", height: "100px"}}><div id="tags_1_addTag"><input id="tags_1_tag" value="" data-default="add a tag" style={{color: "rgb(102, 102, 102)", width: "68px"}}></input></div><div class="tags_clear"></div></div>
+
+                            <div className="tags-input">                              
+                              <ul>
+                                  {tags.map((tag, index) => (
+                                    <li
+                                      key={index}>
+                                      <span>{tag}</span>
+                                      <b onClick={() => removeTags(index)}>x</b>
+                                    </li>
+                                  ))}
+                              </ul>
+                              <input
+                                className="tags-input__input"
+                                type="text"
+                                onKeyUp={event => addTags(event)}
+                                placeholder="add a tag"
+                              />                              
                             </div>
+
                           </div>
                         </div>
                         <div class="filter_col col-md-12">
                           <div class="form-group">
                             <label for="exampleInputEmail1">Attachment</label>
-                            <input type="file" name="account_attachment"></input>                  
+                            <input type="file" name="account_attachment" onChange={fileUpload}></input>                  
                             <span class="error"></span>
                           </div>
                         </div>
                       </div>
                       <div class="col-md-12">
                         <div class="row marl buttons_row form_btn_row text-center">
-                          <button class="btn btn-default save mr-1" name="save" type="submit" id="call_save" onClick={saveAccount}>Save</button>
+                          <button class="btn btn-default save mr-1" name="save" type="button" id="call_save" onClick={saveAccount}>Save</button>
                           <a href="/accounts" class="btn btn-default clear" id="create_user_cancel">Cancel</a>
                         </div>
                       </div>

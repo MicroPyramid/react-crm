@@ -2088,6 +2088,16 @@ label {
 }
 
 /*------------------------------------------------
+# Leads
+--------------------------------------------------*/
+
+.btn-info {
+	color: #fff!important;
+	background: #28a745;
+	border-color: #35a745;
+}
+
+/*------------------------------------------------
 # General
 --------------------------------------------------*/
 
@@ -2154,3 +2164,43 @@ label:focus,
 		width: 45px;
 	}
 	
+
+	.tags-input {		
+		border: 1px solid #e6e6e6;
+		height: 100px;			
+		overflow: scroll;				
+	}
+	.tags-input ul {
+		display: flex;
+		justify-items: flex-start;
+		flex-wrap: wrap;
+		padding: 0;
+		margin: 0;
+	}	
+	.tags-input__input {		
+		border: none;
+	}
+	.tags-input ul li {
+		list-style-type: none;
+		margin: 5px 5px 5px 5px;		
+		padding: 3px;		
+		border-radius: 2px;			
+		background: #cde69c;
+		color: #638421;
+		border: 1px solid #a5d24a;	
+	}
+	.tags-input ul li span {
+		font-size: 13px;
+	}
+	.tags-input ul li b {
+		font-size: 12px;
+		padding-left: 8px;
+		color: #82ad2b;
+		cursor: pointer;
+	}
+	.tags-input input[type="text"]::placeholder {
+		display: none;
+	}
+	.tags-container {
+		display: flex;
+	}

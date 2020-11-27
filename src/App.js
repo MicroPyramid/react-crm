@@ -14,6 +14,8 @@ import Contacts from './crm/Contacts/Contacts';
 import AddContact from './crm/Contacts/AddContact';
 import EditContact from './crm/Contacts/EditContact';
 import ViewContact from './crm/Contacts/ViewContact';
+import Leads from './crm/Leads/Leads';
+import AddLead from './crm/Leads/AddLead';
 import { ACCOUNTS, CONTACTS, LEADS } from './common/apiUrls';
 import { useState, useEffect } from 'react';
 
@@ -61,6 +63,7 @@ function App() {
     });    
   }
 
+
   const getLeads =  () => {    
     fetch(`${LEADS}`, {
       method: 'GET',
@@ -88,17 +91,26 @@ function App() {
           <Route sensitive path={'/login'} component={Login} />
           <Route sensitive path={'/register'} component={Register} />
           <Route sensitive path={'/password-reset'} component={ForgotPassword} />
+
           <Route sensitive path={'/dashboard'} component={Dashboard} />          
+
           <Route sensitive exact path={'/accounts'} 
                   component={ (routerProps) => <Accounts {...routerProps} accounts={accounts}/>} />
           <Route sensitive path={'/accounts/create'} 
                   component={ (routerProps) => <AddAccount {...routerProps} contacts={contacts} leads={leads}/>} />
           <Route sensitive path={'/accounts/:id/view'} 
-                  component={ (routerProps) => <ViewAccount {...routerProps} />} />
+                  component={ (routerProps) => <ViewAccount {...routerProps} accounts={accounts}/>} />
+                  
           <Route sensitive exact path={'/contacts'} component={Contacts} />
           <Route sensitive path={'/contacts/create'} component={AddContact} />
           <Route sensitive path={'/contacts/:id/edit'} component={EditContact} />
           <Route sensitive path={'/contacts/:id/view'} component={ViewContact} />
+
+          <Route sensitive exact path={'/leads'}
+                 component={ (routerProps) => <Leads/>} />
+          <Route sensitive path={'/leads/create'}
+                 component={ (routerProps) => <AddLead leads={leads}/>} />
+
           <Route exact sensitive path={'/'} component={Home} />
         </div>
       </Router>

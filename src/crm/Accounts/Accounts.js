@@ -5,7 +5,7 @@ import Select, { createFilter } from 'react-select';
 
 const Accounts = (props) => {
   
-  
+  console.log(props);
   const [isTabActive, setIsTabActive] = useState(true);
   const [openAccounts, setOpenAccounts] = useState([]);
   const [closedAccounts, setClosedAccounts] = useState([]);  
@@ -421,6 +421,7 @@ const Accounts = (props) => {
                                           </span>
                                       </h5>
                                     </div>
+
                                     <div className="row marl">
                                       <div className="col-md-4">
                                           <div className="filter_col col-md-12" id="iname">
@@ -515,7 +516,7 @@ const Accounts = (props) => {
                                       </div>                                    
                                     </div>  
 
-                                      <div className="col-md-12">
+                                    <div className="col-md-12">
                                           <div className="created_information">
                                               Created by <b>{account.email}</b> created on <b title="Nov. 19, 2020, 10:16 a.m.">{`${moment(date, "YYYYMMDD").fromNow()}`}</b>
                                           </div>
