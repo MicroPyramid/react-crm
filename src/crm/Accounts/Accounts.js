@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { useState, useEffect } from 'react';
 import moment from 'moment';
 import Select, { createFilter } from 'react-select';
@@ -219,7 +219,7 @@ const Accounts = (props) => {
                   <ul className="nav nav-tabs" id="myTab" role="tablist">                    
                     <li className="nav-item" onClick={() => {setIsTabActive(true)}}>                      
                       <a className="nav-link active" id="open-tab" data-toggle="tab" href="#open" role="tab" aria-controls="open" aria-selected="true">Active ({(resDisplayOpenAccounts) ? resDisplayOpenAccounts.length: 0})</a>
-                    </li>                    
+                    </li>
                     <li className="nav-item" onClick={() => {setIsTabActive(false)}}>                      
                       <a className="nav-link" id="close-tab" data-toggle="tab" href="#close" role="tab" aria-controls="close" aria-selected="false">Closed ({(resDisplayClosedAccounts) ? resDisplayClosedAccounts.length: 0})</a>
                     </li>
@@ -251,7 +251,7 @@ const Accounts = (props) => {
                                 </tr>
                               </thead>
                               <tbody>
-                                {                                                                    
+                                {
                                   (resDisplayOpenAccounts && resDisplayOpenAccounts.map( (account, index) => {                                    
                                     let createdDate = new Date(account.created_on);
                                     let date = createdDate.getFullYear() + '' + (createdDate.getMonth()+1) + '' + createdDate.getUTCDate()                                      

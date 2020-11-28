@@ -107,9 +107,11 @@ function App() {
           <Route sensitive path={'/contacts/:id/view'} component={ViewContact} />
 
           <Route sensitive exact path={'/leads'}
-                 component={ (routerProps) => <Leads/>} />
+                 component={ (routerProps) => <Leads leads={leads}/>} />
           <Route sensitive path={'/leads/create'}
                  component={ (routerProps) => <AddLead leads={leads}/>} />
+          
+                 
 
           <Route exact sensitive path={'/'} component={Home} />
         </div>

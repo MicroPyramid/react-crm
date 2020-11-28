@@ -758,7 +758,8 @@ header .navbar .navbar-form .btn.btn-default {
 	color: #000!important;
 	position: absolute;
 	background: #fff;
-	top: -6px;
+	top: -23px;
+	right: -10px;
 	padding: 1px;
 	border-radius: 50%;
 	font-size: 0.6rem;
@@ -2083,7 +2084,8 @@ label {
 .hide {
 	display: none;
 }
-.display_edit {
+.display_edit,
+.display {
 	display: block;
 }
 
@@ -2096,6 +2098,7 @@ label {
 	background: #28a745;
 	border-color: #35a745;
 }
+
 
 /*------------------------------------------------
 # General
