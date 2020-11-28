@@ -18,7 +18,7 @@ export default function Leads(props) {
   }, []);
    
 
-  const displayAccounts = (status) => {
+  const displayLeads = (status) => {
 
     let leads = (status === "open") ? openLeads : closedLeads;  
 
@@ -79,16 +79,16 @@ export default function Leads(props) {
                     <td>{(lead.country) ? lead.country: 'None'}</td>
                     <td title="Nov. 27, 2020, 4:08 p.m.">{timeFromNow(lead.created_on)}</td>
                     <td className="actions action-flex">                        
-                        <ViewActionButton lead={lead} to="leads"/>
-                        <EditActionButton lead={lead} to="leads"/>
-                        <DeleteActionButton lead={lead} to="leads"/>                      
-                    </td>        
+                        <ViewActionButton object={lead} to="leads"/>
+                        <EditActionButton object={lead} to="leads"/>
+                        <DeleteActionButton object={lead} to="leads"/>
+                    </td>
                   </tr>)
              })
            }
         </tbody>
       </table>
-    )    
+    )
   }
 
   
@@ -132,7 +132,7 @@ export default function Leads(props) {
                             </span>
                           </div>
                           <div className="table-responsive">
-                            { (status) ? displayAccounts("open"): ''}                            
+                            { (status) ? displayLeads("open"): ''}                            
                           </div>
                           
                           <div className="text-center row marl">
@@ -152,7 +152,7 @@ export default function Leads(props) {
                           </div>
 
                           <div className="table-responsive">
-                            { (!status) ? displayAccounts("close"): ''}
+                            { (!status) ? displayLeads("close"): ''}
                           </div>                                                    
 
                           <div className="text-center row marl">
