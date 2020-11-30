@@ -94,14 +94,19 @@ const AddAccount = (props) => {
     let targetName = e.target.name;    
     let finalTags = tags.join(',');
 
-    const formData = new FormData();
-    formData.append(
-      "account_attachment",
-      file,
-      file.name
-    )
-    console.log(file);
-    console.log(formData);
+    // const formData = new FormData();
+    // formData.append(
+    //   "account_attachment",
+    //   file,
+    //   file.name
+    // )
+    // console.log(file);
+    // console.log(formData);
+    let tagObject = {
+      1: {
+        name: 'tag20'
+      }
+    }
     // Validation
     let validationResults = Validations(accountObject);    
     setErrors(validationResults);
@@ -135,8 +140,12 @@ const AddAccount = (props) => {
           status: accountObject.status,
           contacts: accountObject.contacts,
           description: accountObject.description,
-          tags: finalTags,
-          account_attachment: formData
+          // tags: finalTags,
+          // tags: [{id: 12, name: 'tag10'}, {id: 12, name: 'tag20'}],
+          // tags: [{id: 'tag10', name: 'tag10'}, {id: 'tag20', name: 'tag20'}],
+          // tags: tagObject,
+          tags: [{"name": "tag10", "slug": "tag10"}],
+          account_attachment: ""
         })
       })
       .then (res => res.json())

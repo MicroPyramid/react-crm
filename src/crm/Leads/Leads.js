@@ -47,7 +47,7 @@ export default function Leads(props) {
                  <td><a className="text-capitalize" href={`/users/${lead.created_by.id}/view/`}><img src={lead.created_by.profile_pic} alt={lead.created_by.username} style={{width: "40px", height: "40px"}} title={lead.created_by.email}/></a></td>          
                  <td className="text-capitalize">{lead.source}</td>
                  <td className="text-capitalize">{(lead.status) ? lead.status : 'None'}</td>
-                 <td>{ 
+                 <td>{
                     (lead.assigned_to && lead.assigned_to.length !== 0) ?
                       lead.assigned_to.map( assigned_to => {
                         return(                
