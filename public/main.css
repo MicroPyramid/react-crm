@@ -2099,6 +2099,23 @@ label {
 	border-color: #35a745;
 }
 
+.address_group > .filter_col > .form-group{
+	margin-bottom: 0;
+} 
+
+.address_group .filter_col:nth-child(2) {	
+	margin-top: -10px;	
+}
+
+.address_group .filter_col:nth-child(3) > .row .filter_col:nth-child(1),
+.address_group .filter_col:nth-child(3) > .row .filter_col:nth-child(3){
+	margin-top: -10px;	
+}
+
+.address_group .filter_col:nth-child(3) > .filter_col {
+	padding: 0;
+	margin-top: -25px;
+}
 
 /*------------------------------------------------
 # General

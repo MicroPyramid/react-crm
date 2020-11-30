@@ -199,12 +199,12 @@ export default class AddContact extends Component {
                                id="id_postcode"
                                onChange={(e) => this.setState({postcode: e.target.value})}></input>
                         <span className="error"></span>
-                      </div>                      
+                      </div>
                     </div>
                     {/* Country */}
                     <div className="col-md-12 p-0" style={{marginTop: '10px'}}>
                       <div className="form-group ">
-                          <label for="exampleInputEmail1">Country <span className="error_marker" style={{color: "red"}}></span></label>
+                          <label for="exampleInputEmail1">Country <span className="error_marker" style={{color: "red"}}></span></label>                          
                           <select name="billing_country" className="form-control rounded-0" placeholder="Billing country" required="" id="id_billing_country" 
                                           onChange={(e) => {
                                             console.log(e.target.value);
@@ -458,7 +458,7 @@ export default class AddContact extends Component {
                                                         <option value="YE">Yemen</option>
                                                         <option value="ZM">Zambia</option>
                                                         <option value="ZW">Zimbabwe</option>
-                                                    </select>
+                                                    </select>                         
                           <span className="error" id="id__billing_country"></span>
                       </div>
                     </div>                    

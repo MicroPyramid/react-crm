@@ -243,7 +243,7 @@ export default class AddContact extends Component {
                     <div className="form-group ">
                           <label for="exampleInputEmail1">Country <span className="error_marker" style={{color: "red"}}></span></label>
                           <select name="billing_country" className="form-control rounded-0" placeholder="Billing country" required="" id="id_billing_country" 
-                                          onChange={(e) => this.setState({selectedCountry: e.target.value})}>                                                        
+                                          onChange={(e) => this.setState({selectedCountry: e.target.value})}>
                                                         <option value="">{this.state.country}</option>
                                                         <option value="GB">United Kingdom</option>
                                                         <option value="AF">Afghanistan</option>
