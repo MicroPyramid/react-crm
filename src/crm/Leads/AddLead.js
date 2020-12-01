@@ -88,7 +88,7 @@ export default function AddLead(props) {
   return (
     
     <div id="mainbody" className="main_container" style={{ marginTop: '65px' }}>
-      <BreadCrumb target="leads" action="create" />          
+      <BreadCrumb target="leads" action="create" />
       <form className="d-flex justify-content-center mt-2" id="add_form" method="POST" action="" novalidate="" enctype="multipart/form-data">
         <div className="col-md-9">
           <div className="card">

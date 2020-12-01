@@ -325,7 +325,7 @@ const Accounts = (props) => {
     if (filteredResults === undefined && tags === null) {            
       results = mergedAccounts;
     }
-            
+    
     let displayOpenAccounts = [];
     let displayClosedAccounts = [];
 

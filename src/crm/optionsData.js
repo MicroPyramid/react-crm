@@ -266,3 +266,8 @@ export const sources = [
                   { value: 'campaign', label: 'Campaign'},
                   { value: 'other', label: 'Other'},
 ]
+
+export const twoStatus = [
+                  { value: 'open', label: 'Open'},
+                  { value: 'close', label: 'Close'}
+]

@@ -18,7 +18,7 @@ export default class Register extends Component{
       if(this.state.username !== '') {
         if(this.state.email !== '') {
           if(this.state.password !== '') {
-            fetch(`${DOMAIN}registration/`,
+            fetch(`${DOMAIN}register/`,
               { method: 'POST',
                 headers: 
                   {

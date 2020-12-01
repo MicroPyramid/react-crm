@@ -25,9 +25,7 @@ export default class ValidateDomain extends Component {
         if(res.status === "failure") {
           this.setState({ errors: res })
         } else {
-          // const redirectUrl = `//${this.state.domain}.bottlecrm.com/login`;
-          const redirectUrl = `//${this.state.domain}.bt:3000/login`;  
-          // const redirectUrl = `//${this.state.domain}.localhost:3000/login`;  
+          const redirectUrl = `//${this.state.domain}.bottlecrm.com/login`;                       
           window.location.href = redirectUrl;
         }
       })
