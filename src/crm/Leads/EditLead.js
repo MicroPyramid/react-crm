@@ -15,14 +15,7 @@ import { Validations } from './Validations';
 
 export default function EditLead(props) {
 
-  const [leadObject, setLeadObject] = useState({
-    // first_name: '', last_name: '', account_name: '', title: '',
-    // phone: '', email: '', attachment: '',
-    // website: '', description: '', teams: [], users: [], assigned_users: [],
-    // status: '', source: '',
-    // address_line: '', street: '', postcode: '',
-    // city: '', state: '', country: '',    
-  })
+  const [leadObject, setLeadObject] = useState({})
   const [tags, setTags] = useState([]);
   const [isValidations, setIsValidations] = useState('true');
   const [errors, setErrors] = useState({});
@@ -94,7 +87,7 @@ export default function EditLead(props) {
   return (
       
     <div id="mainbody" className="main_container" style={{ marginTop: '65px' }}>
-      <BreadCrumb target="leads" action="create" />          
+      <BreadCrumb target="leads" action="edit" />
       <form className="d-flex justify-content-center mt-2" id="add_form" method="POST" action="" novalidate="" enctype="multipart/form-data">
         <div className="col-md-9">
           <div className="card">
@@ -117,7 +110,7 @@ export default function EditLead(props) {
                                       value={leadObject.last_name} getInputValue={handleChange} isRequired={true} error={errors.last_name}/>
                       </div>
                     </div>
-                  </div>                
+                  </div>
                   <TextInput  elementSize="col-md-12"  labelName="Account Name"  attrName="account_name"  attrPlaceholder="Account Name"  inputId="id_account_name"  
                               value={leadObject.account_name} getInputValue={handleChange}/>
                   <TextInput  elementSize="col-md-12"  labelName="Title"  attrName="title"  attrPlaceholder="Title"  inputId="id_title"  
@@ -133,7 +126,7 @@ export default function EditLead(props) {
                   <TextInput  elementSize="col-md-12"  labelName="Website"  attrName="website"  attrPlaceholder="Website"  inputId="id_website"  
                               value={leadObject.website} getInputValue={handleChange}/>
                   <TextArea elementSize="col-md-12"  labelName="Description"  attrName="description"  attrPlaceholder="Description"  inputId="id_description"  rows="6" 
-                               getInputValue={handleChange}/>
+                              value={leadObject.description} getInputValue={handleChange}/>
                   <ReactSelect labelName="Teams"/>
                   <ReactSelect labelName="Users" isDisabled={true}/>
                   <ReactSelect labelName="Assigned Users"/>

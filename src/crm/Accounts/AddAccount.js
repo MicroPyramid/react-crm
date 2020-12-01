@@ -93,8 +93,9 @@ const AddAccount = (props) => {
     e.preventDefault();    
     let targetName = e.target.name;    
     let finalTags = tags.join(',');
-
+    console.log(finalTags);
     // const formData = new FormData();
+    // console.log(formData);
     // formData.append(
     //   "account_attachment",
     //   file,
@@ -102,11 +103,11 @@ const AddAccount = (props) => {
     // )
     // console.log(file);
     // console.log(formData);
-    let tagObject = {
-      1: {
-        name: 'tag20'
-      }
-    }
+    // let tagObject = {
+    //   1: {
+    //     name: 'tag20'
+    //   }
+    // }
     // Validation
     let validationResults = Validations(accountObject);    
     setErrors(validationResults);
@@ -144,7 +145,8 @@ const AddAccount = (props) => {
           // tags: [{id: 12, name: 'tag10'}, {id: 12, name: 'tag20'}],
           // tags: [{id: 'tag10', name: 'tag10'}, {id: 'tag20', name: 'tag20'}],
           // tags: tagObject,
-          tags: [{"name": "tag10", "slug": "tag10"}],
+          // tags: [{"name": "tag10", "slug": "tag10"}],
+          tags: finalTags,
           account_attachment: ""
         })
       })

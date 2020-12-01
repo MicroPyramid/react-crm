@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {timeFromNow} from '../Utilities';
+import { LEADS } from '../../common/apiUrls';
 import ViewActionButton from '../UIComponents/ActionButtons/ViewActionButton';
 import EditActionButton from '../UIComponents/ActionButtons/EditActionButton';
 import DeleteActionButton from '../UIComponents/ActionButtons/DeleteActionButton';
@@ -8,15 +9,20 @@ import DeleteActionButton from '../UIComponents/ActionButtons/DeleteActionButton
 export default function Leads(props) {
 
   const [openLeads, setOpenLeads] = useState([]);
-  const [closedLeads, setClosedLeads] = useState([]);  
+  const [closedLeads, setClosedLeads] = useState([]);
   const [status, setStatus] = useState(true);
-  const [isDisplay, setIsDisplay] = useState('hide');
-
+  const [isDisplay, setIsDisplay] = useState('hide');  
+  
   useEffect(() => {    
     setOpenLeads(props.leads.open_leads);
     setClosedLeads(props.leads.close_leads);
   }, []);
    
+  // Updates the state recevied after deleting
+  const stateUpdate = (res) => {
+    setOpenLeads(res.open_leads);
+    setClosedLeads(res.close_leads);
+  }
 
   const displayLeads = (status) => {
 
@@ -81,7 +87,7 @@ export default function Leads(props) {
                     <td className="actions action-flex">                        
                         <ViewActionButton object={lead} to="leads"/>
                         <EditActionButton object={lead} to="leads"/>
-                        <DeleteActionButton object={lead} to="leads"/>
+                        <DeleteActionButton stateUpdate={stateUpdate} openLeads={setOpenLeads} closeLeads={setClosedLeads} api={LEADS} id={lead.id} to="leads"/>
                     </td>
                   </tr>)
              })

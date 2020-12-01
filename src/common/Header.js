@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 function Header() {
   const [userMenu, setUserMenu] = useState(false);
   const [currentPage, setCurrentPage] = useState(window.location.pathname);
+  const [id, setId] = useState(window.location.pathname.split('/')[2]);
+
   return (
     <header>
       {localStorage.getItem('Token') 
@@ -47,7 +49,7 @@ function Header() {
               <Link className={(currentPage === '/contacts' || currentPage === '/contacts/create/') ? 'nav-link active' : 'nav-link'} onClick={() => setCurrentPage('/contacts')} id="contacts" to={'/contacts'}>Contacts</Link>
             </li>
             <li className="nav-item">
-              <Link className={(currentPage === '/leads' || currentPage === '/leads/create/') ? 'nav-link active' : 'nav-link'} onClick={() => setCurrentPage('/leads')} id="leads" to={'/leads'}>Leads</Link>                            
+              <Link className={(currentPage === '/leads' || currentPage === '/leads/create/' || currentPage === `/leads/${id}/edit/`) ? 'nav-link active' : 'nav-link'} onClick={() => setCurrentPage('/leads')} id="leads" to={'/leads'}>Leads</Link>                            
             </li>
             <li className="nav-item"><a className="nav-link" id="opportunities">Opportunities</a>
             </li>

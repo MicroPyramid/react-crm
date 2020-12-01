@@ -2,6 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import {timeFromNow} from '../Utilities';
 import Select, { createFilter } from 'react-select';
+import { CONTACTS } from '../../common/apiUrls';
 import MailActionButton from '../UIComponents/ActionButtons/MailActionButton';
 import ViewActionButton from '../UIComponents/ActionButtons/ViewActionButton';
 import EditActionButton from '../UIComponents/ActionButtons/EditActionButton';
@@ -100,7 +101,7 @@ const Accounts = (props) => {
                                           <MailActionButton object={account} to="accounts"/>
                                           <ViewActionButton object={account} to="accounts"/>
                                           <EditActionButton object={account} to="accounts"/>
-                                          <DeleteActionButton object={account} to="accounts"/>         
+                                          <DeleteActionButton api={CONTACTS} id={account.id} to="accounts"/>         
                                         </td>
                                       </tr>
                                     )
