@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import {timeFromNow} from '../Utilities';
 import Select, { createFilter } from 'react-select';
-import { CONTACTS } from '../../common/apiUrls';
+import { ACCOUNTS } from '../../common/apiUrls';
 import MailActionButton from '../UIComponents/ActionButtons/MailActionButton';
 import ViewActionButton from '../UIComponents/ActionButtons/ViewActionButton';
 import EditActionButton from '../UIComponents/ActionButtons/EditActionButton';
@@ -27,6 +27,12 @@ const Accounts = (props) => {
     setOpenAccounts(props.accounts.open_accounts);
     setClosedAccounts(props.accounts.close_accounts);    
   }, []);  
+
+  const stateUpdate = (res) => {
+    console.log(res);
+    setOpenAccounts(res.open_accounts);
+    setClosedAccounts(res.closed_accounts);
+  }
 
   const getTags = () => {
     let tagsArray = [];    
@@ -101,7 +107,7 @@ const Accounts = (props) => {
                                           <MailActionButton object={account} to="accounts"/>
                                           <ViewActionButton object={account} to="accounts"/>
                                           <EditActionButton object={account} to="accounts"/>
-                                          <DeleteActionButton api={CONTACTS} id={account.id} to="accounts"/>         
+                                          <DeleteActionButton stateUpdate={stateUpdate} api={ACCOUNTS} id={account.id} to="accounts"/>         
                                         </td>
                                       </tr>
                                     )
@@ -189,8 +195,8 @@ const Accounts = (props) => {
                                       <div className="filter_col col-md-12">
                                         <div className="form-group">
                                           <label className="acc_field_label" for="id_website" data-name="name">lead</label>
-                                          <div className="account_field" id="account_website" data-name="name">
-                                          {(account.lead !== null) ? account.lead.title: ''}
+                                          <div className="account_field" id="account_website" data-name="name">                                          
+                                          {(account.lead) ? account.lead.title: ''}
                                           </div>
                                         </div>
                                       </div> 

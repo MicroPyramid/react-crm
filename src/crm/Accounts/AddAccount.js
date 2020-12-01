@@ -182,15 +182,15 @@ const AddAccount = (props) => {
                                     value={accountObject.billing_street} getInputValue={handleChange} isRequired={true}/>
                             <TextInput  elementSize="col-md-6" labelName="Postcode" attrName="billing_postcode" attrPlaceholder="Postcode" inputId="id_billing_postcode" 
                                     value={accountObject.billing_postcode} getInputValue={handleChange} isRequired={true}/>
-                            <TextInput  elementSize="col-md-6" labelName="City" attrName="billing_state" attrPlaceholder="State" inputId="id_billing_state" 
-                                    value={accountObject.billing_state} getInputValue={handleChange} isRequired={true}/>
                             <TextInput  elementSize="col-md-6" labelName="City" attrName="billing_city" attrPlaceholder="City" inputId="id_billing_city" 
                                     value={accountObject.billing_city} getInputValue={handleChange} isRequired={true}/>
-                            <SelectComponent  labelName="Country" attrName="country" attrPlaceholder="Country" attrId="id_billing_country" 
+                            <TextInput  elementSize="col-md-6" labelName="State" attrName="billing_state" attrPlaceholder="State" inputId="id_billing_state" 
+                                    value={accountObject.billing_state} getInputValue={handleChange} isRequired={true}/>
+                            <SelectComponent  labelName="Country" attrName="billing_country" attrPlaceholder="Country" attrId="id_billing_country" 
                                         value={{value: accountObject.country, label: accountObject.country}} getInputValue={handleChange} options={countries} isrequired={true}/>                                                                
                             <ReactSelect labelName="Contacts" isMulti={true} options={contacts} getChangedValue={updateContacts}/>                            
-                          </div>                          
-                        </div>                                                
+                          </div>
+                        </div>
                       </div>
 
                       <div class="col-md-4">
