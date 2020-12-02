@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
-import {useEffect, useState} from 'react';
-import Select from 'react-select';
+import React, {useEffect, useState} from 'react';
+import { ACCOUNTS } from '../../common/apiUrls';
 import BreadCrumb from '../UIComponents/BreadCrumb/BreadCrumb';
 import TextInput from '../UIComponents/Inputs/TextInput';
 import PhoneInput from '../UIComponents/Inputs/PhoneInput';
@@ -9,32 +8,30 @@ import EmailInput from '../UIComponents/Inputs/EmailInput';
 import TextArea from '../UIComponents/Inputs/TextArea';
 import SelectComponent from '../UIComponents/Inputs/SelectComponent';
 import ReactSelect from '../UIComponents/ReactSelect/ReactSelect';
-import { ACCOUNTS } from '../../common/apiUrls';
 import { Validations } from './Validations';
 import { countries, twoStatus } from '../optionsData';
 
+export default function EditAccount(props) {
 
-const AddAccount = (props) => {
-  
+
+  // const [accountObject, setAccountObject] = useState({});
   const [accountObject, setAccountObject] = useState({
-      name: '', website: '', phone: '', email: '', lead:[], 
+    name: '', website: '', phone: '', email: '', lead:[], 
       billing_address_line: '', billing_street: '', billing_postcode: '',
       billing_city: '', billing_state: '', billing_country: '',
       status: 'open', contacts: []
-    });
+  });
   const [leads, setLeads] = useState([]);
+  const [availableLeads, setAvailableLeads] = useState([]);
   const [contacts, setContacts] = useState([]);
+  const [availableContacts, setAvailableContacts] = useState([]);
   const [tags, setTags] = useState([]);
   const [file, setFile] = useState(null);
   const [isValidations, setIsValidations] = useState('true');
   const [errors, setErrors] = useState({});
 
-  /**
-   * @method      useEffect
-   * @description updates the leads and contacts
-   */
-
   useEffect(() => {
+    getAccount();
     let leadsArray = [];
     let contactsArray = [];
     props.leads.open_leads && props.leads.open_leads.map( lead => {      
@@ -46,32 +43,43 @@ const AddAccount = (props) => {
     })
     setContacts(contactsArray);
   }, []);
+
+  const getAccount = () => {
+    let userId = window.location.pathname.split('/')[2];
+    fetch(`${ACCOUNTS}${userId}/`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `jwt ${localStorage.getItem('Token')}`,
+        company: `${localStorage.getItem('SubDomain')}`,
+      }
+    })
+    .then(res => res.json())
+    .then(res => {
+      setAccountObject(res.account_obj);
+      let availableContactsArr = [];      
+      res.account_obj.contacts.map( contact => {
+        availableContactsArr.push({value: contact.first_name, label: contact.first_name, id: contact.id});        
+      })      
+      setAvailableContacts(availableContactsArr);      
+    })
+  }  
   
-
-  /**
-   * @method      handleChange
-   * @description updates the state property based on the name attribute
-   */
-
   const handleChange = (e) => {    
     setAccountObject({...accountObject, [e.target.name]: e.target.value})    
   }  
 
-  /**
-   * @method      updateContacts
-   * @description updates the selected contact ids to accountObject
-   */
-
-  const updateContacts = (e) => {    
-    let contactArray = [];    
+  const updateContacts = (e) => {       
+    let contactsArray = [];    
     e && e.map(contact => {
-      contactArray.push((contact.id).toString());
+      contactsArray.push({value: contact.value, label: contact.value, id: contact.id});
     })
-    setAccountObject({...accountObject, contacts: contactArray});    
+    setAvailableContacts(contactsArray);
   }
 
   const updateLeads = (e) => {    
-    setAccountObject({...accountObject, lead: e.lead.id});
+    console.log(e);
+    setAvailableLeads({value: e.lead.title , label: e.lead.title , id: e.lead.id});    
   }
 
   const addTags = event => {    
@@ -86,45 +94,41 @@ const AddAccount = (props) => {
     setTags([...tags.filter(tag => tags.indexOf(tag) !== index)]);
   }
   
-
   const fileUpload = (e) => {    
     setFile(e.target.files[0]);
   }
 
-
-  /**
-   * @method      saveAccount
-   * @description saves the account 
-   */
-
-  const saveAccount = (e) => { 
-    e.preventDefault();    
-    let targetName = e.target.name;    
+  const updateAccount = (e) => {
+    e.preventDefault();
     
-    // Validation
-    let validationResults = Validations(accountObject);    
-    setErrors(validationResults);
-    for (let i in validationResults) {      
-      if (validationResults[i].length > 0) {
-          setIsValidations(false);
-          break;
-      }
-    }           
+    console.log(accountObject);
+    console.log(availableContacts);
+    console.log(availableLeads);
 
-    if (isValidations) {
-      fetch(`${ACCOUNTS}`, {        
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',      
-          Authorization: `jwt ${localStorage.getItem('Token')}`,
-          company: `${localStorage.getItem('SubDomain')}`
-        },
-        body: JSON.stringify({          
+    let contactsArr = [];
+    availableContacts.map(contact => {
+      contactsArr.push(contact.id);
+    })
+
+    // let leadsArr = [];
+    // availableLeads.map(lead => {
+    //   leadsArr.push(lead.id);
+    // })
+
+    let userId = window.location.pathname.split('/')[2];
+    fetch(`${ACCOUNTS}${userId}/`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `jwt ${localStorage.getItem('Token')}`,
+        company: `${localStorage.getItem('SubDomain')}`,
+      },
+      body: JSON.stringify({
           name: accountObject.name,
           website: accountObject.website,
           phone: accountObject.phone,
           email: accountObject.email,
-          lead: accountObject.lead,
+          lead: availableLeads.id,
           billing_address_line: accountObject.billing_address_line,
           billing_street: accountObject.billing_street,
           billing_postcode: accountObject.billing_postcode, 
@@ -132,20 +136,16 @@ const AddAccount = (props) => {
           billing_state: accountObject.billing_state,
           billing_country: accountObject.billing_country,          
           status: accountObject.status,
-          contacts: accountObject.contacts,                    
-        })
+          contacts: contactsArr,          
       })
-      .then ( res => res.json())
-      .then (res => {                   
-        if (!res.errors) {
-          if (targetName === 'save') props.history.push('/accounts');
-        }        
-      });
-    }    
-  } 
+    }).then(res => res.json())
+    .then (res => console.log(res));
+  }  
 
-    return (
-      <div id="mainbody" className="main_container" style={{ marginTop: '65px' }}>        
+  console.log(accountObject);
+
+  return (
+    <div id="mainbody" className="main_container" style={{ marginTop: '65px' }}>        
         <BreadCrumb target="accounts" action="create" />
         <form id="formid" action="" method="POST" novalidate="" enctype="multipart/form-data">        
           <div class="overview_form_block row marl justify-content-center">
@@ -153,7 +153,7 @@ const AddAccount = (props) => {
               {/* card */}
               <div class="card">
                 <div class="card-body">
-                  <div class="card-title text-center">CREATE ACCOUNT</div>
+                  <div class="card-title text-center">EDIT ACCOUNT</div>
                     <div className="row marl">
                       <div class="col-md-4">
                         <TextInput  elementSize="col-md-12" labelName="Name" attrName="name" attrPlaceholder="Name" inputId="id_name" 
@@ -166,7 +166,7 @@ const AddAccount = (props) => {
                         <EmailInput elementSize="col-md-12"  labelName="Email"  attrName="email"  attrPlaceholder="Email"  inputId="id_email"  
                                     value={accountObject.email} getInputValue={handleChange} 
                                     isRequired={true} error={errors.email}/>
-                        <ReactSelect labelName="Leads" options={leads} getChangedValue={updateLeads}/>
+                        <ReactSelect labelName="Leads" options={leads} value={availableLeads} getChangedValue={updateLeads}/>
                       </div>                      
                       <div class="col-md-4">
                         <div class="filter_col billing_block col-md-12" style={{padding: "0px"}}>                                                    
@@ -182,8 +182,9 @@ const AddAccount = (props) => {
                             <TextInput  elementSize="col-md-6" labelName="State" attrName="billing_state" attrPlaceholder="State" inputId="id_billing_state" 
                                     value={accountObject.billing_state} getInputValue={handleChange} isRequired={true}/>
                             <SelectComponent  elementSize="col-md-12" labelName="Country" attrName="billing_country" attrPlaceholder="Country" attrId="id_billing_country" 
-                                        value={{value: accountObject.country, label: accountObject.country}} getInputValue={handleChange} options={countries} isrequired={true}/>                                                                
-                            <ReactSelect elementSize="col-md-12" labelName="Contacts" isMulti={true} options={contacts} getChangedValue={updateContacts}/>                            
+                                              selectedValue={accountObject.billing_country} getInputValue={handleChange} options={countries} isrequired={true}/>                                                                
+                            <ReactSelect  elementSize="col-md-12" labelName="Contacts" isMulti={true} options={contacts} 
+                                          value={availableContacts} getChangedValue={updateContacts}/>
                           </div>
                         </div>
                       </div>
@@ -230,7 +231,7 @@ const AddAccount = (props) => {
                       </div>
                       <div class="col-md-12">
                         <div class="row marl buttons_row form_btn_row text-center">
-                          <button class="btn btn-default save mr-1" name="save" type="button" id="call_save" onClick={saveAccount}>Save</button>
+                          <button class="btn btn-default save mr-1" name="save" type="button" id="call_save" onClick={updateAccount}>Save</button>
                           <a href="/accounts" class="btn btn-default clear" id="create_user_cancel">Cancel</a>
                         </div>
                       </div>
@@ -243,7 +244,5 @@ const AddAccount = (props) => {
           </div>
         </form>
       </div>
-    )
-  }
-
-  export default AddAccount;
+  )
+}

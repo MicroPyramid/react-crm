@@ -131,14 +131,14 @@ export default function AddLead(props) {
                              value={leadObject.website} getInputValue={handleChange}/>
                   <TextArea elementSize="col-md-12"  labelName="Description"  attrName="description"  attrPlaceholder="Description"  inputId="id_description"  rows="6" 
                             value={leadObject.description} getInputValue={handleChange}/>
-                  <ReactSelect labelName="Teams"/>
-                  <ReactSelect labelName="Users" isDisabled={true}/>
-                  <ReactSelect labelName="Assigned Users"/>
+                  <ReactSelect elementSize="col-md-12" labelName="Teams"/>
+                  <ReactSelect elementSize="col-md-12" labelName="Users" isDisabled={true}/>
+                  <ReactSelect elementSize="col-md-12" labelName="Assigned Users"/>
                 </div>
                 <div className="col-md-4">
-                  <SelectComponent  labelName="Status" attrName="status" attrPlaceholder="Status" attrId="id_status" 
+                  <SelectComponent  elementSize="col-md-12" labelName="Status" attrName="status" attrPlaceholder="Status" attrId="id_status" 
                                     value={{value: leadObject.status, label: leadObject.status}} getInputValue={handleChange} options={statuses}/>
-                  <SelectComponent labelName="Source" attrName="source" attrPlaceholder="Source" attrId="id_source" 
+                  <SelectComponent  elementSize="col-md-12" labelName="Source" attrName="source" attrPlaceholder="Source" attrId="id_source" 
                                     value={{value: leadObject.source, label:leadObject.source}} getInputValue={handleChange} options={sources} isRequired={true}/>
                   <div className="address_group">
                     <TextInput  elementSize="col-md-12"  labelName="Address"  attrName="address_line"  attrPlaceholder="Address Line"  inputId="id_address_line"  

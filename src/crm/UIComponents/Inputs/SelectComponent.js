@@ -2,11 +2,11 @@ import React from 'react';
 
 export default function SelectComponent(props) {
   
-  let { labelName, attrName, attrPlaceholder, attrId, options, isRequired, selectedValue, getInputValue } = props;  
+  let { elementSize, labelName, attrName, attrPlaceholder, attrId, options, isRequired, selectedValue, getInputValue } = props;  
   
   return (
     <>       
-       <div className="filter_col col-md-12">
+       <div className={`filter_col ${elementSize}`}>
         <div className="form-group">
           <label for="exampleInputEmail1">{labelName} {(isRequired) ? <span class="error_marker" style={{color:"red"}}>*</span> : ''} </label>
           <select name={attrName} 

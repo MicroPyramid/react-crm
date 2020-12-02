@@ -1,6 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import {timeFromNow} from '../Utilities';
 import { LEADS } from '../../common/apiUrls';
+import TextInput from '../UIComponents/Inputs/TextInput';
+import SelectComponent from '../UIComponents/Inputs/SelectComponent';
+import ReactSelect from '../UIComponents/ReactSelect/ReactSelect';
+import { statuses } from '../optionsData';
+import { sources } from '../optionsData';
 import ViewActionButton from '../UIComponents/ActionButtons/ViewActionButton';
 import EditActionButton from '../UIComponents/ActionButtons/EditActionButton';
 import DeleteActionButton from '../UIComponents/ActionButtons/DeleteActionButton';
@@ -8,14 +13,29 @@ import DeleteActionButton from '../UIComponents/ActionButtons/DeleteActionButton
 
 export default function Leads(props) {
 
+  console.log(props);
+
   const [openLeads, setOpenLeads] = useState([]);
   const [closedLeads, setClosedLeads] = useState([]);
   const [status, setStatus] = useState(true);
   const [isDisplay, setIsDisplay] = useState('hide');  
-  
-  useEffect(() => {    
+  const [assignedUsers, setAssignedUsers] = useState([]);
+
+  useEffect(() => {
     setOpenLeads(props.leads.open_leads);
     setClosedLeads(props.leads.close_leads);
+
+    // setiing assigned user for filter Tags
+    // if (props.leads !== undefined) {
+    //   props.leads && props.leads.users.map(user => {
+    //     // setAssignedUsers(...assignedUsers, [user.lead]);
+    //     // setAssignedUsers(user.leads.users);
+    //     console.log(user);
+    //   })  
+    // }
+  
+    
+    console.log(props.leads.users);
   }, []);
    
   // Updates the state recevied after deleting
@@ -98,6 +118,10 @@ export default function Leads(props) {
   }
 
   
+  const handleChange = (e) => {
+    console.log(e.target.value);
+  }
+
   return (
     <div id="mainbody" className="main_container" style={{ marginTop: '65px' }}>
       <div className="main_container">
@@ -111,6 +135,35 @@ export default function Leads(props) {
 
         {/* Filter */}
         <div></div>
+        {/* <div className="filter_row list_filter_row row marl" style={{display: (isFilterAvailable) ? 'block': 'none'}}> */}
+        <div className="filter_row list_filter_row row marl" style={{display: 'block'}}>
+            <div className="col-md-12">
+              <div className="card">
+                <div className="card-body">
+                  <form id="accounts_filter" method="POST" action="">
+                    <div className="card-body">
+                      <div className="card-title">Filters</div>
+                      <div className="row marl">   
+                        <TextInput  elementSize="col-md-2"  labelName="Title"  attrName="title"  attrPlaceholder="Title"  inputId="id_title" 
+                                    getInputValue={handleChange} />
+                        <SelectComponent  elementSize="col-md-2" labelName="Source" attrName="source" attrId="id_source" options={sources}
+                                    getInputValue={handleChange} />
+                        <ReactSelect elementSize="col-md-2" labelName="Assigned Users" options={assignedUsers} getChangedValue={handleChange}/>
+                        <SelectComponent  elementSize="col-md-2" labelName="Status" attrName="status" attrId="id_source" options={statuses} />
+                        <ReactSelect elementSize="col-md-2" labelName="Tags"/>
+                        <div class="filter_col col-2">
+                          <div class="form-group buttons_row">
+                            <button class="btn btn-primary save mr-2" type="button">Search</button>
+                            <a href="/leads/" class="btn btn-default clear">Clear</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
 
         {/*  */}
         <div className="filter_row row marl">

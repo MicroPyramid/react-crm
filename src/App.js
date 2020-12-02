@@ -9,6 +9,7 @@ import ForgotPassword from './auth/ForgotPassword';
 import Dashboard from './crm/Dashboard';
 import Accounts from './crm/Accounts/Accounts';
 import AddAccount from './crm/Accounts/AddAccount';
+import EditAccount from './crm/Accounts/EditAccount';
 import ViewAccount from './crm/Accounts/ViewAccount';
 import Contacts from './crm/Contacts/Contacts';
 import AddContact from './crm/Contacts/AddContact';
@@ -99,6 +100,8 @@ function App() {
                   component={ (routerProps) => <Accounts {...routerProps} accounts={accounts}/>} />
           <Route sensitive path={'/accounts/create'} 
                   component={ (routerProps) => <AddAccount {...routerProps} contacts={contacts} leads={leads}/>} />
+          <Route sensitive path={'/accounts/:id/edit'} 
+                  component={ (routerProps) => <EditAccount {...routerProps} contacts={contacts} leads={leads}/>} />
           <Route sensitive path={'/accounts/:id/view'} 
                   component={ (routerProps) => <ViewAccount {...routerProps} accounts={accounts}/>} />
                   

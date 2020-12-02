@@ -10,7 +10,6 @@ import DeleteActionButton from '../UIComponents/ActionButtons/DeleteActionButton
 
 const Accounts = (props) => {
   
-  console.log(props);
   const [isTabActive, setIsTabActive] = useState(true);
   const [openAccounts, setOpenAccounts] = useState([]);
   const [closedAccounts, setClosedAccounts] = useState([]);  
@@ -28,8 +27,7 @@ const Accounts = (props) => {
     setClosedAccounts(props.accounts.close_accounts);    
   }, []);  
 
-  const stateUpdate = (res) => {
-    console.log(res);
+  const stateUpdate = (res) => {    
     setOpenAccounts(res.open_accounts);
     setClosedAccounts(res.closed_accounts);
   }
@@ -267,7 +265,7 @@ const Accounts = (props) => {
   }
 
   const getFilteredAccounts = (e) => {
-    e.preventDefault();                
+    e.preventDefault();
     
     setOpenAccounts(props.accounts.open_accounts);
     setClosedAccounts(props.accounts.close_accounts);
@@ -280,7 +278,7 @@ const Accounts = (props) => {
     let mergedAccounts = newOpenAccounts.concat(newClosedAccounts);            
 
     trimmedName = filterObject.name.trim("").toLowerCase();
-    trimmedCity = filterObject.city.trim("").toLowerCase();        
+    trimmedCity = filterObject.city.trim("").toLowerCase();
 
     if (trimmedName && trimmedCity) {
       filteredResults = mergedAccounts.filter(account => (account.name.toLowerCase().includes(trimmedName)) && (account.billing_city.toLowerCase().includes(trimmedCity)));
@@ -310,7 +308,7 @@ const Accounts = (props) => {
           })
         })
       });           
-      results = finalFilter;           
+      results = finalFilter;
     }
 
     // Both filtered results and tags are available
@@ -348,25 +346,35 @@ const Accounts = (props) => {
       displayClosedAccounts = props.accounts.close_accounts;
     }
 
-    setDisplayOpenAccounts(displayOpenAccounts);
-    setDisplayClosedAccounts(displayClosedAccounts);
+    console.log(displayOpenAccounts);
+    console.log(displayClosedAccounts);
+
+    // setDisplayOpenAccounts(displayOpenAccounts);
+    // setDisplayClosedAccounts(displayClosedAccounts);
+
+    setOpenAccounts(displayOpenAccounts);
+    setClosedAccounts(displayClosedAccounts);
 
     setIsDisplayFilteredObjects(false);
   }    
 
   const clearSearchResults = () => {    
-    setIsDisplayFilteredObjects(true);
+    setIsDisplayFilteredObjects(true);    
+    setFilterObject(filterObject);
+    setOpenAccounts(props.accounts.open_accounts);
+    setClosedAccounts(props.accounts.close_accounts);   
+
   }
 
-  let resDisplayOpenAccounts  = (isDisplayFilteredObjects) ? openAccounts : displayOpenAccounts;
-  let resDisplayClosedAccounts  = (isDisplayFilteredObjects) ? closedAccounts : displayClosedAccounts;
+  // let resDisplayOpenAccounts  = (isDisplayFilteredObjects) ? openAccounts : displayOpenAccounts;
+  // let resDisplayClosedAccounts  = (isDisplayFilteredObjects) ? closedAccounts : displayClosedAccounts;
     
   return(
     <div id="mainbody" className="main_container" style={{ marginTop: '65px' }}>
         
         {/* Main container */}
         <div className="main_container">
-
+        
         <div className="row marl">
             <div className="col-lg-12 text-right">
               <span className="d-inline">
@@ -429,11 +437,11 @@ const Accounts = (props) => {
               <div className="table_container_row row marl no-gutters">
                 <div className="col-md-12">
                   <ul className="nav nav-tabs" id="myTab" role="tablist">                                        
-                    <li className="nav-item" onClick={() => {setStatus(true)}}>
-                      <a className="nav-link active" id="open-tab" data-toggle="tab" href="#open" role="tab" aria-controls="open" aria-selected="true">Active ({(resDisplayOpenAccounts) ? resDisplayOpenAccounts.length: 0})</a>
+                    <li className="nav-item" onClick={() => {setStatus(true)}}>                      
+                      <a className="nav-link active" id="open-tab" data-toggle="tab" href="#open" role="tab" aria-controls="open" aria-selected="true">Active ({(openAccounts) ? openAccounts.length: 0})</a>
                     </li>                    
-                    <li className="nav-item" onClick={() => {setStatus(false)}}>
-                      <a className="nav-link" id="close-tab" data-toggle="tab" href="#close" role="tab" aria-controls="close" aria-selected="false">Closed ({(resDisplayClosedAccounts) ? resDisplayClosedAccounts.length: 0})</a>
+                    <li className="nav-item" onClick={() => {setStatus(false)}}>                      
+                      <a className="nav-link" id="close-tab" data-toggle="tab" href="#close" role="tab" aria-controls="close" aria-selected="false">Closed ({(closedAccounts) ? closedAccounts.length: 0})</a>
                     </li>
                   </ul>
                   
@@ -441,8 +449,8 @@ const Accounts = (props) => {
                     <div className="tab-pane fade show active" id="open" role="tabpanel" aria-labelledby="open">
                       <div className="card">
                         <div className="card-body">
-                          <div className="panel-heading-list card-title text-right">                            
-                            <span className="total_count float-left">Open Accounts - {(resDisplayOpenAccounts) ? resDisplayOpenAccounts.length: 0}</span>
+                          <div className="panel-heading-list card-title text-right">                                                        
+                            <span className="total_count float-left">Open Accounts - {(openAccounts) ? openAccounts.length: 0}</span>
                             <span className="filter_toggle">
                               <a href="#" className="primary_btn" onClick={toggleFilter}><svg className="svg-inline--fa fa-filter fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="filter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M487.976 0H24.028C2.71 0-8.047 25.866 7.058 40.971L192 225.941V432c0 7.831 3.821 15.17 10.237 19.662l80 55.98C298.02 518.69 320 507.493 320 487.98V225.941l184.947-184.97C520.021 25.896 509.338 0 487.976 0z"></path></svg>
                               </a>
@@ -463,15 +471,15 @@ const Accounts = (props) => {
                     <div className="tab-pane fade" id="close" role="tabpanel" aria-labelledby="close">
                       <div className="card">
                         <div className="card-body">
-                          <div className="panel-heading-list card-title text-right">                            
-                            <span className="total_count float-left">Closed Accounts - {(resDisplayClosedAccounts) ? resDisplayClosedAccounts.length: 0}</span>
+                          <div className="panel-heading-list card-title text-right">                                                        
+                            <span className="total_count float-left">Closed Accounts - {(closedAccounts) ? closedAccounts.length: 0}</span>
                             <span className="filter_toggle ">
                               <a href="#" className="primary_btn" onClick={toggleFilter}><svg className="svg-inline--fa fa-filter fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="filter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M487.976 0H24.028C2.71 0-8.047 25.866 7.058 40.971L192 225.941V432c0 7.831 3.821 15.17 10.237 19.662l80 55.98C298.02 518.69 320 507.493 320 487.98V225.941l184.947-184.97C520.021 25.896 509.338 0 487.976 0z"></path></svg>                              
                               </a>
                             </span>
                           </div>
                           <div className="table-responsive">
-                            { (!status) ? displayAccounts("open"): ''}
+                            { (!status) ? displayAccounts("close"): ''}
                           </div>                          
                           { 
                             (!closedAccounts) ? <h6 className="text-center">Loading Closed Accounts...</h6> : 

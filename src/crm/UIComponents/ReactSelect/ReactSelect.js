@@ -3,10 +3,10 @@ import Select from 'react-select';
 
 export default function ReactSelect(props) {
 
-  let { labelName, isMulti, isDisabled, options, getChangedValue } = props;  
+  let { elementSize, labelName, isMulti, isDisabled, options, value, getChangedValue } = props;  
 
   return (
-    <div className="filter_col col-12">
+    <div className={`filter_col ${elementSize}`}>
       <div className="form-group">
         <label for="id_status">{labelName}</label>
           <Select
@@ -15,6 +15,7 @@ export default function ReactSelect(props) {
             isMulti={(isMulti) ? true : false}
             options={options}
             onChange={getChangedValue}
+            value={value}
             />
           <span className="error" id="id__teams"></span>
       </div>
