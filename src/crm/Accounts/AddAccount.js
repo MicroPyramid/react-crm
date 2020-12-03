@@ -65,7 +65,7 @@ const AddAccount = (props) => {
   const updateContacts = (e) => {    
     let contactArray = [];    
     e && e.map(contact => {
-      contactArray.push((contact.id).toString());
+      contactArray.push((contact.id));
     })
     setAccountObject({...accountObject, contacts: contactArray});    
   }
@@ -75,8 +75,7 @@ const AddAccount = (props) => {
   }
 
   const addTags = event => {    
-    if (event.key === 'Enter' && event.target.value !== "") {
-      // setTags([...tags, {name: event.target.value, slug: event.target.value}]);
+    if (event.key === 'Enter' && event.target.value !== "") {      
       setTags([...tags, event.target.value]);
       event.target.value="";
     }
@@ -109,7 +108,7 @@ const AddAccount = (props) => {
           setIsValidations(false);
           break;
       }
-    }           
+    }                   
 
     if (isValidations) {
       fetch(`${ACCOUNTS}`, {        
@@ -132,7 +131,8 @@ const AddAccount = (props) => {
           billing_state: accountObject.billing_state,
           billing_country: accountObject.billing_country,          
           status: accountObject.status,
-          contacts: accountObject.contacts,                    
+          contacts: accountObject.contacts, 
+          tags: tags.join(',')
         })
       })
       .then ( res => res.json())
@@ -143,6 +143,9 @@ const AddAccount = (props) => {
       });
     }    
   } 
+
+  console.log(tags);
+  console.log(tags.join(','));
 
     return (
       <div id="mainbody" className="main_container" style={{ marginTop: '65px' }}>        

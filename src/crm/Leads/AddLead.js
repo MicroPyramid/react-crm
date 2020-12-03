@@ -31,6 +31,18 @@ export default function AddLead(props) {
     setLeadObject({...leadObject, [e.target.name]: e.target.value});
   }
 
+  const addTags = event => {    
+    if (event.key === 'Enter' && event.target.value !== "") {
+      // setTags([...tags, {name: event.target.value, slug: event.target.value}]);
+      setTags([...tags, event.target.value]);
+      event.target.value="";
+    }
+  }
+
+  const removeTags = index => {        
+    setTags([...tags.filter(tag => tags.indexOf(tag) !== index)]);
+  }
+
   const saveLead = (e) => {
     e.preventDefault();
     let targetName = e.target.name;
@@ -72,7 +84,8 @@ export default function AddLead(props) {
           city: leadObject.city,
           state: leadObject.state,
           postcode: leadObject.postcode,
-          country: leadObject.country
+          country: leadObject.country,
+          tags: tags.join(',')
         })
       })
       .then (res => res.json())
@@ -84,6 +97,9 @@ export default function AddLead(props) {
       });
     }
   }
+
+  console.log(tags);
+  console.log(tags.join(','));
 
   return (
     
@@ -158,7 +174,8 @@ export default function AddLead(props) {
                                         value={{value: leadObject.country, label: leadObject.country}} getInputValue={handleChange} options={countries}/>
                   </div>
                   </div>
-                  <div class="filter_col col-12">
+
+                  {/* <div class="filter_col col-12">
                     <div class="form-group">
                       <label>Tags</label>
                       <div className="tags-input">                              
@@ -170,13 +187,37 @@ export default function AddLead(props) {
                         />                              
                       </div>
                     </div>
-                  </div>
+                  </div> */}
+                  <div class="filter_col col-12">
+                          <div class="form-group">
+                            <label>Tags</label>
+
+                            <div className="tags-input">
+                              <ul>
+                                  {tags.map((tag, index) => (
+                                    <li
+                                      key={index}>
+                                      <span>{tag}</span>
+                                      <b onClick={() => removeTags(index)}>x</b>
+                                    </li>
+                                  ))}
+                              </ul>
+                              <input
+                                className="tags-input__input"
+                                type="text"
+                                onKeyUp={event => addTags(event)}
+                                placeholder="add a tag"
+                              />                              
+                            </div>
+
+                          </div>
+                        </div> 
                 </div>
                 <br></br>
 
                 <div class="col-md-12">
                   <div class="row marl buttons_row text-center form_btn_row">
-                    <button class="btn btn-default save mr-1" type="submit" id="submit_btn" name="save"
+                    <button class="btn btn-default save mr-1" type="button" id="submit_btn" name="save"
                       onClick={saveLead}>Save</button>                    
                     <button class="btn btn-success save savenew mr-1" type="button" name="saveAndNew"
                       onClick={saveLead}>Save &amp; New</button>                    

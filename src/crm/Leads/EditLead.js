@@ -34,13 +34,32 @@ export default function EditLead(props) {
     .then(res => res.json())
     .then(res => {
       console.log(res);
-      setLeadObject(res.lead_obj);
+      setLeadObject(res.lead_obj);      
+      let tagsArr = [];
+      console.log(res.lead_obj.tags);
+      res.lead_obj.tags.map(tag => {
+        tagsArr.push(tag.name);
+      })
+      setTags(tagsArr);
+      // console.log()
     })
   }, []);
 
   const handleChange = (e) => {   
     console.log(e.target.value);
     setLeadObject({...leadObject, [e.target.name]: e.target.value});
+  }
+
+  const addTags = event => {    
+    if (event.key === 'Enter' && event.target.value !== "") {
+      // setTags([...tags, {name: event.target.value, slug: event.target.value}]);
+      setTags([...tags, event.target.value]);
+      event.target.value="";
+    }
+  }
+
+  const removeTags = index => {        
+    setTags([...tags.filter(tag => tags.indexOf(tag) !== index)]);
   }
 
   const updateLead = (e) => {
@@ -70,7 +89,8 @@ export default function EditLead(props) {
         city: leadObject.city,
         state: leadObject.state,
         postcode: leadObject.postcode,
-        country: leadObject.country
+        country: leadObject.country,
+        tags: tags.join(',')
       })
     })
     .then (res => res.json())
@@ -155,7 +175,7 @@ export default function EditLead(props) {
                   </div>
                   </div>
                   <div class="filter_col col-12">
-                    <div class="form-group">
+                    {/* <div class="form-group">
                       <label>Tags</label>
                       <div className="tags-input">                              
                         <ul></ul>
@@ -165,7 +185,31 @@ export default function EditLead(props) {
                           placeholder="add a tag"
                         />                              
                       </div>
-                    </div>
+                    </div> */}
+                    <div class="filter_col col-12">
+                          <div class="form-group">
+                            <label>Tags</label>
+
+                            <div className="tags-input">
+                              <ul>
+                                  {tags.map((tag, index) => (
+                                    <li
+                                      key={index}>
+                                      <span>{tag}</span>
+                                      <b onClick={() => removeTags(index)}>x</b>
+                                    </li>
+                                  ))}
+                              </ul>
+                              <input
+                                className="tags-input__input"
+                                type="text"
+                                onKeyUp={event => addTags(event)}
+                                placeholder="add a tag"                                
+                              />                              
+                            </div>
+
+                          </div>
+                        </div> 
                   </div>
                 </div>
                 <br></br>

@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import {timeFromNow} from '../Utilities';
 import Select, { createFilter } from 'react-select';
 import { ACCOUNTS } from '../../common/apiUrls';
+import ReactSelect from '../UIComponents/ReactSelect/ReactSelect';
+import TextInput from '../UIComponents/Inputs/TextInput';
 import MailActionButton from '../UIComponents/ActionButtons/MailActionButton';
 import ViewActionButton from '../UIComponents/ActionButtons/ViewActionButton';
 import EditActionButton from '../UIComponents/ActionButtons/EditActionButton';
@@ -270,12 +272,10 @@ const Accounts = (props) => {
     setOpenAccounts(props.accounts.open_accounts);
     setClosedAccounts(props.accounts.close_accounts);
     
-    let filteredResults, newOpenAccounts, newClosedAccounts, accounts, trimmedName, trimmedCity, tags, finalFilter = []; 
+    let filteredResults, trimmedName, trimmedCity, tags, finalFilter = []; 
     let results;
-    
-    newOpenAccounts = [...openAccounts];
-    newClosedAccounts = [...closedAccounts]; 
-    let mergedAccounts = newOpenAccounts.concat(newClosedAccounts);            
+        
+    let mergedAccounts = props.accounts.open_accounts.concat(props.accounts.close_accounts);            
 
     trimmedName = filterObject.name.trim("").toLowerCase();
     trimmedCity = filterObject.city.trim("").toLowerCase();
@@ -303,12 +303,13 @@ const Accounts = (props) => {
         result.tags.filter(tag => {        
           tags.map( oTag => {
             if (oTag === tag.name) {  
-              finalFilter.push(result);              
-            }
+              finalFilter.push(result);            
+            }            
           })
         })
-      });           
-      results = finalFilter;
+      });              
+      results = finalFilter.filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))=== i ); 
+
     }
 
     // Both filtered results and tags are available
@@ -317,12 +318,13 @@ const Accounts = (props) => {
         result.tags.filter(tag => {        
           tags.map( oTag => {
             if (oTag === tag.name) {  
-              finalFilter.push(result);
+              finalFilter.push(result);              
             }
           })
         })
       });        
-      results = finalFilter;
+
+      results = finalFilter.filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))=== i );
     }
 
     // Both filtered results and tags are not available
@@ -330,6 +332,8 @@ const Accounts = (props) => {
       results = mergedAccounts;
     }
     
+    console.log(results);
+
     let displayOpenAccounts = [];
     let displayClosedAccounts = [];
 
@@ -346,12 +350,6 @@ const Accounts = (props) => {
       displayClosedAccounts = props.accounts.close_accounts;
     }
 
-    console.log(displayOpenAccounts);
-    console.log(displayClosedAccounts);
-
-    // setDisplayOpenAccounts(displayOpenAccounts);
-    // setDisplayClosedAccounts(displayClosedAccounts);
-
     setOpenAccounts(displayOpenAccounts);
     setClosedAccounts(displayClosedAccounts);
 
@@ -359,15 +357,12 @@ const Accounts = (props) => {
   }    
 
   const clearSearchResults = () => {    
-    setIsDisplayFilteredObjects(true);    
-    setFilterObject(filterObject);
+    setIsDisplayFilteredObjects(true);        
     setOpenAccounts(props.accounts.open_accounts);
-    setClosedAccounts(props.accounts.close_accounts);   
+    setClosedAccounts(props.accounts.close_accounts);  
+    setFilterObject({...filterObject, name: '', city: '', tags: []});
 
   }
-
-  // let resDisplayOpenAccounts  = (isDisplayFilteredObjects) ? openAccounts : displayOpenAccounts;
-  // let resDisplayClosedAccounts  = (isDisplayFilteredObjects) ? closedAccounts : displayClosedAccounts;
     
   return(
     <div id="mainbody" className="main_container" style={{ marginTop: '65px' }}>
@@ -390,33 +385,13 @@ const Accounts = (props) => {
                   <form id="accounts_filter" method="POST" action="">
                     <div className="card-body">
                       <div className="card-title">Filters</div>
-                      <div className="row marl">
-                        <div className="filter_col col-md-2">
-                          <div className="form-group">
-                            <label htmlFor="exampleInputEmail1">Name</label>
-                            <input type="text" className="form-control" placeholder="Account Name" name="name" 
-                                   onChange={handleChange}/>
-                          </div>
-                        </div>
-                        <div className="filter_col col-md-2">
-                          <div className="form-group">
-                            <label htmlFor="exampleInputEmail1">City</label>
-                            <input type="text" className="form-control" placeholder="City" name="city" 
-                            onChange={handleChange}/>
-                          </div>
-                        </div>
-                        <input type="hidden" name="tab_status" id="tab_status" value="Open" />
-                        <div className="filter_col col-md-2">
-                          <div className="form-group">
-                            <label htmlFor="exampleInputEmail1">Tags</label>
-                            <Select 
-                            className="react_select"
-                            isMulti 
-                            options={tags}
-                            onChange={handleChangeTag}
-                            />
-                          </div>
-                        </div>
+                      <div className="row marl">                        
+                        <TextInput  elementSize="col-md-2"  labelName="Name"  attrName="name"  attrPlaceholder="Name"  inputId="id_name" 
+                                    value={filterObject.name} getInputValue={handleChange} />
+                        <TextInput  elementSize="col-md-2"  labelName="City"  attrName="city"  attrPlaceholder="City"  inputId="id_city" 
+                                    value={filterObject.city} getInputValue={handleChange} />
+                        <ReactSelect  elementSize="col-md-2" labelName="Tags" attrName="tags" isMulti={true} options={tags} 
+                                      value={filterObject.tags} getChangedValue={handleChangeTag}/>                       
                         <div className="filter_col col-lg-2">
                           <div className="form-group buttons_row">
                             <button className="btn btn-primary mr-1 save" type="submit" onClick={getFilteredAccounts}>Search</button>

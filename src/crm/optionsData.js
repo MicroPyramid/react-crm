@@ -249,7 +249,7 @@ export const countries  = [
 ]
 
 export const statuses = [
-                  { value: '', label: '--------'},
+                  { value: '', label: '--status--'},
                   { value: 'assigned', label: 'Assigned'},
                   { value: 'in process', label: 'In Process'},
                   { value: 'converted', label: 'Converted'},
@@ -258,6 +258,7 @@ export const statuses = [
 ]
 
 export const sources = [
+                  { value: '', label: '--source--'},
                   { value: 'call', label: 'Call'},
                   { value: 'email', label: 'Email'},
                   { value: 'existing customer', label: 'Existing Customer'},

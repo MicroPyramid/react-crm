@@ -13,30 +13,41 @@ import DeleteActionButton from '../UIComponents/ActionButtons/DeleteActionButton
 
 export default function Leads(props) {
 
-  console.log(props);
+  // console.log(props);
 
   const [openLeads, setOpenLeads] = useState([]);
   const [closedLeads, setClosedLeads] = useState([]);
   const [status, setStatus] = useState(true);
+  const [isFilterAvailable, setIsFilterAvailable] = useState(false);
   const [isDisplay, setIsDisplay] = useState('hide');  
+  const [isDisplayFilteredObjects, setIsDisplayFilteredObjects] = useState(true);
   const [assignedUsers, setAssignedUsers] = useState([]);
+  const [tags, setTags] = useState([]);
+  const [filterObject, setFilterObject] = useState({title: '', source: '', status: '', filterUsers: [], filterTags: []});
+  // const [filterUsers, setFilterUsers] = useState([]);
+  // const [filterTags, setFilterTags] = useState([]);
+  const [filteredResults, setFilteredResults] = useState([]);
 
   useEffect(() => {
     setOpenLeads(props.leads.open_leads);
-    setClosedLeads(props.leads.close_leads);
-
-    // setiing assigned user for filter Tags
-    // if (props.leads !== undefined) {
-    //   props.leads && props.leads.users.map(user => {
-    //     // setAssignedUsers(...assignedUsers, [user.lead]);
-    //     // setAssignedUsers(user.leads.users);
-    //     console.log(user);
-    //   })  
-    // }
-  
-    
-    console.log(props.leads.users);
+    setClosedLeads(props.leads.close_leads);    
   }, []);
+
+  useEffect(() => {
+    let assignedUsersArr = [];
+    let tagsArr = [];
+    if (props.leads.length !== 0) {
+      props.leads.users.map(user => {
+        assignedUsersArr.push({value: user.username, label: user.username, id: user.id});        
+      })
+      props.leads.tags.map(tag => {
+        tagsArr.push({value: tag.name, label: tag.name});
+      })
+    }    
+    setAssignedUsers(assignedUsersArr);
+    setTags(tagsArr);    
+  }, []);
+    
    
   // Updates the state recevied after deleting
   const stateUpdate = (res) => {
@@ -71,7 +82,7 @@ export default function Leads(props) {
                  <td scope="row">{index+1}</td>          
                  <td><a data-toggle="modal" data-target={`#exampleModalCenter_lead${lead.id}`} href="#">{lead.title}</a></td>
                  <td><a className="text-capitalize" href={`/users/${lead.created_by.id}/view/`}><img src={lead.created_by.profile_pic} alt={lead.created_by.username} style={{width: "40px", height: "40px"}} title={lead.created_by.email}/></a></td>          
-                 <td className="text-capitalize">{lead.source}</td>
+                 <td className="text-capitalize">{(lead.source) ? lead.source : 'None'}</td>
                  <td className="text-capitalize">{(lead.status) ? lead.status : 'None'}</td>
                  <td>{
                     (lead.assigned_to && lead.assigned_to.length !== 0) ?
@@ -118,8 +129,132 @@ export default function Leads(props) {
   }
 
   
-  const handleChange = (e) => {
-    console.log(e.target.value);
+  const handleChange = (e) => {    
+    setFilterObject({...filterObject, [e.target.name]: e.target.value});
+  }
+
+  // const getReactSelectValues = (e, filter) => {
+  //   if (filter === 'assignedUsers') setFilterUsers(e);
+  //   if (filter === 'tags') setFilterTags(e);
+  // }
+  const ReactSelectHandleChange = (e, filter) => {
+    if (filter === 'assignedUsers') setFilterObject({...filterObject, filterUsers: e})
+    if (filter === 'tags') setFilterObject({...filterObject, filterTags: e})
+  }
+
+  const toggleFilter = () => {       
+    setIsFilterAvailable(!isFilterAvailable);
+  }
+
+  const getFilteredLeads = () => {       
+
+    console.log("entering");
+    let mergedLeads, title, source, status, filterUsers, filterTags, results, redundantFilteredUsers = [], redundantFilteredTags = [];
+
+    // mergedLeads = [...openLeads].concat([...closedLeads]); 
+    mergedLeads = props.leads.open_leads.concat(props.leads.close_leads); 
+       
+    console.log(mergedLeads);
+    title = filterObject.title.trim("").toLowerCase();
+    source = filterObject.source;
+    status = filterObject.status;
+    filterUsers = filterObject.filterUsers;
+    filterTags = filterObject.filterTags;
+    
+    // Filtering Title
+    if (title) {      
+      results = mergedLeads.filter( lead => lead.title.toLowerCase().includes(title) );
+    }
+    else {      
+      results = mergedLeads;
+    }
+
+
+    // Filtering Source
+    if (source) {      
+      results = results.filter( lead => {
+        if (lead.source) {
+          return lead.source.includes(source)
+        }
+      });      
+    } else {      
+      results = results;
+    }        
+
+    // Filtering assigned Users
+    if (filterUsers && filterUsers.length !== 0) {
+        if (assignedUsers) {
+          results.map( result => {
+            result.assigned_to.filter(assignedTo => {
+              filterUsers.map( oUser => {
+                if(oUser.value === assignedTo.username) {
+                  redundantFilteredUsers.push(result);
+                }
+              })
+            })
+          })
+        }
+    results = redundantFilteredUsers.filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))=== i );
+    } else {
+      results = results;
+    }     
+
+    // Filtering status
+    if (status) {     
+      results = results.filter( lead => {
+        if (lead.status) {
+          return lead.status.includes(status)
+        }
+      } );      
+    }
+    else {      
+      results = results;
+    }    
+
+    // Filtering Tags
+    if (filterTags && filterTags.length !== 0) {
+      if (filterTags) {
+        results.map( result => {
+          result.tags.filter(tag => {
+            filterTags.map( oTag => {
+              if(oTag.value === tag.name) {
+                redundantFilteredTags.push(result);
+              }
+            })
+          })
+        })
+      }
+    results = redundantFilteredTags.filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))=== i );
+  } else {
+    results = results;
+  }
+    // setFilteredResults(results);
+
+    let displayOpenLeads = [];
+    let displayClosedLeads = [];
+
+    if (results !== undefined) {
+      results.map( result => {
+        if (result.status === 'closed') {
+          displayClosedLeads.push(result);
+        } else {
+          displayOpenLeads.push(result);
+        }
+      })
+    } 
+    
+    setOpenLeads(displayOpenLeads);
+    setClosedLeads(displayClosedLeads);
+
+    // setIsDisplayFilteredObjects(false);
+
+    console.log(results);
+  }
+
+  const clearSearchResults = (e) => {
+    setOpenLeads(props.leads.open_leads);
+    setClosedLeads(props.leads.close_leads);     
+    setFilterObject({...filterObject, title: '', source: '', status: '', filterUsers: [], filterTags: []});    
   }
 
   return (
@@ -133,28 +268,29 @@ export default function Leads(props) {
           </div>
         </div>
 
-        {/* Filter */}
-        <div></div>
-        {/* <div className="filter_row list_filter_row row marl" style={{display: (isFilterAvailable) ? 'block': 'none'}}> */}
-        <div className="filter_row list_filter_row row marl" style={{display: 'block'}}>
+        {/* Filter */}        
+        <div className="filter_row list_filter_row row marl" style={{display: (isFilterAvailable) ? 'block': 'none'}}>        
             <div className="col-md-12">
               <div className="card">
                 <div className="card-body">
                   <form id="accounts_filter" method="POST" action="">
                     <div className="card-body">
                       <div className="card-title">Filters</div>
-                      <div className="row marl">   
+                      <div className="row marl">
                         <TextInput  elementSize="col-md-2"  labelName="Title"  attrName="title"  attrPlaceholder="Title"  inputId="id_title" 
-                                    getInputValue={handleChange} />
+                                    value={filterObject.title} getInputValue={handleChange} />
                         <SelectComponent  elementSize="col-md-2" labelName="Source" attrName="source" attrId="id_source" options={sources}
-                                    getInputValue={handleChange} />
-                        <ReactSelect elementSize="col-md-2" labelName="Assigned Users" options={assignedUsers} getChangedValue={handleChange}/>
-                        <SelectComponent  elementSize="col-md-2" labelName="Status" attrName="status" attrId="id_source" options={statuses} />
-                        <ReactSelect elementSize="col-md-2" labelName="Tags"/>
-                        <div class="filter_col col-2">
-                          <div class="form-group buttons_row">
-                            <button class="btn btn-primary save mr-2" type="button">Search</button>
-                            <a href="/leads/" class="btn btn-default clear">Clear</a>
+                                    value={filterObject.source} getInputValue={handleChange} />
+                        <ReactSelect  elementSize="col-md-2" labelName="Assigned Users" options={assignedUsers} isMulti={true} 
+                                      value={filterObject.filterUsers} getChangedValue={(e) => ReactSelectHandleChange(e, 'assignedUsers')}/>
+                        <SelectComponent  elementSize="col-md-2" labelName="Status" attrName="status" attrId="id_source" options={statuses} 
+                                    value={filterObject.status} getInputValue={handleChange} />
+                        <ReactSelect elementSize="col-md-2" labelName="Tags" isMulti={true} options={tags} 
+                                    value={filterObject.filterTags} getChangedValue={(e) => ReactSelectHandleChange(e, 'tags')}/>
+                        <div className="filter_col col-2">
+                          <div className="form-group buttons_row">
+                            <button className="btn btn-primary save mr-2" type="button" onClick={getFilteredLeads}>Search</button>
+                            <a className="btn btn-default clear" onClick={clearSearchResults}>Clear</a>
                           </div>
                         </div>
                       </div>
@@ -186,7 +322,7 @@ export default function Leads(props) {
                           <div className="panel-heading-list card-title text-right">                            
                             <span className="total_count float-left">Open Leads - {(openLeads) ? openLeads.length : 0}</span>
                             <span className="filter_toggle">
-                              <a href="#" className="primary_btn"><svg className="svg-inline--fa fa-filter fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="filter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M487.976 0H24.028C2.71 0-8.047 25.866 7.058 40.971L192 225.941V432c0 7.831 3.821 15.17 10.237 19.662l80 55.98C298.02 518.69 320 507.493 320 487.98V225.941l184.947-184.97C520.021 25.896 509.338 0 487.976 0z"></path></svg>
+                              <a href="#" className="primary_btn" onClick={toggleFilter}><svg className="svg-inline--fa fa-filter fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="filter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M487.976 0H24.028C2.71 0-8.047 25.866 7.058 40.971L192 225.941V432c0 7.831 3.821 15.17 10.237 19.662l80 55.98C298.02 518.69 320 507.493 320 487.98V225.941l184.947-184.97C520.021 25.896 509.338 0 487.976 0z"></path></svg>
                               </a>
                             </span>
                           </div>
@@ -231,3 +367,6 @@ export default function Leads(props) {
     </div>
   )
 }
+
+
+
