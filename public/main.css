@@ -2224,3 +2224,29 @@ label:focus,
 	.tags-container {
 		display: flex;
 	}
+
+	/* Modal */
+	.tag {
+		display: inline-block;
+		color: #fff;
+		background: rgb(70, 69, 69);
+		padding: 3px 5px;
+		border-radius: 2px;
+		margin-top: 2px;
+		margin-right: 5px;
+		cursor: initial;		
+	}
+	.tag:hover {
+		color: #fff;
+	}
+	.modal-contact {
+		display: block;
+		color: rgb(70, 69, 69);	
+		cursor: initial;					
+	}
+	.modal-contact:hover {
+		color: rgb(70, 69, 69);				
+	}
+	.modal-assigned-users {
+		display: block;		
+	}
