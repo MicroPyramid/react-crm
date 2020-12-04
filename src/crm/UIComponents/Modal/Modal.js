@@ -5,15 +5,15 @@ import ArrayDisplay from '../Display/ArrayDisplay';
 
 export default function Modal(props) {  
 
-  let { data, index } = props;  
+  let { data, index, modalId, heading } = props;    
 
   return (
       
-    <div className="modal fade" id={`exampleModalCenter_account${data.id}`} tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div className="modal fade" id={`exampleModalCenter_${modalId}${data.id}`} tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div className="modal-content">
         <div className="modal-header">
-          <h5 className="modal-title" id="exampleModalLongTitle">{data.name}</h5>
+          <h5 className="modal-title" id="exampleModalLongTitle">{heading}</h5>
           <button type="button" className="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
@@ -33,42 +33,48 @@ export default function Modal(props) {
                             </h5>
                           </div>
                           
-                          <div className="row marl">
-                            <div className="col-md-4">
-                              <TextDisplay  elementSize="col-md-12" labelName="Name" attrId="account_name" attrFor="id_name"
-                                            value={data.name}
-                                            />
-                              <TextDisplay  elementSize="col-md-12" labelName="Phone" attrId="account_phone" attrFor="id_phone"
-                                            value={data.phone}
-                                            />
-                              <TextDisplay  elementSize="col-md-12" labelName="Status" attrId="account_status" attrFor="id_status"
-                                            value={data.status}
-                                            />                                                                              
-                            </div>
-
-                            <div className="col-md-4">
-                              <TextDisplay  elementSize="col-md-12" labelName="Email" attrId="account_email" attrFor="id_email"                                             
-                                              value={data.email}
-                                              />
-                              <TextDisplay  elementSize="col-md-12" labelName="Website" attrId="account_website" attrFor="id_website"                                             
-                                            value={data.website}
-                                            />    
-                              <ArrayDisplay elementSize="col-md-12" labelName="Contacts" attrId="contacts" attrFor="id_contacts" 
-                                          value={data.contacts} property="first_name" style="contact"/>
-                            </div>  
+                          <div className="row marl mine-modal">
                             
-                            <div className="col-md-4">
-                              
-                              <TextDisplay  elementSize="col-md-12" labelName="Billing Address" attrId="account_billing_address" attrFor="id_billing_address"                                             
-                                            value={data.billing_address_line+', '+data.billing_street+', '+data.billing_city+', '+data.billing_state+', '+data.billing_postcode+', '+data.country}
-                                            />
-
-                              <ArrayDisplay elementSize="col-md-12" labelName="Assigned Users" attrId="assigned_to" attrFor="id_assigned_to" 
-                                            value={data.assigned_to} property="email" style="assignedUsers"/>                            
-                              
-                              <ArrayDisplay elementSize="col-md-12" labelName="Tags" attrId="tags" attrFor="id_tags"
-                                            value={data.tags} property="name" style="tag"/>
-                            </div>                                    
+                            <TextDisplay  elementSize="col-md-12" labelName="Name" attrId="account_name" attrFor="id_name"
+                                            value={data.name}/>
+                            
+                            
+                            <TextDisplay  elementSize="col-md-12" labelName="Name" attrId="account_name" attrFor="id_name"
+                                            value={data.first_name+' '+data.last_name}/>
+                            
+                            
+                            <TextDisplay  elementSize="col-md-12" labelName="Phone" attrId="account_phone" attrFor="id_phone"
+                                          value={data.phone}/>
+                            
+                            
+                            <TextDisplay  elementSize="col-md-12" labelName="Status" attrId="account_status" attrFor="id_status"
+                                          value={data.status}/>                                                                              
+                                                        
+                            
+                            
+                            <TextDisplay  elementSize="col-md-12" labelName="Email" attrId="account_email" attrFor="id_email"                                             
+                                          value={data.email}/>
+                            
+                            
+                            <TextDisplay  elementSize="col-md-12" labelName="Website" attrId="account_website" attrFor="id_website"                                             
+                                          value={data.website}/>    
+                            
+                            
+                            <ArrayDisplay elementSize="col-md-12" labelName="Contacts" attrId="contacts" attrFor="id_contacts" 
+                                          value={data.contacts} property="first_name" style="contact"/>
+                                                                                                                
+                            
+                            <TextDisplay  elementSize="col-md-12" labelName="Billing Address" attrId="account_billing_address" attrFor="id_billing_address"                                             
+                                          value={data.address_line+', '+data.street+', '+data.city+', '+data.state+', '+data.postcode+', '+data.country}/>                                            
+                            
+                            
+                            <ArrayDisplay elementSize="col-md-12" labelName="Assigned Users" attrId="assigned_to" attrFor="id_assigned_to" 
+                                          value={data.assigned_to} property="email" style="assignedUsers"/>
+                            
+                            
+                            <ArrayDisplay elementSize="col-md-12" labelName="Tags" attrId="tags" attrFor="id_tags"
+                                          value={data.tags} property="name" style="tag"/>
+                                                                                      
                           </div>  
 
                           <div className="col-md-12">

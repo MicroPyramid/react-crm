@@ -129,7 +129,7 @@ const Accounts = (props) => {
       (mergedModalAccounts && mergedModalAccounts.map( (account, index) => {            
 
         return(
-          <Modal data={account} index={index}/>
+          <Modal data={account} index={index} modalId="account" heading={account.name}/>
         )
       }))
     )

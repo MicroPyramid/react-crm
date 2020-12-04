@@ -2250,3 +2250,10 @@ label:focus,
 	.modal-assigned-users {
 		display: block;		
 	}
+
+	.mine-modal > .filter_col{				
+		width: 33%;
+	}
+	.modal-text-display {
+		display: inline-block;
+	}

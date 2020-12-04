@@ -9,11 +9,10 @@ import { sources } from '../optionsData';
 import ViewActionButton from '../UIComponents/ActionButtons/ViewActionButton';
 import EditActionButton from '../UIComponents/ActionButtons/EditActionButton';
 import DeleteActionButton from '../UIComponents/ActionButtons/DeleteActionButton';
+import Modal from '../UIComponents/Modal/Modal';
 
 
 export default function Leads(props) {
-
-  // console.log(props);
 
   const [openLeads, setOpenLeads] = useState([]);
   const [closedLeads, setClosedLeads] = useState([]);
@@ -23,9 +22,7 @@ export default function Leads(props) {
   const [isDisplayFilteredObjects, setIsDisplayFilteredObjects] = useState(true);
   const [assignedUsers, setAssignedUsers] = useState([]);
   const [tags, setTags] = useState([]);
-  const [filterObject, setFilterObject] = useState({title: '', source: '', status: '', filterUsers: [], filterTags: []});
-  // const [filterUsers, setFilterUsers] = useState([]);
-  // const [filterTags, setFilterTags] = useState([]);
+  const [filterObject, setFilterObject] = useState({title: '', source: '', status: '', filterUsers: [], filterTags: []});  
   const [filteredResults, setFilteredResults] = useState([]);
 
   useEffect(() => {
@@ -127,16 +124,30 @@ export default function Leads(props) {
       </table>
     )
   }
-
   
+  const displayModalForLeads = () => {
+    
+    console.log("Enterd displayModalForLeads");
+    let modalOpenLeads = (openLeads) ? [...openLeads] : '';
+    let modalClosedLeads = (closedLeads) ? [...closedLeads] : '';
+    let mergedModalLeads = modalOpenLeads.concat(modalClosedLeads);
+
+    // console.log(mergedModalLeads);
+
+    return(
+      (mergedModalLeads && mergedModalLeads.map( (lead, index) => {            
+        
+        return(
+          <Modal data={lead} index={index} modalId="lead" heading={lead.title}/>
+        )
+      }))
+    )
+  }
+
   const handleChange = (e) => {    
     setFilterObject({...filterObject, [e.target.name]: e.target.value});
   }
 
-  // const getReactSelectValues = (e, filter) => {
-  //   if (filter === 'assignedUsers') setFilterUsers(e);
-  //   if (filter === 'tags') setFilterTags(e);
-  // }
   const ReactSelectHandleChange = (e, filter) => {
     if (filter === 'assignedUsers') setFilterObject({...filterObject, filterUsers: e})
     if (filter === 'tags') setFilterObject({...filterObject, filterTags: e})
@@ -148,13 +159,10 @@ export default function Leads(props) {
 
   const getFilteredLeads = () => {       
 
-    console.log("entering");
-    let mergedLeads, title, source, status, filterUsers, filterTags, results, redundantFilteredUsers = [], redundantFilteredTags = [];
 
-    // mergedLeads = [...openLeads].concat([...closedLeads]); 
+    let mergedLeads, title, source, status, filterUsers, filterTags, results, redundantFilteredUsers = [], redundantFilteredTags = [];    
     mergedLeads = props.leads.open_leads.concat(props.leads.close_leads); 
-       
-    console.log(mergedLeads);
+           
     title = filterObject.title.trim("").toLowerCase();
     source = filterObject.source;
     status = filterObject.status;
@@ -364,6 +372,9 @@ export default function Leads(props) {
    
 
       </div>
+
+      {/* Modal Container */}
+      { displayModalForLeads() }
     </div>
   )
 }
