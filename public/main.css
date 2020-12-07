@@ -2118,6 +2118,26 @@ label {
 }
 
 /*------------------------------------------------
+# Documents
+--------------------------------------------------*/
+.doc-btn-edit {
+	background: #099cbe;
+	color: #fff;
+	position: absolute;
+	right: 10px;
+	height: 33px;
+	top: 3px;	
+	padding: 5px 10px 0px 10px;	
+}
+.doc-btn-edit:hover {
+	color: #fff;
+}
+.fa-file-alt-doc {
+	width: 40px;
+}
+
+
+/*------------------------------------------------
 # General
 --------------------------------------------------*/
 

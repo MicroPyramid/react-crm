@@ -18,6 +18,10 @@ import ViewContact from './crm/Contacts/ViewContact';
 import Leads from './crm/Leads/Leads';
 import AddLead from './crm/Leads/AddLead';
 import EditLead from './crm/Leads/EditLead';
+import Documents from './crm/Documents/Documents';
+import AddDocument from './crm/Documents/AddDocument';
+import EditDocument from './crm/Documents/EditDocument';
+import ViewDocument from './crm/Documents/ViewDocument';
 import { ACCOUNTS, CONTACTS, LEADS } from './common/apiUrls';
 import { useState, useEffect } from 'react';
 
@@ -81,7 +85,13 @@ function App() {
           <Route sensitive path={'/leads/:id/edit'}
                  component={ (routerProps) => <EditLead leads={leads}/>} />
           
-
+          <Route sensitive exact path={'/documents'} component={Documents}/>
+          <Route sensitive path={'/documents/create'} 
+                 component={ (routerProps) => <AddDocument {...routerProps} /> } />
+          <Route sensitive path={'/documents/:id/edit'} 
+                 component={ (routerProps) => <EditDocument {...routerProps} /> } />
+          <Route sensitive path={'/documents/:id/view'}
+                 component={ (routerProps) => <ViewDocument {...routerProps}/>} />
           <Route exact sensitive path={'/'} component={Home} />
         </div>
       </Router>

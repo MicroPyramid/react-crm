@@ -54,7 +54,9 @@ function Header() {
             <li className="nav-item"><a className="nav-link" id="opportunities">Opportunities</a>
             </li>
             <li className="nav-item"><a className="nav-link" id="cases">Cases</a></li>
-            <li className="nav-item"><a className="nav-link" id="documents">Documents</a></li>
+            <li className="nav-item">
+            <Link className={(currentPage === '/documents' || currentPage === '/documents/create/' || currentPage === `/documents/${id}/edit/`) ? 'nav-link active' : 'nav-link'} onClick={() => setCurrentPage('/documents')} id="documents" to={'/documents'}>Documents</Link>                                          
+            </li>
             <li className="nav-item"><a className="nav-link" id="tasks">Tasks</a></li>
             <li className="nav-item"><a className="nav-link" id="invoices">Invoices</a></li>
             <li className="nav-item"><a className="nav-link" id="events">Events</a></li>
