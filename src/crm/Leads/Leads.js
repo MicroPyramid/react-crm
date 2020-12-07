@@ -10,6 +10,7 @@ import ViewActionButton from '../UIComponents/ActionButtons/ViewActionButton';
 import EditActionButton from '../UIComponents/ActionButtons/EditActionButton';
 import DeleteActionButton from '../UIComponents/ActionButtons/DeleteActionButton';
 import Modal from '../UIComponents/Modal/Modal';
+// import {getApiResults} from '../Utilities';
 
 
 export default function Leads(props) {
@@ -26,6 +27,8 @@ export default function Leads(props) {
   const [filteredResults, setFilteredResults] = useState([]);
 
   useEffect(() => {
+    // let data = getApiResults(LEADS);
+    // console.log(data);
     setOpenLeads(props.leads.open_leads);
     setClosedLeads(props.leads.close_leads);    
   }, []);
@@ -33,14 +36,14 @@ export default function Leads(props) {
   useEffect(() => {
     let assignedUsersArr = [];
     let tagsArr = [];
-    if (props.leads.length !== 0) {
-      props.leads.users.map(user => {
-        assignedUsersArr.push({value: user.username, label: user.username, id: user.id});        
-      })
-      props.leads.tags.map(tag => {
-        tagsArr.push({value: tag.name, label: tag.name});
-      })
-    }    
+    // if (props.leads.length !== 0) {
+    //   props.leads.users.map(user => {
+    //     assignedUsersArr.push({value: user.username, label: user.username, id: user.id});        
+    //   })
+    //   props.leads.tags.map(tag => {
+    //     tagsArr.push({value: tag.name, label: tag.name});
+    //   })
+    // }    
     setAssignedUsers(assignedUsersArr);
     setTags(tagsArr);    
   }, []);

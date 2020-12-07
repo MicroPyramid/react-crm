@@ -5,33 +5,37 @@ export default function DeleteActionButton(props) {
 
   let {api, id, to} = props;
 
-  
-  
   const deleteObject = (e) => {
     e.preventDefault();
-    fetch(`${api}${id}/`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `jwt ${localStorage.getItem('Token')}`,
-        company: `${localStorage.getItem('SubDomain')}`
-      }
-    });
-    
-    setTimeout( () => {      
-      fetch(`${api}/`, {
-        method: 'GET',
+
+    // let isConfirm = window.confirm('Are you sure you want to delete?');
+    // console.log(isConfirm);
+    // if (isConfirm){
+      fetch(`${api}${id}/`, {
+        method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `jwt ${localStorage.getItem('Token')}`,
           company: `${localStorage.getItem('SubDomain')}`
         }
-      })
-      .then (res => res.json())
-      .then (res => {
-        props.stateUpdate(res);
-      });                    
-    }, 300);
+      });
+      console.log("Executing");
+      setTimeout( () => {      
+        fetch(`${api}/`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `jwt ${localStorage.getItem('Token')}`,
+            company: `${localStorage.getItem('SubDomain')}`
+          }
+        })
+        .then (res => res.json())
+        .then (res => {
+          props.stateUpdate(res);
+        });
+      }, 300);  
+
+    // }    
   }
   
   return (

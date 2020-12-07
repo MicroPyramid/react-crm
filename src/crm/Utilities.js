@@ -16,10 +16,11 @@ export const getApiResults = (api) => {
     }
   })
   .then ( res =>  res.json())
-  .then (res => {       
-    // console.log(res); 
+  .then ( async res => {       
+    console.log(res); 
     // openLeads(res.open_leads);
     // closeLeads(res.close_leads);
-    return res
+    let result = await res;
+    return result;
   });
 }

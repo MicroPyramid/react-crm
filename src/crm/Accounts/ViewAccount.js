@@ -70,8 +70,7 @@ export default function ViewAccount(props) {
         billing_state: account.billing_state,
         billing_postcode: account.billing_postcode,
         billing_country: account.billing_country,
-        contacts: [220],
-        comments: [{comment: handleComment.comment}]
+        // contacts: 220,        
       })
     })
     .then(res => res.json())

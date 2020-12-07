@@ -27,74 +27,38 @@ function App() {
   const [leads, setLeads] = useState([]);
   const [accounts, setAccounts] = useState([]);
 
-  useEffect(() => {
-    getContacts();
-    getAccounts();
-    getLeads();
+  useEffect(() => {    
+    getApiData();
   }, []);
 
-  const getContacts =  () => {    
-    fetch(`${CONTACTS}`, {
-      method: 'GET',
-      headers:
-        {
-          'Content-Type': 'application/json',
-          Authorization: `jwt ${localStorage.getItem('Token')}`,
-          company: `${localStorage.getItem('SubDomain')}`,
-        },
-    })
-    .then(res => res.json())
-    .then (  async res => {
-       await setContacts(res);      
-    });    
+  const getApiData = () => {    
+    Promise.all([
+      fetch(`${ACCOUNTS}`, { method: 'GET', headers: { 'Content-Type': 'application/json', Authorization: `jwt ${localStorage.getItem('Token')}`, company: `${localStorage.getItem('SubDomain')}`, } }),
+      fetch(`${CONTACTS}`, { method: 'GET', headers: { 'Content-Type': 'application/json', Authorization: `jwt ${localStorage.getItem('Token')}`, company: `${localStorage.getItem('SubDomain')}`, } }),
+      fetch(`${LEADS}`, { method: 'GET', headers: { 'Content-Type': 'application/json', Authorization: `jwt ${localStorage.getItem('Token')}`, company: `${localStorage.getItem('SubDomain')}`, } })        
+      ])
+      .then(async([res1, res2, res3]) => {
+        const accounts = await res1.json();
+        const contacts = await res2.json();
+        const leads = await res3.json();
+        setAccounts(accounts);
+        setContacts(contacts);
+        setLeads(leads);
+      })      
   }
-
-  const getAccounts =  () => {    
-    fetch(`${ACCOUNTS}`, {
-      method: 'GET',
-      headers:
-        {
-          'Content-Type': 'application/json',
-          Authorization: `jwt ${localStorage.getItem('Token')}`,
-          company: `${localStorage.getItem('SubDomain')}`,
-        },
-    })
-    .then(res => res.json())
-    .then (  async res => {
-       await setAccounts(res);      
-    });    
-  }
-
-
-  const getLeads =  () => {    
-    fetch(`${LEADS}`, {
-      method: 'GET',
-      headers:
-        {
-          'Content-Type': 'application/json',
-          Authorization: `jwt ${localStorage.getItem('Token')}`,
-          company: `${localStorage.getItem('SubDomain')}`,
-        },
-    })
-    .then(res => res.json())
-    .then (  res => {
-       setLeads(res);      
-    });    
-  }
-
   
   
   return (    
     <div className="App">
       <Router>
         <div>
-          <Route sensitive path={'/'} component={Header} />          
+          <Route sensitive path={'/'} component={Header} />
           <Route sensitive path={'/validate-domain'} component={ValidateDomain} />
           <Route sensitive path={'/login'} component={Login} />
           <Route sensitive path={'/register'} component={Register} />
           <Route sensitive path={'/password-reset'} component={ForgotPassword} />
 
-          <Route sensitive path={'/dashboard'} component={Dashboard} />          
+          <Route sensitive path={'/dashboard'} component={Dashboard} />
 
           <Route sensitive exact path={'/accounts'} 
                   component={ (routerProps) => <Accounts {...routerProps} accounts={accounts}/>} />

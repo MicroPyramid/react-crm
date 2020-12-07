@@ -25,7 +25,7 @@ const AddAccount = (props) => {
   const [leads, setLeads] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [tags, setTags] = useState([]);
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState('');
   const [isValidations, setIsValidations] = useState('true');
   const [errors, setErrors] = useState({});
 
@@ -86,7 +86,8 @@ const AddAccount = (props) => {
   }
   
 
-  const fileUpload = (e) => {    
+  const fileUpload = (e) => {   
+    console.log(e.target.files[0]);
     setFile(e.target.files[0]);
   }
 
@@ -98,7 +99,7 @@ const AddAccount = (props) => {
 
   const saveAccount = (e) => { 
     e.preventDefault();    
-    let targetName = e.target.name;    
+    let targetName = e.target.name;
     
     // Validation
     let validationResults = Validations(accountObject);    
@@ -109,6 +110,8 @@ const AddAccount = (props) => {
           break;
       }
     }                   
+
+    console.log(file);
 
     if (isValidations) {
       fetch(`${ACCOUNTS}`, {        
@@ -131,8 +134,9 @@ const AddAccount = (props) => {
           billing_state: accountObject.billing_state,
           billing_country: accountObject.billing_country,          
           status: accountObject.status,
-          contacts: accountObject.contacts, 
-          tags: tags.join(',')
+          contacts: accountObject.contacts.join(','), 
+          tags: tags.join(','),
+          account_attachment: file
         })
       })
       .then ( res => res.json())

@@ -26,7 +26,7 @@ export default function EditAccount(props) {
   const [contacts, setContacts] = useState([]);
   const [availableContacts, setAvailableContacts] = useState([]);
   const [tags, setTags] = useState([]);
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState('');
   const [isValidations, setIsValidations] = useState('true');
   const [errors, setErrors] = useState({});
 
@@ -94,16 +94,17 @@ export default function EditAccount(props) {
     setTags([...tags.filter(tag => tags.indexOf(tag) !== index)]);
   }
   
-  const fileUpload = (e) => {    
+  const fileUpload = (e) => {  
+    console.log(e.target.files[0]);  
     setFile(e.target.files[0]);
   }
 
   const updateAccount = (e) => {
     e.preventDefault();
     
-    console.log(accountObject);
-    console.log(availableContacts);
-    console.log(availableLeads);
+    // console.log(accountObject);
+    // console.log(availableContacts);
+    // console.log(availableLeads);
 
     let contactsArr = [];
     availableContacts.map(contact => {
@@ -115,6 +116,12 @@ export default function EditAccount(props) {
     //   leadsArr.push(lead.id);
     // })
 
+    const formData = new FormData();    
+    formData.append("contact_attachment" , file);
+
+    console.log(file);
+    console.log(formData);
+    
     let userId = window.location.pathname.split('/')[2];
     fetch(`${ACCOUNTS}${userId}/`, {
       method: 'PUT',
@@ -136,13 +143,13 @@ export default function EditAccount(props) {
           billing_state: accountObject.billing_state,
           billing_country: accountObject.billing_country,          
           status: accountObject.status,
-          contacts: contactsArr,          
+          contacts: contactsArr,
+          contact_attachment: formData
+          // formData
       })
     }).then(res => res.json())
     .then (res => console.log(res));
-  }  
-
-  console.log(accountObject);
+  }    
 
   return (
     <div id="mainbody" className="main_container" style={{ marginTop: '65px' }}>        

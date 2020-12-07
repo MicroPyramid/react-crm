@@ -11,7 +11,7 @@ export default function ArrayDisplay(props) {
   return (  
     <>
     {
-      (value.length !== 0) ?      
+      (value && value.length !== 0) ?      
       <div className={`filter_col ${elementSize}`}>
         <div className="form-group">
           <label className="case_field_label" for={attrFor} >{labelName}</label><br/>
