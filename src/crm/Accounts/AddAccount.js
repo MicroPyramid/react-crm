@@ -134,17 +134,20 @@ const AddAccount = (props) => {
           billing_state: accountObject.billing_state,
           billing_country: accountObject.billing_country,          
           status: accountObject.status,
-          contacts: accountObject.contacts.join(','), 
+          contacts: accountObject.contacts, 
           tags: tags.join(','),
           account_attachment: file
         })
       })
       .then ( res => res.json())
       .then (res => {                   
-        if (!res.errors) {
-          if (targetName === 'save') props.history.push('/accounts');
-        }        
-      });
+        console.log(res);
+        return res;
+        // if (!res.errors) {
+        //   if (targetName === 'save') props.history.push('/accounts');
+        // }        
+      })
+      .catch(err => console.log(err));
     }    
   } 
 
@@ -189,7 +192,7 @@ const AddAccount = (props) => {
                             <TextInput  elementSize="col-md-6" labelName="State" attrName="billing_state" attrPlaceholder="State" inputId="id_billing_state" 
                                     value={accountObject.billing_state} getInputValue={handleChange} isRequired={true}/>
                             <SelectComponent  elementSize="col-md-12" labelName="Country" attrName="billing_country" attrPlaceholder="Country" attrId="id_billing_country" 
-                                        value={{value: accountObject.country, label: accountObject.country}} getInputValue={handleChange} options={countries} isrequired={true}/>                                                                
+                                        value={accountObject.country} getInputValue={handleChange} options={countries} isrequired={true}/>                                                                
                             <ReactSelect elementSize="col-md-12" labelName="Contacts" isMulti={true} options={contacts} getChangedValue={updateContacts}/>                            
                           </div>
                         </div>
@@ -200,7 +203,7 @@ const AddAccount = (props) => {
                         <ReactSelect labelName="Users" isDisabled={true}/>
                         <ReactSelect labelName="Assigned To"/>
                         <SelectComponent  labelName="Status" attrName="status" attrPlaceholder="Status" attrId="id_status" 
-                                          value={{value: accountObject.status, label: accountObject.status}} getInputValue={handleChange} options={twoStatus}/>
+                                          value={accountObject.status} getInputValue={handleChange} options={twoStatus}/>
                         <div className="filter_col col-12">
                           <div className="form-group">
                             <label>Tags</label>

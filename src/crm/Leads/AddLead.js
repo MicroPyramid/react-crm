@@ -27,7 +27,7 @@ export default function AddLead(props) {
   const [isValidations, setIsValidations] = useState('true');
   const [errors, setErrors] = useState({});
 
-  const handleChange = (e) => {       
+  const handleChange = (e) => {           
     setLeadObject({...leadObject, [e.target.name]: e.target.value});
   }
 
@@ -90,16 +90,18 @@ export default function AddLead(props) {
       })
       .then (res => res.json())
       .then (res => {        
-        if (!res.errors && !errors) {                    
+        console.log(res);
+        // if (!res.errors && !errors) {                    
           // if (targetName === 'save') props.history.push('/leads');          
           // if(targetName === 'saveAndNew') window.location.reload();          
-        }      
-      });
+        // }      
+        return res;
+      })
+      .catch(err => {
+        console.log(err);
+      })
     }
   }
-
-  console.log(tags);
-  console.log(tags.join(','));
 
   return (
     
@@ -152,10 +154,10 @@ export default function AddLead(props) {
                   <ReactSelect elementSize="col-md-12" labelName="Assigned Users"/>
                 </div>
                 <div className="col-md-4">
-                  <SelectComponent  elementSize="col-md-12" labelName="Status" attrName="status" attrPlaceholder="Status" attrId="id_status" 
-                                    value={{value: leadObject.status, label: leadObject.status}} getInputValue={handleChange} options={statuses}/>
+                  <SelectComponent  elementSize="col-md-12" labelName="Status" attrName="status" attrPlaceholder="Status" attrId="id_status"
+                                    value={leadObject.status} getInputValue={handleChange} options={statuses}/>
                   <SelectComponent  elementSize="col-md-12" labelName="Source" attrName="source" attrPlaceholder="Source" attrId="id_source" 
-                                    value={{value: leadObject.source, label:leadObject.source}} getInputValue={handleChange} options={sources} isRequired={true}/>
+                                    value={leadObject.source} getInputValue={handleChange} options={sources} isRequired={true}/>
                   <div className="address_group">
                     <TextInput  elementSize="col-md-12"  labelName="Address"  attrName="address_line"  attrPlaceholder="Address Line"  inputId="id_address_line"  
                                 value={leadObject.address_line} getInputValue={handleChange}/>  
@@ -171,7 +173,7 @@ export default function AddLead(props) {
                                     value={leadObject.postcode} getInputValue={handleChange}/>                      
                       </div>
                       <SelectComponent  labelName="" attrName="country" attrPlaceholder="Billing country" attrId="id_billing_country" 
-                                        value={{value: leadObject.country, label: leadObject.country}} getInputValue={handleChange} options={countries}/>
+                                        value={leadObject.country} getInputValue={handleChange} options={countries}/>
                   </div>
                   </div>
 

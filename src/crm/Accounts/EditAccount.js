@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { ACCOUNTS } from '../../common/apiUrls';
+import { ACCOUNTS, LEADS } from '../../common/apiUrls';
 import BreadCrumb from '../UIComponents/BreadCrumb/BreadCrumb';
 import TextInput from '../UIComponents/Inputs/TextInput';
 import PhoneInput from '../UIComponents/Inputs/PhoneInput';
@@ -31,7 +31,7 @@ export default function EditAccount(props) {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    getAccount();
+    getAccount();    
     let leadsArray = [];
     let contactsArray = [];
     props.leads.open_leads && props.leads.open_leads.map( lead => {      
@@ -43,6 +43,9 @@ export default function EditAccount(props) {
     })
     setContacts(contactsArray);
   }, []);
+
+
+  
 
   const getAccount = () => {
     let userId = window.location.pathname.split('/')[2];
@@ -201,7 +204,7 @@ export default function EditAccount(props) {
                         <ReactSelect labelName="Users" isDisabled={true}/>
                         <ReactSelect labelName="Assigned To"/>
                         <SelectComponent  labelName="Status" attrName="status" attrPlaceholder="Status" attrId="id_status" 
-                                          value={{value: accountObject.status, label: accountObject.status}} getInputValue={handleChange} options={twoStatus}/>
+                                          value={accountObject.status} getInputValue={handleChange} options={twoStatus}/>
                         <div class="filter_col col-12">
                           <div class="form-group">
                             <label>Tags</label>
