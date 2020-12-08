@@ -2,6 +2,8 @@ import React, {useState, useEffect } from 'react';
 import moment from 'moment';
 import {ACCOUNTS} from '../../common/apiUrls';
 import TextDisplay from '../UIComponents/Display/TextDisplay';
+import ArrayDisplay from '../UIComponents/Display/ArrayDisplay';
+import SingleObjectDisplay from '../UIComponents/Display/SingleObjectDisplay';
 
 export default function ViewAccount(props) {  
   
@@ -109,101 +111,31 @@ export default function ViewAccount(props) {
                   </span>
                 </h5>
                 </div>
-                
-                   
-              <div className="row marl">
-                <div className="col-md-4">
-                    <div className="filter_col col-md-12" id="iname">
-                      <div className="form-group">
-                          <label className="acc_field_label" for="id_name" data-name="name">Name</label>
-                          <div className="account_field" id="account_name" data-name="name">{account.name}</div>
-                      </div>
-                    </div>
-                    <div className="filter_col col-md-12">
-                      <div className="form-group">
-                          <label className="acc_field_label" for="id_phone" data-name="name">Phone</label>
-                          <div className="account_field" id="account_phone" data-name="name">{account.phone}
-                          </div>
-                      </div>
-                    </div>
-                    <div className="filter_col col-md-12">
-                      <div className="form-group">
-                          <label className="acc_field_label" for="id_status" data-name="name">Status</label>
-                          <div className="account_field" id="account_status" data-name="name">{account.status}
-                          </div>
-                      </div>
-                    </div>
-                </div>
-
-                <div className="col-md-4">
-
-                  <div className="filter_col col-md-12">
-                      <div className="form-group">                      
-                        <label className="acc_field_label" for="id_email" data-name="name">Email</label>
-                        <div className="account_field" id="account_email" data-name="name">{account.email}</div>
-                    </div>                        
-                  </div>
-                      
-                    <div className="filter_col col-md-12">
-                      <div className="form-group">
-                        <label className="acc_field_label" for="id_website" data-name="name">Website</label>
-                        <div className="account_field" id="account_website" data-name="name">{account.website}</div>
-                      </div>
-                    </div>
-
-                    <div className="filter_col col-md-12">
-                      <div className="form-group">
-                        <label className="acc_field_label" for="id_website" data-name="name">lead</label>
-                        <div className="account_field" id="account_website" data-name="name">
-                        {(account.lead !== null) ? account.lead.title: ''}
-                        </div>
-                      </div>
-                    </div> 
-
-                  </div>  
-                      
-                <div className="col-md-4">
-
-                  <div className="filter_col col-md-12">
-                    <div className="form-group">
-                      <label className="acc_field_label" for="id_billing_address" data-name="name">Billing Address</label>
-                      <div className="account_field" id="account_billing_address" data-name="name">
-                              {account.billing_address_line} {account.billing_street}
-                              {account.billing_city} {account.billing_state}
-                              {account.billing_postcode} {account.country}
-                      </div>
-                    </div>
+                <div className="row marl">
+                  <div className="col-md-4">                      
+                      <TextDisplay elementSize="col-md-12" labelName="Name" attrId="account_name" attrDataName="name" value={account.name}/>
+                      <TextDisplay elementSize="col-md-12" labelName="Phone" attrId="account_phone" attrDataName="phone" value={account.phone}/>
+                      <TextDisplay elementSize="col-md-12" labelName="Status" attrId="account_status" attrDataName="status" value={account.status}/>
                   </div>
 
-                  <div className="filter_col col-md-12">                        
-                    <div className="form-group">
-                      <label className="case_field_label" for="id_contact" data-name="name">Assigned To</label>                     
-                        {
-                          (account.assignedTo && account.assignedTo.map( assignee => {
-                            return(
-                              <a href="/users/1044/view/">{assignee.email}</a>
-                            )
-                          }))
-                        }                     
-                    </div>                            
+                  <div className="col-md-4">
+                    <TextDisplay elementSize="col-md-12" labelName="Email" attrId="account_email" attrDataName="email" value={account.email}/>
+                    <TextDisplay elementSize="col-md-12" labelName="Website" attrId="account_website" attrDataName="website" value={account.website}/>
+                    <SingleObjectDisplay elementSize="col-md-12" labelName="Lead" attrId="account_lead" attrDataName="lead" value={account.lead.title}/>                    
+                    <ArrayDisplay elementSize="col-md-12" labelName="Contacts" attrId="contacts" attrFor="id_contacts" attrDataName="contacts"
+                                          value={account.contacts} property="first_name" style="contact"/>
                   </div>
 
-                  <div className="filter_col col-md-12">                        
-                    <div className="form-group">
-                      <label className="case_field_label" for="id_contact" data-name="name">Contacts</label>                      
-                        {
-                          (account.contacts && account.contacts.map( contact => {
-                            return(
-                              <p>{contact.first_name}</p>
-                            )
-                          }))
-                        }                     
-                    </div>                            
-                  </div>
-                      
-
+                  <div className="col-md-4">
+                    <TextDisplay elementSize="col-md-12" labelName="Billing Address" attrId="account_billing_address" attrDataName="billing_address" 
+                                value={account.billing_address_line+', '+account.billing_street+', '+account.billing_city+', '+account.billing_state+', '+account.billing_postcode+', '+account.billing_country}/>
+                    <ArrayDisplay elementSize="col-md-12" labelName="Assigned Users" attrId="assigned_to" attrFor="id_assigned_to"  attrDataName="assigned_users"
+                                          value={account.assigned_to} property="email" style="assignedUsers"/>
+                    <ArrayDisplay elementSize="col-md-12" labelName="Tags" attrId="tags" attrFor="id_tags" attrDataName="tags"
+                                          value={account.tags} property="name" style="tag"/>
                 </div>                                    
-                                    </div>  
+              </div> {/* End of card body */}
+
 
               <div className="col-md-12">
                   <div className="created_information">
@@ -211,7 +143,8 @@ export default function ViewAccount(props) {
                     Created by <b>{account.email}</b> created on <b title="Nov. 19, 2020, 10:16 a.m.">{createOn}</b>
                   </div>
                </div>
-                          
+
+              {/* Comments */}
               <div className="col-md-12 p-0">
 
                 <div className="card-title">
