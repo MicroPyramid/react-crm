@@ -43,19 +43,19 @@ function Header() {
               <Link className={currentPage === '/dashboard' ? 'nav-link active' : 'nav-link'} onClick={() => setCurrentPage('/dashboard')} id="dashboard" to={'/dashboard'}>Dashboard</Link>
             </li>
             <li className="nav-item">
-              <Link className={(currentPage === '/accounts'|| currentPage === '/accounts/create/' )? 'nav-link active' : 'nav-link'} onClick={() => setCurrentPage('/accounts')} id="accounts" to={'/accounts'}>Accounts</Link>
+              <Link className={(currentPage === '/accounts'|| currentPage === '/accounts/create/' || currentPage === `/accounts/${id}/edit/` || currentPage === `/accounts/${id}/view/` )? 'nav-link active' : 'nav-link'} onClick={() => setCurrentPage('/accounts')} id="accounts" to={'/accounts'}>Accounts</Link>
             </li>
             <li className="nav-item">
-              <Link className={(currentPage === '/contacts' || currentPage === '/contacts/create/') ? 'nav-link active' : 'nav-link'} onClick={() => setCurrentPage('/contacts')} id="contacts" to={'/contacts'}>Contacts</Link>
+              <Link className={(currentPage === '/contacts' || currentPage === '/contacts/create/' || currentPage === `/contacts/${id}/edit/` || currentPage === `/contacts/${id}/view/`) ? 'nav-link active' : 'nav-link'} onClick={() => setCurrentPage('/contacts')} id="contacts" to={'/contacts'}>Contacts</Link>
             </li>
             <li className="nav-item">
-              <Link className={(currentPage === '/leads' || currentPage === '/leads/create/' || currentPage === `/leads/${id}/edit/`) ? 'nav-link active' : 'nav-link'} onClick={() => setCurrentPage('/leads')} id="leads" to={'/leads'}>Leads</Link>                            
+              <Link className={(currentPage === '/leads' || currentPage === '/leads/create/' || currentPage === `/leads/${id}/edit/` || currentPage === `/leads/${id}/view/`) ? 'nav-link active' : 'nav-link'} onClick={() => setCurrentPage('/leads')} id="leads" to={'/leads'}>Leads</Link>                            
             </li>
             <li className="nav-item"><a className="nav-link" id="opportunities">Opportunities</a>
             </li>
             <li className="nav-item"><a className="nav-link" id="cases">Cases</a></li>
             <li className="nav-item">
-            <Link className={(currentPage === '/documents' || currentPage === '/documents/create/' || currentPage === `/documents/${id}/edit/`) ? 'nav-link active' : 'nav-link'} onClick={() => setCurrentPage('/documents')} id="documents" to={'/documents'}>Documents</Link>                                          
+            <Link className={(currentPage === '/documents' || currentPage === '/documents/create/' || currentPage === `/documents/${id}/edit/` || currentPage === `/socuments/${id}/view/`) ? 'nav-link active' : 'nav-link'} onClick={() => setCurrentPage('/documents')} id="documents" to={'/documents'}>Documents</Link>
             </li>
             <li className="nav-item"><a className="nav-link" id="tasks">Tasks</a></li>
             <li className="nav-item"><a className="nav-link" id="invoices">Invoices</a></li>

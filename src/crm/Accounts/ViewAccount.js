@@ -1,6 +1,7 @@
 import React, {useState, useEffect } from 'react';
 import moment from 'moment';
 import {ACCOUNTS} from '../../common/apiUrls';
+import TextDisplay from '../UIComponents/Display/TextDisplay';
 
 export default function ViewAccount(props) {  
   
@@ -77,6 +78,8 @@ export default function ViewAccount(props) {
     .then(res => console.log(res));
   }  
 
+  console.log(account);
+
   return (
     <div id="mainbody" className="main_container" style={{ marginTop: '65px' }}>
       {
@@ -91,6 +94,7 @@ export default function ViewAccount(props) {
         <div className="main_container" id="maincontainer">
           <div className="overview_form_block row marl justify-content-center">
             <div className="col-md-8" id="opacity_block">
+            
             <div className="card">
               <div className="card-body" id="datashow">
                 
@@ -108,97 +112,97 @@ export default function ViewAccount(props) {
                 
                    
               <div className="row marl">
-                                      <div className="col-md-4">
-                                          <div className="filter_col col-md-12" id="iname">
-                                            <div className="form-group">
-                                                <label className="acc_field_label" for="id_name" data-name="name">Name</label>
-                                                <div className="account_field" id="account_name" data-name="name">{account.name}</div>
-                                            </div>
-                                          </div>
-                                          <div className="filter_col col-md-12">
-                                            <div className="form-group">
-                                                <label className="acc_field_label" for="id_phone" data-name="name">Phone</label>
-                                                <div className="account_field" id="account_phone" data-name="name">{account.phone}
-                                                </div>
-                                            </div>
-                                          </div>
-                                          <div className="filter_col col-md-12">
-                                            <div className="form-group">
-                                                <label className="acc_field_label" for="id_status" data-name="name">Status</label>
-                                                <div className="account_field" id="account_status" data-name="name">{account.status}
-                                                </div>
-                                            </div>
-                                          </div>
-                                      </div>
+                <div className="col-md-4">
+                    <div className="filter_col col-md-12" id="iname">
+                      <div className="form-group">
+                          <label className="acc_field_label" for="id_name" data-name="name">Name</label>
+                          <div className="account_field" id="account_name" data-name="name">{account.name}</div>
+                      </div>
+                    </div>
+                    <div className="filter_col col-md-12">
+                      <div className="form-group">
+                          <label className="acc_field_label" for="id_phone" data-name="name">Phone</label>
+                          <div className="account_field" id="account_phone" data-name="name">{account.phone}
+                          </div>
+                      </div>
+                    </div>
+                    <div className="filter_col col-md-12">
+                      <div className="form-group">
+                          <label className="acc_field_label" for="id_status" data-name="name">Status</label>
+                          <div className="account_field" id="account_status" data-name="name">{account.status}
+                          </div>
+                      </div>
+                    </div>
+                </div>
 
-                                      <div className="col-md-4">
+                <div className="col-md-4">
 
-                                        <div className="filter_col col-md-12">
-                                            <div className="form-group">                                            
-                                              <label className="acc_field_label" for="id_email" data-name="name">Email</label>
-                                              <div className="account_field" id="account_email" data-name="name">{account.email}</div>
-                                          </div>                                                                                    
-                                        </div>
-                                          
-                                          <div className="filter_col col-md-12">
-                                            <div className="form-group">
-                                              <label className="acc_field_label" for="id_website" data-name="name">Website</label>
-                                              <div className="account_field" id="account_website" data-name="name">{account.website}</div>
-                                            </div>
-                                          </div>
+                  <div className="filter_col col-md-12">
+                      <div className="form-group">                      
+                        <label className="acc_field_label" for="id_email" data-name="name">Email</label>
+                        <div className="account_field" id="account_email" data-name="name">{account.email}</div>
+                    </div>                        
+                  </div>
+                      
+                    <div className="filter_col col-md-12">
+                      <div className="form-group">
+                        <label className="acc_field_label" for="id_website" data-name="name">Website</label>
+                        <div className="account_field" id="account_website" data-name="name">{account.website}</div>
+                      </div>
+                    </div>
 
-                                          <div className="filter_col col-md-12">
-                                            <div className="form-group">
-                                              <label className="acc_field_label" for="id_website" data-name="name">lead</label>
-                                              <div className="account_field" id="account_website" data-name="name">
-                                              {(account.lead !== null) ? account.lead.title: ''}
-                                              </div>
-                                            </div>
-                                          </div> 
+                    <div className="filter_col col-md-12">
+                      <div className="form-group">
+                        <label className="acc_field_label" for="id_website" data-name="name">lead</label>
+                        <div className="account_field" id="account_website" data-name="name">
+                        {(account.lead !== null) ? account.lead.title: ''}
+                        </div>
+                      </div>
+                    </div> 
 
-                                        </div>  
-                                      
-                                      <div className="col-md-4">
+                  </div>  
+                      
+                <div className="col-md-4">
 
-                                        <div className="filter_col col-md-12">
-                                          <div className="form-group">
-                                            <label className="acc_field_label" for="id_billing_address" data-name="name">Billing Address</label>
-                                            <div className="account_field" id="account_billing_address" data-name="name">
-                                                    {account.billing_address_line} {account.billing_street}
-                                                    {account.billing_city} {account.billing_state}
-                                                    {account.billing_postcode} {account.country}
-                                            </div>
-                                          </div>
-                                        </div>
+                  <div className="filter_col col-md-12">
+                    <div className="form-group">
+                      <label className="acc_field_label" for="id_billing_address" data-name="name">Billing Address</label>
+                      <div className="account_field" id="account_billing_address" data-name="name">
+                              {account.billing_address_line} {account.billing_street}
+                              {account.billing_city} {account.billing_state}
+                              {account.billing_postcode} {account.country}
+                      </div>
+                    </div>
+                  </div>
 
-                                        <div className="filter_col col-md-12">                        
-                                          <div className="form-group">
-                                            <label className="case_field_label" for="id_contact" data-name="name">Assigned To</label>                                            
-                                              {
-                                                (account.assignedTo && account.assignedTo.map( assignee => {
-                                                  return(
-                                                    <a href="/users/1044/view/">{assignee.email}</a>
-                                                  )
-                                                }))
-                                              }                                            
-                                          </div>                            
-                                        </div>
+                  <div className="filter_col col-md-12">                        
+                    <div className="form-group">
+                      <label className="case_field_label" for="id_contact" data-name="name">Assigned To</label>                     
+                        {
+                          (account.assignedTo && account.assignedTo.map( assignee => {
+                            return(
+                              <a href="/users/1044/view/">{assignee.email}</a>
+                            )
+                          }))
+                        }                     
+                    </div>                            
+                  </div>
 
-                                        <div className="filter_col col-md-12">                        
-                                          <div className="form-group">
-                                            <label className="case_field_label" for="id_contact" data-name="name">Contacts</label>                                            
-                                              {
-                                                (account.contacts && account.contacts.map( contact => {
-                                                  return(
-                                                    <p>{contact.first_name}</p>
-                                                  )
-                                                }))
-                                              }                                            
-                                          </div>                            
-                                        </div>
-                                        
+                  <div className="filter_col col-md-12">                        
+                    <div className="form-group">
+                      <label className="case_field_label" for="id_contact" data-name="name">Contacts</label>                      
+                        {
+                          (account.contacts && account.contacts.map( contact => {
+                            return(
+                              <p>{contact.first_name}</p>
+                            )
+                          }))
+                        }                     
+                    </div>                            
+                  </div>
+                      
 
-                                      </div>                                    
+                </div>                                    
                                     </div>  
 
               <div className="col-md-12">
@@ -207,7 +211,7 @@ export default function ViewAccount(props) {
                     Created by <b>{account.email}</b> created on <b title="Nov. 19, 2020, 10:16 a.m.">{createOn}</b>
                   </div>
                </div>
-                                                
+                          
               <div className="col-md-12 p-0">
 
                 <div className="card-title">
@@ -261,7 +265,63 @@ export default function ViewAccount(props) {
               
               </div>
             </div>
-            </div>
+            
+            <br/>
+
+
+            {/* Contacts Form */}
+            <form method="GET" className="accountdetails_row">
+              <div className="table_container_row row marl no-gutters">
+                <div className="col-md-12">
+                  <div className="card">
+                    <div className="card-body">
+                      <div className="panel-heading-list card-title view-pad">
+                        Contacts
+                        <a href="/contacts/create/?view_account=232"><svg className="svg-inline--fa fa-plus fa-w-14 pull-right text-black"  aria-hidden="true" focusable="false" data-prefix="fa" data-icon="plus" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"></path></svg></a>
+                      </div>
+                      <div className="table-responsive">
+                        <table className="table table-bordered table-striped table-condensed">
+                          
+                          <thead>
+                            <tr>
+                              <th width="5%" className="text-center">S.No</th>
+                              <th width="25%" className="text-center">Contact Name</th>
+                              <th width="20%" className="text-center">Phone</th>
+                              <th width="25%" className="text-center">Email</th>
+                              <th width="25%" className="text-center">Actions</th>
+                            </tr>
+                          </thead>
+                          
+                          <tbody>
+                            {
+                              (account && account.contacts.map((contact, index) => (                              
+                                <tr id={`contacts_details${contact.id}`} className="text-center">
+                                  <td className="text-center" scope="row">{index+1}</td>
+                                  <td className="text-center">{contact.first_name+' '+contact.last_name}</td>
+                                  <td className="text-center">{contact.phone}</td>
+                                  <td className="text-center">{contact.email}</td>
+                                  <td className="actions text-center">
+                                    <a href={`/contacts/${contact.id}/view`} className="btn btn-primary text-white mr-1">View</a>
+                                    <a href={`/contacts/${contact.id}/edit/?view_account=${contact.id}`} className="btn btn-success btn-success-edit text-white mr-1">Edit</a>
+                                    <a href={`/contacts/${contact.id}/delete`} className="btn btn-warning btn-warning-remove text-white">Remove</a>                                    
+                                  </td>
+                                </tr>
+  )))
+                            }
+                            
+                            
+                          </tbody>
+                        </table>
+                      </div>
+                      
+                    </div>
+                  </div>            
+                </div>
+              </div>
+            </form>
+            
+
+            </div> {/* end of col-md-8 */}
           </div>
         </div>
  
