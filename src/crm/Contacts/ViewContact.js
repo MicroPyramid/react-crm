@@ -34,8 +34,7 @@ class ViewContact extends Component {
       }
     })
     .then ( res => res.json())
-    .then (res => {
-      console.log(res);
+    .then (res => {      
       this.setState({
         first_name: res.contact_obj.first_name,
         last_name: res.contact_obj.last_name,

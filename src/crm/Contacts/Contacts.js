@@ -36,9 +36,7 @@ export default class Contacts extends Component {
       }
     })
     .then ( res => res.json())
-    .then ( res => {
-      console.log(res);
-      console.log(res.contact_obj_list);      
+    .then ( res => {      
       this.setState({contacts: res.contact_obj_list});
       this.setState({isLoading: false})
     });    

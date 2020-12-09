@@ -89,17 +89,10 @@ export default function AddLead(props) {
         })
       })
       .then (res => res.json())
-      .then (res => {        
-        console.log(res);
-        // if (!res.errors && !errors) {                    
-          // if (targetName === 'save') props.history.push('/leads');          
-          // if(targetName === 'saveAndNew') window.location.reload();          
-        // }      
+      .then (res => {                        
         return res;
       })
-      .catch(err => {
-        console.log(err);
-      })
+      .catch(err => err)
     }
   }
 

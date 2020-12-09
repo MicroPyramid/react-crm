@@ -32,27 +32,22 @@ export default function EditLead(props) {
       }
     })
     .then(res => res.json())
-    .then(res => {
-      console.log(res);
+    .then(res => {    
       setLeadObject(res.lead_obj);      
-      let tagsArr = [];
-      console.log(res.lead_obj.tags);
+      let tagsArr = [];      
       res.lead_obj.tags.map(tag => {
         tagsArr.push(tag.name);
       })
-      setTags(tagsArr);
-      // console.log()
+      setTags(tagsArr);      
     })
   }, []);
 
-  const handleChange = (e) => {   
-    console.log(e.target.value);
+  const handleChange = (e) => {       
     setLeadObject({...leadObject, [e.target.name]: e.target.value});
   }
 
   const addTags = event => {    
-    if (event.key === 'Enter' && event.target.value !== "") {
-      // setTags([...tags, {name: event.target.value, slug: event.target.value}]);
+    if (event.key === 'Enter' && event.target.value !== "") {      
       setTags([...tags, event.target.value]);
       event.target.value="";
     }
@@ -94,8 +89,7 @@ export default function EditLead(props) {
       })
     })
     .then (res => res.json())
-    .then (res => {
-      console.log(res);
+    .then (res => {      
       if (!res.errors && !errors) {
         if (targetName === 'save') props.history.push('/accounts');
         if(targetName === 'saveAndNew') window.location.reload();
@@ -103,7 +97,6 @@ export default function EditLead(props) {
     });
   }
   
-  console.log(leadObject);
   return (
       
     <div id="mainbody" className="main_container" style={{ marginTop: '65px' }}>

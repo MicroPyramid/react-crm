@@ -199,9 +199,7 @@ const Accounts = (props) => {
     // Both filtered results and tags are not available
     if (filteredResults === undefined && tags === null) {            
       results = mergedAccounts;
-    }
-    
-    console.log(results);
+    }    
 
     let displayOpenAccounts = [];
     let displayClosedAccounts = [];

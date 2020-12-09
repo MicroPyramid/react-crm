@@ -7,10 +7,7 @@ export default function DeleteActionButton(props) {
 
   const deleteObject = (e) => {
     e.preventDefault();
-
-    // let isConfirm = window.confirm('Are you sure you want to delete?');
-    // console.log(isConfirm);
-    // if (isConfirm){
+    
       fetch(`${api}${id}/`, {
         method: 'DELETE',
         headers: {
@@ -19,7 +16,7 @@ export default function DeleteActionButton(props) {
           company: `${localStorage.getItem('SubDomain')}`
         }
       });
-      console.log("Executing");
+      
       setTimeout( () => {      
         fetch(`${api}/`, {
           method: 'GET',
@@ -33,9 +30,7 @@ export default function DeleteActionButton(props) {
         .then (res => {
           props.stateUpdate(res);
         });
-      }, 300);  
-
-    // }    
+      }, 300);         
   }
   
   return (

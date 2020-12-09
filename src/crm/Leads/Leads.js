@@ -26,24 +26,14 @@ export default function Leads(props) {
   const [filterObject, setFilterObject] = useState({title: '', source: '', status: '', filterUsers: [], filterTags: []});  
   const [filteredResults, setFilteredResults] = useState([]);
 
-  useEffect(() => {
-    // let data = getApiResults(LEADS);
-    // console.log(data);
+  useEffect(() => {    
     setOpenLeads(props.leads.open_leads);
     setClosedLeads(props.leads.close_leads);    
   }, []);
 
   useEffect(() => {
     let assignedUsersArr = [];
-    let tagsArr = [];
-    // if (props.leads.length !== 0) {
-    //   props.leads.users.map(user => {
-    //     assignedUsersArr.push({value: user.username, label: user.username, id: user.id});        
-    //   })
-    //   props.leads.tags.map(tag => {
-    //     tagsArr.push({value: tag.name, label: tag.name});
-    //   })
-    // }    
+    let tagsArr = [];    
     setAssignedUsers(assignedUsersArr);
     setTags(tagsArr);    
   }, []);
@@ -129,13 +119,10 @@ export default function Leads(props) {
   }
   
   const displayModalForLeads = () => {
-    
-    console.log("Enterd displayModalForLeads");
+        
     let modalOpenLeads = (openLeads) ? [...openLeads] : '';
     let modalClosedLeads = (closedLeads) ? [...closedLeads] : '';
-    let mergedModalLeads = modalOpenLeads.concat(modalClosedLeads);
-
-    // console.log(mergedModalLeads);
+    let mergedModalLeads = modalOpenLeads.concat(modalClosedLeads);    
 
     return(
       (mergedModalLeads && mergedModalLeads.map( (lead, index) => {            
@@ -255,11 +242,7 @@ export default function Leads(props) {
     } 
     
     setOpenLeads(displayOpenLeads);
-    setClosedLeads(displayClosedLeads);
-
-    // setIsDisplayFilteredObjects(false);
-
-    console.log(results);
+    setClosedLeads(displayClosedLeads);        
   }
 
   const clearSearchResults = (e) => {

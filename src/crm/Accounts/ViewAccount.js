@@ -31,8 +31,7 @@ export default function ViewAccount(props) {
       }
     })
     .then (res => res.json())
-    .then (res => {
-      console.log(res);
+    .then (res => {      
       setAccount(res.account_obj);
       let createdDate = new Date(res.account_obj.created_on);
       let date = createdDate.getFullYear() + '' + (createdDate.getMonth()+1) + '' + createdDate.getUTCDate();
@@ -47,14 +46,8 @@ export default function ViewAccount(props) {
 
   const submitComment = (e) => {
     e.preventDefault();
-    let userId = window.location.pathname.split('/')[2];
-    // if (handleComment.comment.trim()) {
-    //   setComments([...comments, handleComment.comment]);
-    //   setErrors({...errors, comment: ''});
-    // } else {
-    //   setErrors({...errors, comment: 'This field is required'});
-    // }
-    console.log(handleComment.comment);
+    let userId = window.location.pathname.split('/')[2];    
+
     fetch(`${ACCOUNTS}${userId}/`, {
       method: 'PUT',
       headers: {
@@ -72,15 +65,12 @@ export default function ViewAccount(props) {
         billing_city: account.billing_city,        
         billing_state: account.billing_state,
         billing_postcode: account.billing_postcode,
-        billing_country: account.billing_country,
-        // contacts: 220,        
+        billing_country: account.billing_country,                
       })
     })
     .then(res => res.json())
-    .then(res => console.log(res));
-  }  
-
-  console.log(account);
+    .then(res => res);
+  }    
 
   return (
     <div id="mainbody" className="main_container" style={{ marginTop: '65px' }}>

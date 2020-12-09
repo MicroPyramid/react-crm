@@ -86,8 +86,7 @@ const AddAccount = (props) => {
   }
   
 
-  const fileUpload = (e) => {   
-    console.log(e.target.files[0]);
+  const fileUpload = (e) => {       
     setFile(e.target.files[0]);
   }
 
@@ -109,9 +108,7 @@ const AddAccount = (props) => {
           setIsValidations(false);
           break;
       }
-    }                   
-
-    console.log(file);
+    }                       
 
     if (isValidations) {
       fetch(`${ACCOUNTS}`, {        
@@ -140,19 +137,12 @@ const AddAccount = (props) => {
         })
       })
       .then ( res => res.json())
-      .then (res => {                   
-        console.log(res);
-        return res;
-        // if (!res.errors) {
-        //   if (targetName === 'save') props.history.push('/accounts');
-        // }        
+      .then (res => {                           
+        return res;        
       })
-      .catch(err => console.log(err));
+      .catch(err => err);
     }    
   } 
-
-  console.log(tags);
-  console.log(tags.join(','));
 
     return (
       <div id="mainbody" className="main_container" style={{ marginTop: '65px' }}>        

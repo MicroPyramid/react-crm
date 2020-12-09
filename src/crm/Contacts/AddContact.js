@@ -114,8 +114,7 @@ export default class AddContact extends Component {
                           <PhoneInput className=""
                             country={'in'}
                             value={this.state.phone}                            
-                            onChange={phone => {
-                              console.log(phone);
+                            onChange={phone => {                              
                               this.setState({ phone })
                             }}/>
                       <span className="error errro_ft_sz">{this.state.errors.phone}</span>
@@ -206,8 +205,7 @@ export default class AddContact extends Component {
                       <div className="form-group ">
                           <label for="exampleInputEmail1">Country <span className="error_marker" style={{color: "red"}}></span></label>                          
                           <select name="billing_country" className="form-control rounded-0" placeholder="Billing country" required="" id="id_billing_country" 
-                                          onChange={(e) => {
-                                            console.log(e.target.value);
+                                          onChange={(e) => {                                            
                                             this.setState({country: e.target.value})
                                           }}
                                           >

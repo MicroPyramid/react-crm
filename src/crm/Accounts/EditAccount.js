@@ -80,14 +80,12 @@ export default function EditAccount(props) {
     setAvailableContacts(contactsArray);
   }
 
-  const updateLeads = (e) => {    
-    console.log(e);
+  const updateLeads = (e) => {        
     setAvailableLeads({value: e.lead.title , label: e.lead.title , id: e.lead.id});    
   }
 
   const addTags = event => {    
-    if (event.key === 'Enter' && event.target.value !== "") {
-      // setTags([...tags, {name: event.target.value, slug: event.target.value}]);
+    if (event.key === 'Enter' && event.target.value !== "") {      
       setTags([...tags, event.target.value]);
       event.target.value="";
     }
@@ -97,33 +95,21 @@ export default function EditAccount(props) {
     setTags([...tags.filter(tag => tags.indexOf(tag) !== index)]);
   }
   
-  const fileUpload = (e) => {  
-    console.log(e.target.files[0]);  
+  const fileUpload = (e) => { 
+
     setFile(e.target.files[0]);
   }
 
   const updateAccount = (e) => {
     e.preventDefault();
     
-    // console.log(accountObject);
-    // console.log(availableContacts);
-    // console.log(availableLeads);
-
     let contactsArr = [];
     availableContacts.map(contact => {
       contactsArr.push(contact.id);
     })
 
-    // let leadsArr = [];
-    // availableLeads.map(lead => {
-    //   leadsArr.push(lead.id);
-    // })
-
     const formData = new FormData();    
-    formData.append("contact_attachment" , file);
-
-    console.log(file);
-    console.log(formData);
+    formData.append("contact_attachment" , file);    
     
     let userId = window.location.pathname.split('/')[2];
     fetch(`${ACCOUNTS}${userId}/`, {
@@ -151,7 +137,7 @@ export default function EditAccount(props) {
           // formData
       })
     }).then(res => res.json())
-    .then (res => console.log(res));
+    .then (res => res);
   }    
 
   return (
