@@ -1928,8 +1928,10 @@ pre {
 .action__btn-edit-a,
 .action__btn-delete-a,
 .action__btn-email-a {
-	padding: 7px 13px;	
-	border-radius: 5px;
+	padding: 10px 13px;	
+	border-radius: 5px;	
+	display: inline-block;
+	margin-top: 2px;
 }
 .action__btn-view-a:hover {
 	background: #067d97;
@@ -2054,6 +2056,7 @@ pre {
 	background-color: #218838;
 	border-color: #1e7e34;
 }
+
 /*------------------------------------------------
 # Contacts
 --------------------------------------------------*/
@@ -2181,9 +2184,12 @@ label:focus,
 	font-size: 14px;
 }
 .action-flex {
-	display: flex;
+	/* display: flex;
 	border-top: 1px solid #fff !important;
-	margin-bottom: -1px;
+	margin-bottom: -1px; */
+}
+.actions {
+	
 }
 .card-title-bg {
 	background: #e5e5e5;
@@ -2191,6 +2197,7 @@ label:focus,
 	font-weight: 600;
 	font-size: 1rem
 }
+
 /*------------------------------------------------
 # Componenet CSS
 --------------------------------------------------*/
@@ -2289,3 +2296,4 @@ label:focus,
 	.modal-text-display {
 		display: inline-block;
 	}
+	

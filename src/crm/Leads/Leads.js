@@ -63,28 +63,28 @@ export default function Leads(props) {
       <table className="table">
         <thead>
           <tr>
-            <th width="5%">ID</th>
-            <th width="10%">Title</th>
-            <th width="10%">Created By</th>
-            <th width="10%">Source</th>
-            <th width="5%">Status</th>
-            <th width="20%">Assigned To</th>
-            <th width="20%">Tags</th>
-            <th width="5%">Country</th>
-            <th width="15%">Created On</th>
-            <th width="10%">Actions</th>
+            <th scope="col">ID</th>
+            <th scope="col">Title</th>
+            <th scope="col">Created By</th>
+            <th scope="col">Source</th>
+            <th scope="col">Status</th>
+            <th scope="col">Assigned To</th>
+            <th scope="col">Tags</th>
+            <th scope="col">Country</th>
+            <th scope="col">Created On</th>
+            <th scope="col">Actions</th>
           </tr>
         </thead>
         <tbody>
            {
              leads && leads.map( (lead, index) => {
               return(<tr className="text-center" key={lead.id}>
-                 <td scope="row">{index+1}</td>          
-                 <td><a data-toggle="modal" data-target={`#exampleModalCenter_lead${lead.id}`} href="#">{lead.title}</a></td>
-                 <td><a className="text-capitalize" href={`/users/${lead.created_by.id}/view/`}><img src={lead.created_by.profile_pic} alt={lead.created_by.username} style={{width: "40px", height: "40px"}} title={lead.created_by.email}/></a></td>          
-                 <td className="text-capitalize">{(lead.source) ? lead.source : 'None'}</td>
-                 <td className="text-capitalize">{(lead.status) ? lead.status : 'None'}</td>
-                 <td>{
+                 <td scope="col">{index+1}</td>          
+                 <td scope="col"><a data-toggle="modal" data-target={`#exampleModalCenter_lead${lead.id}`} href="#">{lead.title}</a></td>
+                 <td scope="col"><a className="text-capitalize" href={`/users/${lead.created_by.id}/view/`}><img src={lead.created_by.profile_pic} alt={lead.created_by.username} style={{width: "40px", height: "40px"}} title={lead.created_by.email}/></a></td>          
+                 <td scope="col" className="text-capitalize">{(lead.source) ? lead.source : 'None'}</td>
+                 <td scope="col" className="text-capitalize">{(lead.status) ? lead.status : 'None'}</td>
+                 <td scope="col">{
                     (lead.assigned_to && lead.assigned_to.length !== 0) ?
                       lead.assigned_to.map( assigned_to => {
                         return(                
@@ -113,9 +113,9 @@ export default function Leads(props) {
                         }
                       </div>
                     </td>
-                    <td>{(lead.country) ? lead.country: 'None'}</td>
-                    <td title="Nov. 27, 2020, 4:08 p.m.">{timeFromNow(lead.created_on)}</td>
-                    <td className="actions action-flex">                        
+                    <td scope="col">{(lead.country) ? lead.country: 'None'}</td>
+                    <td scope="col" title="Nov. 27, 2020, 4:08 p.m.">{timeFromNow(lead.created_on)}</td>
+                    <td scope="col" className="actions action-flex">                        
                         <ViewActionButton object={lead} to="leads"/>
                         <EditActionButton object={lead} to="leads"/>
                         <DeleteActionButton stateUpdate={stateUpdate} openLeads={setOpenLeads} closeLeads={setClosedLeads} api={LEADS} id={lead.id} to="leads"/>

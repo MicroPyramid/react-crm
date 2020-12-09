@@ -75,14 +75,14 @@ const Accounts = (props) => {
       <table className="table">
                               <thead>
                                 <tr>
-                                  <th width="5%">ID</th>
-                                  <th width="15%">Name</th>
-                                  <th width="10%">Created By</th>
-                                  <th width="10%">City</th>
-                                  <th width="10%">State</th>
-                                  <th width="10%">Created On</th>
-                                  <th width="18%">Tags</th>
-                                  <th width="15%">Actions</th>
+                                  <th scope="col">ID</th>
+                                  <th scope="col">Name</th>
+                                  <th scope="col">Created By</th>
+                                  <th scope="col">City</th>
+                                  <th scope="col">State</th>
+                                  <th scope="col">Created On</th>
+                                  <th scope="col">Tags</th>
+                                  <th scope="col">Actions</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -97,14 +97,14 @@ const Accounts = (props) => {
 
                                     return(
                                       <tr>
-                                        <td>{index+1}</td>                                        
-                                        <td><a data-toggle="modal" data-target={`#exampleModalCenter_account${account.id}`} href="#">{account.name}</a></td>
-                                        <td><img src={account.created_by.profile_pic} alt={account.created_by.username}></img></td>
-                                        <td>{(account.billing_city) ? account.billing_city : 'Not Specified'}</td>
-                                        <td>{(account.billing_city) ? account.billing_state : 'Not Specified'}</td>
-                                        <td title="Nov. 27, 2020, 4:08 p.m.">{timeFromNow(account.created_on)}</td>
-                                        <td>{tags}</td>
-                                        <td className="actions action-flex">
+                                        <td scope="col">{index+1}</td>                                        
+                                        <td scope="col"><a data-toggle="modal" data-target={`#exampleModalCenter_account${account.id}`} href="#">{account.name}</a></td>
+                                        <td scope="col"><img src={account.created_by.profile_pic} alt={account.created_by.username}></img></td>
+                                        <td scope="col">{(account.billing_city) ? account.billing_city : 'Not Specified'}</td>
+                                        <td scope="col">{(account.billing_city) ? account.billing_state : 'Not Specified'}</td>
+                                        <td scope="col" title="Nov. 27, 2020, 4:08 p.m.">{timeFromNow(account.created_on)}</td>
+                                        <td scope="col">{tags}</td>
+                                        <td scope="col" className="actions action-flex">
                                           <MailActionButton object={account} to="accounts"/>
                                           <ViewActionButton object={account} to="accounts"/>
                                           <EditActionButton object={account} to="accounts"/>
@@ -353,3 +353,4 @@ const Accounts = (props) => {
 }
 
 export default Accounts;
+
