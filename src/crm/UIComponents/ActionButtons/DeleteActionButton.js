@@ -1,5 +1,4 @@
 import React from 'react';
-// import { getApiResults } from '../../Utilities';
 
 export default function DeleteActionButton(props) {
 

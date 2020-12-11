@@ -19,25 +19,15 @@ export default function Leads(props) {
   const [closedLeads, setClosedLeads] = useState([]);
   const [status, setStatus] = useState(true);
   const [isFilterAvailable, setIsFilterAvailable] = useState(false);
-  const [isDisplay, setIsDisplay] = useState('hide');  
-  const [isDisplayFilteredObjects, setIsDisplayFilteredObjects] = useState(true);
+  const [isDisplay, setIsDisplay] = useState('hide');    
   const [assignedUsers, setAssignedUsers] = useState([]);
   const [tags, setTags] = useState([]);
-  const [filterObject, setFilterObject] = useState({title: '', source: '', status: '', filterUsers: [], filterTags: []});  
-  const [filteredResults, setFilteredResults] = useState([]);
+  const [filterObject, setFilterObject] = useState({title: '', source: '', status: '', filterUsers: [], filterTags: []});     
 
   useEffect(() => {    
     setOpenLeads(props.leads.open_leads);
-    setClosedLeads(props.leads.close_leads);    
-  }, []);
-
-  useEffect(() => {
-    let assignedUsersArr = [];
-    let tagsArr = [];    
-    setAssignedUsers(assignedUsersArr);
-    setTags(tagsArr);    
-  }, []);
-    
+    setClosedLeads(props.leads.close_leads);
+  }, []);  
    
   // Updates the state recevied after deleting
   const stateUpdate = (res) => {
@@ -71,7 +61,7 @@ export default function Leads(props) {
               return(<tr className="text-center" key={lead.id}>
                  <td scope="col">{index+1}</td>          
                  <td scope="col"><a data-toggle="modal" data-target={`#exampleModalCenter_lead${lead.id}`} href="#">{lead.title}</a></td>
-                 <td scope="col"><a className="text-capitalize" href={`/users/${lead.created_by.id}/view/`}><img src={lead.created_by.profile_pic} alt={lead.created_by.username} style={{width: "40px", height: "40px"}} title={lead.created_by.email}/></a></td>          
+                 <td scope="col"><a className="text-capitalize mr-1" href={`/users/${lead.created_by.id}/view/`}><img src={lead.created_by.profile_pic} alt={lead.created_by.username} style={{width: "40px", height: "40px"}} title={lead.created_by.email}/></a></td>          
                  <td scope="col" className="text-capitalize">{(lead.source) ? lead.source : 'None'}</td>
                  <td scope="col" className="text-capitalize">{(lead.status) ? lead.status : 'None'}</td>
                  <td scope="col">{
@@ -80,7 +70,7 @@ export default function Leads(props) {
                         return(                
                             <a href={`/users/${assigned_to.id}/view/`} key={assigned_to.id}>
                               <img className="text-capitalize" src={assigned_to.profile_pic} alt={assigned_to.username} title={assigned_to.email} width="40" height="40"/>
-                            </a>                  
+                            </a>
                         )
                       }) : 'None'
                     }</td>

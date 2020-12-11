@@ -12,6 +12,7 @@ import { countries } from '../optionsData';
 import { statuses } from '../optionsData';
 import { sources } from '../optionsData';
 import { Validations } from './Validations';
+import axios from 'axios';
 
 export default function AddLead(props) {
   
@@ -32,8 +33,7 @@ export default function AddLead(props) {
   }
 
   const addTags = event => {    
-    if (event.key === 'Enter' && event.target.value !== "") {
-      // setTags([...tags, {name: event.target.value, slug: event.target.value}]);
+    if (event.key === 'Enter' && event.target.value !== "") {      
       setTags([...tags, event.target.value]);
       event.target.value="";
     }
@@ -47,8 +47,8 @@ export default function AddLead(props) {
     e.preventDefault();
     let targetName = e.target.name;
 
-    const data = new FormData();
-    data.append('attachement', leadObject.attachment);
+    const formData = new FormData();
+    formData.append('attachement', leadObject.attachment);
 
     let validationResults = Validations(leadObject);    
     setErrors(validationResults);
@@ -59,41 +59,39 @@ export default function AddLead(props) {
           break;
       }
     }
-    
-    if (isValidations) {
-      fetch(`${LEADS}`, {
-        method: 'POST',
-        headers: {        
-          'Content-Type': 'application/json',                           
-          Authorization: `jwt ${localStorage.getItem('Token')}`,
-          company: `${localStorage.getItem('SubDomain')}`
-        },
-        body: JSON.stringify({
-          first_name: leadObject.first_name,
-          last_name: leadObject.last_name,
-          account_name: leadObject.account_name,
-          title: leadObject.title,
-          email: leadObject.email,
-          phone: leadObject.phone,
-          website: leadObject.website,
-          description: leadObject.description,
-          status: leadObject.status,        
-          source: leadObject.source,
-          address_line: leadObject.address_line,
-          street: leadObject.street,
-          city: leadObject.city,
-          state: leadObject.state,
-          postcode: leadObject.postcode,
-          country: leadObject.country,
-          tags: tags.join(',')
-        })
-      })
-      .then (res => res.json())
-      .then (res => {                        
-        return res;
-      })
-      .catch(err => err)
+        
+    let config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `jwt ${localStorage.getItem('Token')}`,
+        company: `${localStorage.getItem('SubDomain')}`
+      }
     }
+
+    let data = {
+        first_name: leadObject.first_name,
+        last_name: leadObject.last_name,
+        account_name: leadObject.account_name,
+        title: leadObject.title,
+        email: leadObject.email,
+        phone: leadObject.phone,
+        website: leadObject.website,
+        description: leadObject.description,
+        status: leadObject.status,        
+        source: leadObject.source,
+        address_line: leadObject.address_line,
+        street: leadObject.street,
+        city: leadObject.city,
+        state: leadObject.state,
+        postcode: leadObject.postcode,
+        country: leadObject.country,
+        tags: tags.join(',')
+    }
+
+    if(isValidations) {
+      axios.post(`${LEADS}`, data, config).then( res => res);
+    }
+
   }
 
   return (
@@ -169,20 +167,7 @@ export default function AddLead(props) {
                                         value={leadObject.country} getInputValue={handleChange} options={countries}/>
                   </div>
                   </div>
-
-                  {/* <div class="filter_col col-12">
-                    <div class="form-group">
-                      <label>Tags</label>
-                      <div className="tags-input">                              
-                        <ul></ul>
-                        <input
-                          className="tags-input__input"
-                          type="text"                              
-                          placeholder="add a tag"
-                        />                              
-                      </div>
-                    </div>
-                  </div> */}
+                  
                   <div class="filter_col col-12">
                           <div class="form-group">
                             <label>Tags</label>

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { ACCOUNTS, LEADS } from '../../common/apiUrls';
+import { ACCOUNTS, CONTACTS, LEADS } from '../../common/apiUrls';
 import BreadCrumb from '../UIComponents/BreadCrumb/BreadCrumb';
 import TextInput from '../UIComponents/Inputs/TextInput';
 import PhoneInput from '../UIComponents/Inputs/PhoneInput';
@@ -10,16 +10,16 @@ import SelectComponent from '../UIComponents/Inputs/SelectComponent';
 import ReactSelect from '../UIComponents/ReactSelect/ReactSelect';
 import { Validations } from './Validations';
 import { countries, twoStatus } from '../optionsData';
+import { getApiResults } from '../Utilities';
+import axios from 'axios';
 
 export default function EditAccount(props) {
-
-
-  // const [accountObject, setAccountObject] = useState({});
+  
   const [accountObject, setAccountObject] = useState({
-    name: '', website: '', phone: '', email: '', lead:[], 
+    name: '', website: '', phone: '', email: '',
       billing_address_line: '', billing_street: '', billing_postcode: '',
       billing_city: '', billing_state: '', billing_country: '',
-      status: 'open', contacts: []
+      status: 'open', lead:[], contacts: [],
   });
   const [leads, setLeads] = useState([]);
   const [availableLeads, setAvailableLeads] = useState([]);
@@ -31,58 +31,57 @@ export default function EditAccount(props) {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
+    getContacts();
+    getLeads();
     getAccount();    
-    let leadsArray = [];
-    let contactsArray = [];
-    props.leads.open_leads && props.leads.open_leads.map( lead => {      
-      leadsArray.push({label: lead.title, value: lead.title, lead: lead});
-    })
-    setLeads(leadsArray);    
-    props.contacts.contact_obj_list && props.contacts.contact_obj_list.map ( contact => {      
-      contactsArray.push({label: contact.first_name, value: contact.first_name, id: contact.id, contact: contact});
-    })
-    setContacts(contactsArray);
   }, []);
 
 
-  
+  const getContacts = () => {    
+    let contactsResults = getApiResults(CONTACTS);
+    let contactsArray = [];
+    contactsResults.then( result => {
+      result.data.contact_obj_list.map( contact => {
+        contactsArray.push({label: contact.first_name, value: contact.first_name, id: contact.id});
+      })
+      setContacts(contactsArray);
+    })}
 
+  const getLeads = () => {
+    let leadsResults = getApiResults(LEADS);    
+    let mergedLeads, leadsArray = [];
+    leadsResults.then( result => {
+      mergedLeads = result.data.open_leads.concat(result.data.close_leads);
+      mergedLeads.map(lead => leadsArray.push({label: lead.title, value: lead.title, id: lead.id}));
+    })
+    setLeads(leadsArray);
+  }
+  
   const getAccount = () => {
     let userId = window.location.pathname.split('/')[2];
-    fetch(`${ACCOUNTS}${userId}/`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `jwt ${localStorage.getItem('Token')}`,
-        company: `${localStorage.getItem('SubDomain')}`,
-      }
-    })
-    .then(res => res.json())
-    .then(res => {
-      setAccountObject(res.account_obj);
-      let availableContactsArr = [];      
-      res.account_obj.contacts.map( contact => {
-        availableContactsArr.push({value: contact.first_name, label: contact.first_name, id: contact.id});        
-      })      
-      setAvailableContacts(availableContactsArr);      
-    })
-  }  
-  
+    let account = getApiResults(`${ACCOUNTS}${userId}/`);    
+    account.then( acc => {      
+      setAccountObject({...accountObject, name: acc.data.account_obj.name,
+        website: acc.data.account_obj.website,
+        phone: acc.data.account_obj.phone,
+        email: acc.data.account_obj.email,
+        billing_address_line: acc.data.account_obj.billing_address_line,
+        billing_street: acc.data.account_obj.billing_street,
+        billing_postcode: acc.data.account_obj.billing_postcode,
+        billing_street: acc.data.account_obj.billing_street,
+        billing_city: acc.data.account_obj.billing_city,
+        billing_state: acc.data.account_obj.billing_state,
+        billing_country: acc.data.account_obj.billing_country,
+        status: acc.data.account_obj.status,
+        lead: {label: acc.data.account_obj.lead.title, value: acc.data.account_obj.lead.title, id: acc.data.account_obj.lead.id},        
+        contacts: acc.data.account_obj.contacts.map( contact =>  ({label: contact.first_name, value: contact.first_name, id: contact.id}))
+      });      
+    })    
+  }
+
   const handleChange = (e) => {    
     setAccountObject({...accountObject, [e.target.name]: e.target.value})    
   }  
-
-  const updateContacts = (e) => {       
-    let contactsArray = [];    
-    e && e.map(contact => {
-      contactsArray.push({value: contact.value, label: contact.value, id: contact.id});
-    })
-    setAvailableContacts(contactsArray);
-  }
-
-  const updateLeads = (e) => {        
-    setAvailableLeads({value: e.lead.title , label: e.lead.title , id: e.lead.id});    
-  }
 
   const addTags = event => {    
     if (event.key === 'Enter' && event.target.value !== "") {      
@@ -102,44 +101,61 @@ export default function EditAccount(props) {
 
   const updateAccount = (e) => {
     e.preventDefault();
-    
+    let userId = window.location.pathname.split('/')[2];
+
+    // Retrieving contacts
     let contactsArr = [];
     availableContacts.map(contact => {
       contactsArr.push(contact.id);
     })
 
+    // Creating formData for file
     const formData = new FormData();    
-    formData.append("contact_attachment" , file);    
-    
-    let userId = window.location.pathname.split('/')[2];
-    fetch(`${ACCOUNTS}${userId}/`, {
-      method: 'PUT',
+    formData.append("contact_attachment" , file);        
+
+    // Validations
+    let validationResults = Validations(accountObject);    
+    setErrors(validationResults);
+    for (let i in validationResults) {      
+      if (validationResults[i].length > 0) {
+          setIsValidations(false);
+          break;
+      }
+    }      
+
+    let config = {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `jwt ${localStorage.getItem('Token')}`,
-        company: `${localStorage.getItem('SubDomain')}`,
-      },
-      body: JSON.stringify({
-          name: accountObject.name,
-          website: accountObject.website,
-          phone: accountObject.phone,
-          email: accountObject.email,
-          lead: availableLeads.id,
-          billing_address_line: accountObject.billing_address_line,
-          billing_street: accountObject.billing_street,
-          billing_postcode: accountObject.billing_postcode, 
-          billing_city: accountObject.billing_city,
-          billing_state: accountObject.billing_state,
-          billing_country: accountObject.billing_country,          
-          status: accountObject.status,
-          contacts: contactsArr,
-          contact_attachment: formData
-          // formData
-      })
-    }).then(res => res.json())
-    .then (res => res);
+        company: `${localStorage.getItem('SubDomain')}`
+      }
+    }    
+
+    let data = {
+      name: accountObject.name,
+      website: accountObject.website,
+      phone: accountObject.phone,
+      email: accountObject.email,
+      lead: accountObject.lead.id,
+      billing_address_line: accountObject.billing_address_line,
+      billing_street: accountObject.billing_street,
+      billing_postcode: accountObject.billing_postcode, 
+      billing_city: accountObject.billing_city,
+      billing_state: accountObject.billing_state,
+      billing_country: accountObject.billing_country,     
+      status: accountObject.status,
+      contacts: accountObject.contacts.map(contact => contact.id),
+      tags: tags.join(','),
+      account_attachment: file
+    }
+    
+    if (isValidations) {
+      axios.put(`${ACCOUNTS}${userId}/`, data, config).then(res => res);
+    }    
+
   }    
 
+  console.log(accountObject);
   return (
     <div id="mainbody" className="main_container" style={{ marginTop: '65px' }}>        
         <BreadCrumb target="accounts" action="create" />
@@ -161,9 +177,9 @@ export default function EditAccount(props) {
                                     value={accountObject.phone} getInputValue={handleChange}/>                                                     
                         <EmailInput elementSize="col-md-12"  labelName="Email"  attrName="email"  attrPlaceholder="Email"  inputId="id_email"  
                                     value={accountObject.email} getInputValue={handleChange} 
-                                    isRequired={true} error={errors.email}/>
-                        <ReactSelect labelName="Leads" options={leads} value={availableLeads} getChangedValue={updateLeads}/>
-                      </div>                      
+                                    isRequired={true} error={errors.email}/>                        
+                        <ReactSelect labelName="Leads" options={leads} value={accountObject.lead} getChangedValue={(e) => setAccountObject({...accountObject, lead: e})}/>
+                      </div>
                       <div class="col-md-4">
                         <div class="filter_col billing_block col-md-12" style={{padding: "0px"}}>                                                    
                           <div class="row" style={{marginTop: "10px"}}>
@@ -178,9 +194,9 @@ export default function EditAccount(props) {
                             <TextInput  elementSize="col-md-6" labelName="State" attrName="billing_state" attrPlaceholder="State" inputId="id_billing_state" 
                                     value={accountObject.billing_state} getInputValue={handleChange} isRequired={true}/>
                             <SelectComponent  elementSize="col-md-12" labelName="Country" attrName="billing_country" attrPlaceholder="Country" attrId="id_billing_country" 
-                                              selectedValue={accountObject.billing_country} getInputValue={handleChange} options={countries} isrequired={true}/>                                                                
+                                              selectedValue={accountObject.billing_country} getInputValue={handleChange} options={countries} isrequired={true}/>                            
                             <ReactSelect  elementSize="col-md-12" labelName="Contacts" isMulti={true} options={contacts} 
-                                          value={availableContacts} getChangedValue={updateContacts}/>
+                                          value={accountObject.contacts} getChangedValue={(e) => setAccountObject({...accountObject, contacts: e})}/>
                           </div>
                         </div>
                       </div>
@@ -216,14 +232,7 @@ export default function EditAccount(props) {
                           </div>
                         </div>                        
                         <FileInput  elementSize="col-md-12" labelName="Attachment" attrName="account_attachment" inputId="id_file"  
-                                    getFile={fileUpload}/>
-                        {/* <div class="filter_col col-md-12">
-                          <div class="form-group">
-                            <label for="exampleInputEmail1">Attachment</label>
-                            <input type="file" name="account_attachment" onChange={fileUpload}></input>                  
-                            <span class="error"></span>
-                          </div>
-                        </div> */}
+                                    getFile={fileUpload}/>                        
                       </div>
                       <div class="col-md-12">
                         <div class="row marl buttons_row form_btn_row text-center">

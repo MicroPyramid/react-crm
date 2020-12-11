@@ -10,8 +10,12 @@ import ViewActionButton from '../UIComponents/ActionButtons/ViewActionButton';
 import EditActionButton from '../UIComponents/ActionButtons/EditActionButton';
 import DeleteActionButton from '../UIComponents/ActionButtons/DeleteActionButton';
 import Modal from '../UIComponents/Modal/Modal';
+import { getApiResults } from '../Utilities';
+import axios from 'axios';
 
 const Accounts = (props) => {
+
+  console.log(props);
   
   const [isTabActive, setIsTabActive] = useState(true);
   const [openAccounts, setOpenAccounts] = useState([]);
@@ -22,14 +26,22 @@ const Accounts = (props) => {
   const [isDisplayFilteredObjects, setIsDisplayFilteredObjects] = useState(true);
   const [displayOpenAccounts, setDisplayOpenAccounts] = useState([]);
   const [displayClosedAccounts, setDisplayClosedAccounts] = useState([]);
-  // 
+  
   const [status, setStatus] = useState(true);
 
-  useEffect(() => {        
-    setOpenAccounts(props.accounts.open_accounts);
-    setClosedAccounts(props.accounts.close_accounts);    
-  }, []);  
+  let config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `jwt ${localStorage.getItem('Token')}`,
+      company: `${localStorage.getItem('SubDomain')}`
+    }
+  }
 
+  useEffect(() => {            
+    setOpenAccounts(props.accounts.open_accounts);
+    setClosedAccounts(props.accounts.close_accounts);        
+  }, []);
+  
   const stateUpdate = (res) => {    
     setOpenAccounts(res.open_accounts);
     setClosedAccounts(res.closed_accounts);
@@ -136,7 +148,7 @@ const Accounts = (props) => {
   }
 
   const getFilteredAccounts = (e) => {
-    e.preventDefault();
+    e.preventDefault();    
     
     setOpenAccounts(props.accounts.open_accounts);
     setClosedAccounts(props.accounts.close_accounts);

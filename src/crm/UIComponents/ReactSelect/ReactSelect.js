@@ -4,7 +4,7 @@ import Select from 'react-select';
 export default function ReactSelect(props) {
 
   let { elementSize, labelName, isMulti, isDisabled, options, value, getChangedValue } = props;  
-
+  
   return (
     <div className={`filter_col ${elementSize}`}>
       <div className="form-group">
@@ -14,7 +14,7 @@ export default function ReactSelect(props) {
             isDisabled={(isDisabled) ? true : false}
             isMulti={(isMulti) ? true : false}
             options={options}
-            onChange={getChangedValue}
+            onChange={(e) => getChangedValue(e)}
             value={value}
             />
           <span className="error" id="id__teams"></span>

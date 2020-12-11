@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { CONTACTS } from '../../common';
+import {getApiResults} from '../Utilities';
 
 export default class Contacts extends Component {
   
@@ -20,48 +21,26 @@ export default class Contacts extends Component {
   componentDidMount() {
     this.getContacts();
   }
-  
-  /**
-   * @method      getContacts
-   * @description Retrives the contacts and updates to state object
-   */
+ 
 
-  getContacts = () => {
-    fetch(`${CONTACTS}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `jwt ${localStorage.getItem('Token')}`,
-        'company': `${localStorage.getItem('SubDomain')}`,
-      }
+  getContacts = () => {         
+    let contactsResults = getApiResults(`${CONTACTS}`);
+    console.log(contactsResults);
+    contactsResults.then(result => {
+      this.setState({contacts: result.data.contact_obj_list});      
     })
-    .then ( res => res.json())
-    .then ( res => {      
-      this.setState({contacts: res.contact_obj_list});
-      this.setState({isLoading: false})
-    });    
+    this.setState({isLoading: false});
   }
   
-  
-  /**   
-   * @method      searchUsers
-   * @description searches the contact based on the search criteria and updates the table.
-   */
-
   searchUsers = (e) => {
     e.preventDefault();    
     // TODO : Implement searching users 
   }
 
-  /**
-   * @method      displayUsers
-   * @description displays the contacts assigned based on isInitialDisplay boolean property
-   */
-
   displayUsers = () => {
     let newContacts = [];
     if (this.state.isInitialDisplay) {
-      newContacts = [...this.state.contacts];      
+      newContacts = [...this.state.contacts];
     } else {
       newContacts = [...this.state.filteredContacts];
     }
@@ -69,12 +48,12 @@ export default class Contacts extends Component {
     let assigned_to = (user.assigned_to.length !== 0) ?         
           user.assigned_to.map (assigned_user => {
             return (                
-                  <a href={`user/${assigned_user.id}/view/`}>
+                  <a href={`user/${assigned_user.id}/view/`} className="mr-1">
                     <img src={assigned_user.profile_pic} alt={assigned_user.username} title={assigned_user.email} width="40" height="40"></img>
                   </a>                              
             )
           })
-        : <td>None</td>
+        : 'None'
       return(
         <tr style={{textAlign:'center'}}>
           <td scope="col">{index+1}</td>
@@ -100,11 +79,6 @@ export default class Contacts extends Component {
     return usersList;
   }
 
-  /**
-   * @method      deleteContact
-   * @description deletes the selected contact   
-   */
-
   deleteContact = (e,id) => {
     e.preventDefault();
     fetch(`${CONTACTS}${id}/`, {
@@ -120,21 +94,10 @@ export default class Contacts extends Component {
     }, 500);
   }
 
-
-  /**
-   * @method      toggleFilter
-   * @description Helps in toggling the Filters
-   */
-
   toggleFilter = () => {    
     this.setState({isFilterAvailable: !this.state.isFilterAvailable});
   }
 
-  /**
-   * @method      clearSearch
-   * @description clears the search fields
-   */
-  
   clearSearch = () => {
     this.setState({isInitialDisplay: true});        
     this.setState({name: '', city: '', assignedTo: ''});

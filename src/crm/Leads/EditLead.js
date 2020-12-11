@@ -12,6 +12,8 @@ import { countries } from '../optionsData';
 import { statuses } from '../optionsData';
 import { sources } from '../optionsData';
 import { Validations } from './Validations';
+import axios from 'axios';
+import {getApiResults} from '../Utilities';
 
 export default function EditLead(props) {
 
@@ -20,27 +22,32 @@ export default function EditLead(props) {
   const [isValidations, setIsValidations] = useState('true');
   const [errors, setErrors] = useState({});
 
+  let config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `jwt ${localStorage.getItem('Token')}`,
+      company: `${localStorage.getItem('SubDomain')}`
+    }
+  }
+
   useEffect(() => {
-    let userId = window.location.pathname.split('/')[2];
-    
-    fetch(`${LEADS}${userId}/`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `jwt ${localStorage.getItem('Token')}`,
-        company: `${localStorage.getItem('SubDomain')}`,
-      }
-    })
-    .then(res => res.json())
-    .then(res => {    
-      setLeadObject(res.lead_obj);      
-      let tagsArr = [];      
-      res.lead_obj.tags.map(tag => {
+    getLeadAndTags();    
+  }, []);
+
+  const getLeadAndTags = () => {
+    let userId = window.location.pathname.split('/')[2];        
+    let leadsResults = getApiResults(`${LEADS}${userId}/`);
+    leadsResults.then(result => {
+      console.log(result.data);
+      console.log(result.data.lead_obj);
+      setLeadObject(result.data.lead_obj);
+      let tagsArr = [];
+      result.data.lead_obj.tags.map(tag => {
         tagsArr.push(tag.name);
       })
-      setTags(tagsArr);      
+      setTags(tagsArr);
     })
-  }, []);
+  }
 
   const handleChange = (e) => {       
     setLeadObject({...leadObject, [e.target.name]: e.target.value});
@@ -58,17 +65,12 @@ export default function EditLead(props) {
   }
 
   const updateLead = (e) => {
+
     e.preventDefault();
     let userId = window.location.pathname.split('/')[2];
-    let targetName = e.target.name;
-    fetch(`${LEADS}${userId}/`, {
-      method: 'PUT',
-      headers: {        
-        'Content-type': 'application/json',        
-        Authorization: `jwt ${localStorage.getItem('Token')}`,
-        company: `${localStorage.getItem('SubDomain')}`
-      },
-      body: JSON.stringify({
+    let targetName = e.target.name;    
+
+    let data = {
         first_name: leadObject.first_name,
         last_name: leadObject.last_name,
         account_name: leadObject.account_name,
@@ -86,15 +88,9 @@ export default function EditLead(props) {
         postcode: leadObject.postcode,
         country: leadObject.country,
         tags: tags.join(',')
-      })
-    })
-    .then (res => res.json())
-    .then (res => {      
-      if (!res.errors && !errors) {
-        if (targetName === 'save') props.history.push('/accounts');
-        if(targetName === 'saveAndNew') window.location.reload();
-      }      
-    });
+    }
+    
+    axios.put(`${LEADS}${userId}/`, data, config).then(res => res);    
   }
   
   return (
@@ -167,18 +163,7 @@ export default function EditLead(props) {
                                         selectedValue={leadObject.country} getInputValue={handleChange} options={countries}/>                                          
                   </div>
                   </div>
-                  <div class="filter_col col-12">
-                    {/* <div class="form-group">
-                      <label>Tags</label>
-                      <div className="tags-input">                              
-                        <ul></ul>
-                        <input
-                          className="tags-input__input"
-                          type="text"                              
-                          placeholder="add a tag"
-                        />                              
-                      </div>
-                    </div> */}
+                  <div class="filter_col col-12">                    
                     <div class="filter_col col-12">
                           <div class="form-group">
                             <label>Tags</label>

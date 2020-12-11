@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+import axios from 'axios';
 import Header from './common/Header';
 import Home from './Home';
 import Login from './auth/Login';
@@ -35,20 +36,23 @@ function App() {
     getApiData();
   }, []);
 
-  const getApiData = () => {    
-    Promise.all([
-      fetch(`${ACCOUNTS}`, { method: 'GET', headers: { 'Content-Type': 'application/json', Authorization: `jwt ${localStorage.getItem('Token')}`, company: `${localStorage.getItem('SubDomain')}`, } }),
-      fetch(`${CONTACTS}`, { method: 'GET', headers: { 'Content-Type': 'application/json', Authorization: `jwt ${localStorage.getItem('Token')}`, company: `${localStorage.getItem('SubDomain')}`, } }),
-      fetch(`${LEADS}`, { method: 'GET', headers: { 'Content-Type': 'application/json', Authorization: `jwt ${localStorage.getItem('Token')}`, company: `${localStorage.getItem('SubDomain')}`, } })        
-      ])
-      .then(async([res1, res2, res3]) => {
-        const accounts = await res1.json();
-        const contacts = await res2.json();
-        const leads = await res3.json();
-        setAccounts(accounts);
-        setContacts(contacts);
-        setLeads(leads);
-      })      
+  const getApiData = () => {
+    let config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `jwt ${localStorage.getItem('Token')}`,
+        company: `${localStorage.getItem('SubDomain')}`
+      },
+    }
+    axios.all([
+      axios.get(`${ACCOUNTS}`, config),
+      axios.get(`${CONTACTS}`, config),
+      axios.get(`${LEADS}`, config)
+    ]).then(axios.spread((res1, res2, res3) => {
+      setAccounts(res1.data);
+      setContacts(res2.data);
+      setLeads(res3.data);
+    }))
   }
   
   
@@ -64,13 +68,11 @@ function App() {
 
           <Route sensitive path={'/dashboard'} component={Dashboard} />
 
-          <Route sensitive exact path={'/accounts'} 
-                  component={ (routerProps) => <Accounts {...routerProps} accounts={accounts}/>} />
-          <Route sensitive path={'/accounts/create'} 
-                  component={ (routerProps) => <AddAccount {...routerProps} contacts={contacts} leads={leads}/>} />
-          <Route sensitive path={'/accounts/:id/edit'} 
-                  component={ (routerProps) => <EditAccount {...routerProps} contacts={contacts} leads={leads}/>} />
-          <Route sensitive path={'/accounts/:id/view'} 
+          <Route sensitive exact path={'/accounts'}
+                  component={ (routerProps) => <Accounts {...routerProps} accounts={accounts}/>} />          
+          <Route sensitive exact path={'/accounts/create'} component={AddAccount}/>
+          <Route sensitive exact path={'/accounts/:id/edit'} component={EditAccount}/>
+          <Route sensitive path={'/accounts/:id/view'}
                   component={ (routerProps) => <ViewAccount {...routerProps} accounts={accounts}/>} />
                   
           <Route sensitive exact path={'/contacts'} component={Contacts} />
@@ -79,11 +81,9 @@ function App() {
           <Route sensitive path={'/contacts/:id/view'} component={ViewContact} />
 
           <Route sensitive exact path={'/leads'}
-                 component={ (routerProps) => <Leads leads={leads}/>} />
-          <Route sensitive path={'/leads/create'}
-                 component={ (routerProps) => <AddLead leads={leads}/>} />
-          <Route sensitive path={'/leads/:id/edit'}
-                 component={ (routerProps) => <EditLead leads={leads}/>} />
+                 component={ (routerProps) => <Leads leads={leads}/>} />          
+          <Route sensitive path={'/leads/create'} component={AddLead} />
+          <Route sensitive path={'/leads/:id/edit'} component={EditLead} />          
           
           <Route sensitive exact path={'/documents'} component={Documents}/>
           <Route sensitive path={'/documents/create'} 

@@ -1,4 +1,5 @@
 import moment from 'moment';
+import axios from 'axios';
 
 export const timeFromNow = (created_on) => {  
   let date = new Date(created_on);
@@ -6,18 +7,13 @@ export const timeFromNow = (created_on) => {
   return moment(customDate, "YYYYMMDD").fromNow()
 }
 
-export const getApiResults = (api) => {
-  fetch(`${api}`, {
-    method: 'GET',
+export const getApiResults = async (api) => {  
+  console.log("Executed ");
+  return await axios.get(api, {    
     headers: {
       'Content-Type': 'application/json',
       Authorization: `jwt ${localStorage.getItem('Token')}`,
       company: `${localStorage.getItem('SubDomain')}`
     }
-  })
-  .then ( res =>  res.json())
-  .then ( async res => {               
-    let result = await res;
-    return result;
-  });
+  }).then( async res => await res);
 }

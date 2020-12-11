@@ -9,70 +9,57 @@ import EmailInput from '../UIComponents/Inputs/EmailInput';
 import TextArea from '../UIComponents/Inputs/TextArea';
 import SelectComponent from '../UIComponents/Inputs/SelectComponent';
 import ReactSelect from '../UIComponents/ReactSelect/ReactSelect';
-import { ACCOUNTS } from '../../common/apiUrls';
+import { ACCOUNTS, CONTACTS, LEADS } from '../../common/apiUrls';
 import { Validations } from './Validations';
 import { countries, twoStatus } from '../optionsData';
+import { getApiResults } from '../Utilities';
+import axios from 'axios';
 
 
 const AddAccount = (props) => {
   
   const [accountObject, setAccountObject] = useState({
-      name: '', website: '', phone: '', email: '', lead:[], 
+      name: '', website: '', phone: '', email: '',
       billing_address_line: '', billing_street: '', billing_postcode: '',
       billing_city: '', billing_state: '', billing_country: '',
-      status: 'open', contacts: []
+      status: 'open', lead:[], contacts: []
     });
   const [leads, setLeads] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [tags, setTags] = useState([]);
   const [file, setFile] = useState('');
   const [isValidations, setIsValidations] = useState('true');
-  const [errors, setErrors] = useState({});
-
-  /**
-   * @method      useEffect
-   * @description updates the leads and contacts
-   */
+  const [errors, setErrors] = useState({});  
 
   useEffect(() => {
-    let leadsArray = [];
-    let contactsArray = [];
-    props.leads.open_leads && props.leads.open_leads.map( lead => {      
-      leadsArray.push({label: lead.title, value: lead.title, lead: lead});
-    })
-    setLeads(leadsArray);    
-    props.contacts.contact_obj_list && props.contacts.contact_obj_list.map ( contact => {      
-      contactsArray.push({label: contact.first_name, value: contact.first_name, id: contact.id, contact: contact});
-    })
-    setContacts(contactsArray);
+    getContacts();
+    getLeads();    
   }, []);
   
+  const getContacts = () => {    
+    console.log("Executed in AddContact");
+    let contactsResults = getApiResults(CONTACTS);
+    let contactsArray = [];
+    contactsResults.then( result => {
+      result.data.contact_obj_list.map( contact => {
+        contactsArray.push({label: contact.first_name, value: contact.first_name, id: contact.id});
+      })
+      setContacts(contactsArray);
+    })}
 
-  /**
-   * @method      handleChange
-   * @description updates the state property based on the name attribute
-   */
+  const getLeads = () => {
+    let leadsResults = getApiResults(LEADS);
+    let mergedLeads, leadsArray = [];
+    leadsResults.then( result => {
+      mergedLeads = result.data.open_leads.concat(result.data.close_leads);
+      mergedLeads.map(lead => leadsArray.push({label: lead.title, value: lead.title, id: lead.id}));
+    })
+    setLeads(leadsArray);
+  }
 
   const handleChange = (e) => {    
     setAccountObject({...accountObject, [e.target.name]: e.target.value})    
-  }  
-
-  /**
-   * @method      updateContacts
-   * @description updates the selected contact ids to accountObject
-   */
-
-  const updateContacts = (e) => {    
-    let contactArray = [];    
-    e && e.map(contact => {
-      contactArray.push((contact.id));
-    })
-    setAccountObject({...accountObject, contacts: contactArray});    
-  }
-
-  const updateLeads = (e) => {    
-    setAccountObject({...accountObject, lead: e.lead.id});
-  }
+  }    
 
   const addTags = event => {    
     if (event.key === 'Enter' && event.target.value !== "") {      
@@ -90,12 +77,6 @@ const AddAccount = (props) => {
     setFile(e.target.files[0]);
   }
 
-
-  /**
-   * @method      saveAccount
-   * @description saves the account 
-   */
-
   const saveAccount = (e) => { 
     e.preventDefault();    
     let targetName = e.target.name;
@@ -108,41 +89,38 @@ const AddAccount = (props) => {
           setIsValidations(false);
           break;
       }
-    }                       
-
-    if (isValidations) {
-      fetch(`${ACCOUNTS}`, {        
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',      
-          Authorization: `jwt ${localStorage.getItem('Token')}`,
-          company: `${localStorage.getItem('SubDomain')}`
-        },
-        body: JSON.stringify({          
-          name: accountObject.name,
-          website: accountObject.website,
-          phone: accountObject.phone,
-          email: accountObject.email,
-          lead: accountObject.lead,
-          billing_address_line: accountObject.billing_address_line,
-          billing_street: accountObject.billing_street,
-          billing_postcode: accountObject.billing_postcode, 
-          billing_city: accountObject.billing_city,
-          billing_state: accountObject.billing_state,
-          billing_country: accountObject.billing_country,          
-          status: accountObject.status,
-          contacts: accountObject.contacts, 
-          tags: tags.join(','),
-          account_attachment: file
-        })
-      })
-      .then ( res => res.json())
-      .then (res => {                           
-        return res;        
-      })
-      .catch(err => err);
+    }      
+    
+    let config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `jwt ${localStorage.getItem('Token')}`,
+        company: `${localStorage.getItem('SubDomain')}`
+      }
     }    
-  } 
+
+    let data = {
+      name: accountObject.name,
+      website: accountObject.website,
+      phone: accountObject.phone,
+      email: accountObject.email,
+      lead: accountObject.lead.id,
+      billing_address_line: accountObject.billing_address_line,
+      billing_street: accountObject.billing_street,
+      billing_postcode: accountObject.billing_postcode, 
+      billing_city: accountObject.billing_city,
+      billing_state: accountObject.billing_state,
+      billing_country: accountObject.billing_country,     
+      status: accountObject.status,
+      contacts: accountObject.contacts.map(contact => contact.id),
+      tags: tags.join(','),
+      account_attachment: file
+    }
+    
+    if (isValidations) {
+      axios.post(`${ACCOUNTS}`, data, config).then(res => res);
+    }    
+  }
 
     return (
       <div id="mainbody" className="main_container" style={{ marginTop: '65px' }}>        
@@ -166,8 +144,8 @@ const AddAccount = (props) => {
                         <EmailInput elementSize="col-md-12"  labelName="Email"  attrName="email"  attrPlaceholder="Email"  inputId="id_email"  
                                     value={accountObject.email} getInputValue={handleChange} 
                                     isRequired={true} error={errors.email}/>
-                        <ReactSelect labelName="Leads" options={leads} getChangedValue={updateLeads}/>
-                      </div>                      
+                        <ReactSelect labelName="Leads" options={leads} value={accountObject.lead} getChangedValue={(e) => setAccountObject({...accountObject, lead: e})}/>
+                      </div>
                       <div className="col-md-4">
                         <div className="filter_col billing_block col-md-12" style={{padding: "0px"}}>
                           <div className="row" style={{marginTop: "10px"}}>
@@ -182,8 +160,9 @@ const AddAccount = (props) => {
                             <TextInput  elementSize="col-md-6" labelName="State" attrName="billing_state" attrPlaceholder="State" inputId="id_billing_state" 
                                     value={accountObject.billing_state} getInputValue={handleChange} isRequired={true}/>
                             <SelectComponent  elementSize="col-md-12" labelName="Country" attrName="billing_country" attrPlaceholder="Country" attrId="id_billing_country" 
-                                        value={accountObject.country} getInputValue={handleChange} options={countries} isrequired={true}/>                                                                
-                            <ReactSelect elementSize="col-md-12" labelName="Contacts" isMulti={true} options={contacts} getChangedValue={updateContacts}/>                            
+                                        value={accountObject.country} getInputValue={handleChange} options={countries} isrequired={true}/>                            
+                            <ReactSelect  elementSize="col-md-12" labelName="Contacts" isMulti={true} options={contacts}
+                                          value={accountObject.contacts} getChangedValue={(e) => setAccountObject({...accountObject, contacts: e})}/>
                           </div>
                         </div>
                       </div>
@@ -219,14 +198,7 @@ const AddAccount = (props) => {
                           </div>
                         </div>                        
                         <FileInput  elementSize="col-md-12" labelName="Attachment" attrName="account_attachment" inputId="id_file"  
-                                    getFile={fileUpload}/>
-                        {/* <div className="filter_col col-md-12">
-                          <div className="form-group">
-                            <label for="exampleInputEmail1">Attachment</label>
-                            <input type="file" name="account_attachment" onChange={fileUpload}></input>                  
-                            <span className="error"></span>
-                          </div>
-                        </div> */}
+                                    getFile={fileUpload}/>                        
                       </div>
                       <div className="col-md-12">
                         <div className="row marl buttons_row form_btn_row text-center">
