@@ -15,6 +15,8 @@ import Modal from '../UIComponents/Modal/Modal';
 
 export default function Leads(props) {
 
+  console.log(props);
+
   const [openLeads, setOpenLeads] = useState([]);
   const [closedLeads, setClosedLeads] = useState([]);
   const [status, setStatus] = useState(true);
@@ -34,6 +36,21 @@ export default function Leads(props) {
     setOpenLeads(res.open_leads);
     setClosedLeads(res.close_leads);
   }
+
+  const getTagsAndAssignedUsers = () => {
+    let tagsArray = [];
+    props.leads.tags.map(tag => {
+      tagsArray.push({value: tag.name, label: tag.name});
+    })
+    setTags(tagsArray);
+
+    let assignedUsers = [];
+    props.leads.users.map(user => {
+      assignedUsers.push({label: user.username, value: user.username});
+    })
+    setAssignedUsers(assignedUsers);
+  }
+  
 
   const displayLeads = (status) => {
 
@@ -135,10 +152,12 @@ export default function Leads(props) {
 
   const toggleFilter = () => {       
     setIsFilterAvailable(!isFilterAvailable);
+
+    // Retrieve tags and assignedUsers only when filters are available
+    if (!isFilterAvailable) getTagsAndAssignedUsers();
   }
 
   const getFilteredLeads = () => {       
-
 
     let mergedLeads, title, source, status, filterUsers, filterTags, results, redundantFilteredUsers = [], redundantFilteredTags = [];    
     mergedLeads = props.leads.open_leads.concat(props.leads.close_leads); 
@@ -148,7 +167,7 @@ export default function Leads(props) {
     status = filterObject.status;
     filterUsers = filterObject.filterUsers;
     filterTags = filterObject.filterTags;
-    
+        
     // Filtering Title
     if (title) {      
       results = mergedLeads.filter( lead => lead.title.toLowerCase().includes(title) );
@@ -168,7 +187,7 @@ export default function Leads(props) {
     } else {      
       results = results;
     }        
-
+    
     // Filtering assigned Users
     if (filterUsers && filterUsers.length !== 0) {
         if (assignedUsers) {
@@ -193,7 +212,7 @@ export default function Leads(props) {
         if (lead.status) {
           return lead.status.includes(status)
         }
-      } );      
+      });
     }
     else {      
       results = results;

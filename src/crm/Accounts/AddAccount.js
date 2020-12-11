@@ -33,7 +33,7 @@ const AddAccount = (props) => {
 
   useEffect(() => {
     getContacts();
-    getLeads();    
+    getLeads();
   }, []);
   
   const getContacts = () => {    

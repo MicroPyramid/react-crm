@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState } from 'react';
 import Select from 'react-select';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
@@ -6,7 +6,7 @@ import { CONTACTS } from '../../common/apiUrls';
 import axios from 'axios';
 import { Validations } from './Validations';
 
-function AddContact() {
+function AddContact(props) {
   
   const [contactObject, setContactObject] = useState({
     first_name: '', last_name: '', phone: '', email: '',      
@@ -15,6 +15,7 @@ function AddContact() {
     errors: {}
   });
   const [file, setFile] = useState([]);
+  const [isValidationsPassed, setIsValidationsPassed] = useState(true);
 
   const handleChange = (e) => {    
     setContactObject({...contactObject, [e.target.name]: e.target.value})    
@@ -30,12 +31,12 @@ function AddContact() {
 
   const saveContact = (e) => {
     e.preventDefault();
-    let targetName = e.target.name;
+    let targetName = e.target.name;    
     let phone = `+${contactObject.phone}`;
 
     let config = {
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json',        
         Authorization: `jwt ${localStorage.getItem('Token')}`,
         company: `${localStorage.getItem('SubDomain')}`
       }
@@ -55,10 +56,33 @@ function AddContact() {
         description: contactObject.description,
     }
 
-    axios.post(`${CONTACTS}`, data, config).then ( res =>  {      
-      setContactObject({...contactObject, errors: res.data.contact_errors});
-    });    
+    let validateData = {
+        first_name: contactObject.first_name,
+        last_name: contactObject.last_name,
+        email: contactObject.email,
+        phone: contactObject.phone
+    }
+    
+    let validationResults = Validations(validateData);
+    setContactObject({...contactObject, errors: validationResults});
+
+    for (let i in validationResults) {      
+      if (validationResults[i].length > 0) {
+        setIsValidationsPassed(false);
+          break;
+      }
+    }
+    
+    if (isValidationsPassed){
+      axios.post(`${CONTACTS}`, data, config)
+          .then ( res =>  res)
+          .catch(err => err);
+    }
+
+    
   }  
+
+  console.log(contactObject);
 
   return(
     <div id="mainbody" className="main_container" style={{ marginTop: '65px' }}>
@@ -69,7 +93,7 @@ function AddContact() {
         </ol>
       </nav>
 
-      <form className="d-flex justify-content-center mt-2" id="add_form" method="POST" action="" novalidate="" enctype="multipart/form-data"
+      <form className="d-flex justify-content-center mt-2" id="add_form" method="POST" action="" novalidate="" enctype=""
       >        
         <div className="col-md-9">
           <div className="card">
@@ -111,11 +135,7 @@ function AddContact() {
                   <div className="form-group">
                     <label for="exampleInputEmail1" className="required">Phone<span className="error">*</span></label>                       
                         <PhoneInput className=""
-                          country={'in'}
-                          // value={this.state.phone}                            
-                          // onChange={phone => {                              
-                          //   this.setState({ phone })
-                          // }}/>
+                          country={'in'}                          
                           onChange={handlePhoneInput}/>
                     <span className="error errro_ft_sz">{contactObject.errors.phone}</span>
                   </div>
@@ -462,23 +482,23 @@ function AddContact() {
               </div>
                 <div className="col-md-4">
                   {/* Descritpion */}
-                <div class="col-md-12">
-                  <div class="form-group">
+                <div className="col-md-12">
+                  <div className="form-group">
                     <label for="exampleInputEmail1">Description</label>
-                    <textarea name="description" class="form-control rounded-0" rows="6" placeholder="Description" 
+                    <textarea name="description" className="form-control rounded-0 descripton-text" rows="6" placeholder="Description" 
                               id="id_description"
                               onChange={handleChange}></textarea>
-                    <span class="error"></span>
+                    <span className="error"></span>
                   </div>
                 </div>
                 {/* Attachement */}
-                <div class="filter_col col-md-12">
-                  <div class="form-group">
+                <div className="filter_col col-md-12">
+                  <div className="form-group">
                     <label for="exampleInputEmail1">Attachment</label>
                     <input type="file" 
                            name="contact_attachment"
                            onChange={handleFileInput}></input>
-                    <span class="error"></span>
+                    <span className="error"></span>
                   </div>
                 </div>
               </div>
@@ -486,7 +506,7 @@ function AddContact() {
                   <div className="row marl buttons_row text-center form_btn_row">
                     <button className="btn btn-default save update_data mr-2" name="save" type="button" onClick={saveContact}>Save</button>                                            
                     <button className="btn btn-success save savenew mr-2" name="saveAndNew" type="button" onClick={saveContact}>Save &amp; New</button>                      
-                    <a href="/contacts" class="btn btn-default clear" id="create_contact_cancel">Cancel</a>
+                    <a href="/contacts" className="btn btn-default clear" id="create_contact_cancel">Cancel</a>
                   </div>
                 </div>
               </div>

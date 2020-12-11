@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import { Component } from 'react';
 import axios from 'axios';
 import Select from 'react-select';
 import PhoneInput from 'react-phone-input-2';
@@ -7,7 +6,8 @@ import 'react-phone-input-2/lib/style.css';
 import { CONTACTS } from '../../common/apiUrls';
 import {getApiResults} from '../Utilities';
 import SelectComponent from '../UIComponents/Inputs/SelectComponent';
-import { countries, twoStatus } from '../optionsData';
+import { countries } from '../optionsData';
+import { Validations } from './Validations';
 
 function EditContact() {
 
@@ -17,6 +17,7 @@ function EditContact() {
     description: '', contact_attachment: '',
     errors: {}
   });
+  const [isValidationsPassed, setIsValidationsPassed] = useState(true);
 
   useEffect(() => {
     getContact();
@@ -26,7 +27,7 @@ function EditContact() {
     let userId = window.location.pathname.split('/')[2];
     let contactsResults = getApiResults(`${CONTACTS}${userId}/`);
     console.log(contactsResults);
-    contactsResults.then( result => {      
+    contactsResults.then( result => {
       setContactObject({...contactObject, 
         first_name: result.data.contact_obj.first_name,
         last_name: result.data.contact_obj.last_name,
@@ -40,7 +41,6 @@ function EditContact() {
         state: result.data.address_obj.state,
         country: result.data.address_obj.country,  
         description: result.data.contact_obj.description,
-
       }); 
     })
   }
@@ -86,11 +86,29 @@ function EditContact() {
         country: contactObject.country,
         description: contactObject.description,
     }
+
+    let validateData = {
+      first_name: contactObject.first_name,
+      last_name: contactObject.last_name,
+      email: contactObject.email,
+      phone: contactObject.phone
+    }
+
+    let validationResults = Validations(validateData);    
+    setContactObject({...contactObject, errors: validationResults});
+
+    for (let i in validationResults) {      
+      if (validationResults[i].length > 0) {
+        setIsValidationsPassed(false);
+          break;
+      }
+    }
     
-    axios.put(`${CONTACTS}${userId}/`, data, config).then ( res => {
-      setContactObject({...contactObject, errors: res.data.contact_errors});
-      console.log(res);
-    })
+    if(isValidationsPassed) {
+      axios.put(`${CONTACTS}${userId}/`, data, config)
+            .then(res => res)
+            .catch(err => err);
+    }
   }
 
   console.log(contactObject);
@@ -99,7 +117,7 @@ function EditContact() {
       <nav aria-label="breadcrumb">
         <ol className="breadcrumb">
           <li className="breadcrumb-item"><a href="/contacts/">Contacts</a></li>
-          <li className="breadcrumb-item active">Create</li>
+          <li className="breadcrumb-item active">Edit</li>
         </ol>
       </nav>
 
@@ -109,7 +127,7 @@ function EditContact() {
           <div className="card">
             <div className="card-body p-0">
               <div className="card-title text-center p-2 card-title-bg">
-                CREATE CONTACT
+                EDIT CONTACT
               </div>
 
               <div className="row marl no-gutters justify-content-center mt-3">    
@@ -247,23 +265,24 @@ function EditContact() {
               </div>
                 <div className="col-md-4">
                   {/* Descritpion */}
-                <div class="col-md-12">
-                  <div class="form-group">
+                <div className="col-md-12">
+                  <div className="form-group">
                     <label for="exampleInputEmail1">Description</label>
-                    <textarea name="description" class="form-control rounded-0" rows="6" placeholder="Description" 
+                    <textarea name="description" className="form-control rounded-0 descripton-text" rows="6" placeholder="Description" 
                               id="id_description"
+                              value={contactObject.description}
                               onChange={handleChange}></textarea>
-                    <span class="error"></span>
+                    <span className="error"></span>
                   </div>
                 </div>
                 {/* Attachement */}
-                <div class="filter_col col-md-12">
-                  <div class="form-group">
+                <div className="filter_col col-md-12">
+                  <div className="form-group">
                     <label for="exampleInputEmail1">Attachment</label>
                     <input type="file" 
                            name="contact_attachment"
                            onChange={handleFileInput}></input>
-                    <span class="error"></span>
+                    <span className="error"></span>
                   </div>
                 </div>
               </div>
@@ -271,7 +290,7 @@ function EditContact() {
                   <div className="row marl buttons_row text-center form_btn_row">
                     <button className="btn btn-default save update_data mr-2" name="save" type="button" onClick={updateContact}>Save</button>                                            
                     <button className="btn btn-success save savenew mr-2" name="saveAndNew" type="button" onClick={updateContact}>Save &amp; New</button>                      
-                    <a href="/contacts" class="btn btn-default clear" id="create_contact_cancel">Cancel</a>
+                    <a href="/contacts" className="btn btn-default clear" id="create_contact_cancel">Cancel</a>
                   </div>
                 </div>
               </div>

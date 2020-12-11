@@ -33,7 +33,8 @@ export default function EditAccount(props) {
   useEffect(() => {
     getContacts();
     getLeads();
-    getAccount();    
+    getAccount(); 
+    console.log("Useeffect in add account");
   }, []);
 
 

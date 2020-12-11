@@ -75,7 +75,9 @@ function App() {
           <Route sensitive path={'/accounts/:id/view'}
                   component={ (routerProps) => <ViewAccount {...routerProps} accounts={accounts}/>} />
                   
-          <Route sensitive exact path={'/contacts'} component={Contacts} />
+          {/* <Route sensitive exact path={'/contacts'} component={Contacts} /> */}
+          <Route sensitive exact path={'/contacts'}
+                 component={ (routerProps) => <Contacts {...routerProps} contacts={contacts}/>} />          
           <Route sensitive path={'/contacts/create'} component={AddContact} />
           <Route sensitive path={'/contacts/:id/edit'} component={EditContact} />
           <Route sensitive path={'/contacts/:id/view'} component={ViewContact} />

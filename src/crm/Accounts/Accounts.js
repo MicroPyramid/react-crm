@@ -39,7 +39,7 @@ const Accounts = (props) => {
 
   useEffect(() => {            
     setOpenAccounts(props.accounts.open_accounts);
-    setClosedAccounts(props.accounts.close_accounts);        
+    setClosedAccounts(props.accounts.close_accounts);            
   }, []);
   
   const stateUpdate = (res) => {    
@@ -48,20 +48,10 @@ const Accounts = (props) => {
   }
 
   const getTags = () => {
-    let tagsArray = [];    
-    let newOpenAccounts = [...openAccounts];
-    newOpenAccounts.map(account => {
-      account.tags.map(tag => {
+    let tagsArray = [];
+      props.accounts.tags.map(tag => {
         tagsArray.push({value: tag.name, label: tag.name, tag: tag.name});
-      })
-    })
-
-    let newClosedAccounts = [...closedAccounts];
-    newClosedAccounts.map(account => {
-      account.tags.map(tag => {
-        tagsArray.push({value: tag.name, label: tag.name, tag: tag.name});
-      })
-    })    
+      })    
     setTags(tagsArray);
   }
   
