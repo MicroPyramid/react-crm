@@ -74,7 +74,7 @@ export default function EditAccount(props) {
         billing_state: acc.data.account_obj.billing_state,
         billing_country: acc.data.account_obj.billing_country,
         status: acc.data.account_obj.status,
-        lead: {label: acc.data.account_obj.lead.title, value: acc.data.account_obj.lead.title, id: acc.data.account_obj.lead.id},        
+        lead: (acc.data.account_obj.lead) ? {label: acc.data.account_obj.lead.title, value: acc.data.account_obj.lead.title, id: acc.data.account_obj.lead.id}: '',        
         contacts: acc.data.account_obj.contacts.map( contact =>  ({label: contact.first_name, value: contact.first_name, id: contact.id}))
       });      
     })    

@@ -133,9 +133,32 @@ export default function Leads(props) {
 
     return(
       (mergedModalLeads && mergedModalLeads.map( (lead, index) => {            
-        
+        console.log(lead);
+
+        let leadObject = {
+          name : lead.first_name+' '+lead.last_name,
+          email: lead.email,
+          phone: lead.phone,
+          status: lead.status,
+          titile: lead.title,
+          source: lead.source,
+          website: lead.website,
+          address: lead.address_line+', '+lead.city+', '+lead.state+', '+lead.country+', '+lead.postcode,
+          tags: lead.tags,
+          description: lead.description          
+        }
+
         return(
-          <Modal data={lead} index={index} modalId="lead" heading={lead.title}/>
+          
+          <div>
+            <Modal
+              modalTab="lead"
+              id={lead.id} 
+              object={leadObject}
+              createdBy={lead.created_by.email}
+              createdOn={lead.created_on}
+            />
+          </div>
         )
       }))
     )

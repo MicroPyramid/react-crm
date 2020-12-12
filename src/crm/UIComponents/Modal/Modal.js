@@ -5,15 +5,36 @@ import ArrayDisplay from '../Display/ArrayDisplay';
 
 export default function Modal(props) {  
 
-  let { data, index, modalId, heading } = props;    
+  let { modalTab, id, object, createdBy, createdOn } = props;
+  
+  let accountObject = Object.entries(object);
+  let modalResult = accountObject.map((result, index) => {
+    let key = accountObject[index][0];
+    let value = accountObject[index][1];
+    if (typeof(value) === "string" || typeof(value) === "number") {
+      return (
+        <TextDisplay  elementSize="col-md-4" labelName={key} value={value}/>
+      )
+    } else if (typeof(value) === "object") {
+      let propertyValue;
+      if (key === 'contacts') propertyValue = 'first_name'; 
+      if (key === 'tags') propertyValue = 'name'; 
+      return (
+        <ArrayDisplay elementSize="col-md-4" labelName={key} value={value}
+          property={propertyValue} style={(key === 'contacts') ? 'contactStyle' :
+                                            (key === 'tags') ? 'tagStyle': ''}/>
+      )
+    }
+  })
 
+  
   return (
       
-    <div className="modal fade" id={`exampleModalCenter_${modalId}${data.id}`} tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div className="modal fade" id={`exampleModalCenter_${modalTab}${id}`} tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div className="modal-content">
         <div className="modal-header">
-          <h5 className="modal-title" id="exampleModalLongTitle">{heading}</h5>
+          <h5 className="modal-title" id="exampleModalLongTitle">NAME</h5>
           <button type="button" className="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
@@ -33,53 +54,13 @@ export default function Modal(props) {
                             </h5>
                           </div>
                           
-                          <div className="row marl mine-modal">
-                            
-                            <TextDisplay  elementSize="col-md-12" labelName="Name" attrId="account_name" attrFor="id_name"
-                                            value={data.name}/>
-                            
-                            
-                            <TextDisplay  elementSize="col-md-12" labelName="Name" attrId="account_name" attrFor="id_name"
-                                            value={data.first_name+' '+data.last_name}/>
-                            
-                            
-                            <TextDisplay  elementSize="col-md-12" labelName="Phone" attrId="account_phone" attrFor="id_phone"
-                                          value={data.phone}/>
-                            
-                            
-                            <TextDisplay  elementSize="col-md-12" labelName="Status" attrId="account_status" attrFor="id_status"
-                                          value={data.status}/>                                                                              
-                                                        
-                            
-                            
-                            <TextDisplay  elementSize="col-md-12" labelName="Email" attrId="account_email" attrFor="id_email"                                             
-                                          value={data.email}/>
-                            
-                            
-                            <TextDisplay  elementSize="col-md-12" labelName="Website" attrId="account_website" attrFor="id_website"                                             
-                                          value={data.website}/>    
-                            
-                            
-                            <ArrayDisplay elementSize="col-md-12" labelName="Contacts" attrId="contacts" attrFor="id_contacts" 
-                                          value={data.contacts} property="first_name" style="contact"/>
-                                                                                                                
-                            
-                            <TextDisplay  elementSize="col-md-12" labelName="Billing Address" attrId="account_billing_address" attrFor="id_billing_address"                                             
-                                          value={data.address_line+', '+data.street+', '+data.city+', '+data.state+', '+data.postcode+', '+data.country}/>                                            
-                            
-                            
-                            <ArrayDisplay elementSize="col-md-12" labelName="Assigned Users" attrId="assigned_to" attrFor="id_assigned_to" 
-                                          value={data.assigned_to} property="email" style="assignedUsers"/>
-                            
-                            
-                            <ArrayDisplay elementSize="col-md-12" labelName="Tags" attrId="tags" attrFor="id_tags"
-                                          value={data.tags} property="name" style="tag"/>
-                                                                                      
+                          <div className="row marl mine-modal">                            
+                            { modalResult }
                           </div>  
 
                           <div className="col-md-12">
-                                <div className="created_information">
-                                    Created by <b>{data.email}</b> created on <b title="Nov. 19, 2020, 10:16 a.m.">{timeFromNow(data.created_on)}</b>
+                                <div className="created_information pl-0">
+                                    Created by <b>{createdBy}</b> created on <b title="Nov. 19, 2020, 10:16 a.m.">{timeFromNow(createdOn)}</b>
                                 </div>
                             </div>
 

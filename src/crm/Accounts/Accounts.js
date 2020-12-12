@@ -15,7 +15,7 @@ import axios from 'axios';
 
 const Accounts = (props) => {
 
-  console.log(props);
+  // console.log(props);
   
   const [isTabActive, setIsTabActive] = useState(true);
   const [openAccounts, setOpenAccounts] = useState([]);
@@ -128,10 +128,28 @@ const Accounts = (props) => {
     let mergedModalAccounts = modalOpenAccounts.concat(modalClosedAccounts);
 
     return(
-      (mergedModalAccounts && mergedModalAccounts.map( (account, index) => {            
-
-        return(
-          <Modal data={account} index={index} modalId="account" heading={account.name}/>
+      (mergedModalAccounts && mergedModalAccounts.map( (account, index) => {                    
+        
+        let accountObject = {          
+          name: account.name,
+          phone: account.phone,
+          email: account.email,
+          status: account.status,
+          contacts: account.contacts,
+          lead: account.lead.title,
+          address: account.billing_address_line+', '+account.billing_city+', '+account.billing_state+', '+account.billing_country+', '+account.billing_postcode,
+          contacts: account.contacts,
+          tags: account.tags,                    
+        }
+        
+        return(          
+          <Modal
+                modalTab="account"
+                id={account.id} 
+                object={accountObject}
+                createdBy={account.created_by.email}
+                createdOn={account.created_on}
+                />
         )
       }))
     )

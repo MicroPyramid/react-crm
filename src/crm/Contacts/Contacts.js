@@ -6,7 +6,7 @@ import MailActionButton from '../UIComponents/ActionButtons/MailActionButton';
 import ViewActionButton from '../UIComponents/ActionButtons/ViewActionButton';
 import EditActionButton from '../UIComponents/ActionButtons/EditActionButton';
 import DeleteActionButton from '../UIComponents/ActionButtons/DeleteActionButton';
-
+import Modal from '../UIComponents/Modal/Modal';
 
 export default function Contacts(props) {
 
@@ -17,13 +17,13 @@ export default function Contacts(props) {
   const [filterObject, setFilterObject] = useState({first_name: '', city: '', assignedTo: []});
   
   useEffect(() => {
-    setContacts(props.contacts);
+    setContacts(props.contacts);    
     getAssignedTo();
     
   }, []);
   
   const getAssignedTo = () => {
-  
+    
   }
 
   const stateUpdate = (res) => {    
@@ -73,7 +73,7 @@ export default function Contacts(props) {
               return( 
                 <tr>
                   <td scope="col">{index+1}</td>
-                  <td scope="col"><a href="/#" data-toggle="modal" data-target={`#exampleModalCenter_contact${contact.id}`}>{contact.first_name +' ' + contact.last_name}</a></td>
+                  <td scope="col"><a href="#" data-toggle="modal" data-target={`#exampleModalCenter_contact${contact.id}`}>{contact.first_name +' ' + contact.last_name}</a></td>
                   <td scope="col">{assigned_to}</td>
                   <td scope="col">{(contact.address.city) ? contact.address.city : 'Not Specified'}</td>
                   <td scope="col">{(contact.address.state) ? contact.address.state : 'Not Specified'}</td>
@@ -96,11 +96,37 @@ export default function Contacts(props) {
     
   }
 
+  const displayModalForContacts = () => {
+
+    return(
+      (contacts.contact_obj_list && contacts.contact_obj_list.map( (contact, index) => {
+        console.log(contact);
+        let contactObject = {
+            name: contact.first_name+' '+contact.last_name,
+            email: contact.email,
+            phone: contact.phone,
+            address: contact.address_line+', '+contact.city+', '+contact.state+', '+contact.country+', '+contact.postcode,
+            description: contact.description
+        }
+
+        return(
+          <Modal
+              modalTab="contact"
+              id={contact.id}
+              object={contactObject}
+              createdBy={contact.created_by.email}
+              createdOn={contact.created_on}
+              />
+        )
+      }))  
+    )
+  }
+
   const searchUsers = (e) => {
     e.preventDefault();
     console.log(filterObject);
   }
-  
+    
   const clearSearch = (e) => {
     
   }
@@ -178,6 +204,9 @@ export default function Contacts(props) {
         </div>                     
         
       </div>
+
+      {/* ModalContainer */}
+      { displayModalForContacts() }
     </div>
   )
 }
