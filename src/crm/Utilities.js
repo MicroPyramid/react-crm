@@ -7,8 +7,7 @@ export const timeFromNow = (created_on) => {
   return moment(customDate, "YYYYMMDD").fromNow()
 }
 
-export const getApiResults = async (api) => {  
-  console.log("Executed ");
+export const getApiResults = async (api) => {   
   return await axios.get(api, {    
     headers: {
       'Content-Type': 'application/json',

@@ -13,9 +13,7 @@ import Modal from '../UIComponents/Modal/Modal';
 import { getApiResults } from '../Utilities';
 import axios from 'axios';
 
-const Accounts = (props) => {
-
-  // console.log(props);
+const Accounts = (props) => {  
   
   const [isTabActive, setIsTabActive] = useState(true);
   const [openAccounts, setOpenAccounts] = useState([]);
@@ -248,7 +246,7 @@ const Accounts = (props) => {
     setOpenAccounts(props.accounts.open_accounts);
     setClosedAccounts(props.accounts.close_accounts);  
     setFilterObject({...filterObject, name: '', city: '', tags: []});
-
+    setIsFilterAvailable(!isFilterAvailable);
   }
     
   return(

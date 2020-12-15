@@ -36,8 +36,7 @@ const AddAccount = (props) => {
     getLeads();
   }, []);
   
-  const getContacts = () => {    
-    console.log("Executed in AddContact");
+  const getContacts = () => {     
     let contactsResults = getApiResults(CONTACTS);
     let contactsArray = [];
     contactsResults.then( result => {

@@ -2,8 +2,6 @@ import React from 'react'
 
 export default function ArrayDisplay(props) {
 
-  console.log(props);
-
   let { elementSize, labelName, attrId, attrFor, value, property, style } = props;  
 
   let tagStyle = (style === "tagStyle") ? 'tag' : ''

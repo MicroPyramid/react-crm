@@ -25,8 +25,7 @@ function EditContact() {
 
   const getContact = (e) => {
     let userId = window.location.pathname.split('/')[2];
-    let contactsResults = getApiResults(`${CONTACTS}${userId}/`);
-    console.log(contactsResults);
+    let contactsResults = getApiResults(`${CONTACTS}${userId}/`);    
     contactsResults.then( result => {
       setContactObject({...contactObject, 
         first_name: result.data.contact_obj.first_name,
@@ -110,8 +109,7 @@ function EditContact() {
             .catch(err => err);
     }
   }
-
-  console.log(contactObject);
+  
   return(
     <div id="mainbody" className="main_container" style={{ marginTop: '65px' }}>
       <nav aria-label="breadcrumb">

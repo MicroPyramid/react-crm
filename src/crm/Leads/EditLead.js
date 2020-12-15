@@ -37,9 +37,7 @@ export default function EditLead(props) {
   const getLeadAndTags = () => {
     let userId = window.location.pathname.split('/')[2];        
     let leadsResults = getApiResults(`${LEADS}${userId}/`);
-    leadsResults.then(result => {
-      console.log(result.data);
-      console.log(result.data.lead_obj);
+    leadsResults.then(result => {            
       setLeadObject(result.data.lead_obj);
       let tagsArr = [];
       result.data.lead_obj.tags.map(tag => {

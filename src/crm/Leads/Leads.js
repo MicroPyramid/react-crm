@@ -13,9 +13,7 @@ import Modal from '../UIComponents/Modal/Modal';
 // import {getApiResults} from '../Utilities';
 
 
-export default function Leads(props) {
-
-  console.log(props);
+export default function Leads(props) { 
 
   const [openLeads, setOpenLeads] = useState([]);
   const [closedLeads, setClosedLeads] = useState([]);
@@ -51,7 +49,6 @@ export default function Leads(props) {
     setAssignedUsers(assignedUsers);
   }
   
-
   const displayLeads = (status) => {
 
     let leads = (status === "open") ? openLeads : closedLeads;  
@@ -132,8 +129,7 @@ export default function Leads(props) {
     let mergedModalLeads = modalOpenLeads.concat(modalClosedLeads);    
 
     return(
-      (mergedModalLeads && mergedModalLeads.map( (lead, index) => {            
-        console.log(lead);
+      (mergedModalLeads && mergedModalLeads.map( (lead, index) => {                   
 
         let leadObject = {
           name : lead.first_name+' '+lead.last_name,
@@ -206,7 +202,7 @@ export default function Leads(props) {
         if (lead.source) {
           return lead.source.includes(source)
         }
-      });      
+      });
     } else {      
       results = results;
     }        
@@ -280,7 +276,8 @@ export default function Leads(props) {
   const clearSearchResults = (e) => {
     setOpenLeads(props.leads.open_leads);
     setClosedLeads(props.leads.close_leads);     
-    setFilterObject({...filterObject, title: '', source: '', status: '', filterUsers: [], filterTags: []});    
+    setFilterObject({...filterObject, title: '', source: '', status: '', filterUsers: [], filterTags: []}); 
+    setIsFilterAvailable(!isFilterAvailable);   
   }
 
   return (
