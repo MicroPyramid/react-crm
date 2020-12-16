@@ -27,21 +27,39 @@ export default function AddLead(props) {
   const [tags, setTags] = useState([]);
   const [isValidations, setIsValidations] = useState('true');
   const [errors, setErrors] = useState({});
+  const [tagErrorStyle, setTagErrorStyle] = useState(''); 
+  const [invalidTag, setIsInvalidTag] = useState([]);    
 
   const handleChange = (e) => {           
     setLeadObject({...leadObject, [e.target.name]: e.target.value});
   }
 
-  const addTags = event => {    
-    if (event.key === 'Enter' && event.target.value !== "") {      
-      setTags([...tags, event.target.value]);
+  const addTags = event => {        
+    event.preventDefault();
+    if (event.key === 'Enter' && event.target.value !== "") {       
+      let val = event.target.value;             
+      if(!tags.includes(val)) {        
+        setTags([...tags, event.target.value]);        
+        setIsInvalidTag('');                
+      }       
       event.target.value="";
-    }
+    }    
   }
 
+  const handleTag = (e) => {    
+    e.preventDefault();
+    if(tags.includes(e.target.value)) {
+      setTagErrorStyle('invalid_tag');      
+    }else{
+      setTagErrorStyle('');      
+    }    
+    setIsInvalidTag(e.target.value);    
+  }
   const removeTags = index => {        
     setTags([...tags.filter(tag => tags.indexOf(tag) !== index)]);
   }
+
+
 
   const saveLead = (e) => {
     e.preventDefault();
@@ -169,29 +187,30 @@ export default function AddLead(props) {
                   </div>
                   
                   <div class="filter_col col-12">
-                          <div class="form-group">
+                    <div className="form-group">
                             <label>Tags</label>
 
-                            <div className="tags-input">
-                              <ul>
+                            <div className="tags-wrapper">                              
+                                <ul className="tags-ul">                                  
                                   {tags.map((tag, index) => (
                                     <li
-                                      key={index}>
-                                      <span>{tag}</span>
+                                      className="tag-list-item" key={index}>
+                                      <span className={`${tag}`}>{tag}</span>
                                       <b onClick={() => removeTags(index)}>x</b>
                                     </li>
                                   ))}
-                              </ul>
-                              <input
-                                className="tags-input__input"
-                                type="text"
-                                onKeyUp={event => addTags(event)}
-                                placeholder="add a tag"
-                              />                              
+                                </ul>
+                                <input                                
+                                  className={`tags-input ${tagErrorStyle}`}
+                                  type="text"
+                                  onKeyUp={event => addTags(event)}                                  
+                                  placeholder="add a tag"
+                                  value={invalidTag}                                  
+                                  onChange={(e) => {handleTag(e)}}
+                                />                                 
                             </div>
-
-                          </div>
-                        </div> 
+                    </div>   
+                  </div> 
                 </div>
                 <br></br>
 

@@ -2056,7 +2056,56 @@ pre {
 	background-color: #218838;
 	border-color: #1e7e34;
 }
-
+.tags-wrapper {
+	border: 1px solid #ccc;
+	height: 100px;	
+	justify-content: flex-start;
+	align-items: flex-start;
+	overflow: scroll;
+	padding-left: -10px;		
+}
+.tags-ul {	
+	padding: 0;	
+	margin-left: 5px;
+	margin-top: 5px;
+}
+.tag-list-item {
+	float: left;
+	list-style-type: none;
+	padding: 0;
+	font-size: 13px;
+	margin-right: 5px;
+	margin-bottom: 5px;
+	background: #cde69c;
+	color: #638421;
+	border: 1px solid #a5d24a;
+	border-radius: 2px;
+	padding: 5px 4px;
+}
+.tag-list-item b {
+	padding: 0px 2px 0px 8px;	
+	color: #7ba822;	
+	font-size: 12px;
+	cursor: pointer;
+}
+.tags-input {
+	width: 68px;
+	margin-left: 10px;
+	border: none;
+	display: block;
+	margin-top: -10px;	
+	margin-right: 0px;
+	font-size: 13px;	
+}
+.tags-input::placeholder {
+	font-size: 13px;		
+}
+.invalid_tag {
+	background: #FBD8DB;
+	color: #90111A;
+	padding: 5px;
+	padding: 5px 5px 5px 5px;	
+}
 /*------------------------------------------------
 # Contacts
 --------------------------------------------------*/
@@ -2185,14 +2234,6 @@ label:focus,
 ::placeholder {
 	font-size: 14px;
 }
-.action-flex {
-	/* display: flex;
-	border-top: 1px solid #fff !important;
-	margin-bottom: -1px; */
-}
-.actions {
-	
-}
 .card-title-bg {
 	background: #e5e5e5;
 	padding: 6px 10px;
@@ -2226,45 +2267,8 @@ label:focus,
 	}
 	
 
-	.tags-input {		
-		border: 1px solid #e6e6e6;
-		height: 100px;			
-		overflow: scroll;				
-	}
-	.tags-input ul {
-		display: flex;
-		justify-items: flex-start;
-		flex-wrap: wrap;
-		padding: 0;
-		margin: 0;
-	}	
-	.tags-input__input {		
-		border: none;
-	}
-	.tags-input ul li {
-		list-style-type: none;
-		margin: 5px 5px 5px 5px;		
-		padding: 3px;		
-		border-radius: 2px;			
-		background: #cde69c;
-		color: #638421;
-		border: 1px solid #a5d24a;	
-	}
-	.tags-input ul li span {
-		font-size: 13px;
-	}
-	.tags-input ul li b {
-		font-size: 12px;
-		padding-left: 8px;
-		color: #82ad2b;
-		cursor: pointer;
-	}
-	.tags-input input[type="text"]::placeholder {
-		display: none;
-	}
-	.tags-container {
-		display: flex;
-	}
+
+	
 
 	/* Modal */
 	.tag {

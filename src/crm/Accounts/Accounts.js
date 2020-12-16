@@ -126,15 +126,14 @@ const Accounts = (props) => {
     let mergedModalAccounts = modalOpenAccounts.concat(modalClosedAccounts);
 
     return(
-      (mergedModalAccounts && mergedModalAccounts.map( (account, index) => {                    
-        
+      (mergedModalAccounts && mergedModalAccounts.map( (account, index) => {                            
         let accountObject = {          
           name: account.name,
           phone: account.phone,
           email: account.email,
           status: account.status,
           contacts: account.contacts,
-          lead: account.lead.title,
+          lead: (account.lead !== null) ? account.lead.title : '',
           address: account.billing_address_line+', '+account.billing_city+', '+account.billing_state+', '+account.billing_country+', '+account.billing_postcode,
           contacts: account.contacts,
           tags: account.tags,                    
