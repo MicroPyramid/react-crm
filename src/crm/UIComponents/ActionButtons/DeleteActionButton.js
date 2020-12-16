@@ -16,20 +16,21 @@ export default function DeleteActionButton(props) {
         }
       });
       
-      setTimeout( () => {      
-        fetch(`${api}/`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `jwt ${localStorage.getItem('Token')}`,
-            company: `${localStorage.getItem('SubDomain')}`
-          }
-        })
-        .then (res => res.json())
-        .then (res => {
-          props.stateUpdate(res);
-        });
-      }, 300);         
+      // setTimeout( () => {   
+      //   console.log(api);
+      //   fetch(`${api}/`, {
+      //     method: 'GET',
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //       Authorization: `jwt ${localStorage.getItem('Token')}`,
+      //       company: `${localStorage.getItem('SubDomain')}`
+      //     }
+      //   })
+      //   .then (res => res.json())
+      //   .then (res => {
+      //     props.stateUpdate(res);
+      //   });
+      // }, 300);         
   }
   
   return (

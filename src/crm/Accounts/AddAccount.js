@@ -22,7 +22,7 @@ const AddAccount = (props) => {
       name: '', website: '', phone: '', email: '',
       billing_address_line: '', billing_street: '', billing_postcode: '',
       billing_city: '', billing_state: '', billing_country: '',
-      status: 'open', lead:[], contacts: []
+      status: 'open', lead:[], contacts: [], tags: []
     });
   const [leads, setLeads] = useState([]);
   const [contacts, setContacts] = useState([]);
@@ -67,7 +67,7 @@ const AddAccount = (props) => {
     if (event.key === 'Enter' && event.target.value !== "") {       
       let val = event.target.value;             
       if(!tags.includes(val)) {        
-        setTags([...tags, event.target.value]);        
+        setTags([...tags, event.target.value]);         
         setIsInvalidTag('');                
       }       
       event.target.value="";
@@ -84,13 +84,19 @@ const AddAccount = (props) => {
     setIsInvalidTag(e.target.value);    
   }
   
-
   const removeTags = index => {        
     setTags([...tags.filter(tag => tags.indexOf(tag) !== index)]);
   }
   
   const fileUpload = (e) => {       
     setFile(e.target.files[0]);
+  }
+
+  const getAccounts = () => {
+    let accountResults = getApiResults(ACCOUNTS);
+    accountResults.then( result => {
+
+    })
   }
 
   const saveAccount = (e) => { 
@@ -113,29 +119,34 @@ const AddAccount = (props) => {
         Authorization: `jwt ${localStorage.getItem('Token')}`,
         company: `${localStorage.getItem('SubDomain')}`
       }
-    }    
+    }       
+            
+    const formData = new FormData();     
+    formData.append("name", accountObject.name);    
+    formData.append("website", accountObject.website);   
+    formData.append("phone", accountObject.phone);    
+    formData.append("email", accountObject.email);
+    formData.append("lead", accountObject.lead.id);
+    formData.append("billing_address_line", accountObject.billing_address_line);
+    formData.append("billing_street", accountObject.billing_street);
+    formData.append("billing_postcode", accountObject.billing_postcode);
+    formData.append("billing_city", accountObject.billing_city);
+    formData.append("billing_state", accountObject.billing_state);
+    formData.append("billing_country", accountObject.billing_country);    
+    formData.append("contacts", accountObject.contacts.map(contact => contact.id).join(''));        
+    formData.append("status", accountObject.status);
+    formData.append("tags", tags.join(','));
+    formData.append("account_attachment", file);
 
-    let data = {
-      name: accountObject.name,
-      website: accountObject.website,
-      phone: accountObject.phone,
-      email: accountObject.email,
-      lead: accountObject.lead.id,
-      billing_address_line: accountObject.billing_address_line,
-      billing_street: accountObject.billing_street,
-      billing_postcode: accountObject.billing_postcode, 
-      billing_city: accountObject.billing_city,
-      billing_state: accountObject.billing_state,
-      billing_country: accountObject.billing_country,     
-      status: accountObject.status,
-      contacts: accountObject.contacts.map(contact => contact.id),
-      tags: tags.join(','),
-      account_attachment: file
-    }
-    
-    if (isValidations) {
-      axios.post(`${ACCOUNTS}`, data, config).then(res => res);
-    }    
+    if (isValidations) {      
+      axios.post(`${ACCOUNTS}`, formData, config).then(res => {             
+        if(!res.data.error) {
+          if (targetName === 'save') {            
+            props.history.push('/accounts/');                    
+          }
+        }
+      });
+    }          
   }
 
     return (
@@ -156,24 +167,24 @@ const AddAccount = (props) => {
                         <TextInput  elementSize="col-md-12" labelName="Website" attrName="website" attrPlaceholder="Website" inputId="id_website" 
                                     value={accountObject.website} getInputValue={handleChange}/>
                         <PhoneInput elementSize="col-md-12" labelName="Phone" attrName="phone" attrPlaceholder="+911234567890" inputId="id_phone" 
-                                    value={accountObject.phone} getInputValue={handleChange}/>                                                     
+                                    value={accountObject.phone} getInputValue={handleChange} isRequired={true} error={errors.name}/>                                                     
                         <EmailInput elementSize="col-md-12"  labelName="Email"  attrName="email"  attrPlaceholder="Email"  inputId="id_email"  
                                     value={accountObject.email} getInputValue={handleChange} 
                                     isRequired={true} error={errors.email}/>
-                        <ReactSelect labelName="Leads" options={leads} value={accountObject.lead} getChangedValue={(e) => setAccountObject({...accountObject, lead: e})}/>
+                        <ReactSelect elementSize="col-md-12" labelName="Leads" options={leads} value={accountObject.lead} getChangedValue={(e) => setAccountObject({...accountObject, lead: e})}/>
                       </div>
                       <div className="col-md-4">
                         <div className="filter_col billing_block col-md-12" style={{padding: "0px"}}>
-                          <div className="row" style={{marginTop: "10px"}}>
-                          <TextInput  elementSize="col-md-12" labelName="Billing Address" attrName="billing_address_line" attrPlaceholder="Address Line" inputId="id_billing_address_line" 
+                          <div className="row">
+                          <TextInput elementSize="col-md-12" labelName="Billing Address" attrName="billing_address_line" attrPlaceholder="Address Line" inputId="id_billing_address_line" 
                                     value={accountObject.billing_address_line} getInputValue={handleChange} isRequired={true}/>                                    
-                            <TextInput  elementSize="col-md-6" labelName="Street" attrName="billing_street" attrPlaceholder="Street" inputId="id_billing_street" 
+                            <TextInput elementSize="col-md-6" labelName="Street" attrName="billing_street" attrPlaceholder="Street" inputId="id_billing_street" 
                                     value={accountObject.billing_street} getInputValue={handleChange} isRequired={true}/>
-                            <TextInput  elementSize="col-md-6" labelName="Postcode" attrName="billing_postcode" attrPlaceholder="Postcode" inputId="id_billing_postcode" 
+                            <TextInput elementSize="col-md-6" labelName="Postcode" attrName="billing_postcode" attrPlaceholder="Postcode" inputId="id_billing_postcode" 
                                     value={accountObject.billing_postcode} getInputValue={handleChange} isRequired={true}/>
-                            <TextInput  elementSize="col-md-6" labelName="City" attrName="billing_city" attrPlaceholder="City" inputId="id_billing_city" 
+                            <TextInput elementSize="col-md-6" labelName="City" attrName="billing_city" attrPlaceholder="City" inputId="id_billing_city" 
                                     value={accountObject.billing_city} getInputValue={handleChange} isRequired={true}/>
-                            <TextInput  elementSize="col-md-6" labelName="State" attrName="billing_state" attrPlaceholder="State" inputId="id_billing_state" 
+                            <TextInput elementSize="col-md-6" labelName="State" attrName="billing_state" attrPlaceholder="State" inputId="id_billing_state" 
                                     value={accountObject.billing_state} getInputValue={handleChange} isRequired={true}/>
                             <SelectComponent  elementSize="col-md-12" labelName="Country" attrName="billing_country" attrPlaceholder="Country" attrId="id_billing_country" 
                                         value={accountObject.country} getInputValue={handleChange} options={countries} isrequired={true}/>                            
@@ -182,12 +193,11 @@ const AddAccount = (props) => {
                           </div>
                         </div>
                       </div>
-
                       <div className="col-md-4">
-                        <ReactSelect labelName="Teams"/>
-                        <ReactSelect labelName="Users" isDisabled={true}/>
-                        <ReactSelect labelName="Assigned To"/>
-                        <SelectComponent  labelName="Status" attrName="status" attrPlaceholder="Status" attrId="id_status" 
+                        <ReactSelect elementSize="col-md-12" labelName="Teams"/>
+                        <ReactSelect elementSize="col-md-12" labelName="Users" isDisabled={true}/>
+                        <ReactSelect elementSize="col-md-12" labelName="Assigned To"/>
+                        <SelectComponent elementSize="col-md-12" labelName="Status" attrName="status" attrPlaceholder="Status" attrId="id_status" 
                                           value={accountObject.status} getInputValue={handleChange} options={twoStatus}/>
                         <div className="filter_col col-12">
                           <div className="form-group">

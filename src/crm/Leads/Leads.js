@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {timeFromNow} from '../Utilities';
+import {momentTimeFormats} from '../Utilities';
 import { LEADS } from '../../common/apiUrls';
 import TextInput from '../UIComponents/Inputs/TextInput';
 import SelectComponent from '../UIComponents/Inputs/SelectComponent';
@@ -108,7 +108,7 @@ export default function Leads(props) {
                       </div>
                     </td>
                     <td scope="col">{(lead.country) ? lead.country: 'None'}</td>
-                    <td scope="col" title="Nov. 27, 2020, 4:08 p.m.">{timeFromNow(lead.created_on)}</td>
+                    <td scope="col" title={momentTimeFormats(lead.created_on)[1]}>{momentTimeFormats(lead.created_on)[0]}</td>
                     <td scope="col" className="actions action-flex">                        
                         <ViewActionButton object={lead} to="leads"/>
                         <EditActionButton object={lead} to="leads"/>

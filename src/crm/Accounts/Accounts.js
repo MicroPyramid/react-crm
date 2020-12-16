@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import {timeFromNow} from '../Utilities';
+import {momentTimeFormats} from '../Utilities';
 import Select, { createFilter } from 'react-select';
 import { ACCOUNTS } from '../../common/apiUrls';
 import ReactSelect from '../UIComponents/ReactSelect/ReactSelect';
@@ -15,31 +15,28 @@ import axios from 'axios';
 
 const Accounts = (props) => {  
   
-  const [isTabActive, setIsTabActive] = useState(true);
   const [openAccounts, setOpenAccounts] = useState([]);
   const [closedAccounts, setClosedAccounts] = useState([]);  
   const [filterObject, setFilterObject] = useState({ name: '', city: '', tags: []});
   const [isFilterAvailable, setIsFilterAvailable] = useState(false);
   const [tags, setTags] = useState([]);    
-  const [isDisplayFilteredObjects, setIsDisplayFilteredObjects] = useState(true);
-  const [displayOpenAccounts, setDisplayOpenAccounts] = useState([]);
-  const [displayClosedAccounts, setDisplayClosedAccounts] = useState([]);
-  
-  const [status, setStatus] = useState(true);
-
-  let config = {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `jwt ${localStorage.getItem('Token')}`,
-      company: `${localStorage.getItem('SubDomain')}`
-    }
-  }
+  const [isDisplayFilteredObjects, setIsDisplayFilteredObjects] = useState(true);  
+  const [status, setStatus] = useState(true);  
 
   useEffect(() => {            
     setOpenAccounts(props.accounts.open_accounts);
-    setClosedAccounts(props.accounts.close_accounts);            
-  }, []);
+    setClosedAccounts(props.accounts.close_accounts);     
+    updateAccounts();
+  }, []);  
   
+  const updateAccounts = () => {
+    const resAcc = getApiResults(ACCOUNTS);    
+    resAcc.then(res => {
+      setOpenAccounts(res.data.open_accounts);
+      setClosedAccounts(res.data.close_accounts);
+    })
+  }
+
   const stateUpdate = (res) => {    
     setOpenAccounts(res.open_accounts);
     setClosedAccounts(res.closed_accounts);
@@ -93,8 +90,7 @@ const Accounts = (props) => {
                                         return(
                                           <span className={`text-left color${index+1} tag_class_acc`} id="list_tag">{tag.name}</span>
                                         )
-                                    }): 'No Tags';
-
+                                    }): 'No Tags';                                    
                                     return(
                                       <tr>
                                         <td scope="col">{index+1}</td>                                        
@@ -102,13 +98,13 @@ const Accounts = (props) => {
                                         <td scope="col"><img src={account.created_by.profile_pic} alt={account.created_by.username}></img></td>
                                         <td scope="col">{(account.billing_city) ? account.billing_city : 'Not Specified'}</td>
                                         <td scope="col">{(account.billing_city) ? account.billing_state : 'Not Specified'}</td>
-                                        <td scope="col" title="Nov. 27, 2020, 4:08 p.m.">{timeFromNow(account.created_on)}</td>
+                                        <td scope="col" title={momentTimeFormats(account.created_on)[1]}>{momentTimeFormats(account.created_on)[0]}</td>
                                         <td scope="col">{tags}</td>
                                         <td scope="col" className="actions action-flex">
                                           <MailActionButton object={account} to="accounts"/>
                                           <ViewActionButton object={account} to="accounts"/>
                                           <EditActionButton object={account} to="accounts"/>
-                                          <DeleteActionButton stateUpdate={stateUpdate} api={ACCOUNTS} id={account.id} to="accounts"/>         
+                                          <DeleteActionButton stateUpdate={stateUpdate} api={ACCOUNTS} id={account.id} to="accounts"/>
                                         </td>
                                       </tr>
                                     )
@@ -121,12 +117,13 @@ const Accounts = (props) => {
 
   const displayModalForAccounts = () => {
     
-    let modalOpenAccounts = (openAccounts) ? [...openAccounts] : '';
-    let modalClosedAccounts = (closedAccounts) ? [...closedAccounts] : '';
+    let modalOpenAccounts = (openAccounts) ? [...openAccounts] : [];
+    let modalClosedAccounts = (closedAccounts) ? [...closedAccounts] : [];
     let mergedModalAccounts = modalOpenAccounts.concat(modalClosedAccounts);
-
+    
     return(
-      (mergedModalAccounts && mergedModalAccounts.map( (account, index) => {                            
+      (mergedModalAccounts && mergedModalAccounts.map( (account, index) => {  
+                               
         let accountObject = {          
           name: account.name,
           phone: account.phone,
@@ -236,12 +233,10 @@ const Accounts = (props) => {
 
     setOpenAccounts(displayOpenAccounts);
     setClosedAccounts(displayClosedAccounts);
-
-    setIsDisplayFilteredObjects(false);
+    
   }    
 
-  const clearSearchResults = () => {    
-    setIsDisplayFilteredObjects(true);        
+  const clearSearchResults = () => {               
     setOpenAccounts(props.accounts.open_accounts);
     setClosedAccounts(props.accounts.close_accounts);  
     setFilterObject({...filterObject, name: '', city: '', tags: []});

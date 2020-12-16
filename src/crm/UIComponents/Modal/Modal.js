@@ -1,5 +1,5 @@
 import React from 'react';
-import {timeFromNow} from '../../Utilities';
+import {momentTimeFormats} from '../../Utilities';
 import TextDisplay from '../Display/TextDisplay';
 import ArrayDisplay from '../Display/ArrayDisplay';
 
@@ -60,7 +60,7 @@ export default function Modal(props) {
 
                           <div className="col-md-12">
                                 <div className="created_information pl-0">
-                                    Created by <b>{createdBy}</b> created on <b title="Nov. 19, 2020, 10:16 a.m.">{timeFromNow(createdOn)}</b>
+                                    Created by <b>{createdBy}</b> created on <b title={momentTimeFormats(createdOn)[1]}>{momentTimeFormats(createdOn)[0]}</b>
                                 </div>
                             </div>
 

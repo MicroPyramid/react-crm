@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CONTACTS } from '../../common';
-import {getApiResults} from '../Utilities';
+import {momentTimeFormats} from '../Utilities';
 import ReactSelect from '../UIComponents/ReactSelect/ReactSelect';
 import MailActionButton from '../UIComponents/ActionButtons/MailActionButton';
 import ViewActionButton from '../UIComponents/ActionButtons/ViewActionButton';
@@ -73,9 +73,8 @@ export default function Contacts(props) {
                   <td scope="col">{assigned_to}</td>
                   <td scope="col">{(contact.address.city) ? contact.address.city : 'Not Specified'}</td>
                   <td scope="col">{(contact.address.state) ? contact.address.state : 'Not Specified'}</td>
-                  <td scope="col">{contact.created_on_arrow}</td>
-                  <td scope="col">
-                    <MailActionButton object={contact} to="contacts"/>
+                  <td scope="col" title={momentTimeFormats(contact.created_on)[1]}>{momentTimeFormats(contact.created_on)[0]}</td>
+                  <td scope="col">                    
                     <ViewActionButton object={contact} to="contacts"/>
                     <EditActionButton object={contact} to="contacts"/>
                     <DeleteActionButton stateUpdate={stateUpdate} api={CONTACTS} id={contact.id} to="contacts"/>         
