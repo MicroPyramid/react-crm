@@ -11,6 +11,7 @@ import InactiveUsers from './inactiveUsers/InactiveUser';
         show : true,
         term : '' 
     }
+    
     }
 
 componentDidMount(){
