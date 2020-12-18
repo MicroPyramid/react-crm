@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import User from '../users/User'
 
 function Header() {
   const [userMenu, setUserMenu] = useState(false);
@@ -61,13 +62,13 @@ function Header() {
                 <b className="caret"></b>
               </a>
               <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown" style={{ display: userMenu ? 'block' : 'none' }}>
-                <a className="dropdown-item">Users</a>
-                <a className="dropdown-item">Settings</a>
+                <Link to='/user' className="dropdown-item">Users</Link>
+                <Link to='/settings' className="dropdown-item">Settings</Link>
                 <a className="dropdown-item">Change Password</a>
                 <a className="dropdown-item">Profile</a>
                 <a onClick={() => {
                   localStorage.clear()
-                  const redirectUrl = `//bottlecrm.com/validate-domain`
+                  const redirectUrl = `//localhost:3000/validate-domain`
                   window.location.href = redirectUrl;
                 }} 
                   className="dropdown-item"
@@ -75,7 +76,7 @@ function Header() {
                   Logout
                 </a>
               </div>
-            </li>
+            </li> 
           </ul>
         </div>
         </nav>

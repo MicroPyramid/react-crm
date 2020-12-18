@@ -26,7 +26,7 @@ export default class Login extends Component{
           email: this.state.email,
           password: this.state.password
         }
-        fetch(`${DOMAIN}login/`,
+        fetch('https://bottlecrm.com/api/auth/login/',
           { method: 'POST',
             headers: 
               {

@@ -11,7 +11,7 @@ export default class ValidateDomain extends Component {
 
   onClick() {
     if(this.state.domain !== '') {
-    fetch('https://bottlecrm.com/api-common/validate-subdomain/',
+    fetch('https://bottlecrm.com/api/auth/validate-subdomain/',
       { method: 'POST',
         headers: 
           {
@@ -24,7 +24,7 @@ export default class ValidateDomain extends Component {
         if(res.status === "failure") {
           this.setState({ errors: res })
         } else {
-          const redirectUrl = `//${this.state.domain}.bottlecrm.com/login`;
+          const redirectUrl = `//${this.state.domain}.localhost:3000/login`;
           window.location.href = redirectUrl;
         }
       })

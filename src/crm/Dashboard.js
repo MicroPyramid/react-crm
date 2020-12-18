@@ -11,9 +11,9 @@ export default class Dashboard extends Component {
     }
   }
 
-  componentDidMount() {
+  componentDidMount() { 
     if (localStorage.getItem('Token')) {
-      fetch(`${DOMAIN}dashboard/`,
+      fetch('https://bottlecrm.com/api/dashboard/',
         { 
           method: 'GET',
           headers:
@@ -29,7 +29,7 @@ export default class Dashboard extends Component {
           this.setState({ data: response }) 
         })
     } else {
-      const redirectUrl = `//bottlecrm.com/validate-domain`;
+      const redirectUrl = `//localhost:3000/validate-domain`;
       window.location.href = redirectUrl;
     }
   }

@@ -17,11 +17,11 @@ export default class Register extends Component{
       if(this.state.username !== '') {
         if(this.state.email !== '') {
           if(this.state.password !== '') {
-            fetch('https://bottlecrm.com/api-common/registration/',
+            fetch('https://bottlecrm.com/api/auth/register/',
               { method: 'POST',
                 headers: 
                   {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json',    
                     'company': localStorage.getItem('SubDomain')
                   },
                 body: JSON.stringify({ 
