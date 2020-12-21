@@ -23,7 +23,7 @@ class UserCreate extends React.Component{
 }
      onInputChange = e => {
        e.preventDefault()
-      // console.log( e.target.value )
+      console.log( e.target.value )
          this.setState({ [e.target.name] : e.target.value });
       };
      onSubmit = e => {
@@ -32,9 +32,7 @@ class UserCreate extends React.Component{
        apiurl.post('/users/',this.state)
 
         .then((posRes) => {
-            // this.setState({ 
-              //   usersList : posRes.data
-              //  })
+           
               console.log(posRes.data)
          })
              .catch(errRes=> {
@@ -94,10 +92,10 @@ class UserCreate extends React.Component{
   <div class="form-row">
     <div class="form-group col-md-4">
     <label>has_marketing_access</label>
-    <select onChange={this.onInputChange} class="form-control" required >
-    <option selected>.....</option>
-        <option  name="has_marketing_access" value={has_marketing_access}>  false </option>
-        <option  name="has_marketing_access" value={has_marketing_access_true} > true </option>
+    <select name="has_marketing_access" onChange={this.onInputChange} class="form-control" required >
+    <option >.....</option>
+        <option  value={has_marketing_access}>false</option>
+        <option  value={has_marketing_access_true} > true </option>
       </select>
     
     {/* <div class="form-check">
@@ -113,10 +111,10 @@ class UserCreate extends React.Component{
     </div>
     <div class="form-group col-md-4">
     <label>has_sales_access</label>
-    <select onChange={this.onInputChange} class="form-control" required >
-    <option selected>.....</option>
-        <option name="has_sales_access" value={has_sales_access} > false </option>
-        <option name="has_sales_access" value={has_sales_access_true} > true </option>
+    <select  name="has_sales_access" onChange={this.onInputChange} class="form-control" required >
+    <option >.....</option>
+        <option value={has_sales_access} > false </option>
+        <option value={has_sales_access_true} > true </option>
       </select>
     </div>
     <div class="form-group col-md-4">

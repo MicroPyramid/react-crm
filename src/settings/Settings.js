@@ -1,9 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import apiurl from '../api/apiurl'
-//import Filter from './Filter'
-
-
 
 class Settings extends React.Component{
 
@@ -140,33 +137,4 @@ class Settings extends React.Component{
 }
 }
 
-const Filter = () => {
-  return (
-      <div>
-          <form>
-          <input type = "text" value={this.state.search} onChange= {(e) => this.handleChange(e)} />
-          </form>
-      </div>
-  )
-}
 export default Settings;
-
-
-
-    //  let contacts = []
-        //  const searchkey = this.state.search.trim().toLowerCase();
-        //  if(searchkey && searchkey.length>0){
-        //    contacts = contactList.filter( contact => {
-        //        return contact.first_name.toLowerCase().match(searchkey);
-        //    })
-        //  }
-
-        // const inputClass = this.state.isFilterClicked ? 'hide' : '';
-        // const buttonLabel = this.state.isFilterClicked ? 'show input' : 'hide input'
-                  {/* <span>
-        <input type="text" className={inputClass} />
-        <button onClick={this.filterClicked} >          
-          {buttonLabel}
-        </button>
-      </span> */}
-              {/* <button onClick={this.filterClicked} className="btn btn-secondary btn-sm">Filter</button> */}

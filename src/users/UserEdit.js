@@ -14,6 +14,8 @@ class UserEdit extends React.Component{
     has_sales_access : false,
     has_sales_access_true: true,
     has_marketing_access : false,
+    has_marketing_access_true : true,
+
   //  user : ''
 }
  
@@ -24,13 +26,14 @@ class UserEdit extends React.Component{
     const id = this.props.match.params.id
             apiurl.get(`/users/${id}/`)
             .then((posRes) => {
-              this.setState({  //user :  posRes.data.data.user_obj
+              this.setState({ 
                 first_name : posRes.data.data.user_obj.first_name,
                 last_name : posRes.data.data.user_obj.last_name,
                 username : posRes.data.data.user_obj.username,
                 profile_pic : posRes.data.data.user_obj.profile_pic,
                 has_marketing_access : posRes.data.data.user_obj.has_marketing_access,
                 has_sales_access : posRes.data.data.user_obj.has_sales_access
+                 //user :  posRes.data.data.user_obj
               })
                 console.log(posRes.data.data.user_obj)
                         
@@ -41,7 +44,7 @@ class UserEdit extends React.Component{
                         }
 
      onHandleChange = e => {
-      //function={()=>{this.onChangeHandle()}}
+      
        console.log({[e.target.name] : e.target.value })
         this.setState({ ...this.state, [e.target.name] : e.target.value });
       };
@@ -92,18 +95,20 @@ class UserEdit extends React.Component{
     </div>
     <div class="form-group col-md-4">
     <label>has_marketing Access</label>
-    <select onChange={this.onHandleChange} class="form-control" required >
+    <select  name="has_marketing_access" onChange={this.onHandleChange} class="form-control" required >
     <option >.....</option>
-        <option  name="has_marketing_access" value={this.state.has_marketing_access}>  false </option>
-        <option  name="has_marketing_access" value={this.state.has_marketing_access_true} > true </option>
+        <option  value={this.state.has_marketing_access} > false </option>
+        <option  value={this.state.has_marketing_access_true} > true </option>
       </select>
     </div>
     <div class="form-group col-md-4">
     <label>has_sales_access</label>
-    <select onChange={this.onHandleChange} class="form-control" required >
-    <option >.....</option>
-        <option > {this.state.has_sales_access} </option>
-        <option  > true </option>
+    <select  onChange={this.onHandleChange} class="form-control" required >
+    <option name="has_sales_access" >.....</option>
+    <option  value={this.state.has_sales_access}> false </option>
+    <option  value={this.state.has_sales_access_true}> true </option>
+
+        
       </select>
     </div>
     </div>

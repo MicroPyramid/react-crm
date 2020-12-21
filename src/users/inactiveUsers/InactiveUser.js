@@ -19,7 +19,7 @@ componentDidMount(){
     
  .then((posRes) => {
     this.setState({ 
-        inactiveUser : posRes.data
+        inactiveuser : posRes.data.inactive_users
        })
      //  console.log(posRes.data)
  }, (errRes)=> {
@@ -33,39 +33,15 @@ componentDidMount(){
             term : e.target.value
         })
     }
-
-    displayDate = (string) =>{
-        let date = new Date(string)
-         return date.toLocaleDateString();
-      }
     
 
 
     render(){
          const { inactiveuser , term } = this.state
         return (
-            <div className="container-fluid py-5">
-                        
-                        <div className="text-right py-2">
-                        
-                        <Link to ="/users/create" className="btn btn-success mr-2" >Add New User</Link>
-                        
-                        </div>
-         
-         <ul class="nav nav-tabs">
-              <li className="nav-item">
-             <a className="nav-link active" data-toggle="tab" aria-current="page" href="#user">Active User</a>
-              </li>
-               <li className="nav-item">
-               <a className="nav-link" data-toggle="tab" href="#inactive" >Inactive user</a>
-                 </li>
-  
-        </ul>
-        <div className="tab-content">
-            <div className="tab-pane active" id="user">
-
-            <div className="card">
-                <div className="card-header text-right"> <span className="float-left ">Actives Users</span>
+        <div>
+          <div className="card">
+                <div className="card-header text-right"> <span className="float-left ">Inctives Users</span>
                 <input type = "text" value={this.state.term} onChange= {this.handleChange} />
                 </div>
                          <div className="card-body">
@@ -75,12 +51,10 @@ componentDidMount(){
                         <tr>
                             <td>ID</td>
                         <th >Username</th>
-                   <th >Created</th>
+                   
                    <th >Email Address</th>
                    <th >UserRole</th>
-                   <th> Permissions</th>
-                   <th>Status</th>
-                   <th>Actions</th>
+                  <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -94,16 +68,8 @@ componentDidMount(){
                         <tr>
                         <td>{user.id}</td>
                         <td>{user.username}</td>
-                        <td>{this.displayDate(user.date_joined)}</td>
                         <td>{user.email}</td>
                         <td>{user.role}</td>
-                        <td>
-                            { user.has_marketing_access || user.has_sales_access ? 'sales,marketing' : 'null' }
-                           
-                        </td>
-                        <td> 
-                            {user.is_active? 'Active' : 'inactive' }
-                        </td>
                         <td> 
                          {/* <Link to="/users/show" className="btn btn-primary mr-2">View</Link> */}
                            
@@ -124,25 +90,11 @@ componentDidMount(){
                         </div>
                         </div>
                 
-            </div>
-               <div className="tab-pane" id="inactive">
-                  <p>lorem20</p>
-
-                </div>
+           
             
         </div> 
-
-
-
-          </div>
-
-                        
-                    
-                        
-                   
-                   )
+                  )
                 }
-            
             }
-            export default InactiveUsers;
+    export default InactiveUsers;
                         

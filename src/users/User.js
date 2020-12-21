@@ -8,10 +8,11 @@ import InactiveUsers from './inactiveUsers/InactiveUser';
     super();
     this.state= {
         usersList : [],
+        inactiveuser : [],
         show : true,
         term : '' 
     }
-    
+
     }
 
 componentDidMount(){
@@ -19,9 +20,12 @@ componentDidMount(){
     
  .then((posRes) => {
     this.setState({ 
-        usersList : posRes.data.active_users
+        usersList : posRes.data.active_users,
+        inactiveuser : posRes.data.inactive_users
+        
+        
        })
-     //  console.log(posRes.data)
+       console.log(posRes.data)
  }, (errRes)=> {
      console.log(errRes)
      });
@@ -42,7 +46,8 @@ componentDidMount(){
 
 
     render(){
-         const { usersList , term } = this.state
+         const { usersList,inactiveuser , term } = this.state
+         console.log(usersList.length)
         return (
             <div className="container-fluid py-5">
                         
@@ -51,19 +56,16 @@ componentDidMount(){
                         <Link to ="/users/create" className="btn btn-success mr-2" >Add New User</Link>
                         
                         </div>
-         
-         <ul class="nav nav-tabs">
-              <li className="nav-item">
-             <a className="nav-link active" data-toggle="tab" id="active-tab" aria-current="page" href="#user">Active User()</a>
-              </li>
-               <li className="nav-item">
-               <a className="nav-link" data-toggle="tab" id="inactive-tab" href="#inactive" >Inactive user</a>
-                 </li>
-  
-        </ul>
-        <div className="tab-content">
-            <div className="tab-pane active" id="user" aria-labelledby="active-tab">
 
+                        <nav>
+  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <a class="nav-link active" class ="btn btn-success"  id="nav-user-tab" data-toggle="tab" href="#user" role="tab" aria-controls="nav-user" aria-selected="true">Active User({usersList.length})</a>
+    <a class="nav-link"  className="btn btn-primary"  id="nav-inactive-tab"  data-toggle="tab" href="#inactive" role="tab" aria-controls="nav-inactive" aria-selected="false">Inactive User({inactiveuser.length})</a>
+  </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+  <div class="tab-pane fade show active" id="user" role="tabpanel" aria-labelledby="nav-home-tab">
+  <div>
             <div className="card">
                 <div className="card-header text-right"> <span className="float-left ">Actives Users</span>
                 <input type = "text" value={this.state.term} onChange= {this.handleChange} placeholder="Search an user" />
@@ -87,7 +89,7 @@ componentDidMount(){
                         <tbody>
                         {usersList.filter((val)=>{
                             if(term===""){
-                                return val
+                                return val;
                             } else if(val.username.toLowerCase().includes(term.toLowerCase())){
                                 return val;
                             }
@@ -108,9 +110,10 @@ componentDidMount(){
                         <td> 
                          {/* <Link to="/users/show" className="btn btn-primary mr-2">View</Link> */}
                            
-                         <Link to={`/users/edit/${user.id}`} className="btn btn-warning mr-2">Edit</Link>
-                         <Link to ={`/users/delete/${user.id}`} type="button" className="btn btn-danger" data-toggle="modal" data-target="#exampleModal">
-                            Delete </Link>
+                          <Link to={`/users/edit/${user.id}`} className="btn btn-warning mr-2">Edit</Link>
+  
+                          <Link to ={`/users/delete/${user.id}`} className="btn btn-danger">
+                            Delete </Link> 
                             </td>
                        </tr> 
                         ))} 
@@ -122,14 +125,21 @@ componentDidMount(){
                         </div>
                 
             </div>
-               <div className="tab-pane" id="inactive" aria-labelledby="inactive-tab" >
-              
-                  < InactiveUsers />
+            </div>
+      
+     
 
-                </div>
+  <div class="tab-pane fade" id="inactive" role="tabpanel" aria-labelledby="nav-inactive-tab">
+      <InactiveUsers />
+      </div>
+</div> 
+
+
+                        </div>
+
             
-        </div> 
-</div>
+         
+       
 
                  )
                 }
