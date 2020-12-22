@@ -8,12 +8,13 @@ import EmailInput from '../UIComponents/Inputs/EmailInput';
 import TextArea from '../UIComponents/Inputs/TextArea';
 import SelectComponent from '../UIComponents/Inputs/SelectComponent';
 import ReactSelect from '../UIComponents/ReactSelect/ReactSelect';
+import TagsInput from '../UIComponents/Inputs/TagsInput';
 import { countries } from '../optionsData';
 import { statuses } from '../optionsData';
 import { sources } from '../optionsData';
 import { Validations } from './Validations';
 import axios from 'axios';
-import {getApiResults} from '../Utilities';
+import { getApiResults, convertArrayToString} from '../Utilities';
 
 export default function EditLead(props) {
 
@@ -21,6 +22,8 @@ export default function EditLead(props) {
   const [tags, setTags] = useState([]);
   const [isValidations, setIsValidations] = useState('true');
   const [errors, setErrors] = useState({});
+  const [tagErrorStyle, setTagErrorStyle] = useState(''); 
+  const [invalidTag, setIsInvalidTag] = useState([]);
 
   let config = {
     headers: {
@@ -46,16 +49,31 @@ export default function EditLead(props) {
       setTags(tagsArr);
     })
   }
-
+  
   const handleChange = (e) => {       
     setLeadObject({...leadObject, [e.target.name]: e.target.value});
   }
 
-  const addTags = event => {    
-    if (event.key === 'Enter' && event.target.value !== "") {      
-      setTags([...tags, event.target.value]);
+    const addTags = event => {        
+    event.preventDefault();
+    if (event.key === 'Enter' && event.target.value !== "") {       
+      let val = event.target.value;             
+      if(!tags.includes(val)) {        
+        setTags([...tags, event.target.value]);         
+        setIsInvalidTag('');                
+      }
       event.target.value="";
-    }
+    }    
+  }
+
+  const handleTag = (e) => {    
+    e.preventDefault();
+    if(tags.includes(e.target.value)) {
+      setTagErrorStyle('invalid_tag');      
+    }else{
+      setTagErrorStyle('');      
+    }    
+    setIsInvalidTag(e.target.value);    
   }
 
   const removeTags = index => {        
@@ -85,7 +103,7 @@ export default function EditLead(props) {
         state: leadObject.state,
         postcode: leadObject.postcode,
         country: leadObject.country,
-        tags: tags.join(',')
+        tags: convertArrayToString(tags)
     }
     
     axios.put(`${LEADS}${userId}/`, data, config).then(res => res);    
@@ -161,32 +179,12 @@ export default function EditLead(props) {
                                         selectedValue={leadObject.country} getInputValue={handleChange} options={countries}/>                                          
                   </div>
                   </div>
-                  <div class="filter_col col-12">                    
-                    <div class="filter_col col-12">
-                          <div class="form-group">
-                            <label>Tags</label>
-
-                            <div className="tags-input">
-                              <ul>
-                                  {tags.map((tag, index) => (
-                                    <li
-                                      key={index}>
-                                      <span>{tag}</span>
-                                      <b onClick={() => removeTags(index)}>x</b>
-                                    </li>
-                                  ))}
-                              </ul>
-                              <input
-                                className="tags-input__input"
-                                type="text"
-                                onKeyUp={event => addTags(event)}
-                                placeholder="add a tag"                                
-                              />                              
-                            </div>
-
-                          </div>
-                        </div> 
-                  </div>
+                  <TagsInput tags={tags}
+                        removeTags={(index) => removeTags(index)}
+                        addTags={(event) => addTags(event)}
+                        value={invalidTag}
+                        handleTag={(e) => handleTag(e)}
+                        tagErrorStyle={tagErrorStyle}/>
                 </div>
                 <br></br>
 

@@ -7,11 +7,11 @@ import FileInput from '../UIComponents/Inputs/FileInput';
 import EmailInput from '../UIComponents/Inputs/EmailInput';
 import SelectComponent from '../UIComponents/Inputs/SelectComponent';
 import ReactSelect from '../UIComponents/ReactSelect/ReactSelect';
+import TagsInput from '../UIComponents/Inputs/TagsInput';
 import { Validations } from './Validations';
 import { countries, twoStatus } from '../optionsData';
-import { getApiResults } from '../Utilities';
+import { getApiResults, convertArrayToString } from '../Utilities';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 
 export default function EditAccount(props) {
 
@@ -52,7 +52,7 @@ export default function EditAccount(props) {
     })}
 
   const getLeads = () => {
-    let leadsResults = getApiResults(LEADS);    
+    let leadsResults = getApiResults(LEADS);
     let mergedLeads, leadsArray = [];
     leadsResults.then( result => {
       mergedLeads = result.data.open_leads.concat(result.data.close_leads);
@@ -121,8 +121,7 @@ export default function EditAccount(props) {
     let filesArray = [...accountObject.files];  
     let newFile = e.target.files[0];
     filesArray.push(newFile);
-    console.log(newFile);
-    // setAccountObject({...accountObject, files: newFile});
+    console.log(newFile);    
     setAccountObject({...accountObject, files: filesArray});
   }
     
@@ -149,24 +148,10 @@ export default function EditAccount(props) {
 
     let config = {
       headers: {
-        'Content-Type': 'application/json',
-        // 'Content-Type': 'multipart/form-data',
+        'Content-Type': 'application/json',        
         Authorization: `jwt ${localStorage.getItem('Token')}`,
         company: `${localStorage.getItem('SubDomain')}`
       }
-    }
-
-    const makeArrayToString = (arr) => {      
-      let arrString = '';
-      let arrLen = arr.length;
-      for (let i = 0; i < arrLen; i++) {
-        if(i == arrLen-1) {
-          arrString = arrString + `"${arr[i]}"` // "334"
-        } else {
-          arrString = arrString + `"${arr[i]}",` // "332,"
-        }
-      }
-      return '['+arrString+']';  // ["332","334"]
     }
 
     
@@ -182,12 +167,12 @@ export default function EditAccount(props) {
     formData.append("billing_city", accountObject.billing_city);
     formData.append("billing_state", accountObject.billing_state);
     formData.append("billing_country", accountObject.billing_country);
-    formData.append("contacts", makeArrayToString(accountObject.contacts.map(account => account.id)));
+    formData.append("contacts", convertArrayToString(accountObject.contacts.map(account => account.id)));
     formData.append("status", accountObject.status);
-    formData.append("tags", makeArrayToString(tags));    
+    formData.append("tags", convertArrayToString(tags));    
     console.log(accountObject.files);    
     accountObject.files.forEach(file => {      
-      formData.append("account_attachment", file);      
+      formData.append("account_attachment", file);
     })
       
 
@@ -258,33 +243,13 @@ export default function EditAccount(props) {
                         <ReactSelect elementSize="col-md-12" labelName="Users" isDisabled={true}/>
                         <ReactSelect elementSize="col-md-12" labelName="Assigned To"/>
                         <SelectComponent  elementSize="col-md-12" labelName="Status" attrName="status" attrPlaceholder="Status" attrId="id_status" 
-                                          value={accountObject.status} getInputValue={handleChange} options={twoStatus}/>
-
-                        <div className="filter_col col-12">
-                          <div className="form-group">
-                            <label>Tags</label>
-
-                            <div className="tags-wrapper">                              
-                                <ul className="tags-ul">                                  
-                                  {tags.map((tag, index) => (
-                                    <li
-                                      className="tag-list-item" key={index}>
-                                      <span>{tag}</span>
-                                      <b onClick={() => removeTags(index)}>x</b>
-                                    </li>
-                                  ))}
-                                </ul>
-                                <input                                
-                                  className={`tags-input ${tagErrorStyle}`}
-                                  type="text"
-                                  onKeyUp={event => addTags(event)}                                  
-                                  placeholder="add a tag"
-                                  value={invalidTag}                                  
-                                  onChange={(e) => {handleTag(e)}}
-                                />                                 
-                            </div>
-                          </div>
-                        </div>                                        
+                                          value={accountObject.status} getInputValue={handleChange} options={twoStatus}/>                           
+                        <TagsInput tags={tags}
+                              removeTags={(index) => removeTags(index)}
+                              addTags={(event) => addTags(event)}
+                              value={invalidTag}
+                              handleTag={(e) => handleTag(e)}
+                              tagErrorStyle={tagErrorStyle}/>
                        
                         <FileInput  elementSize="col-md-12" labelName="Attachment" attrName="account_attachment" inputId="id_file"  
                                     getFile={fileUpload}/>
@@ -306,8 +271,7 @@ export default function EditAccount(props) {
                       <div class="col-md-12">
                         <div class="row marl buttons_row form_btn_row text-center">
                           <button class="btn btn-default save mr-1" name="save" type="button" id="call_save" onClick={updateAccount}>Save</button>
-                          {/* <a href="/accounts" class="btn btn-default clear" id="create_user_cancel">Cancel</a> */}
-                          <Link href="/accounts" class="btn btn-default clear" id="create_user_cancel">Cancel</Link>
+                          <a href="/accounts" class="btn btn-default clear" id="create_user_cancel">Cancel</a>                          
                         </div>
                       </div>
                     </div>

@@ -7,10 +7,11 @@ import FileInput from '../UIComponents/Inputs/FileInput';
 import EmailInput from '../UIComponents/Inputs/EmailInput';
 import SelectComponent from '../UIComponents/Inputs/SelectComponent';
 import ReactSelect from '../UIComponents/ReactSelect/ReactSelect';
+import TagsInput from '../UIComponents/Inputs/TagsInput';
 import { ACCOUNTS, CONTACTS, LEADS } from '../../common/apiUrls';
 import { Validations } from './Validations';
 import { countries, twoStatus } from '../optionsData';
-import { getApiResults } from '../Utilities';
+import { getApiResults, convertArrayToString } from '../Utilities';
 import axios from 'axios';
 import { getContactsForReactSelect, getLeadsForReactSelect } from '../network';
 
@@ -115,20 +116,6 @@ const AddAccount = (props) => {
         company: `${localStorage.getItem('SubDomain')}`
       }
     }                    
-          
-
-    const makeArrayToString = (arr) => {      
-      let arrString = '';
-      let arrLen = arr.length;
-      for (let i = 0; i < arrLen; i++) {
-        if(i == arrLen-1) {
-          arrString = arrString + `"${arr[i]}"` // "334"
-        } else {
-          arrString = arrString + `"${arr[i]}",` // "332,"
-        }
-      }
-      return '['+arrString+']';  // ["332","334"]
-    }
 
     const formData = new FormData();
     formData.append("name", accountObject.name);
@@ -143,8 +130,8 @@ const AddAccount = (props) => {
     formData.append("billing_state", accountObject.billing_state);
     formData.append("billing_country", accountObject.billing_country);
     formData.append("status", accountObject.status);
-    formData.append("tags", makeArrayToString(tags));    
-    formData.append("contacts", makeArrayToString(
+    formData.append("tags", convertArrayToString(tags));    
+    formData.append("contacts", convertArrayToString(
           accountObject.contacts ? accountObject.contacts.map(contact => contact.id) : []
           ));
     formData.append("account_attachment", file);
@@ -217,34 +204,15 @@ const AddAccount = (props) => {
                         <ReactSelect elementSize="col-md-12" labelName="Users" isDisabled={true}/>
                         <ReactSelect elementSize="col-md-12" labelName="Assigned To"/>
                         <SelectComponent elementSize="col-md-12" labelName="Status" attrName="status" attrPlaceholder="Status" attrId="id_status" 
-                                          value={accountObject.status} getInputValue={handleChange} options={twoStatus}/>
-                        <div className="filter_col col-12">
-                          <div className="form-group">
-                            <label>Tags</label>
-
-                            <div className="tags-wrapper">                              
-                                <ul className="tags-ul">                                  
-                                  {tags.map((tag, index) => (
-                                    <li
-                                      className="tag-list-item" key={index}>
-                                      <span className={`${tag}`}>{tag}</span>
-                                      <b onClick={() => removeTags(index)}>x</b>
-                                    </li>
-                                  ))}
-                                </ul>
-                                <input
-                                  className={`tags-input ${tagErrorStyle}`}
-                                  type="text"
-                                  onKeyUp={event => addTags(event)}                                  
-                                  placeholder="add a tag"
-                                  value={invalidTag}                                  
-                                  onChange={(e) => {handleTag(e)}}
-                                />                                 
-                            </div>
-                          </div>
-                        </div>                        
+                                          value={accountObject.status} getInputValue={handleChange} options={twoStatus}/>                        
+                        <TagsInput tags={tags}
+                              removeTags={(index) => removeTags(index)}
+                              addTags={(event) => addTags(event)}
+                              value={invalidTag}
+                              handleTag={(e) => handleTag(e)}
+                              tagErrorStyle={tagErrorStyle}/>
                         <FileInput  elementSize="col-md-12" labelName="Attachment" attrName="account_attachment" inputId="id_file"  
-                                    getFile={fileUpload}/>                        
+                                    getFile={fileUpload}/>
                       </div>
                       <div className="col-md-12">
                         <div className="row marl buttons_row form_btn_row text-center">

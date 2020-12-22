@@ -8,6 +8,7 @@ import EmailInput from '../UIComponents/Inputs/EmailInput';
 import TextArea from '../UIComponents/Inputs/TextArea';
 import SelectComponent from '../UIComponents/Inputs/SelectComponent';
 import ReactSelect from '../UIComponents/ReactSelect/ReactSelect';
+import TagsInput from '../UIComponents/Inputs/TagsInput';
 import { countries } from '../optionsData';
 import { statuses } from '../optionsData';
 import { sources } from '../optionsData';
@@ -22,7 +23,7 @@ export default function AddLead(props) {
     website: '', description: '', teams: [], users: [], assigned_users: [],
     status: '', source: '',
     address_line: '', street: '', postcode: '',
-    city: '', state: '', country: '',    
+    city: '', state: '', country: '',
   })
   const [tags, setTags] = useState([]);
   const [isValidations, setIsValidations] = useState('true');
@@ -186,31 +187,12 @@ export default function AddLead(props) {
                   </div>
                   </div>
                   
-                  <div class="filter_col col-12">
-                    <div className="form-group">
-                            <label>Tags</label>
-
-                            <div className="tags-wrapper">                              
-                                <ul className="tags-ul">                                  
-                                  {tags.map((tag, index) => (
-                                    <li
-                                      className="tag-list-item" key={index}>
-                                      <span className={`${tag}`}>{tag}</span>
-                                      <b onClick={() => removeTags(index)}>x</b>
-                                    </li>
-                                  ))}
-                                </ul>
-                                <input                                
-                                  className={`tags-input ${tagErrorStyle}`}
-                                  type="text"
-                                  onKeyUp={event => addTags(event)}                                  
-                                  placeholder="add a tag"
-                                  value={invalidTag}                                  
-                                  onChange={(e) => {handleTag(e)}}
-                                />                                 
-                            </div>
-                    </div>   
-                  </div> 
+                  <TagsInput tags={tags}
+                        removeTags={(index) => removeTags(index)}
+                        addTags={(event) => addTags(event)}
+                        value={invalidTag}
+                        handleTag={(e) => handleTag(e)}
+                        tagErrorStyle={tagErrorStyle}/>
                 </div>
                 <br></br>
 

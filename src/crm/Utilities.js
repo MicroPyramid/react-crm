@@ -21,3 +21,16 @@ export const getApiResults = async (api) => {
     }
   }).then( async res => await res);
 }
+
+export const convertArrayToString = (arr) => {      
+  let arrString = '';
+  let arrLen = arr.length;
+  for (let i = 0; i < arrLen; i++) {
+    if(i == arrLen-1) {
+      arrString = arrString + `"${arr[i]}"` // "334"
+    } else {
+      arrString = arrString + `"${arr[i]}",` // "332,"
+    }
+  }
+  return '['+arrString+']';  // ["332","334"]
+}
