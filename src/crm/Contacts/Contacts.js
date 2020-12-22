@@ -10,6 +10,8 @@ import Modal from '../UIComponents/Modal/Modal';
 
 export default function Contacts(props) {  
 
+  // console.log(props);
+
   const [contacts, setContacts] = useState([]);
   const [isFilterAvailable, setIsFilterAvailable] = useState(false);
   const [filterObject, setFilterObject] = useState({first_name: '', city: '', assignedTo: []});
@@ -24,8 +26,8 @@ export default function Contacts(props) {
     
   }
 
-  const stateUpdate = (res) => {    
-    setContacts(res.contacts.contact_obj_list);    
+  const stateUpdate = (res) => {       
+    setContacts(res.contact_obj_list);        
   }
 
   const toggleFilter = () => {       
@@ -157,7 +159,7 @@ export default function Contacts(props) {
     setContacts(props.contacts.contact_obj_list);
     setIsFilterAvailable(!isFilterAvailable);
   }
-
+  
   return (
     <div id="mainbody" className="main_container" style={{ marginTop: '65px' }}>
       <div className="main_container">

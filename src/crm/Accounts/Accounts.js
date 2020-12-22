@@ -1,7 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import {momentTimeFormats} from '../Utilities';
-import Select, { createFilter } from 'react-select';
 import { ACCOUNTS } from '../../common/apiUrls';
 import ReactSelect from '../UIComponents/ReactSelect/ReactSelect';
 import TextInput from '../UIComponents/Inputs/TextInput';
@@ -11,24 +10,26 @@ import EditActionButton from '../UIComponents/ActionButtons/EditActionButton';
 import DeleteActionButton from '../UIComponents/ActionButtons/DeleteActionButton';
 import Modal from '../UIComponents/Modal/Modal';
 import { getApiResults } from '../Utilities';
-import axios from 'axios';
 
 const Accounts = (props) => {  
   
+  console.log(props);
+
   const [openAccounts, setOpenAccounts] = useState([]);
   const [closedAccounts, setClosedAccounts] = useState([]);  
   const [filterObject, setFilterObject] = useState({ name: '', city: '', tags: []});
   const [isFilterAvailable, setIsFilterAvailable] = useState(false);
   const [tags, setTags] = useState([]);    
-  const [isDisplayFilteredObjects, setIsDisplayFilteredObjects] = useState(true);  
   const [status, setStatus] = useState(true);  
 
-  useEffect(() => {            
+  useEffect(() => {
     setOpenAccounts(props.accounts.open_accounts);
-    setClosedAccounts(props.accounts.close_accounts);     
-    updateAccounts();
-  }, []);  
-  
+    setClosedAccounts(props.accounts.close_accounts);              
+    if(props.history.location.pathname === "/accounts/") {
+      updateAccounts();
+    }
+  }, []);    
+
   const updateAccounts = () => {
     const resAcc = getApiResults(ACCOUNTS);    
     resAcc.then(res => {
@@ -44,7 +45,7 @@ const Accounts = (props) => {
 
   const getTags = () => {
     let tagsArray = [];
-      props.accounts.tags.map(tag => {
+    props.accounts.tags && props.accounts.tags.map(tag => {
         tagsArray.push({value: tag.name, label: tag.name, tag: tag.name});
       })    
     setTags(tagsArray);
@@ -90,14 +91,14 @@ const Accounts = (props) => {
                                         return(
                                           <span className={`text-left color${index+1} tag_class_acc`} id="list_tag">{tag.name}</span>
                                         )
-                                    }): 'No Tags';                                    
+                                    }): 'No Tags';
                                     return(
                                       <tr>
-                                        <td scope="col">{index+1}</td>                                        
+                                        <td scope="col">{index+1}</td>
                                         <td scope="col"><a data-toggle="modal" data-target={`#exampleModalCenter_account${account.id}`} href="#">{account.name}</a></td>
                                         <td scope="col"><img src={account.created_by.profile_pic} alt={account.created_by.username}></img></td>
                                         <td scope="col">{(account.billing_city) ? account.billing_city : 'Not Specified'}</td>
-                                        <td scope="col">{(account.billing_city) ? account.billing_state : 'Not Specified'}</td>
+                                        <td scope="col">{(account.billing_state) ? account.billing_state : 'Not Specified'}</td>
                                         <td scope="col" title={momentTimeFormats(account.created_on)[1]}>{momentTimeFormats(account.created_on)[0]}</td>
                                         <td scope="col">{tags}</td>
                                         <td scope="col" className="actions action-flex">
@@ -133,7 +134,7 @@ const Accounts = (props) => {
           lead: (account.lead !== null) ? account.lead.title : '',
           address: account.billing_address_line+', '+account.billing_city+', '+account.billing_state+', '+account.billing_country+', '+account.billing_postcode,
           contacts: account.contacts,
-          tags: account.tags,                    
+          tags: account.tags,
         }
         
         return(          
@@ -336,8 +337,8 @@ const Accounts = (props) => {
                             { (!status) ? displayAccounts("close"): ''}
                           </div>                          
                           { 
-                            (!closedAccounts) ? <h6 className="text-center">Loading Closed Accounts...</h6> : 
-                              (closedAccounts && closedAccounts.length === 0) ? <h6 className="text-center">No Closed Acccount Records Found</h6> : ''                            
+                            (!closedAccounts) ? <h6 className="text-center">Loading Closed Accounts...</h6> :                               
+                              (closedAccounts && closedAccounts.length >! 0) ? <h6 className="text-center">No Closed Acccount Records Found</h6> : ''
                           }
                           <div className="text-center row marl">
                           </div>

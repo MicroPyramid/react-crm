@@ -2,13 +2,13 @@ import React from 'react';
 
 export default function SelectComponent(props) {
   
-  let { elementSize, labelName, attrName, attrPlaceholder, attrId, options, isRequired, selectedValue, value, getInputValue } = props;  
+  let { elementSize, labelName, attrName, attrPlaceholder, attrId, options, isRequired, selectedValue, value, error, getInputValue } = props;  
   
   return (
     <>       
        <div className={`filter_col ${elementSize}`}>
         <div className="form-group">
-          <label for="exampleInputEmail1">{labelName} {(isRequired) ? <span class="error_marker" style={{color:"red"}}>*</span> : ''} </label>
+          <label for="exampleInputEmail1">{labelName} {(isRequired) ? <span className="error_marker" style={{color:"red"}}>*</span> : ''} </label>
           <select name={attrName} 
                   className="form-control rounded-0" 
                   placeholder={attrPlaceholder} 
@@ -24,7 +24,7 @@ export default function SelectComponent(props) {
             })
           }
           </select>
-          <span class="error error_message" id="error_id_status"></span>
+          <span className="error error_message" id="error_id_status">{error}</span>
         </div>
       </div>
     </>

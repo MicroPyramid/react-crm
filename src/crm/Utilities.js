@@ -1,27 +1,19 @@
 import moment from 'moment';
 import axios from 'axios';
 
-export const momentTimeFormats = (created_on) => {  
+export const momentTimeFormats = (created_on) => {
 
-  let date = new Date(created_on);
-
-  let fullYear = date.getFullYear();
-  let month = date.getMonth()+1;
-  let day = date.getUTCDate();      
-
-  let customDate = fullYear + '' + month + '' + day
-    
-  let momentKeys = moment(customDate, 'MMMM Do YYYY, h:mm:ss a'); 
-  let merediam = (date.getHours() > 12) ? 'a.m.' : 'p.m.';  
-
-  let elapsedTime = moment(customDate, "YYYYMMDD").fromNow();   
-  let titleTime = momentKeys._locale._config.monthsShort[month-1]+'. '+month+', '+fullYear+', '+(date.getHours()-12).toString()+':'+(date.getMinutes()).toString()+' '+merediam;
-
-  return [elapsedTime, titleTime];
+  let date = new Date(created_on);      
+  let elapsedTime = moment.utc(created_on).local().startOf('seconds').fromNow();  
+  let momentKeys = moment(created_on);
+  let merediam = (date.getHours() > 12) ? 'p.m.' : 'a.m.';  
+  let titleTime = momentKeys._locale._config.monthsShort[date.getMonth()]+'. '+(date.getMonth()+1)+', '+date.getFullYear()+', '+(date.getHours()-12).toString()+':'+(date.getMinutes()).toString()+' '+merediam;
+  
+  return[ elapsedTime, titleTime]
 }
 
 export const getApiResults = async (api) => {   
-  return await axios.get(api, {    
+  return await axios.get(api, {
     headers: {
       'Content-Type': 'application/json',
       Authorization: `jwt ${localStorage.getItem('Token')}`,

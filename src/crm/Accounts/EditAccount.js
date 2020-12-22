@@ -5,30 +5,34 @@ import TextInput from '../UIComponents/Inputs/TextInput';
 import PhoneInput from '../UIComponents/Inputs/PhoneInput';
 import FileInput from '../UIComponents/Inputs/FileInput';
 import EmailInput from '../UIComponents/Inputs/EmailInput';
-import TextArea from '../UIComponents/Inputs/TextArea';
 import SelectComponent from '../UIComponents/Inputs/SelectComponent';
 import ReactSelect from '../UIComponents/ReactSelect/ReactSelect';
 import { Validations } from './Validations';
 import { countries, twoStatus } from '../optionsData';
 import { getApiResults } from '../Utilities';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 export default function EditAccount(props) {
-  
+
+  // console.log(props);
+
   const [accountObject, setAccountObject] = useState({
     name: '', website: '', phone: '', email: '',
       billing_address_line: '', billing_street: '', billing_postcode: '',
       billing_city: '', billing_state: '', billing_country: '',
-      status: 'open', lead:[], contacts: [],
+      status: 'open', lead:[], contacts: [], files: []
   });
   const [leads, setLeads] = useState([]);
   const [availableLeads, setAvailableLeads] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [availableContacts, setAvailableContacts] = useState([]);
   const [tags, setTags] = useState([]);
-  const [file, setFile] = useState('');
+  const [file, setFile] = useState([]);
   const [isValidations, setIsValidations] = useState('true');
   const [errors, setErrors] = useState({});
+  const [tagErrorStyle, setTagErrorStyle] = useState(''); 
+  const [invalidTag, setIsInvalidTag] = useState([]);    
 
   useEffect(() => {
     getContacts();
@@ -60,7 +64,7 @@ export default function EditAccount(props) {
   const getAccount = () => {
     let userId = window.location.pathname.split('/')[2];
     let account = getApiResults(`${ACCOUNTS}${userId}/`);    
-    account.then( acc => {      
+    account.then( acc => {          
       setAccountObject({...accountObject, name: acc.data.account_obj.name,
         website: acc.data.account_obj.website,
         phone: acc.data.account_obj.phone,
@@ -74,44 +78,64 @@ export default function EditAccount(props) {
         billing_country: acc.data.account_obj.billing_country,
         status: acc.data.account_obj.status,
         lead: (acc.data.account_obj.lead) ? {label: acc.data.account_obj.lead.title, value: acc.data.account_obj.lead.title, id: acc.data.account_obj.lead.id}: '',        
-        contacts: acc.data.account_obj.contacts.map( contact =>  ({label: contact.first_name, value: contact.first_name, id: contact.id}))
-      });      
+        contacts: acc.data.account_obj.contacts.map( contact =>  ({label: contact.first_name, value: contact.first_name, id: contact.id})),        
+        files: acc.data.attachments
+      });
+      setTags(acc.data.account_obj.tags.map( tag => tag.name));
     })    
   }
+
+  console.log(accountObject);
 
   const handleChange = (e) => {    
     setAccountObject({...accountObject, [e.target.name]: e.target.value})    
   }  
 
-  const addTags = event => {    
-    if (event.key === 'Enter' && event.target.value !== "") {      
-      setTags([...tags, event.target.value]);
+  const addTags = event => {        
+    event.preventDefault();
+    if (event.key === 'Enter' && event.target.value !== "") {       
+      let val = event.target.value;             
+      if(!tags.includes(val)) {        
+        setTags([...tags, event.target.value]);         
+        setIsInvalidTag('');                
+      }
       event.target.value="";
-    }
+    }    
+  }
+
+  const handleTag = (e) => {    
+    e.preventDefault();
+    if(tags.includes(e.target.value)) {
+      setTagErrorStyle('invalid_tag');      
+    }else{
+      setTagErrorStyle('');      
+    }    
+    setIsInvalidTag(e.target.value);    
   }
 
   const removeTags = index => {        
     setTags([...tags.filter(tag => tags.indexOf(tag) !== index)]);
   }
   
-  const fileUpload = (e) => { 
+  const fileUpload = (e) => {       
+    let filesArray = [...accountObject.files];  
+    let newFile = e.target.files[0];
+    filesArray.push(newFile);
+    console.log(newFile);
+    // setAccountObject({...accountObject, files: newFile});
+    setAccountObject({...accountObject, files: filesArray});
+  }
+    
 
-    setFile(e.target.files[0]);
+  const removeFile = (createdOn) => {
+      let dupFiles = [...accountObject.files];
+      let remainingFiles = dupFiles.filter(file => file.created_on !== createdOn);
+      setAccountObject({...accountObject, files: remainingFiles});
   }
 
   const updateAccount = (e) => {
     e.preventDefault();
     let userId = window.location.pathname.split('/')[2];
-
-    // Retrieving contacts
-    let contactsArr = [];
-    availableContacts.map(contact => {
-      contactsArr.push(contact.id);
-    })
-
-    // Creating formData for file
-    const formData = new FormData();    
-    formData.append("contact_attachment" , file);        
 
     // Validations
     let validationResults = Validations(accountObject);    
@@ -126,34 +150,63 @@ export default function EditAccount(props) {
     let config = {
       headers: {
         'Content-Type': 'application/json',
+        // 'Content-Type': 'multipart/form-data',
         Authorization: `jwt ${localStorage.getItem('Token')}`,
         company: `${localStorage.getItem('SubDomain')}`
       }
-    }    
-
-    let data = {
-      name: accountObject.name,
-      website: accountObject.website,
-      phone: accountObject.phone,
-      email: accountObject.email,
-      lead: accountObject.lead.id,
-      billing_address_line: accountObject.billing_address_line,
-      billing_street: accountObject.billing_street,
-      billing_postcode: accountObject.billing_postcode, 
-      billing_city: accountObject.billing_city,
-      billing_state: accountObject.billing_state,
-      billing_country: accountObject.billing_country,     
-      status: accountObject.status,
-      contacts: accountObject.contacts.map(contact => contact.id),
-      tags: tags.join(','),
-      account_attachment: file
     }
-    
-    if (isValidations) {
-      axios.put(`${ACCOUNTS}${userId}/`, data, config).then(res => res);
-    }    
 
-  }    
+    const makeArrayToString = (arr) => {      
+      let arrString = '';
+      let arrLen = arr.length;
+      for (let i = 0; i < arrLen; i++) {
+        if(i == arrLen-1) {
+          arrString = arrString + `"${arr[i]}"` // "334"
+        } else {
+          arrString = arrString + `"${arr[i]}",` // "332,"
+        }
+      }
+      return '['+arrString+']';  // ["332","334"]
+    }
+
+    
+    const formData = new FormData();
+    formData.append("name", accountObject.name);
+    formData.append("website", accountObject.website);
+    formData.append("phone", '+'+accountObject.phone);
+    formData.append("email", accountObject.email);
+    formData.append("lead", (accountObject.lead.id !== undefined) ? accountObject.lead.id : "");
+    formData.append("billing_address_line", accountObject.billing_address_line);
+    formData.append("billing_street", accountObject.billing_street);
+    formData.append("billing_postcode", accountObject.billing_postcode);
+    formData.append("billing_city", accountObject.billing_city);
+    formData.append("billing_state", accountObject.billing_state);
+    formData.append("billing_country", accountObject.billing_country);
+    formData.append("contacts", makeArrayToString(accountObject.contacts.map(account => account.id)));
+    formData.append("status", accountObject.status);
+    formData.append("tags", makeArrayToString(tags));    
+    console.log(accountObject.files);    
+    accountObject.files.forEach(file => {      
+      formData.append("account_attachment", file);      
+    })
+      
+
+    if (isValidations) {
+      axios.put(`${ACCOUNTS}${userId}/`, formData, config)
+        .then(res => {          
+          if(!res.data.error) {
+            setTimeout(() => { 
+              props.history.push({
+                pathname: '/accounts/',          
+                state: "accounts"
+              }, 500)
+            })                    
+          }
+        }).catch(err => {       
+        })
+    }
+
+  }      
   
   return (
     <div id="mainbody" className="main_container" style={{ marginTop: '65px' }}>        
@@ -171,17 +224,17 @@ export default function EditAccount(props) {
                                     value={accountObject.name} getInputValue={handleChange} 
                                     isRequired={true} error={errors.name}/>
                         <TextInput  elementSize="col-md-12" labelName="Website" attrName="website" attrPlaceholder="Website" inputId="id_website" 
-                                    value={accountObject.website} getInputValue={handleChange}/>
+                                    value={accountObject.website} getInputValue={handleChange} error={errors.website}/>
                         <PhoneInput elementSize="col-md-12" labelName="Phone" attrName="phone" attrPlaceholder="+911234567890" inputId="id_phone" 
-                                    value={accountObject.phone} getInputValue={handleChange}/>                                                     
+                                    value={parseInt(accountObject.phone)} getInputValue={handleChange}/>
                         <EmailInput elementSize="col-md-12"  labelName="Email"  attrName="email"  attrPlaceholder="Email"  inputId="id_email"  
                                     value={accountObject.email} getInputValue={handleChange} 
-                                    isRequired={true} error={errors.email}/>                        
-                        <ReactSelect labelName="Leads" options={leads} value={accountObject.lead} getChangedValue={(e) => setAccountObject({...accountObject, lead: e})}/>
+                                    isRequired={true} error={errors.email}/>
+                        <ReactSelect elementSize="col-md-12" labelName="Leads" options={leads} value={accountObject.lead} getChangedValue={(e) => setAccountObject({...accountObject, lead: e})}/>
                       </div>
                       <div class="col-md-4">
                         <div class="filter_col billing_block col-md-12" style={{padding: "0px"}}>                                                    
-                          <div class="row" style={{marginTop: "10px"}}>
+                          <div class="row">
                           <TextInput  elementSize="col-md-12" labelName="Billing Address" attrName="billing_address_line" attrPlaceholder="Address Line" inputId="id_billing_address_line" 
                                     value={accountObject.billing_address_line} getInputValue={handleChange} isRequired={true}/>                                    
                             <TextInput  elementSize="col-md-6" labelName="Street" attrName="billing_street" attrPlaceholder="Street" inputId="id_billing_street" 
@@ -201,42 +254,60 @@ export default function EditAccount(props) {
                       </div>
 
                       <div class="col-md-4">
-                        <ReactSelect labelName="Teams"/>
-                        <ReactSelect labelName="Users" isDisabled={true}/>
-                        <ReactSelect labelName="Assigned To"/>
-                        <SelectComponent  labelName="Status" attrName="status" attrPlaceholder="Status" attrId="id_status" 
+                        <ReactSelect elementSize="col-md-12" labelName="Teams"/>
+                        <ReactSelect elementSize="col-md-12" labelName="Users" isDisabled={true}/>
+                        <ReactSelect elementSize="col-md-12" labelName="Assigned To"/>
+                        <SelectComponent  elementSize="col-md-12" labelName="Status" attrName="status" attrPlaceholder="Status" attrId="id_status" 
                                           value={accountObject.status} getInputValue={handleChange} options={twoStatus}/>
-                        <div class="filter_col col-12">
-                          <div class="form-group">
+
+                        <div className="filter_col col-12">
+                          <div className="form-group">
                             <label>Tags</label>
 
-                            <div className="tags-input">
-                              <ul>
+                            <div className="tags-wrapper">                              
+                                <ul className="tags-ul">                                  
                                   {tags.map((tag, index) => (
                                     <li
-                                      key={index}>
+                                      className="tag-list-item" key={index}>
                                       <span>{tag}</span>
                                       <b onClick={() => removeTags(index)}>x</b>
                                     </li>
                                   ))}
-                              </ul>
-                              <input
-                                className="tags-input__input"
-                                type="text"
-                                onKeyUp={event => addTags(event)}
-                                placeholder="add a tag"
-                              />                              
+                                </ul>
+                                <input                                
+                                  className={`tags-input ${tagErrorStyle}`}
+                                  type="text"
+                                  onKeyUp={event => addTags(event)}                                  
+                                  placeholder="add a tag"
+                                  value={invalidTag}                                  
+                                  onChange={(e) => {handleTag(e)}}
+                                />                                 
                             </div>
-
                           </div>
-                        </div>                        
+                        </div>                                        
+                       
                         <FileInput  elementSize="col-md-12" labelName="Attachment" attrName="account_attachment" inputId="id_file"  
-                                    getFile={fileUpload}/>                        
+                                    getFile={fileUpload}/>
+                        <div>
+                          {
+                            (accountObject.files.map((file, index) => {
+                              
+                              return(
+                                <div id={`attachment${index}`} className="mt-2 ml-3">
+                                  <a target="_blank" href={file.file_path}>{(file.file_name) ? file.file_name : file.name }</a>                                  
+                                  <a className="action btn primary_btn ml-1" onClick={() => removeFile(file.created_on)}>X</a>
+                                </div>
+                              )
+                            }))
+                          }
+                      </div>
+
                       </div>
                       <div class="col-md-12">
                         <div class="row marl buttons_row form_btn_row text-center">
                           <button class="btn btn-default save mr-1" name="save" type="button" id="call_save" onClick={updateAccount}>Save</button>
-                          <a href="/accounts" class="btn btn-default clear" id="create_user_cancel">Cancel</a>
+                          {/* <a href="/accounts" class="btn btn-default clear" id="create_user_cancel">Cancel</a> */}
+                          <Link href="/accounts" class="btn btn-default clear" id="create_user_cancel">Cancel</Link>
                         </div>
                       </div>
                     </div>

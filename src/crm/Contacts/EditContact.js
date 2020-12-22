@@ -109,7 +109,9 @@ function EditContact() {
             .catch(err => err);
     }
   }
-  
+
+  console.log(contactObject);
+
   return(
     <div id="mainbody" className="main_container" style={{ marginTop: '65px' }}>
       <nav aria-label="breadcrumb">

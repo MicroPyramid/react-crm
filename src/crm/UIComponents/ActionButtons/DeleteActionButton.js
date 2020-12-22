@@ -1,38 +1,37 @@
+import axios from 'axios';
 import React from 'react';
 
 export default function DeleteActionButton(props) {
 
-  let {api, id, to} = props;
-
-  const deleteObject = (e) => {
-    e.preventDefault();
-    
-      fetch(`${api}${id}/`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `jwt ${localStorage.getItem('Token')}`,
-          company: `${localStorage.getItem('SubDomain')}`
-        }
-      });
-      
-      // setTimeout( () => {   
-      //   console.log(api);
-      //   fetch(`${api}/`, {
-      //     method: 'GET',
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //       Authorization: `jwt ${localStorage.getItem('Token')}`,
-      //       company: `${localStorage.getItem('SubDomain')}`
-      //     }
-      //   })
-      //   .then (res => res.json())
-      //   .then (res => {
-      //     props.stateUpdate(res);
-      //   });
-      // }, 300);         
-  }
+  let {api, id, to} = props;  
   
+  const deleteObject = (e) => {
+
+    let config = {
+      headers: {
+        'Content-Type': 'application/json',          
+        Authorization: `jwt ${localStorage.getItem('Token')}`,
+        company: `${localStorage.getItem('SubDomain')}`
+      }
+    }
+
+    e.preventDefault();    
+    let resConf = window.confirm("Are you sure to cancel");    
+      if (resConf) {
+      axios.delete(`${api}${id}/`, config).then(res => {        
+        if(res.request.status === 200) {
+          setTimeout( () => {                           
+            axios.get(`${api}/`, config)
+            .then (res => res.json())
+            .then (res => {
+              props.stateUpdate(res);          
+            });
+          }, 300); 
+        }         
+      });
+             
+  }
+  }
   return (
 
       <a href="/leads/" className="action__btn-delete-a delete remove_account" title="Delete" onClick={(e) => deleteObject(e)}>

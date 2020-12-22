@@ -10,11 +10,10 @@ import ViewActionButton from '../UIComponents/ActionButtons/ViewActionButton';
 import EditActionButton from '../UIComponents/ActionButtons/EditActionButton';
 import DeleteActionButton from '../UIComponents/ActionButtons/DeleteActionButton';
 import Modal from '../UIComponents/Modal/Modal';
-// import {getApiResults} from '../Utilities';
-
 
 export default function Leads(props) { 
 
+  console.log(props);
   const [openLeads, setOpenLeads] = useState([]);
   const [closedLeads, setClosedLeads] = useState([]);
   const [status, setStatus] = useState(true);
@@ -91,7 +90,7 @@ export default function Leads(props) {
                     <td>
                       <div className="tag_content" id={`leadtag${lead.id}`} data-leadtagcontent={lead.id}>
                         {
-                          (lead.tags && lead.tags.length !== 0) ?   
+                          (lead.tags && lead.tags.length <! 0) ? 
                             lead.tags.map((tag, index) => {
                               return (
                                 <span style={{cursor: "pointer"}} className="tag_class_lead_ mr-1" data-leadtag={`${lead.id}${index}`}>

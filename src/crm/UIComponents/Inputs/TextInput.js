@@ -9,7 +9,7 @@ export default function TextInput(props) {
     <>      
       <div className={`filter_col ${elementSize}`}>
         <div className="form-group">
-          <label for="exampleInputEmail1" className="name">{labelName} {(isRequired) ? <span class="error_marker" style={{color:"red"}}>*</span> : ''} </label>
+          <label for="exampleInputEmail1" className="name">{labelName} {(isRequired) ? <span className="error_marker" style={{color:"red"}}>*</span> : ''} </label>
           <input  className="form-control" 
                   type="text" 
                   name={attrName} 

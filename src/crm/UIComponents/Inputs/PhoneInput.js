@@ -9,7 +9,7 @@ export default function PhoneInput(props) {
       <div className={`filter_col ${elementSize}`}>
       <div className="form-group">
         <label for="exampleInputEmail1" className="name">{labelName} {(isRequired) ? <span class="error_marker" style={{color:"red"}}>*</span> : ''} </label>        
-        <input type="tel"
+        <input type="number"
                name={attrName} 
               className="form-control" 
               placeholder={attrPlaceholder} 
