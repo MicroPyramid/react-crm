@@ -46,7 +46,7 @@ export default function EditAccount(props) {
     let contactsArray = [];
     contactsResults.then( result => {
       result.data.contact_obj_list.map( contact => {
-        contactsArray.push({label: contact.first_name, value: contact.first_name, id: contact.id});
+        contactsArray.push({label: contact.first_name +' - '+ contact.email, value: contact.first_name +' - '+ contact.email, id: contact.id});
       })
       setContacts(contactsArray);
     })}
