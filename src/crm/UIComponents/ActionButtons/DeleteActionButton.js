@@ -22,7 +22,6 @@ export default function DeleteActionButton(props) {
         if(res.request.status === 200) {
           setTimeout( () => {                           
             axios.get(`${api}/`, config)
-            .then (res => res.json())
             .then (res => {
               props.stateUpdate(res);          
             });

@@ -154,8 +154,6 @@ const AddAccount = (props) => {
 
   }  
 
-  // console.log(accountObject);
-
     return (
       <div id="mainbody" className="main_container" style={{ marginTop: '65px' }}>        
         <BreadCrumb target="accounts" action="create" />
