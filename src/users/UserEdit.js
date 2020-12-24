@@ -12,10 +12,10 @@ class UserEdit extends React.Component{
     last_name : '',
     profile_pic: null,
     has_sales_access : false,
-    has_sales_access_true: true,
+    has_sales_access_null: true,
     has_marketing_access : false,
-    has_marketing_access_true : true,
-
+    has_marketing_access_null : true,
+    is_active : true
   //  user : ''
 }
  
@@ -32,11 +32,12 @@ class UserEdit extends React.Component{
                 username : posRes.data.data.user_obj.username,
                 profile_pic : posRes.data.data.user_obj.profile_pic,
                 has_marketing_access : posRes.data.data.user_obj.has_marketing_access,
-                has_sales_access : posRes.data.data.user_obj.has_sales_access
+                has_sales_access : posRes.data.data.user_obj.has_sales_access,
+                is_active: posRes.data.data.user_obj.is_active
                  //user :  posRes.data.data.user_obj
               })
-                console.log(posRes.data.data.user_obj)
-                        
+                console.log(posRes.data.data.user_obj.has_marketing_access)
+                console.log(this.state.has_marketing_access)     
                        
             }).catch(errRes=> {
                          console.log(errRes)
@@ -66,23 +67,26 @@ class UserEdit extends React.Component{
     // }
            
         return(
-         
+          <div className= "container mt-5 py-5">
+          <div class="card">
+          <div class="card-header text-center">
+           <b><i>EDIT USER</i></b> 
+          </div>
+          <div class="card-body">
 
-          
-          <div class="container py-5 mt-5">
-              <form onSubmit={this.onSubmit}>
-            <h1 className="text-center bg-light">Edit User</h1>
+          <form onSubmit={this.onSubmit}>
+            {/* <h1 className="text-center bg-light">Edit User</h1> */}
       <div className="form-row">
       <div className="col-md-4">
-        <label>First Name</label>
+        <label><b>First Name</b></label>
         <input type="text" name="first_name" value={this.state.first_name} onChange={this.onHandleChange} className="form-control" required />
       </div>
       <div className="col-md-4">
-        <label>Last Name</label>
+        <label><b>Last Name</b></label>
         <input type="text" name="last_name" value={this.state.last_name}  onChange={this.onHandleChange}  className="form-control" />
       </div>
         <div className="form-group col-md-4">
-          <label>User Name</label>
+          <label><b>User Name</b></label>
           <input type="text" name="username" value={this.state.username}  onChange={this.onHandleChange} className="form-control" required />
   
         </div>
@@ -90,37 +94,46 @@ class UserEdit extends React.Component{
     </div>
     <div className="form-row">
     <div class="form-group col-md-4">
-      <label>Upload Profile Picture</label>
+      <label><b>Upload Profile Picture</b></label>
       <input type="file" name="profile_pic" value={this.state.profile_pic}  onChange={this.onHandleChange} className="form-control" />
     </div>
     <div class="form-group col-md-4">
-    <label>has_marketing Access</label>
-    <select  name="has_marketing_access" onChange={this.onHandleChange} class="form-control" required >
+    <label><b>Marketing Access</b></label>
+    <select  name="has_marketing_access" onChange={this.onHandleChange}  class="form-control" required >
     <option >.....</option>
-        <option  value={this.state.has_marketing_access} > false </option>
-        <option  value={this.state.has_marketing_access_true} > true </option>
+        <option value={false} >false</option>
+        <option  value={true} > true </option>
       </select>
     </div>
     <div class="form-group col-md-4">
-    <label>has_sales_access</label>
-    <select  onChange={this.onHandleChange} class="form-control" required >
-    <option name="has_sales_access" >.....</option>
-    <option  value={this.state.has_sales_access}> false </option>
-    <option  value={this.state.has_sales_access_true}> true </option>
+    <label><b>Sales Access</b></label>
+    <select name="has_sales_access" onChange={this.onHandleChange} class="form-control" required >
+    <option  >.....</option>
+    <option value={false}> false </option>
+    <option  value={true}>true </option>
 
         
       </select>
     </div>
+    
     </div>
+
+    <label><b>Status</b></label>
+    <select  name="this.state.user.is_active" onChange={this.onHandleChange}  class="form-control" required >
+    <option >.....</option>
+     <option value={false} >false</option>
+       
+      </select>
     <div class="text-center">
   <button type="submit" class="btn btn-success">Save</button>
   <Link to='/user' class="btn btn-light">Cancel</Link>
   </div>
     </form>
+          </div>
         </div>
-          
 
-   
+          </div>
+         
         )
     }
 

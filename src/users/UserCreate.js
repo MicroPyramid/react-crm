@@ -45,20 +45,25 @@ class UserCreate extends React.Component{
       const { username ,password, email, role, first_name,last_name,profile_pic,has_sales_access,has_sales_access_true,has_marketing_access_true,has_marketing_access,status }= this.state
         return(
             <div class="container py-5 mt-5">
-      
-        <form onSubmit={this.onSubmit}>
-          <h1 class="text-center bg-light">Create User</h1>
+
+          <div class="card">
+          <div class="card-header text-center">
+               <b><i>CREATE USER</i></b> 
+            </div>
+               <div class="card-body">
+               <form onSubmit={this.onSubmit}>
+          {/* <h1 class="text-center bg-light">Create User</h1> */}
     <div class="form-row">
-    <div class="col-md-4">
-      <label>First Name</label>
+    <div class="form-group col-md-4">
+      <label><b>First Name</b></label>
       <input type="text" name="first_name" value={first_name} onChange={this.onInputChange} class="form-control"  placeholder="First name" required />
     </div>
-    <div class="col-md-4">
-      <label>Last Name</label>
+    <div class="form-group col-md-4">
+      <label><b>Last Name</b></label>
       <input type="text" name="last_name" value={last_name}  onChange={this.onInputChange}  class="form-control" placeholder="Last name" />
     </div>
       <div class="form-group col-md-4">
-        <label>User Name</label>
+        <label><b>User Name</b></label>
         <input type="text" name="username" value={username}  onChange={this.onInputChange} class="form-control" placeholder="Username" required />
 
       </div>
@@ -67,11 +72,11 @@ class UserCreate extends React.Component{
 
   <div class="form-row">
     <div class="form-group col-md-6">
-      <label for="inputEmail4">Email</label>
-      <input type="email" name="email" value={email}  onChange={this.onInputChange} class="form-control" id="inputEmail4" />
+      <label for="inputEmail4"><b>Email</b></label>
+      <input type="email" name="email" value={email}  onChange={this.onInputChange} class="form-control" id="inputEmail4" placeholder="email" />
     </div>
     <div class="form-group col-md-6">
-      <label for="inputState"> User Role</label>
+      <label for="inputState"><b>User Role</b> </label>
       <select id="inputState" name="role" value={role}  onChange={this.onInputChange} class="form-control" required>
         <option selected>.....</option>
         <option>  USER </option>
@@ -81,36 +86,27 @@ class UserCreate extends React.Component{
   </div>
   <div class="form-row">
     <div class="form-group col-md-6">
-      <label>Password</label>
-      <input type="password" name="password" value={password}  onChange={this.onInputChange} class="form-control" required />
+      <label><b>Password</b></label>
+      <input type="password" name="password" value={password}  onChange={this.onInputChange} class="form-control" placeholder="password" required />
     </div>
     <div class="form-group col-md-6">
-      <label>Upload Profile Picture</label>
+      <label><b>Upload Profile Picture</b></label>
       <input type="file" name="profile_pic" value={profile_pic}  onChange={this.onInputChange} className="form-control" />
     </div>
   </div>
   <div class="form-row">
     <div class="form-group col-md-4">
-    <label>has_marketing_access</label>
+    <label><b>Marketing Access</b></label>
     <select name="has_marketing_access" onChange={this.onInputChange} class="form-control" required >
     <option >.....</option>
-        <option  value={has_marketing_access}>false</option>
-        <option  value={has_marketing_access_true} > true </option>
+        <option  value= {false} >false</option>
+        <option  value= {true}> true </option>
       </select>
     
-    {/* <div class="form-check">
-    
-      <input class="form-check-input" name="salesaccess" value={salesaccess}  onChange={this.onInputChange} type="checkbox" id="gridCheck" />
-      <label class="form-check-label" for="gridCheck"  >Sales</label>
-    </div>
-      <div class="form-check">
-      <input class="form-check-input" name="marketingaccess" value={marketingaccess}  onChange={this.onInputChange} type="checkbox" id="gridCheckTwo" />
-      <label class="form-check-label" for="gridCheckTwo"  >Marketing</label>
-   
-    </div> */}
+  
     </div>
     <div class="form-group col-md-4">
-    <label>has_sales_access</label>
+    <label><b>Sales Access</b></label>
     <select  name="has_sales_access" onChange={this.onInputChange} class="form-control" required >
     <option >.....</option>
         <option value={has_sales_access} > false </option>
@@ -118,16 +114,21 @@ class UserCreate extends React.Component{
       </select>
     </div>
     <div class="form-group col-md-4">
-      <label>Status</label>
+      <label><b>Status</b></label>
       <input type="text" name="status" value={status}  onChange={this.onInputChange} class="form-control" />
     </div>
       
     </div>
-<div class="d-center">
+<div class="text-center">
   <button type="submit" class="btn btn-success">Save</button>
   <Link to='/user' class="btn btn-light">Cancel</Link>
   </div>
-</form>
+</form> 
+
+                   </div>
+              </div>
+      
+       
       </div>
         )
     }

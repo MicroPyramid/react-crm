@@ -65,7 +65,7 @@ function Header() {
                 <Link to='/user' className="dropdown-item">Users</Link>
                 <Link to='/settings' className="dropdown-item">Settings</Link>
                 <a className="dropdown-item">Change Password</a>
-                <a className="dropdown-item">Profile</a>
+                <Link to='profile' className="dropdown-item">Profile</Link>
                 <a onClick={() => {
                   localStorage.clear()
                   const redirectUrl = `//localhost:3000/validate-domain`

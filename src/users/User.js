@@ -2,6 +2,7 @@ import React from 'react'
 import apiurl from '../api/apiurl'
 import { Link } from 'react-router-dom'
 import InactiveUsers from './inactiveUsers/InactiveUser';
+import ShowMe from './ShowMe'
 
   class Users extends React.Component{
     constructor(){
@@ -9,7 +10,7 @@ import InactiveUsers from './inactiveUsers/InactiveUser';
     this.state= {
         usersList : [],
         inactiveuser : [],
-        show : true,
+        show : false,
         term : '' 
     }
 
@@ -25,7 +26,7 @@ componentDidMount(){
         
         
        })
-       console.log(posRes.data)
+    console.log(posRes.data);
  }, (errRes)=> {
      console.log(errRes)
      });
@@ -42,38 +43,51 @@ componentDidMount(){
         let date = new Date(string)
          return date.toLocaleDateString();
       }
-    
 
+      actions = () => {
+          this.setState({
+              show : !this.state.show
+          })
+      }
 
     render(){
          const { usersList,inactiveuser , term } = this.state
-         console.log(usersList.length)
+        // console.log(usersList.length)
         return (
             <div className="container-fluid py-5">
                         
                         <div className="text-right py-2">
                         
                         <Link to ="/users/create" className="btn btn-success mr-2" >Add New User</Link>
-                        
                         </div>
+
+            <div>
+                {
+                    this.state.show? <div> <ShowMe value={this.state.term} 
+                                                   onChange={this.handleChange}      /> </div> :null
+                }
+            </div>
+                   <br></br>
+ 
 
                         <nav>
   <div class="nav nav-tabs" id="nav-tab" role="tablist">
-    <a class="nav-link active" class ="btn btn-success"  id="nav-user-tab" data-toggle="tab" href="#user" role="tab" aria-controls="nav-user" aria-selected="true">Active User({usersList.length})</a>
-    <a class="nav-link"  className="btn btn-primary"  id="nav-inactive-tab"  data-toggle="tab" href="#inactive" role="tab" aria-controls="nav-inactive" aria-selected="false">Inactive User({inactiveuser.length})</a>
+    <a class="nav-link active" class ="btn btn-success"  id="nav-user-tab" data-toggle="tab" href="#user" role="tab" aria-controls="nav-user" aria-selected="true">Active Users({usersList.length})</a>
+    <a class="nav-link"  className="btn btn-secondary"  id="nav-inactive-tab"  data-toggle="tab" href="#inactive" role="tab" aria-controls="nav-inactive" aria-selected="false">Inactive Users({inactiveuser.length})</a>
   </div>
 </nav>
 <div class="tab-content" id="nav-tabContent">
   <div class="tab-pane fade show active" id="user" role="tabpanel" aria-labelledby="nav-home-tab">
   <div>
             <div className="card">
-                <div className="card-header text-right"> <span className="float-left ">Actives Users</span>
-                <input type = "text" value={this.state.term} onChange= {this.handleChange} placeholder="Search an user" />
+                <div className="card-header text-right bg-dark text-white"> <span className="float-left "><h6><b>Active Users - {usersList.length}</b></h6></span>
+                <button className="btn btn-warning btn-md" onClick={this.actions} >Filter</button>
+                {/* <input type = "text" value={this.state.term} onChange= {this.handleChange} placeholder="Search an user" /> */}
                 </div>
 
-                <div className="card-body">
+                <div className="card-body bg-light">
                  <div className="table-responsive">
-                  <table className="table">
+                  <table className="table table-striped table-light">
                     <thead>
                      <tr>
                         <td>ID</td>
@@ -93,7 +107,7 @@ componentDidMount(){
                             } else if(val.username.toLowerCase().includes(term.toLowerCase())){
                                 return val;
                             }
-                        }).map(user=> ( 
+                        }).map((user,index) => ( 
                         <tr>
                         <td>{user.id}</td>
                         <td>{user.username}</td>
@@ -105,12 +119,13 @@ componentDidMount(){
                            
                         </td>
                         <td> 
-                            {user.is_active? 'Active' : 'inactive' }
+                        <Link to={`/users/status/${user.id}`} id={index}  >Active</Link>
+
+                            {/* // {user.is_active? 'Active' : 'inactive' } */}
                         </td>
                         <td> 
-                         {/* <Link to="/users/show" className="btn btn-primary mr-2">View</Link> */}
                            
-                          <Link to={`/users/edit/${user.id}`} className="btn btn-warning mr-2">Edit</Link>
+                          <Link to={`/users/edit/${user.id}`} className="btn btn-primary mr-2">Edit</Link>
   
                           <Link to ={`/users/delete/${user.id}`} className="btn btn-danger">
                             Delete </Link> 
@@ -130,6 +145,7 @@ componentDidMount(){
      
 
   <div class="tab-pane fade" id="inactive" role="tabpanel" aria-labelledby="nav-inactive-tab">
+      
       <InactiveUsers />
       </div>
 </div> 

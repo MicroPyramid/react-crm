@@ -17,7 +17,7 @@ class UserDelete extends React.Component{
                 users :  posRes.data.data.user_obj
                
               })
-               // console.log(posRes.data.data.user_obj)
+               console.log(posRes.data.data.user_obj)
                         
                        
             }).catch(errRes=> {
@@ -34,7 +34,7 @@ class UserDelete extends React.Component{
   
 render() {
     return (
-<div className="container mt-5">
+<div className="container mt-5 py-5">
 <div class="card">
   <div class="card-header">
     Delete User

@@ -1,6 +1,7 @@
 import React from 'react'
 import apiurl from '../../api/apiurl'
 import { Link } from 'react-router-dom'
+import ShowMe from '../ShowMe'
 
 
 class InactiveUsers extends React.Component{
@@ -21,7 +22,7 @@ componentDidMount(){
     this.setState({ 
         inactiveuser : posRes.data.inactive_users
        })
-     //  console.log(posRes.data)
+      console.log(this.state.inactiveuser)
  }, (errRes)=> {
      console.log(errRes)
      });
@@ -34,19 +35,19 @@ componentDidMount(){
         })
     }
     
-
-
     render(){
          const { inactiveuser , term } = this.state
         return (
         <div>
-          <div className="card">
-                <div className="card-header text-right"> <span className="float-left ">Inctives Users</span>
-                <input type = "text" value={this.state.term} onChange= {this.handleChange} />
+            <div className="card">
+               
+                <div className="card-header text-right bg-dark text-white"> <span className="float-left "><h6><b>Inactive Users - {inactiveuser.length}</b></h6></span>
+
+                <input type = "text" value={this.state.term} onChange= {this.handleChange} placeholder="search user"/>
                 </div>
                          <div className="card-body">
                              <div className="table-responsive">
-                         <table className="table">
+                         <table className="table table-striped">
                         <thead>
                         <tr>
                             <td>ID</td>
@@ -74,9 +75,7 @@ componentDidMount(){
                          {/* <Link to="/users/show" className="btn btn-primary mr-2">View</Link> */}
                            
                          <Link to={`/users/edit/${user.id}`} className="btn btn-warning mr-2">Edit</Link>
-                         <Link to ={`/users/delete/${user.id}`} type="button" className="btn btn-danger" data-toggle="modal" data-target="#exampleModal">
-              Delete
-            </Link>
+                         <Link to ={`/users/delete/${user.id}`} className="btn btn-danger"> Delete </Link>
                           
                          
         
