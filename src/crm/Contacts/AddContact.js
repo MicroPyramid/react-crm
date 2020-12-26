@@ -9,6 +9,7 @@ import FileInput from '../UIComponents/Inputs/FileInput';
 import 'react-phone-input-2/lib/style.css';
 import BreadCrumb from '../UIComponents/BreadCrumb/BreadCrumb';
 import { CONTACTS } from '../../common/apiUrls';
+import {Link} from 'react-router-dom';
 import axios from 'axios';
 import { Validations } from './Validations';
 import { countries } from '../optionsData';
@@ -74,13 +75,16 @@ function AddContact(props) {
     
     if (isValidationsPassed){
       axios.post(`${CONTACTS}`, formData, config)
-          .then ( res =>  {
-            console.log(res);
+          .then ( res =>  {            
             if(res.status === 200) {
-              props.history.push({
-                pathname: '/contacts/',
-                state: "contacts"
-              })
+              if(targetName === 'save') {
+                props.history.push({
+                  pathname: '/contacts/',
+                  state: "contacts"
+                })
+              } else if (targetName === 'saveAndNew'){
+                window.location.reload();
+              }
             }
           })
           .catch(err => err);
@@ -156,7 +160,7 @@ function AddContact(props) {
                   <div className="row marl buttons_row text-center form_btn_row">
                     <button className="btn btn-default save update_data mr-2" name="save" type="button" onClick={saveContact}>Save</button>                                            
                     <button className="btn btn-success save savenew mr-2" name="saveAndNew" type="button" onClick={saveContact}>Save &amp; New</button>                      
-                    <a href="/contacts" className="btn btn-default clear" id="create_contact_cancel">Cancel</a>
+                    <Link to="/contacts" className="btn btn-default clear">Cancel</Link>
                   </div>
                 </div>
               </div>

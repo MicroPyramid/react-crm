@@ -13,6 +13,7 @@ import { countries } from '../optionsData';
 import { statuses } from '../optionsData';
 import { sources } from '../optionsData';
 import { Validations } from './Validations';
+import {Link} from 'react-router-dom';
 import axios from 'axios';
 import { getApiResults, convertArrayToString} from '../Utilities';
 
@@ -192,7 +193,7 @@ export default function EditLead(props) {
                   <div class="row marl buttons_row text-center form_btn_row">
                     <button class="btn btn-default save mr-1" type="button" id="submit_btn"
                       onClick={updateLead}>Save</button>                                                        
-                    <a href="/leads/" class="btn btn-default clear" id="create_lead_cancel">Cancel</a>
+                    <Link to="/leads" className="btn btn-default clear">Cancel</Link>
                   </div>
                 </div>
               </div>

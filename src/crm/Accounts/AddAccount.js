@@ -13,6 +13,7 @@ import { Validations } from './Validations';
 import { countries, twoStatus } from '../optionsData';
 import { getApiResults, convertArrayToString } from '../Utilities';
 import axios from 'axios';
+import {Link} from 'react-router-dom';
 import { getContactsForReactSelect, getLeadsForReactSelect } from '../network';
 
 const AddAccount = (props) => {  
@@ -94,6 +95,7 @@ const AddAccount = (props) => {
     e.preventDefault();    
 
     let targetName = e.target.name;
+    console.log(targetName);
     
     // Validation
     let validationResults = Validations(accountObject);           
@@ -211,8 +213,8 @@ const AddAccount = (props) => {
                       </div>
                       <div className="col-md-12">
                         <div className="row marl buttons_row form_btn_row text-center">
-                          <button className="btn btn-default save mr-1" name="save" type="button" id="call_save" onClick={saveAccount}>Save</button>                                                    
-                          <a href="/accounts" className="btn btn-default clear" id="create_user_cancel">Cancel</a>                          
+                          <button  type="button" className="btn btn-default save mr-1" name="save" onClick={saveAccount}>Save</button>
+                          <Link to="/accounts" className="btn btn-default clear">Cancel</Link>
                         </div>
                       </div>
                     </div>

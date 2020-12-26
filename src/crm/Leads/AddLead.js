@@ -9,6 +9,7 @@ import TextArea from '../UIComponents/Inputs/TextArea';
 import SelectComponent from '../UIComponents/Inputs/SelectComponent';
 import ReactSelect from '../UIComponents/ReactSelect/ReactSelect';
 import TagsInput from '../UIComponents/Inputs/TagsInput';
+import {Link} from 'react-router-dom';
 import { countries } from '../optionsData';
 import { statuses } from '../optionsData';
 import { sources } from '../optionsData';
@@ -202,7 +203,7 @@ export default function AddLead(props) {
                       onClick={saveLead}>Save</button>                    
                     <button class="btn btn-success save savenew mr-1" type="button" name="saveAndNew"
                       onClick={saveLead}>Save &amp; New</button>                    
-                    <a href="/leads/" class="btn btn-default clear" id="create_lead_cancel">Cancel</a>
+                    <Link to="/leads" className="btn btn-default clear">Cancel</Link>
                   </div>
                 </div>
               </div>

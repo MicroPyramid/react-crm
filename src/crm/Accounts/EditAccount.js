@@ -11,6 +11,7 @@ import TagsInput from '../UIComponents/Inputs/TagsInput';
 import { Validations } from './Validations';
 import { countries, twoStatus } from '../optionsData';
 import { getApiResults, convertArrayToString } from '../Utilities';
+import {Link} from 'react-router-dom';
 import axios from 'axios';
 
 export default function EditAccount(props) {
@@ -270,8 +271,8 @@ export default function EditAccount(props) {
                       </div>
                       <div class="col-md-12">
                         <div class="row marl buttons_row form_btn_row text-center">
-                          <button class="btn btn-default save mr-1" name="save" type="button" id="call_save" onClick={updateAccount}>Save</button>
-                          <a href="/accounts" class="btn btn-default clear" id="create_user_cancel">Cancel</a>                          
+                          <button className="btn btn-default save mr-1" name="save" type="button" id="call_save" onClick={updateAccount}>Save</button>
+                          <Link to="/accounts" className="btn btn-default clear">Cancel</Link>
                         </div>
                       </div>
                     </div>

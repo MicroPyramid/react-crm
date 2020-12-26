@@ -17,7 +17,7 @@ const Accounts = (props) => {
 
   const [openAccounts, setOpenAccounts] = useState([]);
   const [closedAccounts, setClosedAccounts] = useState([]);  
-  const [filterObject, setFilterObject] = useState({ name: '', city: '', tags: []});
+  const [filterObject, setFilterObject] = useState({ name: '', city: '', filterTags: []});
   const [isFilterAvailable, setIsFilterAvailable] = useState(false);
   const [tags, setTags] = useState([]);    
   const [status, setStatus] = useState(true);  
@@ -64,7 +64,7 @@ const Accounts = (props) => {
   }
 
   const handleChangeTag = (e) => {   
-    setFilterObject({...filterObject, tags: e});
+    setFilterObject({...filterObject, filterTags: e});
   }
 
   const displayAccounts = (status) => {
@@ -157,69 +157,44 @@ const Accounts = (props) => {
     setOpenAccounts(props.accounts.open_accounts);
     setClosedAccounts(props.accounts.close_accounts);
     
-    let filteredResults, trimmedName, trimmedCity, tags, finalFilter = []; 
-    let results;
-        
-    let mergedAccounts = props.accounts.open_accounts.concat(props.accounts.close_accounts);            
+    let name, city, filterTags, results, redundantFilteredAccounts = [];        
+    let mergedAccounts = [...props.accounts.open_accounts].concat([...props.accounts.close_accounts]);
 
-    trimmedName = filterObject.name.trim("").toLowerCase();
-    trimmedCity = filterObject.city.trim("").toLowerCase();
+    name = filterObject.name.trim("").toLowerCase();
+    city = filterObject.city.trim("").toLowerCase();
+    filterTags = filterObject.filterTags;      
 
-    if (trimmedName && trimmedCity) {
-      filteredResults = mergedAccounts.filter(account => (account.name.toLowerCase().includes(trimmedName)) && (account.billing_city.toLowerCase().includes(trimmedCity)));
-    } else if (trimmedName) {
-      filteredResults = mergedAccounts.filter(account => (account.name.toLowerCase().includes(trimmedName)));
-    } else if (trimmedCity){
-      filteredResults = mergedAccounts.filter(account => (account.billing_city.toLowerCase().includes(trimmedCity)));
-    }        
-
-    tags = filterObject.tags && filterObject.tags.map( tag => tag.value);
-               
-    if (tags === null) tags = [];    
-
-    // Only filtered Results are available
-    if (filteredResults !== undefined && tags.length === 0) {            
-      results = filteredResults;
-    }
-
-    // Only tags are available
-    if (filteredResults === undefined && tags.length !== 0) {
-      mergedAccounts.map ( result => {
-        result.tags.filter(tag => {        
-          tags.map( oTag => {
-            if (oTag === tag.name) {  
-              finalFilter.push(result);            
-            }            
-          })
-        })
-      });              
-      results = finalFilter.filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))=== i ); 
-
-    }
-
-    // Both filtered results and tags are available
-    if (filteredResults !== undefined && tags.length !== 0) {
-      filteredResults.map ( result => {
-        result.tags.filter(tag => {        
-          tags.map( oTag => {
-            if (oTag === tag.name) {  
-              finalFilter.push(result);              
-            }
-          })
-        })
-      });        
-
-      results = finalFilter.filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))=== i );
-    }
-
-    // Both filtered results and tags are not available
-    if (filteredResults === undefined && tags === null) {            
+    // Filtering Name
+    if(name) {
+      results = mergedAccounts.filter( account => account.name.toLowerCase().includes(name));
+    } else {
       results = mergedAccounts;
-    }    
+    }
+
+    // Filtering City
+    if(city) {
+      results = results.filter( account => account.billing_city.toLowerCase().includes(city));
+    }
+
+    // Filtering the tags
+    if(filterTags && filterTags.length > 0) {
+      if(tags) {
+        results.map( result => {
+          result.tags.filter(tag => {
+            tags.map( oTag => {
+              if (oTag.value === tag.name) {
+                redundantFilteredAccounts.push(result);
+              }
+            })
+          })
+        })
+      }
+      results = redundantFilteredAccounts.filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))=== i );
+    }
 
     let displayOpenAccounts = [];
     let displayClosedAccounts = [];
-
+    
     if (results !== undefined) {
       results.map( result => {        
         if (result.status === 'open') {
@@ -241,7 +216,7 @@ const Accounts = (props) => {
   const clearSearchResults = () => {               
     setOpenAccounts(props.accounts.open_accounts);
     setClosedAccounts(props.accounts.close_accounts);  
-    setFilterObject({...filterObject, name: '', city: '', tags: []});
+    setFilterObject({...filterObject, name: '', city: '', filterTags: []});
     setIsFilterAvailable(!isFilterAvailable);
   }
     
@@ -272,7 +247,7 @@ const Accounts = (props) => {
                         <TextInput  elementSize="col-md-2"  labelName="City"  attrName="city"  attrPlaceholder="City"  inputId="id_city" 
                                     value={filterObject.city} getInputValue={handleChange} />
                         <ReactSelect  elementSize="col-md-2" labelName="Tags" attrName="tags" isMulti={true} options={tags} 
-                                      value={filterObject.tags} getChangedValue={handleChangeTag}/>                       
+                                      value={filterObject.filterTags} getChangedValue={handleChangeTag}/>                       
                         <div className="filter_col col-lg-2">
                           <div className="form-group buttons_row">
                             <button className="btn btn-primary mr-1 save" type="submit" onClick={getFilteredAccounts}>Search</button>
