@@ -11,19 +11,30 @@ import { getApiResults } from '../Utilities';
 
 export default function Contacts(props) {    
 
+  console.log(props);
+
   const [contacts, setContacts] = useState([]);
   const [isFilterAvailable, setIsFilterAvailable] = useState(false);
-  const [filterObject, setFilterObject] = useState({first_name: '', city: '', assignedTo: []});
+  const [filterObject, setFilterObject] = useState({first_name: '', city: '', filterUsers: []});
+  const [assignedUsers, setAssignedUsers] = useState([]);
   
   useEffect(() => {
-    setContacts(props.contacts.contact_obj_list);    
-    getAssignedTo();
+    setContacts(props.contacts.contact_obj_list);
+    getAssignedUsers();  
     if(props.history.location.pathname === "/contacts/") {
       updateContacts();
     }
     
   }, []);
-  
+
+  const getAssignedUsers = () => {
+    let assignedToArray = [];
+    props.contacts.assignedto_list && props.contacts.assignedto_list.map(assigned_to => {
+      assignedToArray.push({label: assigned_to.username, value: assigned_to.username, id: assigned_to.id});
+    });
+    setAssignedUsers(assignedToArray);
+  }
+
   const updateContacts = () => {
     const resAcc = getApiResults(CONTACTS);    
     resAcc.then(res => {
@@ -32,9 +43,6 @@ export default function Contacts(props) {
     });
   }
 
-  const getAssignedTo = () => {
-    
-  }
 
   const stateUpdate = (res) => {       
     setContacts(res.contact_obj_list);        
@@ -48,8 +56,9 @@ export default function Contacts(props) {
     setFilterObject({...filterObject, [e.target.name]: e.target.value});
   }
 
-  const ReactSelectHandleChange = (e, value) => {
-
+  const ReactSelectHandleChange = (e, filter) => {
+    console.log(e, filter);
+    if (filter === 'assignedUsers') setFilterObject({...filterObject, filterUsers: e})
   }
 
   const displayContacts = () => {
@@ -135,10 +144,11 @@ export default function Contacts(props) {
   const getFilteredContacts = (e) => {
     e.preventDefault();
     
-    let firstName, filterCity, results;
+    let firstName, filterCity, filterUsers, results, redundantFilteredUsers = [];
 
     firstName = filterObject.first_name.trim("").toLowerCase();
     filterCity = filterObject.city.trim("").toLowerCase();
+    filterUsers = filterObject.filterUsers;
 
     // Filtering first name
     if(firstName) {
@@ -147,7 +157,7 @@ export default function Contacts(props) {
     else {
       results = props.contacts.contact_obj_list;
     }
-    
+        
     // Filtering city
     if(filterCity) {
       results = results.filter(contact =>{
@@ -155,11 +165,27 @@ export default function Contacts(props) {
           return contact.address.city.toLowerCase().includes(filterCity);
         }
       });
-    }
-    else {
-      results = results;
-    }      
-        
+    }    
+    
+    console.log(filterUsers);
+    if(filterUsers && filterUsers.length !== 0) {
+      console.log("Entered into first loop");
+      if(assignedUsers) {
+        console.log("Entered into second loop");
+        results.map(result => {
+          result.assigned_to.filter(assignedTo => {
+            filterUsers.map(oUser => {
+              if(oUser.value === assignedTo.username) {
+                redundantFilteredUsers.push(result);
+              }
+            })
+          })
+        })
+      }
+      results = redundantFilteredUsers.filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))=== i );
+    } 
+    
+
     setContacts(results);
   }
     
@@ -206,7 +232,7 @@ export default function Contacts(props) {
                                    onChange={handleChange}></input>
                           </div>
                         </div>
-                        <ReactSelect  elementSize="col-md-3" labelName="Assigned To" isMulti={true} 
+                        <ReactSelect  elementSize="col-md-3" labelName="Assigned To" isMulti={true} options={assignedUsers}
                                       value={filterObject.assignedTo} getChangedValue={(e) => ReactSelectHandleChange(e, 'assignedUsers')}/>                                      
                         <div className="filter_col text-center col-3">
                           <div className="form-group buttons_row">

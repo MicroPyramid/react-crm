@@ -12,8 +12,7 @@ import DeleteActionButton from '../UIComponents/ActionButtons/DeleteActionButton
 import Modal from '../UIComponents/Modal/Modal';
 
 export default function Leads(props) { 
-
-  console.log(props);
+  
   const [openLeads, setOpenLeads] = useState([]);
   const [closedLeads, setClosedLeads] = useState([]);
   const [status, setStatus] = useState(true);
@@ -178,7 +177,7 @@ export default function Leads(props) {
   const getFilteredLeads = () => {       
 
     let mergedLeads, title, source, status, filterUsers, filterTags, results, redundantFilteredUsers = [], redundantFilteredTags = [];    
-    mergedLeads = props.leads.open_leads.concat(props.leads.close_leads); 
+    mergedLeads = [...props.leads.open_leads].concat([...props.leads.close_leads]); 
            
     title = filterObject.title.trim("").toLowerCase();
     source = filterObject.source;
@@ -205,7 +204,7 @@ export default function Leads(props) {
     } else {      
       results = results;
     }        
-    
+        
     // Filtering assigned Users
     if (filterUsers && filterUsers.length !== 0) {
         if (assignedUsers) {
@@ -225,7 +224,7 @@ export default function Leads(props) {
     }     
 
     // Filtering status
-    if (status) {     
+    if (status) {
       results = results.filter( lead => {
         if (lead.status) {
           return lead.status.includes(status)
