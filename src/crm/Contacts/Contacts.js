@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CONTACTS } from '../../common';
 import {momentTimeFormats} from '../Utilities';
+import TextInput from '../UIComponents/Inputs/TextInput';
 import ReactSelect from '../UIComponents/ReactSelect/ReactSelect';
 import MailActionButton from '../UIComponents/ActionButtons/MailActionButton';
 import ViewActionButton from '../UIComponents/ActionButtons/ViewActionButton';
@@ -215,23 +216,11 @@ export default function Contacts(props) {
                   <form id="contacts_filter" action="" method="POST">
                     <div className="card-body">
                       <div className="card-title">Filters</div>
-                      <div className="row marl mt-2">
-                        <div className="filter_col col-md-3">
-                          <div className="form-group">
-                            <label for="exampleInputEmail1">NAME</label>
-                            <input type="text" className="form-control" name="first_name" placeholder="First Name" name="first_name" 
-                                   value={filterObject.first_name}
-                                   onChange={handleChange}></input>
-                          </div>
-                        </div>
-                        <div className="filter_col col-md-3">
-                          <div className="form-group">
-                            <label for="exampleInputEmail1">CITY</label>
-                            <input type="text" className="form-control" placeholder="City" name="city" 
-                                   value={filterObject.city}
-                                   onChange={handleChange}></input>
-                          </div>
-                        </div>
+                      <div className="row marl mt-2">                        
+                        <TextInput  elementSize="col-md-3" labelName="First Name" attrName="first_name" attrPlaceholder="First Name" inputId="id_first_name" 
+                                    value={filterObject.first_name} onChange={handleChange}/>
+                        <TextInput  elementSize="col-md-3" labelName="City" attrName="city" attrPlaceholder="City" inputId="id_city" 
+                                    value={filterObject.city} onChange={handleChange}/>                                                
                         <ReactSelect  elementSize="col-md-3" labelName="Assigned To" isMulti={true} options={assignedUsers}
                                       value={filterObject.assignedTo} getChangedValue={(e) => ReactSelectHandleChange(e, 'assignedUsers')}/>                                      
                         <div className="filter_col text-center col-3">

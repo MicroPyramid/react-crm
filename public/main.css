@@ -2275,7 +2275,13 @@ input[type=number] {
 		margin-bottom: 1px;
 		margin-left: 1px;		
 		border: none !important;
-		width: 45px;
+		width: 45px;		
+	}
+	.selected-flag:hover {
+		background: #ccc;
+	}
+	.flag-dropdown:hover {
+		background: red;
 	}
 	
 
