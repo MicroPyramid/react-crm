@@ -7,10 +7,9 @@ import ViewActionButton from '../UIComponents/ActionButtons/ViewActionButton';
 import EditActionButton from '../UIComponents/ActionButtons/EditActionButton';
 import DeleteActionButton from '../UIComponents/ActionButtons/DeleteActionButton';
 import Modal from '../UIComponents/Modal/Modal';
+import { getApiResults } from '../Utilities';
 
-export default function Contacts(props) {  
-
-  // console.log(props);
+export default function Contacts(props) {    
 
   const [contacts, setContacts] = useState([]);
   const [isFilterAvailable, setIsFilterAvailable] = useState(false);
@@ -19,9 +18,20 @@ export default function Contacts(props) {
   useEffect(() => {
     setContacts(props.contacts.contact_obj_list);    
     getAssignedTo();
+    if(props.history.location.pathname === "/contacts/") {
+      updateContacts();
+    }
     
   }, []);
   
+  const updateContacts = () => {
+    const resAcc = getApiResults(CONTACTS);    
+    resAcc.then(res => {
+      console.log(res);
+      setContacts(res.data.contact_obj_list);
+    });
+  }
+
   const getAssignedTo = () => {
     
   }

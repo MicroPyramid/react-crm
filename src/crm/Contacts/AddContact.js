@@ -17,8 +17,7 @@ function AddContact(props) {
     description: '', contact_attachment: '',
     errors: {}
   });
-  const [file, setFile] = useState([]);
-  const [isValidationsPassed, setIsValidationsPassed] = useState(true);
+  const [file, setFile] = useState([]);  
 
   const handleChange = (e) => {    
     setContactObject({...contactObject, [e.target.name]: e.target.value})    
@@ -42,20 +41,7 @@ function AddContact(props) {
         Authorization: `jwt ${localStorage.getItem('Token')}`,
         company: `${localStorage.getItem('SubDomain')}`
       }
-    }
-
-    let data = {
-        first_name: contactObject.first_name,
-        last_name: contactObject.last_name,        
-        email: contactObject.email,
-        address_line: contactObject.address_line,
-        street: contactObject.street,
-        city: contactObject.city,
-        state: contactObject.state,
-        postcode: contactObject.postcode,
-        country: contactObject.country,
-        description: contactObject.description,
-    }
+    }    
 
     const formData = new FormData();
     formData.append("first_name", contactObject.first_name);
@@ -70,41 +56,31 @@ function AddContact(props) {
     formData.append("country", contactObject.country);
     formData.append("description", contactObject.description);
     formData.append("account_attachment", file);    
-
-    let validateData = {
-        first_name: contactObject.first_name,
-        last_name: contactObject.last_name,
-        email: contactObject.email,
-        phone: contactObject.phone
-    }
     
-    let validationResults = Validations(validateData);
+    let validationResults = Validations(contactObject);
     setContactObject({...contactObject, errors: validationResults});
 
+    let isValidationsPassed = true;
     for (let i in validationResults) {      
-      if (validationResults[i].length > 0) {
-        setIsValidationsPassed(false);
+      if (validationResults[i].length > 0) {        
+          isValidationsPassed = false;
           break;
       }
     }
     
     if (isValidationsPassed){
-      axios.post(`${CONTACTS}`, data, config)
+      axios.post(`${CONTACTS}`, formData, config)
           .then ( res =>  {
             console.log(res);
-            if(!res.data.error) {
-              setTimeout(() => {
-                props.history.push({
-                  pathname: '/contacts/',
-                  state: "contacts"
-                }, 500)
+            if(res.status === 200) {
+              props.history.push({
+                pathname: '/contacts/',
+                state: "contacts"
               })
             }
           })
           .catch(err => err);
-    }
-
-    
+    }    
   }    
 
   return(

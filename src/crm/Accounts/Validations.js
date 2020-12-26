@@ -1,7 +1,8 @@
 
 export const Validations = (values) => {
   
-  let errors = { };  
+  console.log(values);
+  let errors = { };
   
   errors.name = (!values.name.trim()) ? 'This field is required' : '';     
   errors.email = (!values.email.trim()) ? 'This field is required' : 

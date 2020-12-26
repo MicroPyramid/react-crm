@@ -63,7 +63,7 @@ export default function EditAccount(props) {
   
   const getAccount = () => {
     let userId = window.location.pathname.split('/')[2];
-    let account = getApiResults(`${ACCOUNTS}${userId}/`);    
+    let account = getApiResults(`${ACCOUNTS}${userId}/`);        
     account.then( acc => {          
       setAccountObject({...accountObject, name: acc.data.account_obj.name,
         website: acc.data.account_obj.website,
@@ -85,7 +85,7 @@ export default function EditAccount(props) {
     })    
   }
 
-  console.log(accountObject);
+  // console.log(accountObject);
 
   const handleChange = (e) => {    
     setAccountObject({...accountObject, [e.target.name]: e.target.value})    
@@ -106,7 +106,7 @@ export default function EditAccount(props) {
   const handleTag = (e) => {    
     e.preventDefault();
     if(tags.includes(e.target.value)) {
-      setTagErrorStyle('invalid_tag');      
+      setTagErrorStyle('invalid_tag');
     }else{
       setTagErrorStyle('');      
     }    
@@ -121,7 +121,7 @@ export default function EditAccount(props) {
     let filesArray = [...accountObject.files];  
     let newFile = e.target.files[0];
     filesArray.push(newFile);
-    console.log(newFile);    
+    // console.log(newFile);    
     setAccountObject({...accountObject, files: filesArray});
   }
     
@@ -129,8 +129,10 @@ export default function EditAccount(props) {
   const removeFile = (createdOn) => {
       let dupFiles = [...accountObject.files];
       let remainingFiles = dupFiles.filter(file => file.created_on !== createdOn);
+      console.log(remainingFiles);
       setAccountObject({...accountObject, files: remainingFiles});
   }
+  console.log(accountObject);
 
   const updateAccount = (e) => {
     e.preventDefault();
@@ -154,7 +156,8 @@ export default function EditAccount(props) {
       }
     }
 
-    
+    let filesData = accountObject.files.map(file => (file.File) ? '{'+file.File+'}' : file);    
+
     const formData = new FormData();
     formData.append("name", accountObject.name);
     formData.append("website", accountObject.website);
@@ -169,25 +172,22 @@ export default function EditAccount(props) {
     formData.append("billing_country", accountObject.billing_country);
     formData.append("contacts", convertArrayToString(accountObject.contacts.map(account => account.id)));
     formData.append("status", accountObject.status);
-    formData.append("tags", convertArrayToString(tags));    
-    console.log(accountObject.files);    
+    formData.append("tags", convertArrayToString(tags));        
     accountObject.files.forEach(file => {      
       formData.append("account_attachment", file);
     })
-      
-
+    
+    
     if (isValidations) {
       axios.put(`${ACCOUNTS}${userId}/`, formData, config)
-        .then(res => {          
-          if(!res.data.error) {
-            setTimeout(() => { 
+        .then(res => {                                
+            if(res.status === 200) {        
               props.history.push({
                 pathname: '/accounts/',          
                 state: "accounts"
-              }, 500)
-            })                    
-          }
-        }).catch(err => {       
+              });
+            }
+        }).catch(err => {
         })
     }
 

@@ -9,7 +9,7 @@ import SelectComponent from '../UIComponents/Inputs/SelectComponent';
 import { countries } from '../optionsData';
 import { Validations } from './Validations';
 
-function EditContact() {
+function EditContact(props) {
 
   const [contactObject, setContactObject] = useState({
     first_name: '', last_name: '', phone: '', email: '',      
@@ -17,7 +17,7 @@ function EditContact() {
     description: '', contact_attachment: '',
     errors: {}
   });
-  const [isValidationsPassed, setIsValidationsPassed] = useState(true);
+  const [file, setFile] = useState([]);    
 
   useEffect(() => {
     getContact();
@@ -42,9 +42,7 @@ function EditContact() {
         description: result.data.contact_obj.description,
       }); 
     })
-  }
-
-  const [file, setFile] = useState([]);
+  }  
 
   const handleChange = (e) => {    
     setContactObject({...contactObject, [e.target.name]: e.target.value})    
@@ -61,8 +59,7 @@ function EditContact() {
   const updateContact = (e) => {
     e.preventDefault();
     let userId = window.location.pathname.split('/')[2];
-    let targetName = e.target.name;
-    let phone = `+${contactObject.phone}`;
+    let targetName = e.target.name;    
 
     let config = {
       headers: {
@@ -72,41 +69,43 @@ function EditContact() {
       }
     }
 
-    let data = {
-        first_name: contactObject.first_name,
-        last_name: contactObject.last_name,
-        phone: phone,
-        email: contactObject.email,
-        address_line: contactObject.address_line,
-        street: contactObject.street,
-        city: contactObject.city,
-        state: contactObject.state,
-        postcode: contactObject.postcode,
-        country: contactObject.country,
-        description: contactObject.description,
-    }
+    const formData = new FormData();
+    formData.append("first_name", contactObject.first_name);
+    formData.append("last_name", contactObject.last_name);
+    formData.append("phone", '+'+contactObject.phone);
+    formData.append("email", contactObject.email);
+    formData.append("address_line", contactObject.address_line);
+    formData.append("street", contactObject.street);
+    formData.append("postcode", contactObject.postcode);
+    formData.append("city", contactObject.city);
+    formData.append("state", contactObject.state);
+    formData.append("country", contactObject.country);
+    formData.append("description", contactObject.description);
+    formData.append("account_attachment", file);    
 
-    let validateData = {
-      first_name: contactObject.first_name,
-      last_name: contactObject.last_name,
-      email: contactObject.email,
-      phone: contactObject.phone
-    }
-
-    let validationResults = Validations(validateData);    
+    let validationResults = Validations(contactObject);
     setContactObject({...contactObject, errors: validationResults});
+
+    let isValidationsPassed = true;
 
     for (let i in validationResults) {      
       if (validationResults[i].length > 0) {
-        setIsValidationsPassed(false);
+          isValidationsPassed = false;
           break;
       }
     }
     
     if(isValidationsPassed) {
-      axios.put(`${CONTACTS}${userId}/`, data, config)
-            .then(res => res)
-            .catch(err => err);
+      axios.put(`${CONTACTS}${userId}/`, formData, config)
+      .then(res => {                                
+        if(res.status === 200) {        
+          props.history.push({
+            pathname: '/accounts/',          
+            state: "accounts"
+          });
+        }
+      }).catch(err => {
+      })
     }
   }
 

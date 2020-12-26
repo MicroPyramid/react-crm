@@ -33,14 +33,15 @@ const Accounts = (props) => {
   const updateAccounts = () => {
     const resAcc = getApiResults(ACCOUNTS);    
     resAcc.then(res => {
+      console.log(res);
       setOpenAccounts(res.data.open_accounts);
       setClosedAccounts(res.data.close_accounts);
     })
   }
 
-  const stateUpdate = (res) => {    
+  const stateUpdate = (res) => {        
     setOpenAccounts(res.open_accounts);
-    setClosedAccounts(res.closed_accounts);
+    setClosedAccounts(res.closed_accounts);    
   }
 
   const getTags = () => {

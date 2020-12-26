@@ -6,7 +6,7 @@ export default function DeleteActionButton(props) {
   let {api, id, to} = props;  
   
   const deleteObject = (e) => {
-
+    e.preventDefault();   
     let config = {
       headers: {
         'Content-Type': 'application/json',          
@@ -15,20 +15,20 @@ export default function DeleteActionButton(props) {
       }
     }
 
-    e.preventDefault();    
+     
     let resConf = window.confirm("Are you sure to cancel");    
       if (resConf) {
-      axios.delete(`${api}${id}/`, config).then(res => {        
-        if(res.request.status === 200) {
+      axios.delete(`${api}${id}/`, config).then(res => { 
+        console.log(res);
+        if(res.status === 200) {
           setTimeout( () => {                           
             axios.get(`${api}/`, config)
             .then (res => {
-              props.stateUpdate(res);          
+              props.stateUpdate(res);
             });
           }, 300); 
         }         
-      });
-             
+      });             
   }
   }
   return (

@@ -15,9 +15,7 @@ import { getApiResults, convertArrayToString } from '../Utilities';
 import axios from 'axios';
 import { getContactsForReactSelect, getLeadsForReactSelect } from '../network';
 
-const AddAccount = (props) => {
-  
-  console.log(props);
+const AddAccount = (props) => {  
 
   const [accountObject, setAccountObject] = useState({
       name: '', website: '', phone: '', email: '',
@@ -28,12 +26,10 @@ const AddAccount = (props) => {
   const [leads, setLeads] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [tags, setTags] = useState([]);
-  const [file, setFile] = useState('');
-  const [isValidations, setIsValidations] = useState('true');
+  const [file, setFile] = useState('');  
   const [errors, setErrors] = useState({});   
   const [tagErrorStyle, setTagErrorStyle] = useState(''); 
-  const [invalidTag, setIsInvalidTag] = useState([]);    
-
+  const [invalidTag, setIsInvalidTag] = useState([]);     
 
   useEffect(() => {
     getContacts();
@@ -60,7 +56,7 @@ const AddAccount = (props) => {
     setLeads(leadsArray);
   }
 
-  const handleChange = (e) => {    
+  const handleChange = (e) => {        
     setAccountObject({...accountObject, [e.target.name]: e.target.value})
   }    
 
@@ -96,15 +92,18 @@ const AddAccount = (props) => {
 
   const saveAccount = (e) => { 
     e.preventDefault();    
+
     let targetName = e.target.name;
     
     // Validation
-    let validationResults = Validations(accountObject);       
-    
+    let validationResults = Validations(accountObject);           
     setErrors(validationResults);
+    
+    let isValidationsPassed = true;
+    
     for (let i in validationResults) {      
-      if (validationResults[i].length > 0) {
-          setIsValidations(false);
+      if (validationResults[i].length > 0) {          
+          isValidationsPassed = false;
           break;
       }
     }      
@@ -136,24 +135,22 @@ const AddAccount = (props) => {
           ));
     formData.append("account_attachment", file);
    
-
-    if (isValidations) {            
+    
+    if (isValidationsPassed) {
       axios.post(`${ACCOUNTS}`, formData, config)
-        .then(res => {
-              console.log(res);
-              if(!res.data.error) {
-                setTimeout(() => { 
-                  props.history.push({
-                    pathname: '/accounts/',          
-                    state: "accounts"
-                  }, 500)
-                })
+        .then(res => {              
+              if(res.status === 200) {        
+                props.history.push({
+                  pathname: '/accounts/',          
+                  state: "accounts"
+                });
               }
             })
-      }        
+      }
 
   }  
 
+  
     return (
       <div id="mainbody" className="main_container" style={{ marginTop: '65px' }}>        
         <BreadCrumb target="accounts" action="create" />
