@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { DOMAIN } from '../common/apiUrls';
 
 export default class ValidateDomain extends Component {
   constructor(){
@@ -11,7 +12,7 @@ export default class ValidateDomain extends Component {
 
   onClick() {
     if(this.state.domain !== '') {
-    fetch('https://bottlecrm.com/api-common/validate-subdomain/',
+      fetch(`${DOMAIN}validate-subdomain/`,
       { method: 'POST',
         headers: 
           {
@@ -24,7 +25,7 @@ export default class ValidateDomain extends Component {
         if(res.status === "failure") {
           this.setState({ errors: res })
         } else {
-          const redirectUrl = `//${this.state.domain}.bottlecrm.com/login`;
+          const redirectUrl = `//${this.state.domain}.bottlecrm.com/login`;                                                       
           window.location.href = redirectUrl;
         }
       })
