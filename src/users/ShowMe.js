@@ -6,16 +6,16 @@ const ShowMe = (props) => {
     return(
         <div className="container">
 
-<div class="card">
-  <div class="card-header">
+<div className="card">
+  <div className="card-header">
     <b>FILTER</b>
   </div>
-  <div class="card-body">
+  <div className="card-body">
               <form>
-  <div className="form-row">
-      <div class="form-group col-md-12">
+  <div classNameName="form-row">
+      <div className="form-group col-md-12">
           <label><b>USERNAME</b></label>
-          <input type="text" value={props.value} onChange={props.onChange} class="form-control" placeholder="search username" />
+          <input type="text" value={props.value} onChange={props.onChange} className="form-control" placeholder="search username" />
 
     </div>
   </div>

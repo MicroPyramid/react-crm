@@ -26,7 +26,8 @@ componentDidMount(){
         
         
        })
-    console.log(posRes.data);
+   // console.log(posRes.data);
+   // console.log(posRes.data);
  }, (errRes)=> {
      console.log(errRes)
      });

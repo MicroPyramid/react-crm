@@ -30,32 +30,32 @@ onInputChange = e => {
             <div>
                  <div>
                 < div className="container mt-5">
-  <div class="card">
-    <div class="card-header">
+  <div className="card">
+    <div className="card-header">
      <b>CHANGE PASSWORD</b>
     </div>
-    <div class="card-body">
+    <div className="card-body">
        <form onSubmit = {this.onSubmitPassword}>
        
-    <div class="form-group">
+    <div className="form-group">
       <label><b>Old Password</b></label>
-      <input type="password" name="old_password" value={old_password}  onChange={this.onInputChange} class="form-control" placeholder="password" required />
+      <input type="password" name="old_password" value={old_password}  onChange={this.onInputChange} className="form-control" placeholder="password" required />
     </div>
 
-    <div class="form-group">
+    <div className="form-group">
       <label><b>New Password</b></label>
-      <input type="password" name="new_password" value={new_password}  onChange={this.onInputChange} class="form-control" placeholder="password" required />
+      <input type="password" name="new_password" value={new_password}  onChange={this.onInputChange} className="form-control" placeholder="password" required />
     </div>
-    <div class="form-group">
+    <div className="form-group">
       <label><b>Old Password</b></label>
-      <input type="password" name="retype_password" value={retype_password}  onChange={this.onInputChange} class="form-control" placeholder="password" required />
+      <input type="password" name="retype_password" value={retype_password}  onChange={this.onInputChange} className="form-control" placeholder="password" required />
     </div>
     
-       <div class="text-center">
-   <button type="submit" class="btn btn-success">
+       <div className="text-center">
+   <button type="submit" className="btn btn-success">
        Change
    </button>
-   <Link to='/profile' class="btn btn-light">Cancel</Link>
+   <Link to='/profile' className="btn btn-light">Cancel</Link>
    </div>
        </form>
     </div>

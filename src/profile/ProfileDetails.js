@@ -33,23 +33,23 @@ class ProfileDetails extends React.Component{
  
                <div className="card-body">
        <form>            
-     <div class="form-group row">
-    <label for="staticEmail" class="col-sm-2 col-form-label">Name:</label>
-    <div class="col-md-6">
-      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value={profile.first_name+profile.last_name}/>
+     <div className="form-group row">
+    <label for="staticEmail" className="col-sm-2 col-form-label">Name:</label>
+    <div className="col-md-6">
+      <input type="text" readonly className="form-control-plaintext" id="staticEmail" value={profile.first_name+profile.last_name}/>
     </div>
   </div>
  
-  <div class="form-group row">
-    <label for="staticEmail" class="col-sm-2 col-form-label">Username</label>
-    <div class="col-md-6">
-      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value={profile.username} />
+  <div className="form-group row">
+    <label for="staticEmail" className="col-sm-2 col-form-label">Username</label>
+    <div className="col-md-6">
+      <input type="text" readonly className="form-control-plaintext" id="staticEmail" value={profile.username} />
     </div>
   </div>
-  <div class="form-group row">
-    <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
-    <div class="col-md-6">
-      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value={profile.email} />
+  <div className="form-group row">
+    <label for="staticEmail" className="col-sm-2 col-form-label">Email</label>
+    <div className="col-md-6">
+      <input type="text" readonly className="form-control-plaintext" id="staticEmail" value={profile.email} />
     </div>
   </div>
     <div class="form-group row">

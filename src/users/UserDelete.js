@@ -35,16 +35,20 @@ class UserDelete extends React.Component{
 render() {
     return (
 <div className="container mt-5 py-5">
-<div class="card">
-  <div class="card-header">
+  <div className="row">
+    <div className="col-6 offset-3">
+<div className="card">
+  <div className="card-header">
     Delete User
   </div>
-  <div class="card-body">
+  <div className="card-body">
     
-    <p class="card-text"> Are You sure you want to delete this user ?</p>
+    <p className="card-text"> Are You sure you want to delete this user ?</p>
     <button onClick={this.deleteUser} className="btn btn-primary">Delete</button>
          <Link to='/user' className="btn btn-secondary">Cancel</Link>
   </div>
+</div>
+</div>
 </div>
 </div>
 

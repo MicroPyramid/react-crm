@@ -22,7 +22,7 @@ componentDidMount(){
     this.setState({ 
         inactiveuser : posRes.data.inactive_users
        })
-      console.log(this.state.inactiveuser)
+     // console.log(this.state.inactiveuser)
  }, (errRes)=> {
      console.log(errRes)
      });

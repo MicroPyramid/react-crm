@@ -35,17 +35,21 @@ class Status extends React.Component{
        
     render(){
         return (
-            <div className="container mt-5">
+            <div className="container mt-5 py-5">
+              <div className="row">
+                <div className="col-6 offset-3">
  <div class="card">
    <div class="card-header">
     inactive User?
    </div>
-   <div class="card-body">
+   <div className="card-body">
     
-     <p class="card-text"> Are You sure you want to deactivate this user ?</p>
+     <p className="card-text"> Are You sure you want to deactivate this user ?</p>
      <button onClick={this.inactiveuser} className="btn btn-primary">Ok</button>
           <Link to='/user' className="btn btn-secondary">Cancel</Link>
    </div>
+ </div>
+ </div>
  </div>
  </div>
 

@@ -68,11 +68,11 @@ class UserEdit extends React.Component{
            
         return(
           <div className= "container mt-5 py-5">
-          <div class="card">
-          <div class="card-header text-center">
+          <div className="card">
+          <div className="card-header text-center">
            <b><i>EDIT USER</i></b> 
           </div>
-          <div class="card-body">
+          <div className="card-body">
 
           <form onSubmit={this.onSubmit}>
             {/* <h1 className="text-center bg-light">Edit User</h1> */}
@@ -93,11 +93,11 @@ class UserEdit extends React.Component{
     
     </div>
     <div className="form-row">
-    <div class="form-group col-md-4">
+    <div className="form-group col-md-4">
       <label><b>Upload Profile Picture</b></label>
       <input type="file" name="profile_pic" value={this.state.profile_pic}  onChange={this.onHandleChange} className="form-control" />
     </div>
-    <div class="form-group col-md-4">
+    <div className="form-group col-md-4">
     <label><b>Marketing Access</b></label>
     <select  name="has_marketing_access" onChange={this.onHandleChange}  class="form-control" required >
     <option >.....</option>
@@ -105,7 +105,7 @@ class UserEdit extends React.Component{
         <option  value={true} > true </option>
       </select>
     </div>
-    <div class="form-group col-md-4">
+    <div className="form-group col-md-4">
     <label><b>Sales Access</b></label>
     <select name="has_sales_access" onChange={this.onHandleChange} class="form-control" required >
     <option  >.....</option>
@@ -118,13 +118,8 @@ class UserEdit extends React.Component{
     
     </div>
 
-    <label><b>Status</b></label>
-    <select  name="this.state.user.is_active" onChange={this.onHandleChange}  class="form-control" required >
-    <option >.....</option>
-     <option value={false} >false</option>
-       
-      </select>
-    <div class="text-center">
+    
+    <div className="text-center">
   <button type="submit" class="btn btn-success">Save</button>
   <Link to='/user' class="btn btn-light">Cancel</Link>
   </div>
