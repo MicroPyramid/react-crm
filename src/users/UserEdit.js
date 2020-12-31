@@ -7,7 +7,7 @@ class UserEdit extends React.Component{
    
   state ={ 
 
-     username : '',
+    username : '',
     first_name : '',
     last_name : '',
     profile_pic: null,
@@ -58,16 +58,12 @@ class UserEdit extends React.Component{
         
         }
 
-     
-
-        
-    render() {
-    //   if(!this.state.user){
-    //     return <div>Loading</div>
-    // }
-           
-        return(
+   render() {
+  
+    return(
           <div className= "container mt-5 py-5">
+             <div className="row">
+              <div className="col-6 offset-3">
           <div className="card">
           <div className="card-header text-center">
            <b><i>EDIT USER</i></b> 
@@ -75,13 +71,12 @@ class UserEdit extends React.Component{
           <div className="card-body">
 
           <form onSubmit={this.onSubmit}>
-            {/* <h1 className="text-center bg-light">Edit User</h1> */}
       <div className="form-row">
-      <div className="col-md-4">
+      <div className="form-group col-md-4">
         <label><b>First Name</b></label>
         <input type="text" name="first_name" value={this.state.first_name} onChange={this.onHandleChange} className="form-control" required />
       </div>
-      <div className="col-md-4">
+      <div className="form-group col-md-4">
         <label><b>Last Name</b></label>
         <input type="text" name="last_name" value={this.state.last_name}  onChange={this.onHandleChange}  className="form-control" />
       </div>
@@ -92,12 +87,12 @@ class UserEdit extends React.Component{
         </div>
     
     </div>
-    <div className="form-row">
-    <div className="form-group col-md-4">
+    <div className="form-group">
       <label><b>Upload Profile Picture</b></label>
       <input type="file" name="profile_pic" value={this.state.profile_pic}  onChange={this.onHandleChange} className="form-control" />
     </div>
-    <div className="form-group col-md-4">
+    <div className="form-row">
+    <div className="form-group col-md-6">
     <label><b>Marketing Access</b></label>
     <select  name="has_marketing_access" onChange={this.onHandleChange}  class="form-control" required >
     <option >.....</option>
@@ -105,7 +100,7 @@ class UserEdit extends React.Component{
         <option  value={true} > true </option>
       </select>
     </div>
-    <div className="form-group col-md-4">
+    <div className="form-group col-md-6">
     <label><b>Sales Access</b></label>
     <select name="has_sales_access" onChange={this.onHandleChange} class="form-control" required >
     <option  >.....</option>
@@ -126,7 +121,8 @@ class UserEdit extends React.Component{
     </form>
           </div>
         </div>
-
+          </div>
+          </div>
           </div>
          
         )

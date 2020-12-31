@@ -1,7 +1,7 @@
 import React from 'react'
 import apiurl from '../../api/apiurl'
 import { Link } from 'react-router-dom'
-import ShowMe from '../ShowMe'
+
 
 
 class InactiveUsers extends React.Component{
@@ -10,7 +10,6 @@ class InactiveUsers extends React.Component{
     super();
     this.state= {
         inactiveuser : [],
-        show : true,
         term : ''
     }
     }
@@ -66,20 +65,17 @@ componentDidMount(){
                                 return val;
                             }
                         }).map(user=> ( 
-                        <tr>
+                         
+                        <tr key={user.id}>
                         <td>{user.id}</td>
                         <td>{user.username}</td>
                         <td>{user.email}</td>
                         <td>{user.role}</td>
                         <td> 
-                         {/* <Link to="/users/show" className="btn btn-primary mr-2">View</Link> */}
-                           
                          <Link to={`/users/edit/${user.id}`} className="btn btn-warning mr-2">Edit</Link>
                          <Link to ={`/users/delete/${user.id}`} className="btn btn-danger"> Delete </Link>
                           
-                         
-        
-                         </td>
+                          </td>
                         </tr> 
                         ))} 
                         </tbody>
@@ -88,10 +84,7 @@ componentDidMount(){
                         
                         </div>
                         </div>
-                
-           
-            
-        </div> 
+                      </div> 
                   )
                 }
             }

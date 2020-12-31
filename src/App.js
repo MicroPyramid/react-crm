@@ -12,10 +12,6 @@ import User from './users/User'
 import UserCreate from './users/UserCreate'
 import UserEdit from './users/UserEdit'
 import UserDelete from  './users/UserDelete'
-import Settings from './settings/Settings';
-import Contacts from './settings/Contacts';
-import BlockedDomain from './settings/BlockedDomain';
-import BlockedEmail from './settings/BlockedEmail';
 import Status from './users/Status'
 import ProfileDetails from './profile/ProfileDetails'
 import ProfileChangePassword from './profile/ProfileEdit';
@@ -41,12 +37,7 @@ function App() {
           <Route exact path={'/users/edit/:id'}  component={UserEdit} />
           <Route exact path={'/users/delete/:id'}  component={UserDelete} />
           <Route exact path={'/users/status/:id'}  component={Status} />
-
-          <Route exact path={'/settings'} component={Settings} />
-          <Route exact path={'/contacts'} component={Contacts} />
-          <Route exact path={'/blockdomain'} component={BlockedDomain} />
-          <Route exact path={'/blockemail'} component={BlockedEmail} />
-          <Route exact path={'/profile'} component={ProfileDetails} />
+           <Route exact path={'/profile'} component={ProfileDetails} />
           <Route exact path={'/profile/change-password'} component={ProfileChangePassword} />
           
 

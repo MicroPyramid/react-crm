@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { DOMAIN } from '../common/apiUrls'
 
 export default class ValidateDomain extends Component {
   constructor(){
@@ -11,18 +12,23 @@ export default class ValidateDomain extends Component {
 
   onClick() {
     if(this.state.domain !== '') {
-    fetch('https://bottlecrm.com/api/auth/validate-subdomain/',
-      { method: 'POST',
+  
+    fetch(`${DOMAIN}validate-subdomain/`,
+      { 
+        method: 'POST',
         headers: 
           {
             'Content-Type': 'application/json',
+
           },
         body: JSON.stringify({ sub_domain: this.state.domain })
       })
-      .then((res) => res.json())
+      .then((res) => res.json())  
       .then((res) => {
         if(res.status === "failure") {
+          
           this.setState({ errors: res })
+         
         } else {
           const redirectUrl = `//${this.state.domain}.localhost:3000/login`;
           window.location.href = redirectUrl;

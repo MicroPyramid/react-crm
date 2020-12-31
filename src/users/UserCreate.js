@@ -45,7 +45,8 @@ class UserCreate extends React.Component{
       const { username ,password, email, role, first_name,last_name,profile_pic,has_sales_access,has_sales_access_true,has_marketing_access_true,has_marketing_access,status }= this.state
         return(
             <div class="container py-5 mt-5">
-
+           <div className="row">
+          <div className="col-6 offset-3">
           <div class="card">
           <div class="card-header text-center">
                <b><i>CREATE USER</i></b> 
@@ -128,7 +129,8 @@ class UserCreate extends React.Component{
                    </div>
               </div>
       
-       
+       </div>
+       </div>
       </div>
         )
     }

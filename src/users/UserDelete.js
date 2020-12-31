@@ -38,8 +38,8 @@ render() {
   <div className="row">
     <div className="col-6 offset-3">
 <div className="card">
-  <div className="card-header">
-    Delete User
+  <div className="card-header text-center">
+   <b><i>Delete User</i></b> 
   </div>
   <div className="card-body">
     

@@ -108,7 +108,7 @@ componentDidMount(){
                                 return val;
                             }
                         }).map((user,index) => ( 
-                        <tr>
+                        <tr key={user.id}>
                         <td>{user.id}</td>
                         <td>{user.username}</td>
                         <td>{this.displayDate(user.date_joined)}</td>
