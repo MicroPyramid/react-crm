@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {DOMAIN} from '../common/apiUrls';
 
 export default class Register extends Component{
   constructor(){
@@ -17,7 +18,8 @@ export default class Register extends Component{
       if(this.state.username !== '') {
         if(this.state.email !== '') {
           if(this.state.password !== '') {
-            fetch('https://bottlecrm.com/api/auth/register/',
+           
+            fetch(`${DOMAIN}register/`,
               { method: 'POST',
                 headers: 
                   {

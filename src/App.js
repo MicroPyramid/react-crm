@@ -14,7 +14,7 @@ import UserEdit from './users/UserEdit'
 import UserDelete from  './users/UserDelete'
 import Status from './users/Status'
 import ProfileDetails from './profile/ProfileDetails'
-import ProfileChangePassword from './profile/ProfileEdit';
+import ProfileChangePassword from './profile/ProfileChangePassword';
 
 
 
