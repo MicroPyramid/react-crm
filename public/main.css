@@ -758,7 +758,8 @@ header .navbar .navbar-form .btn.btn-default {
 	color: #000!important;
 	position: absolute;
 	background: #fff;
-	top: -6px;
+	top: -23px;
+	right: -10px;
 	padding: 1px;
 	border-radius: 50%;
 	font-size: 0.6rem;
@@ -1911,27 +1912,61 @@ pre {
 	color: #a7a7a7a7
 }
 
-.actions .edit svg path,
-.actions .delete svg path {
-	fill: white
+.action__btn-view-a {
+	background: #28a745;	
+}
+.action__btn-edit-a {
+	background: #099cbe;
+}
+.action__btn-delete-a {
+	background: #ffc107;
+}
+.action__btn-email-a {
+	background: #3385ff;
+}
+.action__btn-view-a, 
+.action__btn-edit-a,
+.action__btn-delete-a,
+.action__btn-email-a {
+	padding: 10px 13px;	
+	border-radius: 5px;	
+	display: inline-block;
+	margin-top: 2px;
+}
+.action__btn-view-a:hover {
+	background: #067d97;
+}
+.action__btn-edit-a:hover {
+	background: #079b29;
+}
+.action__btn-delete-a:hover {
+	background: rgb(215, 41, 41);
+}
+.action__btn-email-a:hover {
+	background: #0066ff;
 }
 
-.btn-danger {
-	background-color: #ffc107;
-	border-color: #ffc107;
-	color: #fff!important
+.action__btn {
+	width: 20px;			
 }
 
-.btn-success {
-	color: #fff!important;
-	background-color: #099cbe;
-	border-color: #099cbe
+.svg-size {
+	font-size: 5px;
+	height: 15px;
+	width: 15px;
 }
-
-.btn-info {
-	color: #fff!important;
-	background: #28a745;
-	border-color: #35a745
+.svg-inline--fa {
+	width: 15px;
+}
+.action__btn-view,
+.action__btn-edit,
+.action__btn-delete,
+.action__btn-email {		
+	color: #fff;
+}
+.fa-plus-svg {
+	margin-top: -1px;	
+	padding-right: 2px;
 }
 
 .mention-wrapper {
@@ -2008,3 +2043,281 @@ pre {
 .mention-options .mention-option.show {
 	display: block
 }
+
+
+/*------------------------------------------------
+# Accounts
+--------------------------------------------------*/
+.btn-warning-remove:hover {
+	background: #c82333;
+	border-color: #db2130;
+}
+.btn-success-edit:hover {
+	background-color: #218838;
+	border-color: #1e7e34;
+}
+.tags-wrapper {
+	border: 1px solid #ccc;
+	height: 100px;	
+	justify-content: flex-start;
+	align-items: flex-start;
+	overflow: scroll;
+	padding-left: -10px;		
+}
+.tags-ul {	
+	padding: 0;	
+	margin-left: 5px;
+	margin-top: 5px;
+}
+.tag-list-item {
+	float: left;
+	list-style-type: none;
+	padding: 0;
+	font-size: 13px;
+	margin-right: 5px;
+	margin-bottom: 5px;
+	background: #cde69c;
+	color: #638421;
+	border: 1px solid #a5d24a;
+	border-radius: 2px;
+	padding: 5px 4px;
+}
+.tag-list-item b {
+	padding: 0px 2px 0px 8px;	
+	color: #7ba822;	
+	font-size: 12px;
+	cursor: pointer;
+}
+.tags-input {
+	width: 68px;
+	margin-left: 10px;
+	border: none;
+	display: block;
+	margin-top: -10px;	
+	margin-right: 0px;
+	font-size: 13px;	
+}
+.tags-input::placeholder {
+	font-size: 13px;		
+}
+.invalid_tag {
+	background: #FBD8DB;
+	color: #90111A;
+	padding: 5px;
+	padding: 5px 5px 5px 5px;	
+}
+/*------------------------------------------------
+# Contacts
+--------------------------------------------------*/
+
+.display-filters {
+	display: block;
+}
+
+label {
+	font-weight: 600;
+}
+
+.btn_action,
+.btn_edit {
+		display: block;
+		position: absolute;
+		right: 0;
+		font-size: 14px;
+		border: none;
+		color: #fff;
+		cursor: pointer;
+}
+.btn_action {
+	background-color: rgb(224, 72, 72);
+	padding: 6px 9px;		
+}	
+.btn_edit {		
+	top: 28px;
+	background-color: #099CBE;				
+	padding: 5px 28.5px;		
+	color: #fff;
+}
+.btn_edit:hover {
+	color: #fff;
+}
+
+.overview {
+	padding-bottom: 30px;
+}
+.hide {
+	display: none;
+}
+.display_edit,
+.display {
+	display: block;
+}
+.descripton-text {
+	font-size: 0.85rem;
+}
+/*------------------------------------------------
+# Leads
+--------------------------------------------------*/
+
+.btn-info {
+	color: #fff!important;
+	background: #28a745;
+	border-color: #35a745;
+}
+
+.address_group > .filter_col > .form-group{
+	margin-bottom: 0;
+} 
+
+.address_group .filter_col:nth-child(2) {	
+	margin-top: -10px;	
+}
+
+.address_group .filter_col:nth-child(3) > .row .filter_col:nth-child(1),
+.address_group .filter_col:nth-child(3) > .row .filter_col:nth-child(3){
+	margin-top: -10px;	
+}
+
+.address_group .filter_col:nth-child(3) > .filter_col {
+	padding: 0;
+	margin-top: -25px;
+}
+
+/*------------------------------------------------
+# Documents
+--------------------------------------------------*/
+.doc-btn-edit {
+	background: #099cbe;
+	color: #fff;
+	position: absolute;
+	right: 10px;
+	height: 33px;
+	top: 3px;	
+	padding: 5px 10px 0px 10px;	
+}
+.doc-btn-edit:hover {
+	color: #fff;
+}
+.fa-file-alt-doc {
+	width: 40px;
+}
+
+
+/*------------------------------------------------
+# General
+--------------------------------------------------*/
+
+input[type="text"],
+input[type="tel"],
+input[type="email"]{
+	border-radius: 0;
+	font-size: 14px;
+}
+textarea:hover, 
+input:hover, 
+textarea:active, 
+input:active, 
+select:active,
+textarea:focus, 
+input:focus,
+button:focus,
+select:focus,
+button:active,
+button:hover,
+label:focus,
+.btn:active,
+.btn.active {
+  outline: 0px !important;
+  -webkit-appearance: none;
+  box-shadow: none !important;
+}
+::placeholder {
+	font-size: 14px;
+}
+.card-title-bg {
+	background: #e5e5e5;
+	padding: 6px 10px;
+	font-weight: 600;
+	font-size: 1rem
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/*------------------------------------------------
+# Componenet CSS
+--------------------------------------------------*/
+
+	/* Component: react-select */
+	.react_select div {
+		border-radius: 0;
+	}
+
+	/* Component: react-tel-input-2 */
+	.react-tel-input .form-control{
+		border-radius: 0 !important;
+		width: 100% !important;
+	}
+	.react-tel-input .form-control:focus {
+		border: 1px solid #80bfff;
+	}
+	.react-tel-input .flag-dropdown {
+		margin-top: 1px;
+		margin-bottom: 1px;
+		margin-left: 1px;		
+		border: none !important;
+		width: 45px;		
+	}
+	.selected-flag:hover {
+		background: #ccc;
+	}
+	.flag-dropdown:hover {
+		background: red;
+	}
+	
+
+
+	
+
+	/* Modal */
+	.tag {
+		display: inline-block;
+		color: #fff;
+		background: rgb(70, 69, 69);
+		padding: 3px 5px;
+		border-radius: 2px;
+		margin-top: 2px;
+		margin-right: 5px;
+		cursor: initial;		
+	}
+	.tag:hover {
+		color: #fff;
+	}
+	.modal-contact {
+		display: block;
+		color: rgb(70, 69, 69);	
+		cursor: initial;					
+	}
+	.modal-contact:hover {
+		color: rgb(70, 69, 69);				
+	}
+	.modal-assigned-users {
+		display: block;		
+	}
+
+	.mine-modal > .filter_col{				
+		width: 33%;
+	}
+	.modal-text-display {
+		display: inline-block;
+	}
+	
