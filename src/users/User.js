@@ -26,7 +26,7 @@ componentDidMount(){
         
         
        })
-   // console.log(posRes.data);
+   
  }, (errRes)=> {
      console.log(errRes)
      });
@@ -52,7 +52,6 @@ componentDidMount(){
 
     render(){
          const { usersList,inactiveuser , term } = this.state
-        // console.log(usersList.length)
         return (
             <div className="container-fluid py-5">
                         
@@ -71,18 +70,17 @@ componentDidMount(){
  
 
                         <nav>
-  <div class="nav nav-tabs" id="nav-tab" role="tablist">
-    <a class="nav-link active" class ="btn btn-success"  id="nav-user-tab" data-toggle="tab" href="#user" role="tab" aria-controls="nav-user" aria-selected="true">Active Users({usersList.length})</a>
-    <a class="nav-link"  className="btn btn-secondary"  id="nav-inactive-tab"  data-toggle="tab" href="#inactive" role="tab" aria-controls="nav-inactive" aria-selected="false">Inactive Users({inactiveuser.length})</a>
+  <div className="nav nav-tabs" id="nav-tab" role="tablist">
+    <a className="nav-link active" className ="btn btn-success"  id="nav-user-tab" data-toggle="tab" href="#user" role="tab" aria-controls="nav-user" aria-selected="true">Active Users({usersList.length})</a>
+    <a className="nav-link"  className="btn btn-secondary"  id="nav-inactive-tab"  data-toggle="tab" href="#inactive" role="tab" aria-controls="nav-inactive" aria-selected="false">Inactive Users({inactiveuser.length})</a>
   </div>
 </nav>
-<div class="tab-content" id="nav-tabContent">
-  <div class="tab-pane fade show active" id="user" role="tabpanel" aria-labelledby="nav-home-tab">
+<div className="tab-content" id="nav-tabContent">
+  <div className="tab-pane fade show active" id="user" role="tabpanel" aria-labelledby="nav-home-tab">
   <div>
             <div className="card">
                 <div className="card-header text-right bg-dark text-white"> <span className="float-left "><h6><b>Active Users - {usersList.length}</b></h6></span>
                 <button className="btn btn-warning btn-md" onClick={this.actions} >Filter</button>
-                {/* <input type = "text" value={this.state.term} onChange= {this.handleChange} placeholder="Search an user" /> */}
                 </div>
 
                 <div className="card-body bg-light">
@@ -107,7 +105,7 @@ componentDidMount(){
                             } else if(val.username.toLowerCase().includes(term.toLowerCase())){
                                 return val;
                             }
-                        }).map((user,index) => ( 
+                        }).map(user => ( 
                         <tr key={user.id}>
                         <td>{user.id}</td>
                         <td>{user.username}</td>
@@ -119,9 +117,9 @@ componentDidMount(){
                            
                         </td>
                         <td> 
-                        <Link to={`/users/status/${user.id}`} id={index}  >Active</Link>
+                        <Link to={`/users/status/${user.id}`}  >Active</Link>
 
-                            {/* // {user.is_active? 'Active' : 'inactive' } */}
+                          
                         </td>
                         <td> 
                            
@@ -144,7 +142,7 @@ componentDidMount(){
       
      
 
-  <div class="tab-pane fade" id="inactive" role="tabpanel" aria-labelledby="nav-inactive-tab">
+  <div className="tab-pane fade" id="inactive" role="tabpanel" aria-labelledby="nav-inactive-tab">
       
       <InactiveUsers />
       </div>
@@ -152,12 +150,7 @@ componentDidMount(){
 
 
                         </div>
-
-            
-         
-       
-
-                 )
+                        )
                 }
             
             }
