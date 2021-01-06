@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 const ShowMe = (props) => {
 
+
     return(
         <div className="container">
           <div className="row">
@@ -16,10 +17,13 @@ const ShowMe = (props) => {
   <div classNameName="form-row">
       <div className="form-group col-md-12">
           <label><b>USERNAME</b></label>
-          <input type="text" value={props.value} onChange={props.onChange} className="form-control" placeholder="search username" />
-
+          <input type="text" id={"input-value"} onChange={props.onChange} value={props.value} className="form-control" placeholder="search username" />
+          
     </div>
+   
+    
   </div>
+   <button type="submit">Serach</button>
 </form> 
   </div>
 </div>

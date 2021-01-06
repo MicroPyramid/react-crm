@@ -10,7 +10,8 @@ class InactiveUsers extends React.Component{
     super();
     this.state= {
         inactiveuser : [],
-        term : ''
+        term : '',
+        error : ""
     }
     }
 
@@ -21,9 +22,11 @@ componentDidMount(){
     this.setState({ 
         inactiveuser : posRes.data.inactive_users
        })
-     // console.log(this.state.inactiveuser)
- }, (errRes)=> {
-     console.log(errRes)
+     
+ }).catch((errRes)=> {
+       this.setState({
+           error: errRes
+       })
      });
 
     }
@@ -36,6 +39,9 @@ componentDidMount(){
     
     render(){
          const { inactiveuser , term } = this.state
+         if(this.state.error){
+            return <div className="container text-center"><h1>404 Error bad Request</h1></div>
+           }
         return (
         <div>
             <div className="card">

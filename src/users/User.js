@@ -11,7 +11,8 @@ import ShowMe from './ShowMe'
         usersList : [],
         inactiveuser : [],
         show : false,
-        term : '' 
+        term : '' ,
+        error: ""
     }
 
     }
@@ -26,9 +27,12 @@ componentDidMount(){
         
         
        })
+     
    
- }, (errRes)=> {
-     console.log(errRes)
+ }).catch((errRes)=> {
+        this.setState({
+            error:errRes
+        })
      });
 
     }
@@ -52,6 +56,10 @@ componentDidMount(){
 
     render(){
          const { usersList,inactiveuser , term } = this.state
+         
+         if(this.state.error){
+            return <div className="container text-center mt-5 py-5"><h1>404 Error bad Request</h1></div>
+           }
         return (
             <div className="container-fluid py-5">
                         
@@ -63,7 +71,7 @@ componentDidMount(){
             <div>
                 {
                     this.state.show? <div> <ShowMe value={this.state.term} 
-                                                   onChange={this.handleChange}      /> </div> :null
+                                                   onChange={this.handleChange}   /> </div> :null
                 }
             </div>
                    <br></br>

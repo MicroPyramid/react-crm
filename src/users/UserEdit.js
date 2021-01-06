@@ -13,7 +13,8 @@ class UserEdit extends React.Component{
     profile_pic: null,
     has_sales_access : false,
     has_marketing_access : false,
-    is_active : true
+    is_active : true,
+    error : ""
 }
  
     componentDidMount(){
@@ -31,7 +32,9 @@ class UserEdit extends React.Component{
               })
                
               }).catch(errRes=> {
-                         console.log(errRes)
+                        this.setState({
+                          error:errRes
+                        })
                          });
                         }
 
@@ -48,6 +51,10 @@ class UserEdit extends React.Component{
         }
 
    render() {
+
+    if(this.state.error){
+      return <div className="container text-center mt-5 py-5"><h1>404 Error bad Request</h1></div>
+     }
   
     return(
           <div className= "container mt-5 py-5">

@@ -10,7 +10,7 @@ import ValidateDomain from './auth/ValidateDomain';
 import Register from './auth/Register';
 import ForgotPassword from './auth/ForgotPassword';
 
-import Accounts from './crm/Accounts';
+//import Accounts from './crm/Accounts';
 import User from './users/User'
 import UserCreate from './users/UserCreate'
 import UserEdit from './users/UserEdit'

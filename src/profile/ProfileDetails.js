@@ -5,7 +5,8 @@ import apiurl from '../api/apiurl';
 class ProfileDetails extends React.Component{
 
     state={
-        profile : []
+        profile : [],
+        error: ""
     }
 
     componentDidMount(){
@@ -15,15 +16,22 @@ class ProfileDetails extends React.Component{
             this.setState({
                 profile: pos.data.user_obj
             })
-            console.log(pos.data.user_obj)
+            
 
         }).catch(err=>{
-            console.log(err)
+            this.setState({
+              error : err
+            })
         })
     }
      
     render(){
-        const {profile} = this.state
+      const {profile} = this.state
+
+      if(this.state.error){
+        return <div className="container text-center"><h1>404 Error Bad Request</h1></div>
+       }
+      
         return( 
         <div className="container mt-5"> 
          <div className="row">
