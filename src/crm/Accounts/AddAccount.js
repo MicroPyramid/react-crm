@@ -118,9 +118,9 @@ const AddAccount = (props) => {
                   state: "accounts"
                 });
               }
-            })
-      }
-
+        })
+        .catch(err => err)
+    }
   }  
 
   

@@ -22,13 +22,9 @@ export default function EditAccount(props) {
       billing_city: '', billing_state: '', billing_country: '',
       status: 'open', lead:[], contacts: [], files: []
   });
-  const [leads, setLeads] = useState([]);
-  const [availableLeads, setAvailableLeads] = useState([]);
-  const [contacts, setContacts] = useState([]);
-  const [availableContacts, setAvailableContacts] = useState([]);
-  const [tags, setTags] = useState([]);
-  const [file, setFile] = useState([]);
-  const [isValidations, setIsValidations] = useState('true');
+  const [leads, setLeads] = useState([]);  
+  const [contacts, setContacts] = useState([]);  
+  const [tags, setTags] = useState([]);  
   const [errors, setErrors] = useState({});  
 
   useEffect(() => {
@@ -93,7 +89,6 @@ export default function EditAccount(props) {
     setAccountObject({...accountObject, files: filesArray});
   }
     
-
   const removeFile = (createdOn) => {
       let dupFiles = [...accountObject.files];
       let remainingFiles = dupFiles.filter(file => file.created_on !== createdOn);      
@@ -105,11 +100,14 @@ export default function EditAccount(props) {
     let userId = window.location.pathname.split('/')[2];
 
     // Validations
-    let validationResults = Validations(accountObject);    
+    let validationResults = Validations(accountObject);        
     setErrors(validationResults);
+
+    let isValidationspassed = true;
+
     for (let i in validationResults) {      
       if (validationResults[i].length > 0) {
-          setIsValidations(false);
+          isValidationspassed = false;
           break;
       }
     }      
@@ -144,7 +142,7 @@ export default function EditAccount(props) {
     })
     
     
-    if (isValidations) {
+    if (isValidationspassed) {
       axios.put(`${ACCOUNTS}${userId}/`, formData, config)
         .then(res => {                                
             if(res.status === 200) {        
@@ -153,10 +151,9 @@ export default function EditAccount(props) {
                 state: "accounts"
               });
             }
-        }).catch(err => {
         })
+        .catch(err => err)
     }
-
   }      
   
   return (
