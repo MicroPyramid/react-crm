@@ -28,9 +28,7 @@ const AddAccount = (props) => {
   const [contacts, setContacts] = useState([]);
   const [tags, setTags] = useState([]);
   const [file, setFile] = useState('');  
-  const [errors, setErrors] = useState({});   
-  const [tagErrorStyle, setTagErrorStyle] = useState(''); 
-  const [invalidTag, setIsInvalidTag] = useState([]);     
+  const [errors, setErrors] = useState({});      
 
   useEffect(() => {
     getContacts();
@@ -61,32 +59,6 @@ const AddAccount = (props) => {
     setAccountObject({...accountObject, [e.target.name]: e.target.value})
   }    
 
-  const addTags = event => {        
-    event.preventDefault();
-    if (event.key === 'Enter' && event.target.value !== "") {       
-      let val = event.target.value;             
-      if(!tags.includes(val)) {        
-        setTags([...tags, event.target.value]);         
-        setIsInvalidTag('');                
-      }       
-      event.target.value="";
-    }    
-  }
-
-  const handleTag = (e) => {
-    e.preventDefault();
-    if(tags.includes(e.target.value)) {
-      setTagErrorStyle('invalid_tag');      
-    }else{
-      setTagErrorStyle('');
-    }    
-    setIsInvalidTag(e.target.value);    
-  }
-  
-  const removeTags = index => {        
-    setTags([...tags.filter(tag => tags.indexOf(tag) !== index)]);
-  }
-  
   const fileUpload = (e) => {       
     setFile(e.target.files[0]);
   }
@@ -94,8 +66,7 @@ const AddAccount = (props) => {
   const saveAccount = (e) => { 
     e.preventDefault();    
 
-    let targetName = e.target.name;
-    console.log(targetName);
+    let targetName = e.target.name;    
     
     // Validation
     let validationResults = Validations(accountObject);           
@@ -147,9 +118,9 @@ const AddAccount = (props) => {
                   state: "accounts"
                 });
               }
-            })
-      }
-
+        })
+        .catch(err => err)
+    }
   }  
 
   
@@ -201,13 +172,8 @@ const AddAccount = (props) => {
                         <ReactSelect elementSize="col-md-12" labelName="Users" isDisabled={true}/>
                         <ReactSelect elementSize="col-md-12" labelName="Assigned To"/>
                         <SelectComponent elementSize="col-md-12" labelName="Status" attrName="status" attrPlaceholder="Status" attrId="id_status" 
-                                          value={accountObject.status} getInputValue={handleChange} options={twoStatus}/>                        
-                        <TagsInput tags={tags}
-                              removeTags={(index) => removeTags(index)}
-                              addTags={(event) => addTags(event)}
-                              value={invalidTag}
-                              handleTag={(e) => handleTag(e)}
-                              tagErrorStyle={tagErrorStyle}/>
+                                          value={accountObject.status} getInputValue={handleChange} options={twoStatus}/>                                                
+                              <TagsInput type="add" getTags={setTags}/>
                         <FileInput  elementSize="col-md-12" labelName="Attachment" attrName="account_attachment" inputId="id_file"  
                                     getFile={fileUpload}/>
                       </div>

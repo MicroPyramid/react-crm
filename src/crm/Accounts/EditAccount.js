@@ -16,24 +16,16 @@ import axios from 'axios';
 
 export default function EditAccount(props) {
 
-  // console.log(props);
-
   const [accountObject, setAccountObject] = useState({
     name: '', website: '', phone: '', email: '',
       billing_address_line: '', billing_street: '', billing_postcode: '',
       billing_city: '', billing_state: '', billing_country: '',
       status: 'open', lead:[], contacts: [], files: []
   });
-  const [leads, setLeads] = useState([]);
-  const [availableLeads, setAvailableLeads] = useState([]);
-  const [contacts, setContacts] = useState([]);
-  const [availableContacts, setAvailableContacts] = useState([]);
-  const [tags, setTags] = useState([]);
-  const [file, setFile] = useState([]);
-  const [isValidations, setIsValidations] = useState('true');
-  const [errors, setErrors] = useState({});
-  const [tagErrorStyle, setTagErrorStyle] = useState(''); 
-  const [invalidTag, setIsInvalidTag] = useState([]);    
+  const [leads, setLeads] = useState([]);  
+  const [contacts, setContacts] = useState([]);  
+  const [tags, setTags] = useState([]);  
+  const [errors, setErrors] = useState({});  
 
   useEffect(() => {
     getContacts();
@@ -86,65 +78,36 @@ export default function EditAccount(props) {
     })    
   }
 
-  // console.log(accountObject);
-
   const handleChange = (e) => {    
     setAccountObject({...accountObject, [e.target.name]: e.target.value})    
   }  
-
-  const addTags = event => {        
-    event.preventDefault();
-    if (event.key === 'Enter' && event.target.value !== "") {       
-      let val = event.target.value;             
-      if(!tags.includes(val)) {        
-        setTags([...tags, event.target.value]);         
-        setIsInvalidTag('');                
-      }
-      event.target.value="";
-    }    
-  }
-
-  const handleTag = (e) => {    
-    e.preventDefault();
-    if(tags.includes(e.target.value)) {
-      setTagErrorStyle('invalid_tag');
-    }else{
-      setTagErrorStyle('');      
-    }    
-    setIsInvalidTag(e.target.value);    
-  }
-
-  const removeTags = index => {        
-    setTags([...tags.filter(tag => tags.indexOf(tag) !== index)]);
-  }
   
   const fileUpload = (e) => {       
     let filesArray = [...accountObject.files];  
     let newFile = e.target.files[0];
-    filesArray.push(newFile);
-    // console.log(newFile);    
+    filesArray.push(newFile);       
     setAccountObject({...accountObject, files: filesArray});
   }
     
-
   const removeFile = (createdOn) => {
       let dupFiles = [...accountObject.files];
-      let remainingFiles = dupFiles.filter(file => file.created_on !== createdOn);
-      console.log(remainingFiles);
+      let remainingFiles = dupFiles.filter(file => file.created_on !== createdOn);      
       setAccountObject({...accountObject, files: remainingFiles});
-  }
-  console.log(accountObject);
+  }  
 
   const updateAccount = (e) => {
     e.preventDefault();
     let userId = window.location.pathname.split('/')[2];
 
     // Validations
-    let validationResults = Validations(accountObject);    
+    let validationResults = Validations(accountObject);        
     setErrors(validationResults);
+
+    let isValidationspassed = true;
+
     for (let i in validationResults) {      
       if (validationResults[i].length > 0) {
-          setIsValidations(false);
+          isValidationspassed = false;
           break;
       }
     }      
@@ -179,7 +142,7 @@ export default function EditAccount(props) {
     })
     
     
-    if (isValidations) {
+    if (isValidationspassed) {
       axios.put(`${ACCOUNTS}${userId}/`, formData, config)
         .then(res => {                                
             if(res.status === 200) {        
@@ -188,10 +151,9 @@ export default function EditAccount(props) {
                 state: "accounts"
               });
             }
-        }).catch(err => {
         })
+        .catch(err => err)
     }
-
   }      
   
   return (
@@ -244,14 +206,8 @@ export default function EditAccount(props) {
                         <ReactSelect elementSize="col-md-12" labelName="Users" isDisabled={true}/>
                         <ReactSelect elementSize="col-md-12" labelName="Assigned To"/>
                         <SelectComponent  elementSize="col-md-12" labelName="Status" attrName="status" attrPlaceholder="Status" attrId="id_status" 
-                                          value={accountObject.status} getInputValue={handleChange} options={twoStatus}/>                           
-                        <TagsInput tags={tags}
-                              removeTags={(index) => removeTags(index)}
-                              addTags={(event) => addTags(event)}
-                              value={invalidTag}
-                              handleTag={(e) => handleTag(e)}
-                              tagErrorStyle={tagErrorStyle}/>
-                       
+                                          value={accountObject.status} getInputValue={handleChange} options={twoStatus}/>                                                   
+                        <TagsInput type="edit" sendTags={tags} getTags={setTags}/>
                         <FileInput  elementSize="col-md-12" labelName="Attachment" attrName="account_attachment" inputId="id_file"  
                                     getFile={fileUpload}/>
                         <div>

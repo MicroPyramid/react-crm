@@ -11,9 +11,7 @@ import DeleteActionButton from '../UIComponents/ActionButtons/DeleteActionButton
 import Modal from '../UIComponents/Modal/Modal';
 import { getApiResults } from '../Utilities';
 
-const Accounts = (props) => {  
-  
-  console.log(props);
+const Accounts = (props) => {    
 
   const [openAccounts, setOpenAccounts] = useState([]);
   const [closedAccounts, setClosedAccounts] = useState([]);  
