@@ -28,7 +28,7 @@ componentDidMount(){
         
        })
      
-   
+      console.log(posRes.data)
  }).catch((errRes)=> {
         this.setState({
             error:errRes
@@ -85,8 +85,18 @@ componentDidMount(){
 </nav>
 <div className="tab-content" id="nav-tabContent">
   <div className="tab-pane fade show active" id="user" role="tabpanel" aria-labelledby="nav-home-tab">
-  <div>
-            <div className="card">
+ 
+      {usersList.length === 0 ? 
+               <React.Fragment>
+               <div className="card">
+                        <div className="card-header">Active Users - 0</div>
+                        <div className="card-body text-center">
+                            No Records Found
+                        </div>
+                    </div>
+           </React.Fragment>  :
+           <React.Fragment>
+                 <div className="card">
                 <div className="card-header text-right bg-dark text-white"> <span className="float-left "><h6><b>Active Users - {usersList.length}</b></h6></span>
                 <button className="btn btn-warning btn-md" onClick={this.actions} >Filter</button>
                 </div>
@@ -96,7 +106,7 @@ componentDidMount(){
                   <table className="table table-striped table-light">
                     <thead>
                      <tr>
-                        <td>ID</td>
+                        <th>ID</th>
                         <th >Username</th>
                         <th >Created</th>
                         <th >Email Address</th>
@@ -125,7 +135,7 @@ componentDidMount(){
                            
                         </td>
                         <td> 
-                        <Link to={`/users/status/${user.id}`}  >Active</Link>
+                        <Link to={`/users/status/${user.id}`} >Active</Link>
 
                           
                         </td>
@@ -145,7 +155,10 @@ componentDidMount(){
                         </div>
                         </div>
                 
-            </div>
+           </React.Fragment>
+    }
+           
+            
             </div>
       
      
@@ -155,9 +168,7 @@ componentDidMount(){
       <InactiveUsers />
       </div>
 </div> 
-
-
-                        </div>
+  </div>
                         )
                 }
             

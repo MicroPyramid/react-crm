@@ -26,7 +26,7 @@ class UserCreate extends React.Component{
          this.setState({ [e.target.name] : e.target.value });
       };
 
-     onSubmit = e => {
+     onSubmit = e => { 
        e.preventDefault()
        console.log(this.state)
        apiurl.post('/users/',this.state)

@@ -13,7 +13,7 @@ const ShowMe = (props) => {
     <b>FILTER</b>
   </div>
   <div className="card-body">
-              <form>
+              <form >
   <div classNameName="form-row">
       <div className="form-group col-md-12">
           <label><b>USERNAME</b></label>
@@ -23,7 +23,6 @@ const ShowMe = (props) => {
    
     
   </div>
-   <button type="submit">Serach</button>
 </form> 
   </div>
 </div>

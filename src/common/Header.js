@@ -71,7 +71,7 @@ function Header() {
               </a>
               <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown" style={{ display: userMenu ? 'block' : 'none' }}>
                 <Link to='/user' className="dropdown-item">Users</Link>
-                <Link to='/settings' className="dropdown-item">Settings</Link>
+                <Link to='/settings/contacts' className="dropdown-item">Settings</Link>
                 <a className="dropdown-item">Change Password</a>
                 <Link to='profile' className="dropdown-item">Profile</Link>
                 <a onClick={() => {

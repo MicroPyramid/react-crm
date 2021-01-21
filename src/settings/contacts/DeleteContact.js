@@ -1,0 +1,65 @@
+import React from 'react';
+import apiurl from '../../api/apiurl'
+import { Link } from 'react-router-dom'
+
+
+class DeleteContact extends React.Component{
+
+  state= {
+    contacts : []
+  }
+
+//   componentDidMount(){
+    // // const id = this.props.match.params.id
+    //         apiurl.get(`/settings/contacts/`)
+    //         .then((posRes) => {
+    //           this.setState({  
+    //             users :  posRes.data.contacts
+               
+    //           })
+    //            console.log(posRes.data.contacts)
+                        
+                       
+    //         }).catch(errRes=> {
+    //                      console.log(errRes)
+    //                      });
+                      //  }
+
+    deleteUser= ()=>{
+      const id= this.props.match.params.id;
+        apiurl.delete(`/settings/contacts/${id}/`)
+        this.props.history.push('/settings/contacts')
+    }
+
+  
+render() {
+    const {contacts} = this.state
+    return (
+<div className="container mt-5 py-5">
+  <div className="row">
+    <div className="col-6 offset-3">
+<div className="card">
+  <div className="card-header text-center">
+   <b><i>Delete User</i></b> 
+  </div>
+  <div className="card-body">
+    
+    <p className="card-text"> Are You sure you want to delete this user ?</p>
+    <button onClick={this.deleteUser} className="btn btn-primary">Delete</button>
+         <Link to='/settings/contacts' className="btn btn-secondary">Cancel</Link>
+  </div>
+</div>
+</div>
+</div>
+</div>
+
+      
+  
+  )
+}
+}
+export default DeleteContact;
+ 
+
+
+

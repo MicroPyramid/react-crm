@@ -33,7 +33,7 @@ export default class ValidateDomain extends Component {
          
         } else {
 
-          const redirectUrl = `//${this.state.domain}.bottlecrm./login`;                                                       
+          const redirectUrl = `//${this.state.domain}.localhost:3000/login`;                                                       
 
           window.location.href = redirectUrl;
         }
