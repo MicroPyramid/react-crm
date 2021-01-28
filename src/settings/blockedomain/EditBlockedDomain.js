@@ -7,7 +7,8 @@ class EditBlockedDomain extends React.Component{
    
   state ={ 
 
-   domains : []
+   domains : [],
+     errors : ''
 }
  
     componentDidMount(){
@@ -20,7 +21,9 @@ class EditBlockedDomain extends React.Component{
               })
                
               }).catch(errRes=> {
-                       console.log(errRes)
+                      this.setState({
+                         errors : errRes
+                      })
                          });
                         }
 
