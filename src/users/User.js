@@ -28,7 +28,6 @@ componentDidMount(){
         
        })
      
-      console.log(posRes.data)
  }).catch((errRes)=> {
         this.setState({
             error:errRes
