@@ -7,7 +7,8 @@ class EditBlockedEmail extends React.Component{
    
   state ={ 
 
-   emails : []
+   emails : [],
+   errors : ''
 }
  
     componentDidMount(){
@@ -21,7 +22,9 @@ class EditBlockedEmail extends React.Component{
               
                
               }).catch(errRes=> {
-                       console.log(errRes)
+                    this.setState({
+                       errors : errRes
+                    })
                          });
                         }
 
