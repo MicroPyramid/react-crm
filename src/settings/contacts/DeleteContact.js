@@ -4,28 +4,8 @@ import { Link } from 'react-router-dom'
 
 
 class DeleteContact extends React.Component{
-
-  state= {
-    contacts : []
-  }
-
-//   componentDidMount(){
-    // // const id = this.props.match.params.id
-    //         apiurl.get(`/settings/contacts/`)
-    //         .then((posRes) => {
-    //           this.setState({  
-    //             users :  posRes.data.contacts
-               
-    //           })
-    //            console.log(posRes.data.contacts)
-                        
-                       
-    //         }).catch(errRes=> {
-    //                      console.log(errRes)
-    //                      });
-                      //  }
-
-    deleteUser= ()=>{
+  
+       deleteUser= ()=>{
       const id= this.props.match.params.id;
         apiurl.delete(`/settings/contacts/${id}/`)
         this.props.history.push('/settings/contacts')
