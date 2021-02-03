@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import BreadCrumb from '../UIComponents/BreadCrumb/BreadCrumb';
 import TextInput from '../UIComponents/Inputs/TextInput';
 import PhoneInput from '../UIComponents/Inputs/PhoneInput';
@@ -8,13 +7,12 @@ import EmailInput from '../UIComponents/Inputs/EmailInput';
 import SelectComponent from '../UIComponents/Inputs/SelectComponent';
 import ReactSelect from '../UIComponents/ReactSelect/ReactSelect';
 import TagsInput from '../UIComponents/Inputs/TagsInput';
-import { ACCOUNTS, CONTACTS, LEADS } from '../../common/apiUrls';
+import { ACCOUNTS, CONTACTS, LEADS, TEAMS } from '../../common/apiUrls';
 import { Validations } from './Validations';
 import { countries, twoStatus } from '../optionsData';
 import { getApiResults, convertArrayToString } from '../Utilities';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
-import { getContactsForReactSelect, getLeadsForReactSelect } from '../network';
 
 const AddAccount = (props) => {  
 
@@ -22,37 +20,86 @@ const AddAccount = (props) => {
       name: '', website: '', phone: '', email: '',
       billing_address_line: '', billing_street: '', billing_postcode: '',
       billing_city: '', billing_state: '', billing_country: '',
-      status: 'open', lead:[], contacts: [], tags: []      
+      status: 'open', lead:[], contacts: [], tags: [], teams:[], assignedTo: []      
     });
   const [leads, setLeads] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [tags, setTags] = useState([]);
   const [file, setFile] = useState('');  
-  const [errors, setErrors] = useState({});      
+  const [errors, setErrors] = useState({});  
+  // Teams,Users,AssignedTo
+  const [teams, setTeams] = useState([]);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [assignedTo, setAssignedTo] = useState([]);
+  const [selectedAssignedTo, setSelectedAssignedTo] = useState([]);
+  const [isAssignedTo, setIsAssignedTo] = useState(true);
 
   useEffect(() => {
     getContacts();
     getLeads();    
+    getTeamsAndUsers();         
   }, []);
 
   const getContacts = () => {    
     let contactsResults = getApiResults(CONTACTS);
     let contactsArray = [];
     contactsResults.then( result => {
-      result.data.contact_obj_list.map( contact => {
-        contactsArray.push({label: contact.first_name +' - '+ contact.email, value: contact.first_name +' - '+ contact.email, id: contact.id});
-      })
+      result.data.contact_obj_list.map( contact => (
+        contactsArray.push({label: contact.first_name +' - '+ contact.email, value: contact.first_name +' - '+ contact.email, id: contact.id})
+      ))
       setContacts(contactsArray);
     })}
-
+    
   const getLeads = () => {
-    let leadsResults = getApiResults(LEADS);    
+    let leadsResults = getApiResults(LEADS);
     let mergedLeads, leadsArray = [];
     leadsResults.then( result => {
       mergedLeads = result.data.open_leads.concat(result.data.close_leads);
       mergedLeads.map(lead => leadsArray.push({label: lead.title, value: lead.title, id: lead.id}));
     })
     setLeads(leadsArray);
+  }
+
+  const getTeamsAndUsers = () => {
+    let getTeams = getApiResults(`${TEAMS}`);
+    let teamsArray = [];
+    let usersArray = [];
+    getTeams.then( res => {                
+      res.data.teams.map(team => (
+        teamsArray.push({value: team.name, label: team.name, users: team.users, id: team.id})
+      ))
+      res.data.users.map(user => (
+        usersArray.push({value: user.email, label: user.email, id: user.id})
+      ))
+    })
+    setTeams(teamsArray);
+    setAssignedTo(usersArray);
+  }
+   
+
+  const ReactSelectHandleChange = (e, value) => {  
+    setIsAssignedTo(false);    
+    let duplicateAssignedTo = [...assignedTo];      
+    let teams = e;
+    let usersArray = [];
+    setAccountObject({...accountObject, teams: teams});
+    if(value === 'teams') {
+      teams && teams.map(team => (        
+          team.users.map(user => (
+            usersArray.push({value: user.username, label: user.username, id: user.id})
+          ))        
+      ))
+      let selectedUsersArray = usersArray.filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))=== i );
+      setSelectedUsers(selectedUsersArray);
+                  
+      selectedUsersArray.map(selectedUser => (
+        duplicateAssignedTo.map(assignedTo => (                    
+          (selectedUser.id === assignedTo.id) ?                        
+            duplicateAssignedTo.splice(duplicateAssignedTo.indexOf(assignedTo), 1): ''
+        ))
+      ))      
+      setSelectedAssignedTo(duplicateAssignedTo);       
+    }          
   }
 
   const handleChange = (e) => {        
@@ -64,9 +111,7 @@ const AddAccount = (props) => {
   }
 
   const saveAccount = (e) => { 
-    e.preventDefault();    
-
-    let targetName = e.target.name;    
+    e.preventDefault();        
     
     // Validation
     let validationResults = Validations(accountObject);           
@@ -87,7 +132,7 @@ const AddAccount = (props) => {
         Authorization: `jwt ${localStorage.getItem('Token')}`,
         company: `${localStorage.getItem('SubDomain')}`
       }
-    }                    
+    }                        
 
     const formData = new FormData();
     formData.append("name", accountObject.name);
@@ -101,6 +146,12 @@ const AddAccount = (props) => {
     formData.append("billing_city", accountObject.billing_city);
     formData.append("billing_state", accountObject.billing_state);
     formData.append("billing_country", accountObject.billing_country);
+    formData.append("teams", convertArrayToString(
+      accountObject.teams ? accountObject.teams.map(team => team.id) : []
+    ));
+    formData.append("assigned_to", convertArrayToString(
+      accountObject.assignedTo ? accountObject.assignedTo.map(assign => assign.id) : []
+    ));      
     formData.append("status", accountObject.status);
     formData.append("tags", convertArrayToString(tags));    
     formData.append("contacts", convertArrayToString(
@@ -111,7 +162,7 @@ const AddAccount = (props) => {
     
     if (isValidationsPassed) {
       axios.post(`${ACCOUNTS}`, formData, config)
-        .then(res => {              
+        .then(res => {                      
               if(res.status === 200) {        
                 props.history.push({
                   pathname: '/accounts/',          
@@ -119,15 +170,14 @@ const AddAccount = (props) => {
                 });
               }
         })
-        .catch(err => err)
+        .catch(err => err);
     }
   }  
-
   
     return (
-      <div id="mainbody" className="main_container" style={{ marginTop: '65px' }}>        
+      <div id="mainbody" className="main_container main_container_mt">        
         <BreadCrumb target="accounts" action="create" />
-        <form id="formid" action="" method="POST" novalidate="" enctype="multipart/form-data">        
+        <form id="formid" action="" method="POST" noValidate="" encType="multipart/form-data">        
           <div className="overview_form_block row marl justify-content-center">
             <div className="col-md-9">
               {/* card */}
@@ -167,13 +217,17 @@ const AddAccount = (props) => {
                           </div>
                         </div>
                       </div>
-                      <div className="col-md-4">
-                        <ReactSelect elementSize="col-md-12" labelName="Teams"/>
-                        <ReactSelect elementSize="col-md-12" labelName="Users" isDisabled={true}/>
-                        <ReactSelect elementSize="col-md-12" labelName="Assigned To"/>
+                      <div className="col-md-4">                        
+                        <ReactSelect  elementSize="col-md-12" labelName="Teams" options={teams}
+                                      getChangedValue={(e) => ReactSelectHandleChange(e, 'teams')}
+                                      isMulti={true}/>
+                        <ReactSelect  elementSize="col-md-12" labelName="Users" isDisabled={true} isMulti={true} value={selectedUsers}/>
+                        <ReactSelect  elementSize="col-md-12" labelName="Assigned To" options={(isAssignedTo) ? assignedTo : selectedAssignedTo } 
+                                      isMulti={true} value={accountObject.assignedTo}
+                                      getChangedValue={(e) => setAccountObject({...accountObject, assignedTo: e})}/>                        
                         <SelectComponent elementSize="col-md-12" labelName="Status" attrName="status" attrPlaceholder="Status" attrId="id_status" 
-                                          value={accountObject.status} getInputValue={handleChange} options={twoStatus}/>                                                
-                              <TagsInput type="add" getTags={setTags}/>
+                                          value={accountObject.status} getInputValue={handleChange} options={twoStatus}/>
+                        <TagsInput type="add" getTags={setTags}/>
                         <FileInput  elementSize="col-md-12" labelName="Attachment" attrName="account_attachment" inputId="id_file"  
                                     getFile={fileUpload}/>
                       </div>
@@ -184,15 +238,13 @@ const AddAccount = (props) => {
                         </div>
                       </div>
                     </div>
-                  </div>
-                {/* end of card body */}
+                </div>
               </div>
-              {/* end of card */}
             </div>
           </div>
         </form>
       </div>
-    )
-  }
+    );
+};
 
-  export default AddAccount;
+export default AddAccount;

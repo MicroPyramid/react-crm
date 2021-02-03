@@ -1,8 +1,8 @@
-import React from 'react'
+import React from 'react';
 
-export default function ArrayDisplay(props) {
+export default function ArrayDisplay (props) {    
 
-  let { elementSize, labelName, attrId, attrFor, value, property, style } = props;  
+  let { elementSize, labelName, attrFor, value, property, style } = props;  
 
   let tagStyle = (style === "tagStyle") ? 'tag' : ''
   let contactStyle = (style === 'contactStyle') ? 'modal-contact' : ''
@@ -14,7 +14,7 @@ export default function ArrayDisplay(props) {
       (value && value.length !== 0) ?      
       <div className={`filter_col ${elementSize}`}>
         <div className="form-group">
-          <label className="case_field_label" for={attrFor} className="text-capitalize">{labelName}</label><br/>
+          <label className="case_field_label text-capitalize" htmlFor={attrFor}>{labelName}</label><br/>
           {
             value.map(val => {                            
               return(
