@@ -1,14 +1,24 @@
 import React from 'react';
 
-export default function EmailInput(props) {  
-  
-  let { elementSize, labelName, attrName, attrPlaceholder, inputId, isRequired, error, value, getInputValue } = props;
+export default function EmailInput (props) {
+    let {
+        styles,
+        elementSize,
+        labelName,
+        attrName,
+        attrPlaceholder,
+        inputId,
+        isRequired,
+        error,
+        value,
+        getInputValue
+    } = props;
 
   return (
     <>      
-      <div className={`filter_col ${elementSize}`}> 
+      <div className={`filter_col ${elementSize} ${styles}`}> 
         <div className="form-group">
-          <label for="exampleInputEmail1" className="name">{labelName} {(isRequired) ? <span class="error_marker" style={{color:"red"}}>*</span> : ''} </label>
+          <label htmlFor="exampleInputEmail1" className="name">{labelName} {(isRequired) ? <span className="error_marker" style={{color:"red"}}>*</span> : ''} </label>
           <input  type="email" 
                   name={attrName} 
                   className="form-control" 
@@ -22,3 +32,4 @@ export default function EmailInput(props) {
     </>
   )
 }
+

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function TextInput (props) {
+export default function PasswordInput (props) {
     let {
         styles,
         elementSize,
@@ -20,7 +20,7 @@ export default function TextInput (props) {
         <div className="form-group">
           <label htmlFor="exampleInputEmail1" className="name">{labelName} {(isRequired) ? <span className="error_marker" style={{color:"red"}}>*</span> : ''} </label>
           <input  className="form-control" 
-                  type="text" 
+                  type="password" 
                   name={attrName} 
                   placeholder={attrPlaceholder} 
                   id={inputId} 

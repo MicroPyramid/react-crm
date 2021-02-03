@@ -8,7 +8,7 @@ export default function SelectComponent(props) {
     <>       
        <div className={`filter_col ${elementSize}`}>
         <div className="form-group">
-          <label for="exampleInputEmail1">{labelName} {(isRequired) ? <span className="error_marker" style={{color:"red"}}>*</span> : ''} </label>
+          <label htmlFor="exampleInputEmail1">{labelName} {(isRequired) ? <span className="error_marker" style={{color:"red"}}>*</span> : ''} </label>
           <select name={attrName} 
                   className="form-control rounded-0" 
                   placeholder={attrPlaceholder} 
