@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import User from '../users/User'
 
 function Header() {  
   // const [currentPage, setCurrentPage] = useState(window.location.pathname);
@@ -70,19 +71,22 @@ function Header() {
               <Link className={`text-capitalize ${(currentPage === '/teams') ? 'nav-link active' : 'nav-link'}`} id="teams" to={'/teams'}>Teams</Link>
             </li>
           </ul>
-          <ul className="navbar-nav navbar-right my-2 my-lg-0 cursor-pointer settings__ul">
-            <a href="/#" className="dropdown-toggle" type="button" data-toggle="dropdown">
-              <img src="https://bottlecrm.s3.amazonaws.com/images/user.png" alt="Micro profile pic"/>
-              <b className="caret"></b>
-            </a>
-            <div className="dropdown-menu dropdown-menu-right rounded-0 mr-2" aria-labelledby="navbarDropdown">
-                <a href="/#" className="dropdown-item text-secondary py-2 pl-2">Users</a>
-                <a href="/#" className="dropdown-item text-secondary py-2 pl-2">Settings</a>
-                <a href="/#" className="dropdown-item text-secondary py-2 pl-2">Change Password</a>
-                <a href="/#" className="dropdown-item text-secondary py-2 pl-2">Profile</a>
-                <a href="/app" onClick={() => {
-                  localStorage.clear();
-                  const redirectUrl = `//bottlecrm.com/validate-domain`;
+
+          <ul className="navbar-nav navbar-right my-2 my-lg-0">
+            <li className="nav-item dropdown">
+              <a onClick={() => setUserMenu(!userMenu)} className="dropdown-toggle abcd nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <img src="https://bottlecrm.s3.amazonaws.com/images/user.png" alt="Micro profile pic" />
+                <b className="caret"></b>
+              </a>
+              <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown" style={{ display: userMenu ? 'block' : 'none' }}>
+                <Link to='/user' className="dropdown-item">Users</Link>
+                <Link to='/settings/contacts' className="dropdown-item">Settings</Link>
+                <a className="dropdown-item">Change Password</a>
+                <Link to='profile' className="dropdown-item">Profile</Link>
+                <a onClick={() => {
+                  localStorage.clear()
+                  const redirectUrl = `//localhost:3000/validate-domain`
+
                   window.location.href = redirectUrl;
                 }} 
                   className="dropdown-item text-secondary py-2 pl-2"
@@ -90,6 +94,9 @@ function Header() {
                   Logout
                 </a>
               </div>
+
+            </li> 
+
           </ul>
           
         </div>

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+
 import { AUTHENTICATION } from '../common/apiUrls';
+
 
 export default class ValidateDomain extends Component {
     constructor () {
@@ -9,6 +11,7 @@ export default class ValidateDomain extends Component {
             errors: {}
         };
     }
+
 
     onClick () {
         if (this.state.domain.trim()) {
@@ -30,6 +33,7 @@ export default class ValidateDomain extends Component {
                 });
         } else {
             this.setState({ errors: { message: 'Please mention a sub_domain' } });
+
         }
     }
 
