@@ -1,17 +1,24 @@
-import React, { Component } from 'react';
-import {DOMAIN} from '../common/apiUrls';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { AUTHENTICATION } from '../common/apiUrls';
+import TextInput from '../crm/UIComponents/Inputs/TextInput';
+import EmailInput from '../crm/UIComponents/Inputs/EmailInput';
+import PasswordInput from '../crm/UIComponents/Inputs/PasswordInput';
+import { Validations } from './Validations';
 
-export default class Register extends Component{
-  constructor(){
-    super()
-    this.state = {
-      subDomain: '',
-      email: '',
-      password: '',
-      username: '',
-      errors: {}
+const Register = (props) =>  {    
+
+    const [registrationDetails, setRegistrationDetails] = useState({
+     sub_domain: '', username: '', email: '', password: ''
+    });
+    const [errors, setErrors] = useState({});
+    
+    const handleChange = (e) => {        
+     setRegistrationDetails({...registrationDetails, [e.target.name]: e.target.value});
     }
-  }
+    
+    const onRegister = (e) => {
+     e.preventDefault();
 
   onRegister(){
     if(this.state.subDomain !== '') {
@@ -51,83 +58,67 @@ export default class Register extends Component{
           } 
         } else {
           this.setState({ errors: {email: 'please enter email'} })
-        }
-      } else {
-        this.setState({ errors: {username: 'please enter username'} })
-      }
-    } else {
-      this.setState({ errors: {subDomain: 'please enter subdomin'} })
-    }  
-  }
 
-  render() {
-    return (
-      <div classNameName="main_container" style={{paddingTop: '65px'}}>
-        <div className="container">
-          <div className="row marl justify-content-center login_row">
-            <div className="col-md-6 col-lg-6 col-xl-4">
-              <div className="login_block">
-                <div className="login_form_block">
-                  <div className="welcome">bottlecrm</div>
-                  <form>
-                    <div className="form-group">
-                      <input 
-                        type="text"
-                        className="form-control"
-                        id="id_sub_domain"
-                        placeholder="Sub-domain"
-                        name="sub_domain"
-                        value={this.state.subDomain}
-                        onChange={(e) => this.setState({ subDomain: e.target.value, errors: {} })}
-                      />
-                      <span className="error">{this.state.errors.subDomain || (this.state.errors.errors && this.state.errors.errors.sub_domain)}</span>
-                    </div>
-                    <div className="form-group">
-                      <input 
-                        type="text"
-                        className="form-control"
-                        id="exampleInputEmail2"
-                        placeholder="username" 
-                        name="username"
-                        value={this.state.username}
-                        onChange={(e) => this.setState({ username: e.target.value, errors: {} })}
-                      />
-                      <span className="error">{this.state.errors.username || (this.state.errors.errors && this.state.errors.errors.username)}</span>
-                    </div>
-                    <div className="form-group">
-                      <input 
-                        type="text"
-                        className="form-control"
-                        id="exampleInputEmail2"
-                        placeholder="email"
-                        name="email"
-                        value={this.state.email}
-                        onChange={(e) => this.setState({ email: e.target.value, errors: {} })}
-                      />
-                      <span className="error">{this.state.errors.email || (this.state.errors.errors && this.state.errors.errors.email)}</span>
-                    </div>
-                    <div className="form-group">
-                      <input 
-                        type="password"
-                        className="form-control"
-                        id="exampleInputEmail1"
-                        placeholder="password"
-                        name="password"
-                        value={this.state.password}
-                        onChange={(e) => this.setState({ password: e.target.value, errors: {} })}
-                      />
-                      <span className="error">{this.state.errors.password || (this.state.errors.errors && this.state.errors.errors.password)}</span>
-                    </div>
-                    <span className="error">{this.state.errors.message}</span>
-                    <div className="forgot">Have an account? <a onClick={() => this.props.history.push('/login')}>Login here</a></div>
-                    <button type="button" onClick={() => this.onRegister() } className="btn btn-danger">Register</button>
-                  </form>
+     const validationResults = Validations(registrationDetails);
+     setErrors(validationResults);        
+
+     let isValidationsPassed = true;
+    
+     for (let i in validationResults) {      
+        if (validationResults[i].length > 0) {       
+            isValidationsPassed = false;
+            break;
+
+        }
+     }        
+
+     let config = {
+        'Content-Type': 'application/json',
+     }
+
+     if (isValidationsPassed) {
+        axios.post(`${AUTHENTICATION}register/`, registrationDetails, config)
+            .then(res => {            
+                if(res.status === 201) {
+                    props.history.push('/validate-domain');
+                    }
+                })
+            }               
+    }    
+
+        return (
+            <div className="main_container main_container_mt">
+                <div className="container">
+                    <div className="row marl justify-content-center login_row">
+                        <div className="col-md-6 col-lg-6 col-xl-4">
+                            <div className="login_block">
+                                <div className="login_form_block">
+                                    <div className="welcome">bottlecrm</div>
+                                    <form>
+                                        <TextInput  elementSize="col-md-12" attrName="sub_domain" attrPlaceholder="Sub-domain" inputId="id_sub_domian" 
+                                                    value={registrationDetails.subDomain} getInputValue={handleChange} error={errors.sub_domain}
+                                                    styles="register-inputstyles"
+                                                    />
+                                        <TextInput  elementSize="col-md-12" attrName="username" attrPlaceholder="Username" inputId="id_username" 
+                                                    value={registrationDetails.username} getInputValue={handleChange} error={errors.username}
+                                                    styles="register-inputstyles"
+                                                    />
+                                        <EmailInput elementSize="col-md-12"  attrName="email"  attrPlaceholder="Email"  inputId="id_email"  
+                                                    value={registrationDetails.email} getInputValue={handleChange} error={errors.email}
+                                                    styles="register-inputstyles"/>
+                                        <PasswordInput elementSize="col-md-12"  attrName="password"  attrPlaceholder="Password"  inputId="id_password"  
+                                                    value={registrationDetails.password} getInputValue={handleChange} error={errors.password}
+                                                    styles="register-inputstyles"/>
+                                        <div className="forgot mt-3">Have an account? <a href="/app" onClick={() => this.props.history.push('/login')}>Login here</a></div>
+                                        <button type="button" onClick={onRegister} className="btn btn-warning text-white">Register</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                                                                                                  
                 </div>
-              </div>
             </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
+        );    
 }
+
+export default Register;

@@ -1,6 +1,6 @@
-import React from 'react'
+import React from 'react';
 
-export default function SingleObjectDisplay(props) {
+export default function SingleObjectDisplay (props) {   
 
   let { elementSize, labelName, attrId, attrFor, value, attrDataName, style } = props;  
 
@@ -9,9 +9,9 @@ export default function SingleObjectDisplay(props) {
     {
       (value !== null) ? 
       <div className={`filter_col ${elementSize}`}>
-        <div class="form-group">
-          <label className="case_field_label" for={attrFor} >{labelName}</label><br/>
-          <div class="account_field" id={attrId} data-name={attrDataName}>{value}</div>
+        <div className="form-group">
+          <label className="case_field_label" htmlFor={attrFor} >{labelName}</label><br/>
+          <div className="account_field" id={attrId} data-name={attrDataName}>{value}</div>
         </div>
       </div> : ''
     }
