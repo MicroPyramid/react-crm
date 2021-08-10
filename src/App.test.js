@@ -1,9 +1,8 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import Login from './auth/Login';
+import { render, screen } from '@testing-library/react';
+import App from './App';
 
-test('renders bottlecrm link', () => {
-    const { queryAllByText } = render(<Login />);
-    const linkElement = queryAllByText(/bottlecrm/i);
-    expect(linkElement).toBeInTheDocument();
+test('renders learn react link', () => {
+  render(<App />);
+  const linkElement = screen.getByText(/learn react/i);
+  expect(linkElement).toBeInTheDocument();
 });
