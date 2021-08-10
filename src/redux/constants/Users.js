@@ -1,0 +1,7 @@
+export const GET_USERS = 'GET_USERS'
+export const USERS_DATA = 'USERS_DATA'
+export const USER_STATUS = 'USER_STATUS'
+export const USER_DETAILS = 'USER_DETAILS'
+export const UPDATE_USER_DETAILS = 'UPDATE_USER_DETAILS'
+export const DELETE_ALL_USERS = 'DELETE_ALL_USERS'
+export const IS_LOADING = 'IS_LOADING'

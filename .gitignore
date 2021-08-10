@@ -11,6 +11,9 @@
 # production
 /build
 
+#Cache
+.eslintcache
+
 # misc
 .DS_Store
 .env.local
@@ -23,3 +26,6 @@ yarn-debug.log*
 yarn-error.log*
 yarn.lock
 package-lock.json
+
+#env
+.env
