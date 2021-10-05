@@ -4,11 +4,9 @@ import { Row, Col, Form, Input } from 'antd';
 const Address = (props) => {  
   let { errors } = props 
   return(
-    <Row>
+    <Row className="address-component">
       <Col span={12}>
-        <Form.Item label="Address Lane" name="addresslane" className="addresslane"
-          // rules={[errors[0]]}
-          >
+        <Form.Item label="Address Lane" name="address_line" className="addresslane">
           <Input className="req"/>
         </Form.Item>
         <Form.Item label="Street" name="street" className="street">

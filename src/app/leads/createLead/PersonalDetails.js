@@ -1,9 +1,8 @@
 import React from 'react'
 import { motion } from "framer-motion"
-import { Button, Form, Input, Divider, Alert,Row,Col,Upload } from "antd";
+import { Form, Input, Row, Col } from "antd";
 import {
-    MailOutlined,
-    LockOutlined,
+    MailOutlined,    
     PhoneOutlined,
     UserOutlined,
     AccountBookOutlined
@@ -59,8 +58,8 @@ const PersonalDetails = props => {
 
     const {				
 		showMessage,
-		message,
-		auth				
+		// message,
+		// auth				
 	} = props
 
     return (

@@ -1,11 +1,8 @@
 import React from "react";
-import { Layout, Menu, Drawer } from 'antd';
+import { Menu } from 'antd';
 import { connect } from 'react-redux';
-import { SIDE_NAV_WIDTH, SIDE_NAV_DARK, NAV_TYPE_SIDE } from '../../constants/ThemeConstant'
 import { HomeOutlined, AntDesignOutlined, ContactsOutlined } from '@ant-design/icons';
-import { history, useHistory } from 'react-router-dom';
-import { Scrollbars } from 'react-custom-scrollbars';
-import { toggleCollapsedNav } from '../../redux/actions/Theme'
+import { useHistory } from 'react-router-dom';
 
 export const SideNav = (props) => {    
 

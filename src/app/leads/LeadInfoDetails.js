@@ -1,5 +1,5 @@
 import React from 'react'
-import { Row, Col, Card, Form, Button, Avatar, Image, Tag } from 'antd'
+import { Row, Col, Card, Avatar, Image, Tag } from 'antd'
 
 
 const Tags1 = [
@@ -155,7 +155,7 @@ const LeadInfoDetails = () => {
                             </Col>
                             <Col className="gutter-row" span={6}>
                                 <div style={{ fontWeight: "bold" }}>Website</div>
-                                <div className="mt-2"><a href="#">https://bottlecrm.com</a></div>
+                                <div className="mt-2"><a href="!#">https://bottlecrm.com</a></div>
                             </Col>
                             <Col className="gutter-row" span={6}>
                                 <div style={{ fontWeight: "bold" }}>industry</div>
@@ -183,11 +183,11 @@ const LeadInfoDetails = () => {
                             </Col>
                             <Col className="gutter-row" span={6}>
                                 <div style={{ fontWeight: "bold" }}>Job Title</div>
-                                <div className="mt-2"><a href="#">developer</a></div>
+                                <div className="mt-2"><a href="!#">developer</a></div>
                             </Col>
                             <Col className="gutter-row" span={6}>
                                 <div style={{ fontWeight: "bold" }}>Skype ID</div>
-                                <div className="mt-2"><a>Skype@id</a></div>
+                                <div className="mt-2"><a href='!#'>Skype@id</a></div>
                             </Col>
                         </Row>
 
@@ -199,7 +199,7 @@ const LeadInfoDetails = () => {
                                 <div className='mt-2'>
                                     {email.map((item) => (
                                         <div>
-                                            <a>{item}</a>
+                                            <a href='!#'>{item}</a>
                                         </div>
                                     ))}
                                 </div>
@@ -213,12 +213,12 @@ const LeadInfoDetails = () => {
                                         {mobile.map((item) => (
                                             <div>
                                                 {(item.imp) ? <div>
-                                                    <a>{item.phone}<span>
+                                                    <a href='!#'>{item.phone}<span>
                                                         {/* <StarFilled twoToneColor="#eb2f96"/> */}
                                                     </span></a>
                                                 </div> :
                                                     <div>
-                                                        <a>{item.phone}</a>
+                                                        <a href='!#'>{item.phone}</a>
                                                     </div>
                                                 }
                                             </div>
@@ -260,6 +260,31 @@ const LeadInfoDetails = () => {
                     </Row>
 
                 </div>
+                <div className='p-3 border-bottom' style={{ fontWeight: "bold", fontSize: "16px" }}>
+                    Description
+                </div>
+                <div className='p-3 mt-3'>
+                <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+                        <Col className="gutter-row" span={18} >
+                            <div >What is Lorem Ipsum Lorem Ipsum is simply dummy text of the printing and typesetting industry Lorem Ipsum has been the industry's standard dummy text ever since the 1500s when an unknown printer took
+                            What is Lorem Ipsum Lorem Ipsum is simply dummy text of the printing and typesetting industry Lorem Ipsum has been the industry's standard dummy text ever since the 1500s when an unknown printer took
+                            </div>
+                        </Col>
+                    </Row>
+                </div>
+                <div className='p-3 border-bottom' style={{ fontWeight: "bold", fontSize: "16px",color:"red" }}>
+                    Lost Reason
+                </div>
+                <div className='p-3 mt-3'>
+                <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+                        <Col className="gutter-row" span={18} >
+                            <div >What is Lorem Ipsum Lorem Ipsum is simply dummy text of the printing and typesetting industry Lorem Ipsum has been the industry's standard dummy text ever since the 1500s when an unknown printer took
+                            What is Lorem Ipsum Lorem Ipsum is simply dummy text of the printing and typesetting industry Lorem Ipsum has been the industry's standard dummy text ever since the 1500s when an unknown printer took
+                            </div>
+                        </Col>
+                    </Row>
+                </div>
+                
             </Card>
 
         </div>

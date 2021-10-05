@@ -1,15 +1,13 @@
 import React, { useState } from 'react'
 import { Card, Row, Col, Breadcrumb, Form, Input, Collapse } from 'antd'
+import {connect} from 'react-redux'
 import {
-    DownOutlined,
-    MailOutlined,
-    LockOutlined,
-    PhoneOutlined,
-    UserOutlined,
-    AccountBookOutlined
-} from '@ant-design/icons';
-import { motion } from "framer-motion"
-
+    addressLine,
+    city,
+    street,
+    state,
+    pincode
+} from '../../../redux/actions/Leads'
 const { Panel } = Collapse;
 
 const rules = {
@@ -46,7 +44,7 @@ const rules = {
 }
 
 const AddressInformation = (props) => {
-    const [open, setOpen] = useState(false)
+    // const [open, setOpen] = useState(false)
     const [form] = Form.useForm();
 
     const layout = {
@@ -64,57 +62,66 @@ const AddressInformation = (props) => {
                     <div className="w-100">
                         <Form {...layout} form={form} name="control-hooks">
                             <Row >
-                                <Col span={10} xs={18} xl={10}>
+                                <Col span={10} xs={18} xl={11}>
                                     <Form.Item
                                         name="addressLine"
                                         label="Address Line"
                                         rules={rules.addressLine}
                                     >
                                         <Input 
+                                        onChange={(e)=>props.addressLine(e.target.value)}
                                         style={{ borderRadius: "4px" ,borderLeftColor:"red",marginLeft:"16px"}} 
                                         placeholder="Address Line" />
                                     </Form.Item>
                                 </Col>
 
-                                <Col span={10} xs={18} xl={10}>
+                                <Col span={10} xs={18} xl={11}>
                                     <Form.Item
                                         name="city"
                                         label="City"
                                         rules={rules.city}
                                     >
-                                        <Input style={{ borderRadius: "4px" ,marginLeft:"16px"}} placeholder="City" />
+                                        <Input
+                                        onChange={(e)=>props.city(e.target.value)}
+                                        style={{ borderRadius: "4px" ,marginLeft:"16px"}} placeholder="City" />
                                     </Form.Item>
                                 </Col>
                             </Row>
                             <Row >
-                                <Col span={10} xs={18} xl={10}>
+                                <Col span={10} xs={18} xl={11}>
                                     <Form.Item
                                         name="street"
                                         label="Street"
                                         rules={rules.street}
                                     >
-                                        <Input style={{ borderRadius: "4px" ,marginLeft:"16px"}} placeholder="Job Title" />
+                                        <Input 
+                                        onChange={(e)=>props.street(e.target.value)}
+                                        style={{ borderRadius: "4px" ,marginLeft:"16px"}} placeholder="Job Title" />
                                     </Form.Item>
                                 </Col>
 
-                                <Col span={10} xs={18} xl={10}>
+                                <Col span={10} xs={18} xl={11}>
                                     <Form.Item
                                         name="state"
                                         label="State"
                                         rules={rules.state}
                                     >
-                                        <Input style={{ borderRadius: "4px" ,marginLeft:"16px"}} placeholder="Phone Number" />
+                                        <Input 
+                                        onChange={(e)=>props.state(e.target.value)}
+                                        style={{ borderRadius: "4px" ,marginLeft:"16px"}} placeholder="Phone Number" />
                                     </Form.Item>
                                 </Col>
                             </Row>
                             <Row >
-                                <Col span={10} xs={18} xl={10}>
+                                <Col span={10} xs={18} xl={11}>
                                 <Form.Item
                                         name="pincode"
                                         label="Pin Code"
                                         rules={rules.pincode}
                                     >
-                                        <Input style={{ borderRadius: "4px" ,marginLeft:"16px"}} placeholder="Email" />
+                                        <Input 
+                                        onChange={(e)=>props.pincode(e.target.value)}
+                                        style={{ borderRadius: "4px" ,marginLeft:"16px"}} placeholder="Email" />
                                     </Form.Item>
                                 </Col>
                             </Row>
@@ -128,5 +135,15 @@ const AddressInformation = (props) => {
         </Collapse>
     )
 }
+const mapStateToProps = (state) => {
+  return {state}
+}
+export default connect(mapStateToProps, {
+    addressLine,
+    city,
+    street,
+    state,
+    pincode
 
-export default AddressInformation
+})(AddressInformation)
+

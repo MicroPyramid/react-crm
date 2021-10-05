@@ -1,8 +1,7 @@
 import React from 'react'
-import { Row, Col, Card, Form, Button, Avatar, Image, Tag } from 'antd'
+import { Row, Col, Card } from 'antd'
 import {
-    PlusOutlined,
-    MoreOutlined,
+    PlusOutlined,    
     DeleteOutlined,
 } from '@ant-design/icons';
 

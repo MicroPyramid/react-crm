@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import React from 'react'
 import { Collapse } from 'antd';
 import { Row, Col, DatePicker, Button, Form, Input, Select } from 'antd';
 import { PlusOutlined, CloseCircleOutlined, CheckOutlined } from '@ant-design/icons';
-import JoditEditor from "jodit-react"
 import { connect } from 'react-redux'
-import { addContact, contactErrors } from '../../redux/actions/Contacts'
+import { addContact } from '../../redux/actions/Contacts'
 import AddToolbar from '../../components/ui-components/AddToolbar'
 import Address from '../../components/ui-components/Address'
 import Description from '../../components/ui-components/Description'
@@ -16,7 +14,7 @@ const { Option } = Select;
 
 export const AddContact = (props) => {  
 
-  const [errors, setErrors] = useState((props.errors !== "") ? props.errors.error.data.errors.contactErrors: '')
+  // const [errors, setErrors] = useState((props.errors !== "") ? props.errors.error.data.errors.contactErrors: '')
 
 
   const rules = {
@@ -53,7 +51,7 @@ export const AddContact = (props) => {
       facebook_url: e.facebookurl,
       twitter_username: e.twitterhandle,      
     }
-    props.addContact('contacts/', data)
+    props.addContact('/api/contacts/', data)
   }
 
   const toggle = () => {
@@ -68,13 +66,13 @@ export const AddContact = (props) => {
       <div className="basic-information">
         <Form onFinish={addContact}>
         <Collapse defaultActiveKey={["1"]} expandIconPosition="right">
-          <Panel header="Basic Information" key="1">                               
-              <Row>                
+          <Panel header="Basic Information" key="1">
+              <Row>
                 <Col span={12}>
                   <Form.Item label="Saluation" name="saluation" className="saluation"
                     rules={rules.saluation}>
                     <Input className="req" />
-                  </Form.Item> 
+                  </Form.Item>
                   <Form.Item label="Last Name" name="last_name" className="lastname">
                     <Input className="req"/>
                   </Form.Item>
@@ -102,7 +100,7 @@ export const AddContact = (props) => {
                 </Col>
                 <Col span={12}>
                   <Form.Item label="First Name" name="first_name" className="firstname" 
-                    // rules={rules.firstName}
+                    rules={rules.firstName}
                   >
                     <Input className="req"/>
                   </Form.Item>
@@ -110,7 +108,7 @@ export const AddContact = (props) => {
                     <DatePicker />
                   </Form.Item>
                   <Form.Item label="Title" name="title" className="title"
-                    // rules={rules.title}
+                    rules={rules.title}
                   >
                     <Input className="req"/>
                   </Form.Item>
@@ -168,7 +166,7 @@ export const AddContact = (props) => {
           <Button className="btn-cancel mr-2"><CloseCircleOutlined />Cancel</Button>
           {/* <Link to="/home/contacts/"> */}
             <Button className="btn-save" htmlType="submit"><CheckOutlined />Save</Button>
-            {/* </Link>           */}
+          {/* </Link> */}
         </div>        
         </Form>
 

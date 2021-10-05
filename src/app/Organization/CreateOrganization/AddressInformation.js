@@ -1,14 +1,5 @@
-import React, { useState } from 'react'
-import { Card, Row, Col, Breadcrumb, Form, Input, Collapse } from 'antd'
-import {
-    DownOutlined,
-    MailOutlined,
-    LockOutlined,
-    PhoneOutlined,
-    UserOutlined,
-    AccountBookOutlined
-} from '@ant-design/icons';
-import { motion } from "framer-motion"
+import React from 'react'
+import { Row, Col, Form, Input, Collapse } from 'antd'
 
 const { Panel } = Collapse;
 
@@ -46,7 +37,7 @@ const rules = {
 }
 
 const AddressInformation = (props) => {
-    const [open, setOpen] = useState(false)
+    // const [open, setOpen] = useState(false)
     const [form] = Form.useForm();
 
     const layout = {

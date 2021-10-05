@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { Layout, Button, Row, Col } from "antd";
-import { NAV_TYPE_TOP, SIDE_NAV_COLLAPSED_WIDTH, SIDE_NAV_WIDTH } from '../../constants/ThemeConstant'
+import React from "react";
+import { Layout, Button } from "antd";
 import { connect } from 'react-redux'
 import { toggleCollapsedNav } from '../../redux/actions/Theme'
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import '../../assets/css/temp.css'
-import ModuleHead from '../ui-components/ModuleHead'
 import Profile from '../ui-components/Profile'
 const { Header } = Layout;
 
@@ -13,16 +11,15 @@ export const HeaderNav = props => {
 
   const { navCollapsed } = props
 
-  const updateTopNavItems = () => {
-    let brandNameCol = 4, toggleBtnCol = 1, moduleHeadCol = 16;
-    if (navCollapsed) {
-        toggleBtnCol = 1;
-        brandNameCol = 2;        
-        moduleHeadCol = 18;
-    } 
-    
-    return [toggleBtnCol, brandNameCol, moduleHeadCol]
-  }
+  // const updateTopNavItems = () => {
+  //   let brandNameCol = 4, toggleBtnCol = 1, moduleHeadCol = 16;
+  //   if (navCollapsed) {
+  //       toggleBtnCol = 1;
+  //       brandNameCol = 2;        
+  //       moduleHeadCol = 18;
+  //   }     
+  //   return [toggleBtnCol, brandNameCol, moduleHeadCol]
+  // }
 
   const onToggle = () => {
     props.toggleCollapsedNav(!navCollapsed)

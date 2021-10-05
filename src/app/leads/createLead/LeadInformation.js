@@ -1,5 +1,21 @@
 import React, { useState } from 'react'
-import { Row, Col, Form, Input, Collapse } from 'antd'
+import { Row, Col, Form, Input, Collapse, Select, Upload, Button } from 'antd'
+import { DownOutlined, PlusOutlined, VerticalAlignTopOutlined, UploadOutlined } from '@ant-design/icons';
+import { connect } from 'react-redux'
+import {
+    leadName,
+    amount,
+    website,
+    contact,
+    assignTo,
+    organization,
+    status,
+    skypeID,
+    source,
+    attachment,
+    tag,
+    industry
+} from '../../../redux/actions/Leads'
 
 const { Panel } = Collapse;
 
@@ -27,19 +43,74 @@ const rules = {
             required: true,
             message: "please input contact name"
         }
+    ],
+    assignTo: [
+        {
+            required: true,
+            message: "please select assign To"
+        }
+    ],
+    organization: [
+        {
+            required: true,
+            message: "please select organization"
+        }
+    ],
+    status: [
+        {
+            required: true,
+            message: "please select status"
+        }
+    ],
+    skype: [
+        {
+            required: true,
+            message: "field cannot be empty"
+        }
+    ],
+    source: [
+        {
+            required: true,
+            message: "please select source"
+        }
+    ],
+    tag: [
+        {
+            required: true,
+            message: "field cannot be empty"
+        }
+    ],
+    industry: [
+        {
+            required: true,
+            message: "please select industry"
+        }
     ]
 }
 
 
 const LeadInformation = (props) => {
     const [open, setOpen] = useState(false)
+    const [file, setFile] = useState([])
     const [form] = Form.useForm();
 
     const layout = {
         labelCol: { span: 8 },
         wrapperCol: { span: 16 },
     };
+    const selectAfter = (
+        <Select defaultValue="INR   ">
 
+        </Select>
+    );
+
+    function handleUpload(){
+        const formData = new FormData()
+        file.forEach(file=>{
+            formData.append('files[]',file)
+        })
+      
+    }
     return (
 
         <Collapse className="w-100 shadow-sm p-2 mb-5 bg-white" defaultActiveKey={['0']} expandIconPosition={"right"}>
@@ -49,120 +120,168 @@ const LeadInformation = (props) => {
                     <div className="w-100">
                         <Form {...layout} form={form} name="control-hooks">
                             <Row >
-                                <Col span={10} xs={18} xl={10}>
+                                <Col span={10} xs={18} xl={11}>
                                     <Form.Item
                                         name="lead"
                                         label="Lead Name"
                                         rules={rules.leadName}
                                     >
-                                        <Input style={{ borderRadius: "4px", marginLeft: "16px" }}
-                                            placeholder="Lead Name"
+                                        <Input
+
+                                            onChange={(e) => props.leadName(e.target.value)}
+                                            style={{ borderRadius: "4px", marginLeft: "16px", borderLeftColor: "red" }}
+                                            placeholder="lead name"
                                         />
                                     </Form.Item>
                                 </Col>
-                                <Col span={12} xs={18} xl={10}>
+                                <Col span={12} xs={18} xl={11}>
+
                                     <Form.Item
                                         name="amount"
                                         label="Amount"
                                         rules={rules.amount}
                                     >
                                         <Input
-                                            style={{ borderRadius: "4px", marginLeft: "16px" }} placeholder="Amount" />
+                                            addonAfter={selectAfter}
+                                            onChange={(e) => props.amount(e.target.value)}
+                                            style={{ borderRadius: "0px", marginLeft: "16px", borderLeftColor: "red" }}
+                                            placeholder="amount"
+                                        />
                                     </Form.Item>
+
                                 </Col>
                             </Row>
                             <Row >
-                                <Col span={10} xs={18} xl={10}>
+                                <Col span={10} xs={18} xl={11}>
                                     <Form.Item
                                         name="website"
                                         label="Website"
                                         rules={rules.website}
                                     >
-                                        <Input style={{ borderRadius: "4px", marginLeft: "16px" }} placeholder="Website" />
+                                        <Input
+                                            onChange={(e) => props.website(e.target.value)}
+                                            style={{ borderRadius: "4px", marginLeft: "16px" }} placeholder="Website" />
                                     </Form.Item>
                                 </Col>
 
-                                <Col span={12} xs={18} xl={10}>
+                                <Col span={12} xs={18} xl={11}>
                                     <Form.Item
                                         name="contactName"
                                         label="Contact Name"
                                         rules={rules.contactName}
                                     >
-                                        <Input style={{ borderRadius: "4px", marginLeft: "16px" }} placeholder="Contact Name" />
+                                        <Input
+                                            onChange={(e) => props.contact(e.target.value)}
+                                            addonAfter={<PlusOutlined />}
+                                            style={{ borderRadius: "4px", marginLeft: "16px" }} placeholder="Contact Name" />
                                     </Form.Item>
                                 </Col>
                             </Row>
                             <Row>
-                                <Col span={10} xs={18} xl={10}>
+                                <Col span={10} xs={18} xl={11}>
                                     <Form.Item
                                         name="assignTo"
                                         label="AssignTo"
+                                        rules={rules.assignTo}
                                     >
-                                        <div style={{ marginLeft: "16px" }}>---</div>
+                                        <Input
+                                            onChange={(e) => props.assignTo(e.target.value)}
+                                            addonAfter={<DownOutlined />}
+                                            style={{ borderRadius: "4px", marginLeft: "16px" }} placeholder="Assign to" />
                                     </Form.Item>
                                 </Col>
 
-                                <Col span={10} xs={18} xl={10}>
+                                <Col span={10} xs={18} xl={11}>
                                     <Form.Item
                                         name="organization"
                                         label="Organization"
+                                        rules={rules.organization}
                                     >
-                                        <div style={{ marginLeft: "16px" }}>---</div>
+                                        <Input
+                                            onChange={(e) => props.organization(e.target.value)}
+                                            addonAfter={<PlusOutlined />}
+                                            style={{ borderRadius: "4px", marginLeft: "16px" }} placeholder="Organozation" />
+
                                     </Form.Item>
                                 </Col>
                             </Row>
                             <Row >
-                                <Col span={10} xs={18} xl={10}>
+                                <Col span={10} xs={18} xl={11}>
                                     <Form.Item
                                         name="status"
                                         label="Status"
+                                        rules={rules.status}
                                     >
-                                        <div style={{ marginLeft: "16px" }}>---</div>
+                                        <Input
+                                            onChange={(e) => props.status(e.target.value)}
+                                            addonAfter={<DownOutlined />}
+                                            style={{ borderRadius: "4px", marginLeft: "16px" }} placeholder="status" />
+
                                     </Form.Item>
                                 </Col>
 
-                                <Col span={10} xs={18} xl={10}>
+                                <Col span={10} xs={18} xl={11}>
                                     <Form.Item
                                         name="skypeID"
                                         label="SkypeID"
+                                        rules={rules.skype}
                                     >
-                                        <div style={{ marginLeft: "16px" }}>---</div>
+                                        <Input
+                                            onChange={(e) => props.skypeID(e.target.value)}
+                                            style={{ borderRadius: "4px", marginLeft: "16px" }} placeholder="skypeID" />
+
                                     </Form.Item>
                                 </Col>
                             </Row>
                             <Row >
-                                <Col span={10} xs={18} xl={10}>
+                                <Col span={10} xs={18} xl={11}>
                                     <Form.Item
                                         name="source"
                                         label="Source"
+                                        rules={rules.source}
                                     >
-                                        <div style={{ marginLeft: "16px" }}>---</div>
+                                        <Input
+                                            onChange={(e) => props.source(e.target.value)}
+                                            addonAfter={<DownOutlined />}
+                                            style={{ borderRadius: "4px", marginLeft: "16px" }} placeholder="source" />
+
                                     </Form.Item>
                                 </Col>
-                                <Col span={10} xs={18} xl={10}>
+                                <Col span={10} xs={18} xl={11}>
                                     <Form.Item
                                         name="attachment"
                                         label="Attachment"
                                     >
-                                        <div style={{ marginLeft: "16px" }}>---</div>
+                                        <Upload {...props} onChange={handleUpload}>
+                                            <Button  icon={<UploadOutlined />}>Select File</Button>
+                                        </Upload>
                                     </Form.Item>
                                 </Col>
                             </Row>
                             <Row >
-                                <Col span={10} xs={18} xl={10}>
+                                <Col span={10} xs={18} xl={11}>
                                     <Form.Item
                                         name="tags"
                                         label="Tags"
+                                        rules={rules.tag}
                                     >
-                                        <div style={{ marginLeft: "16px" }}>---</div>
+                                        <Input
+                                            onChange={(e) => props.tag(e.target.value)}
+                                            style={{ borderRadius: "4px", marginLeft: "16px" }} placeholder="tags" />
+
                                     </Form.Item>
                                 </Col>
-                                <Col span={10} xs={18} xl={10}>
+                                <Col span={10} xs={18} xl={11}>
                                     <Form.Item
                                         name="industry"
                                         label="Industry"
+                                        rules={rules.industry}
                                     >
-                                        <div style={{ marginLeft: "16px" }}>---</div>
+                                        <Input
+                                            onChange={(e) => props.industry(e.target.value)}
+                                            addonAfter={<DownOutlined />}
+                                            style={{ borderRadius: "4px", marginLeft: "16px" }} placeholder="industry" />
+
                                     </Form.Item>
                                 </Col>
                             </Row>
@@ -174,4 +293,23 @@ const LeadInformation = (props) => {
     )
 }
 
-export default LeadInformation
+const mapStateToProps = (state) => {
+return {state}
+}
+
+export default connect(mapStateToProps,
+    {
+        leadName,
+        amount,
+        website,
+        contact,
+        assignTo,
+        organization,
+        status,
+        skypeID,
+        source,
+        attachment,
+        tag,
+        industry
+
+    })(LeadInformation)

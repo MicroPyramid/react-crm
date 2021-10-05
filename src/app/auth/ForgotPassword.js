@@ -1,7 +1,7 @@
 import React from 'react';
 import ForgotPasswordForm from './components/ForgotPasswordForm';
 import { Row, Col } from 'antd';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import { InfoPanel } from './infoPanel';
 
 const ForgotPassword = (props) => {  

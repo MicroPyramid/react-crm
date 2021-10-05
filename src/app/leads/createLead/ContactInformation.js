@@ -1,56 +1,54 @@
 import React, { useState } from 'react'
 import { Card, Row, Col, Breadcrumb, Form, Input, Collapse } from 'antd'
+import { connect } from 'react-redux'
 import {
-    DownOutlined,
-    MailOutlined,
-    LockOutlined,
-    PhoneOutlined,
-    UserOutlined,
-    AccountBookOutlined
-} from '@ant-design/icons';
-import { motion } from "framer-motion"
-
+    firstName,
+    lastName,
+    jobTitle,
+    phoneNumber,
+    email
+} from '../../../redux/actions/Leads'
 const { Panel } = Collapse;
 
 
 
 const rules = {
-    firstName:[
+    firstName: [
         {
-            required:true,
+            required: true,
             message: 'first name required'
         }
     ],
-    lastName:[
+    lastName: [
         {
-            required:true,
-            message:"last name required"
+            required: true,
+            message: "last name required"
         }
     ],
-   
-    jobTitle:[
+
+    jobTitle: [
         {
-            required:true,
-            message:"job title required"
+            required: true,
+            message: "job title required"
         }
     ],
-    phone:[
+    phone: [
         {
-            required:true,
-            message:"phone number required"
+            required: true,
+            message: "phone number required"
         }
     ],
-    email:[
+    email: [
         {
-            required:true,
-            message:"email required"
+            required: true,
+            message: "email required"
         },
         {
             type: 'email',
             message: 'Please enter a validate email'
         }
     ]
-}   
+}
 const ContactInformation = (props) => {
     const [open, setOpen] = useState(false)
     const [form] = Form.useForm();
@@ -69,59 +67,67 @@ const ContactInformation = (props) => {
                     <div className="w-100">
                         <Form {...layout} form={form} name="control-hooks">
                             <Row >
-                                <Col span={10} xs={18} xl={10}>
+                                <Col span={10} xs={18} xl={11}>
                                     <Form.Item
                                         name="firstName"
                                         label="First Name"
                                         rules={rules.firstName}
                                     >
-                                        <Input style={{ borderRadius: "4px" ,borderLeftColor:"red",marginLeft:"16px"}} placeholder="First Name" />
+                                        <Input
+                                            onChange={(e) => props.firstName(e.target.value)}
+                                            style={{ borderRadius: "4px", borderLeftColor: "red", marginLeft: "16px" }} placeholder="First Name" />
                                     </Form.Item>
                                 </Col>
 
-                                <Col span={10} xs={18} xl={10}>
+                                <Col span={10} xs={18} xl={11}>
                                     <Form.Item
                                         name="lastName"
                                         label="Last Name"
                                         rules={rules.lastName}
                                     >
-                                        <Input style={{ borderRadius: "4px" ,marginLeft:"16px"}} placeholder="Last Name" />
+                                        <Input
+                                            onChange={(e) => props.lastName(e.target.value)}
+                                            style={{ borderRadius: "4px", marginLeft: "16px" }} placeholder="Last Name" />
                                     </Form.Item>
                                 </Col>
                             </Row>
                             <Row >
-                                <Col span={10} xs={18} xl={10}>
+                                <Col span={10} xs={18} xl={11}>
                                     <Form.Item
                                         name="jobTitle"
                                         label="Job Title"
                                         rules={rules.jobTitle}
                                     >
-                                        <Input style={{ borderRadius: "4px" ,marginLeft:"16px"}} placeholder="Job Title" />
+                                        <Input
+                                            onChange={(e) => props.jobTitle(e.target.value)}
+                                            style={{ borderRadius: "4px", marginLeft: "16px" }} placeholder="Job Title" />
                                     </Form.Item>
                                 </Col>
 
-                                <Col span={10} xs={18} xl={10}>
+                                <Col span={10} xs={18} xl={11}>
                                     <Form.Item
                                         name="phone"
                                         label="Phone Number"
                                         rules={rules.phone}
                                     >
-                                        <Input 
-                                        type={"number"}
-                                        style={{ borderRadius: "4px" ,marginLeft:"16px"}} placeholder="Phone Number" />
+                                        <Input
+                                            onChange={(e) => props.phoneNumber(e.target.value)}
+                                            type={"number"}
+                                            style={{ borderRadius: "4px", marginLeft: "16px" }} placeholder="Phone Number" />
                                     </Form.Item>
                                 </Col>
                             </Row>
                             <Row >
-                                <Col span={10} xs={18} xl={10}>
-                                <Form.Item
+                                <Col span={10} xs={18} xl={11}>
+                                    <Form.Item
                                         name="email"
                                         label="Email"
                                         rules={rules.email}
                                     >
-                                        <Input 
-                                        type={"email"}
-                                        style={{ borderRadius: "4px" ,marginLeft:"16px"}} placeholder="Email" />
+                                        <Input
+                                            onChange={(e) => props.email(e.target.value)}
+                                            type={"email"}
+                                            style={{ borderRadius: "4px", marginLeft: "16px" }} placeholder="Email" />
                                     </Form.Item>
                                 </Col>
                             </Row>
@@ -136,4 +142,14 @@ const ContactInformation = (props) => {
     )
 }
 
-export default ContactInformation
+const mapStateToProps = state => {
+  return {state}
+}
+export default connect(mapStateToProps, {
+    firstName,
+    lastName,
+    jobTitle,
+    phoneNumber,
+    email
+
+})(ContactInformation)

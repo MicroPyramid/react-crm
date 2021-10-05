@@ -3,10 +3,11 @@ import { Tabs, Avatar, Table, Checkbox, Select } from 'antd'
 import { EditOutlined, DeleteOutlined, FilterOutlined, RightOutlined, LeftOutlined } from '@ant-design/icons'
 import { connect } from 'react-redux'
 import { getData } from '../../redux/actions/Fetch'
-import { deleteAllUsers, isLoading }from '../../redux/actions/Users'
+import { deleteAllUsers, isLoading, updateUsersData }from '../../redux/actions/Users'
 
 const { TabPane } = Tabs;
 const { Option } = Select;
+const CheckboxGroup = Checkbox.Group;
 
 export const Users = (props) => {
 
@@ -27,12 +28,15 @@ export const Users = (props) => {
   const [checkInactiveUsers, setCheckInactiveUsers] = useState(false)
   
   useEffect(() => {        
-    props.getData(`users/?limit=${rows}`, "users")
-    // props.getData(`users/?limit=${30}`, "users")
+    props.getData(`/api/users/?limit=${rows}`, "users")    
     props.isLoading()
   }, [rows])
 
   useEffect(() => {
+    updateUsersData()
+  }, [loading, isLoaded])
+
+  const updateUsersData = () => {    
     let activeUsers = users && users.data.active_users.active_users.map(user => {
       return (
         {
@@ -45,7 +49,7 @@ export const Users = (props) => {
           isActive: user.is_active
         }
       )
-    })   
+    })
     let inactiveUsers = users && users.data.inactive_users.inactive_users.map(user => {
       return (
         {
@@ -58,10 +62,10 @@ export const Users = (props) => {
           isActive: user.is_active
         }
       )
-    }) 
+    })    
     setActiveUsers(activeUsers)
     setInactiveUsers(inactiveUsers)
-  }, [loading])  
+  }
   
   useEffect(() => {
     setActivePages(users && users.data.active_users.active_users_count)
@@ -69,12 +73,6 @@ export const Users = (props) => {
   })    
 
   const columns1 = [
-    {
-      title: <Checkbox className="users-list-head-checkbox" onClick={(e) => selectAllUsers(e, 'active')}/>,
-      render: (row) => <Checkbox 
-                        checked={checkActiveUsers}
-                        onClick={(e) => getCheckedId(e, row.id)} />
-    },
     {
       title: 'Name',
       dataIndex: 'userName',
@@ -114,12 +112,6 @@ export const Users = (props) => {
 
   const columns2 = [
     {
-      title: <Checkbox className="users-list-head-checkbox" onClick={(e) => selectAllUsers(e, 'inactive')}/>,
-      render: (row) => <Checkbox 
-                              checked={checkInactiveUsers}
-                              onClick={(e) => getCheckedId(e, row.id)} />
-    },
-    {
       title: 'Name',
       dataIndex: 'userName',
       render: (user, row) => {        
@@ -154,7 +146,7 @@ export const Users = (props) => {
           <span className="delete"><DeleteOutlined /></span>
         </>      
     }
-  ]  
+  ]
 
   const updateRecordsPerPage = (e) => {        
     setRows(e)    
@@ -168,7 +160,7 @@ export const Users = (props) => {
     }
   }
   
-  const getCheckedId = (e, id) => {        
+  const getCheckedId = (e, id) => {       
     if(checkedIds) {
       if(e.target.checked && !checkedIds.includes(id)) {
         setCheckedIds([...checkedIds, id])
@@ -179,10 +171,11 @@ export const Users = (props) => {
     }    
   }    
 
-  const deleteUsers = () => {    
+  const deleteUsers = () => {        
+    props.deleteAllUsers(JSON.stringify(checkedIds))    
   }
 
-  const selectAllUsers = (e, val) => {
+  const selectAllUsers = (e, val) => {    
     if(e.target.checked) {
       if(val === 'active') {
         setCheckActiveUsers(!checkActiveUsers)
@@ -194,17 +187,19 @@ export const Users = (props) => {
     } else {
       if(val === 'active') {
         setCheckActiveUsers(!checkActiveUsers)
-        
       } else {
         setCheckInactiveUsers(!checkInactiveUsers)
       }
-    }  
-  }
-
+    }
+  }  
   const routeToDetails = (id) => {
     props.history.push(`/home/users/${id}/details`)
   }
   
+  useEffect(() => {
+    props.getData(`/api/users/?limit=${rows}`, "users")        
+    setIsLoaded(!isLoaded)  
+  }, [props.areUsersDeleted])
   return(
     <>
     <div className="toolbar">
@@ -230,11 +225,7 @@ export const Users = (props) => {
         </span>
         <RightOutlined className="toolbar-pages-count-rightoutlined"/>
       </div>
-    </div>
-    <div className="users-delete-all" onClick={deleteUsers}>    
-      <DeleteOutlined id="delete-activeusers" /> 
-      Delete
-    </div>
+    </div>    
     <Tabs className="custom-tabs" onChange={tabChange}>      
       <TabPane className="custom-tabpane" tab="Active" key="1">        
         <Table className="users-table users-table-active" 
@@ -253,8 +244,8 @@ export const Users = (props) => {
   )
 }
 const mapStateToProps = (state) => {        
-  const { users, loading } = state.users
-  return { users, loading }
+  const { users, loading, areUsersDeleted } = state.users
+  return { users, loading, areUsersDeleted }
 }
 
 const mapDispatchToProps = {

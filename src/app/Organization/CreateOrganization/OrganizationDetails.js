@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Row, Col, Form, Input, Collapse, Upload, Switch } from 'antd'
+import React from 'react'
+import { Row, Col, Form, Input, Collapse, Switch } from 'antd'
 import {
     DownOutlined,
 } from '@ant-design/icons';
@@ -59,7 +59,7 @@ const rules = {
     ]
 }
 const OrganizationDetails = (props) => {
-    const [open, setOpen] = useState(false)
+    // const [open, setOpen] = useState(false)
     const [form] = Form.useForm();
 
     const layout = {

@@ -3,7 +3,12 @@ import {  USERS_DATA,
           USER_DETAILS, 
           UPDATE_USER_DETAILS, 
           DELETE_ALL_USERS, 
-          IS_LOADING } from '../constants/Users'
+          IS_LOADING, 
+          USERS_DELETED, 
+          USER_ADDED, 
+          USER_UPDATED,
+          UPDATE_USER_FORM_DATA,
+          USER_ERRORS } from '../constants/Users'
 
 export const updateUsersData = (data) => {  
   return {
@@ -22,24 +27,31 @@ export const updateUserStatus = (id, status) => {
   }
 }
 
-export const getUserDetails = (url) => {
+export const getUserDetails = (url) => {  
   return {
     type: USER_DETAILS,
     url
   }
 }
 
-export const updateUserDetails = (data) => {
+export const updateUserDetails = (data) => {  
   return {
     type: UPDATE_USER_DETAILS,
-    data
+    data    
   }
 }
 
-export const deleteAllUsers = (ids) => {
+export const deleteAllUsers = (ids) => {  
   return {
     type: DELETE_ALL_USERS,
     ids
+  }
+}
+
+export const usersDeleted = (val) => {  
+  return {
+    type: USERS_DELETED,
+    val
   }
 }
 
@@ -49,9 +61,31 @@ export const isLoading = () => {
   }
 }
 
-// export const isLoading = (bool) => {
-//   return {
-//     type: IS_LOADING,
-//     bool
-//   }
-// }
+export const isUserAdded = (val) => {  
+  return {
+    type: USER_ADDED,
+    val
+  }
+}
+
+export const isUserUpdated = (val) => {
+  return {
+    type: USER_UPDATED,
+    val
+  }
+}
+
+export const updateUserFormData = (data) => {
+  return {
+    type: UPDATE_USER_FORM_DATA,
+    data
+  }
+}
+
+export const userErrors = (errors) => {
+  console.log('Reached userErros action type', errors)
+  return {
+    type: USER_ERRORS,
+    errors
+  }
+}

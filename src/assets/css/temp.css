@@ -1,12 +1,106 @@
+/* --------------------------------
+  Module: Authentication
+  Page: Registration
+  ---------------------------------*/
+.register-margin {
+  margin-top: 100px;  
+}
+.register-margin h1 {
+  margin-bottom: 0;
+}
+#registration-form {
+  margin-top: 50px;
+}
+.register-logo {
+  width: 150px;
+  height: 40px;  
+  position: absolute;
+  right: 20px;
+  top: 20px;  
+}
+.register-ad-bg-image {
+  height: 100vh;
+  width: 100%;
+}
+.register-ad-text {
+  position: absolute;  
+  top: 0;
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;  
+  align-items: center;  
+}
+.register-ad-text h3 {
+  color: #fff;
+}
+.register-ad-text p {  
+  text-align: center;  
+  color: #fff;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.register-ad-image {  
+  position: absolute;    
+  height: 250px;
+  margin-top: 150px;  
+}
+.register-footer {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  color: #fff;
+}
+/* --------------------------------
+  Module: Authentication  
+  Page: CompaniesList  
+  ---------------------------------*/
+.companies .ant-list-header {
+  border-bottom: none;
+}
+.companies .ant-list-item {  
+  background: #eceff5;
+  margin-bottom: 10px;
+  border-radius: 2px;   
+}
+.companies h1 {
+  font-weight: 400;
+  color: #111111;
+}
+
+
+
+/* ====== Sign In Page ======= */
+.sign-in-signup-btn {
+  margin-bottom: 50px;
+}
+.sign-in-email,
+.sign-in-password,
+.sign-in-button {
+   width: 300px;
+}
+.sign-in-forgotpassword {
+  text-align: right;
+  margin-right: 15px;
+  width: 300px;
+}
+.sign-in-subdomain-info 
+.anticon-arrow-left  {
+  background: #e5e8ec;
+  padding: 4px 10px;
+  border-radius: 50px;
+}
+.sign-in-subdomain-name {
+  color: rgb(80, 79, 79);  
+}
+
 .app-container {    
   margin-top: 70px;
   display: flex;    
 }
 .ap-left {
   height: calc(100vh - 70px);
-  overflow-y: auto !important;  
+  overflow-y: auto !important;
 }
-
 .app-content {
   margin-top: 0px;
   padding: 0  !important;
@@ -610,10 +704,7 @@
 }
 
 /* Users
-  ==================== */  
-  .users-list-head-checkbox {
-    
-  }
+  ==================== */    
   .users-table .ant-table-container {
     margin-top: 10px;
     border-top-left-radius: 0px !important;
@@ -649,57 +740,69 @@
 /* Contacts
   ========================= */
 
-.basic-information {
+.basic-information,
+.users-information {
   margin-left: -30px;
   margin-right: 25px;
   margin-top: 30px;
 }
 /* Removing inbuilt star(*) mark for required fields */
-.basic-information .ant-form-item-required::before {
+.basic-information .ant-form-item-required::before,
+.users-information .ant-form-item-required::before {
   display: none !important;
 }
-.basic-information .ant-collapse {
+.basic-information .ant-collapse,
+.users-information .ant-collapse {
   border-radius: 5px !important;
   background-color: #fff;  
   box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.1);
 }
-.basic-information .ant-collapse .ant-collapse-header {
+.basic-information .ant-collapse .ant-collapse-header,
+.users-information .ant-collapse .ant-collapse-header {
   padding-left: 10px;
   padding-bottom: 5px;  
   color: #1a3353;
   font-weight: 500;
 }
-.basic-information .ant-collapse .ant-collapse-item {
+.basic-information .ant-collapse .ant-collapse-item,
+.users-information .ant-collapse .ant-collapse-item {
   border-radius: 5px !important;
   background-color: #fff;
   border: none;
 }
-.basic-information .ant-collapse .ant-collapse-header span {
+.basic-information .ant-collapse .ant-collapse-header span,
+.users-information .ant-collapse .ant-collapse-header span {
   padding-top: 0px !important;
 }
 
  /* Contacts - Basic Information
   =============================== */
-.basic-information .ant-form-item-label label {
+.basic-information .ant-form-item-label label,
+.users-information .ant-form-item-label label {
   color: #0f468e;
   font-weight: 400;
 }
-.basic-information .ant-form-item-control-input-content input {
+.basic-information .ant-form-item-control-input-content input,
+.users-information .ant-form-item-control-input-content input {
   border-radius: 5px;
   height: 35px;
 }
-.basic-information .ant-form-item-control-input-content .req {
+.basic-information .ant-form-item-control-input-content .req,
+.users-information .ant-form-item-control-input-content .req {
   border-left: 2px solid red;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;  
 }
-.basic-information .ant-form-item-control-input-content .ant-input-affix-wrapper {
+.basic-information .ant-form-item-control-input-content .ant-input-affix-wrapper,
+.users-information .ant-form-item-control-input-content .ant-input-affix-wrapper {
   border-radius: 5px;
   height: 35px;  
   padding-top: 0 !important;  
 }
 
 .basic-information .ant-form-item-control-input-content 
+.ant-input-affix-wrapper .ant-input-suffix,
+.users-information .ant-form-item-control-input-content 
 .ant-input-affix-wrapper .ant-input-suffix {
   background: #edf0f4;
   padding-top: 10px;
@@ -712,17 +815,21 @@
   height: 33px;
 }
 .basic-information .ant-form-item-control-input-content 
-.ant-input-affix-wrapper input{
+.ant-input-affix-wrapper input,
+.users-information .ant-form-item-control-input-content 
+.ant-input-affix-wrapper input {
   height: 30px !important;  
 }
-.basic-information .ant-form-item-control-input-content .ant-select-selector {
+.basic-information .ant-form-item-control-input-content .ant-select-selector,
+.users-information .ant-form-item-control-input-content .ant-select-selector {
   height: 35px;
   border-radius: 5px;   
 }
 .ant-form-item-control-input {
   width: 80%; 
 }
-.basic-information .ant-select-arrow {
+.basic-information .ant-select-arrow,
+.users-information .ant-select-arrow {
   background: #edf0f4;
   padding-top: 12px;
   padding-bottom: 10px;
@@ -751,12 +858,12 @@
   border-bottom-right-radius: 3px;
   height: 33px;
 }
-.ant-form-item {
+/* .ant-form-item {
   display: flex !important;
   flex-direction: row !important;
   justify-content: center !important;
   align-items: center !important;
-}
+} */
 
 .basic-information .saluation {
   margin-left: 70px;
@@ -795,22 +902,22 @@
   margin-left: 90px;
 }
 
-.basic-information .addresslane {
+.address-component .addresslane {
   margin-left: 40px;
 }
-.basic-information .street {
+.address-component .street {
   margin-left: 85px;
 }
-.basic-information .pincode {
+.address-component .pincode {
   margin-left: 70px;
 }
-.basic-information .city {
+.address-component .city {
   margin-left: 130px;
 }
-.basic-information .state {
+.address-component .state {
   margin-left: 125px;
 }
-.basic-information .country {
+.address-component .country {
   margin-left: 110px;
 }
 
@@ -881,6 +988,7 @@
   margin-left: 1px;
   cursor: pointer;
   display: block;
+  transition: 0.2s ease;
 }
 .toggle-button-text {
   margin-left: 45px;
@@ -890,8 +998,7 @@
   ================*/
 .user-details {
   position: absolute;
-  width: 100%;
-  /* z-index: -2; */
+  width: 100%;  
   margin-left: -30px;
   margin-top: -5px;  
 }
@@ -1007,4 +1114,102 @@
   border-bottom-right-radius: 10px;
   margin-right: 20px;
   border: 1px solid #eef3f8;
+}
+
+
+/* Add User
+  =================== */
+.users-information .user-name {
+  margin-left: 60px;
+}
+.users-information .user-usertype {
+  margin-left: 35px;
+}
+.users-information .user-userrole {
+  margin-left: 70px;  
+}
+.users-information .user-emailaddress {
+  margin-left: 40px;
+}
+.users-information .user-mobilenumber {
+  margin-left: 35px;
+}
+.users-information .user-skype {
+  margin-left: 80px;
+}
+.users-information .toggle-button {
+  position: absolute;
+  top: 35px;
+  right: 50px;
+}
+.users-information {
+  background: #fff;
+  height: auto;  
+  margin-top: 0;
+  padding-top: 50px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.close-email .ant-input-suffix,
+.close-mobilenumber .ant-input-suffix {
+  background: #9fc8f1 !important;
+  padding-left: 10px;
+  padding-right: 10px;  
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;  
+  position: absolute;
+  right: 11px;  
+}
+.users-information .close-email,
+.users-information .close-mobilenumber {
+  margin-left: 140px;
+  width: 75%;
+  height: 35px !important;
+  border-radius: 5px !important;  
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  margin-top: -20px;
+  line-height: -50px;
+}
+
+/* Edit User
+  =================== */
+.edit-user input {
+  outline: none;  
+  width: 100%; 
+  border: 1px solid rgb(228, 225, 225);
+}
+.edit-user input:focus {  
+  border: 1px solid #7ca1f1;
+}
+.edit-user #alternate_email,
+.edit-user #alternate_phone {
+  width: 86.5%;
+  margin-left: 70px;
+}
+.edit-user .add-email-btn,
+.edit-user .add-phone-btn {
+  position: absolute;
+  right: 0;
+  background: #e1eaf5;  
+  padding: 10px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  cursor: pointer;
+}
+.edit-user .close-alternateemail-btn {
+  position: absolute;
+  right: -27px;
+  top: 0px;  
+  background: #e1eaf5;  
+  padding: 10px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  cursor: pointer;
+}
+.d-none {
+  display: none;
 }
