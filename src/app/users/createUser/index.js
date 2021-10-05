@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Card, Row, Col, Breadcrumb, Button } from 'antd'
+import { Card, Row, Col, Breadcrumb, Button, Switch } from 'antd'
 import { DownOutlined, LeftOutlined, CloseCircleOutlined, CheckOutlined } from '@ant-design/icons';
 import UserInformation from './UserInformation'
 import AddressInformation from './AddressInformation'
@@ -8,7 +8,7 @@ const users = (props) => {
 
     return (
         <div className="toolbar">
-            <div style={{ backgroundColor: "#1A3353" ,alignItems:"center"}} className="p-2 d-flex justify-content-between">
+            <div style={{ backgroundColor: "#1A3353", alignItems: "center" }} className="p-2 d-flex justify-content-between">
                 <div >
                     <Breadcrumb style={{ color: "white" }}>
                         <Breadcrumb.Item>Home</Breadcrumb.Item>
@@ -25,7 +25,7 @@ const users = (props) => {
                         <Col span={25}>
                             <Button icon={<LeftOutlined />} className="btn btn-default" htmlType="submit" block >
                                 Back to Users
-                                </Button>
+                            </Button>
                         </Col>
                         <Col>
                             <Button
@@ -33,44 +33,39 @@ const users = (props) => {
                                 style={{ backgroundColor: "#304B6D", color: "white", borderColor: "#1A3353" }}
                                 icon={<CloseCircleOutlined />} htmlType="submit" block >
                                 Cancel
-                                </Button>
+                            </Button>
                         </Col>
                         <Col>
                             <Button
                                 style={{ backgroundColor: "#3E79F7", borderColor: "#3E79F7", color: "white" }}
                                 icon={<CheckOutlined />} htmlType="submit" block >
                                 Save
-                                </Button>
+                            </Button>
                         </Col>
                     </Row>
                 </div>
             </div>
 
             <Card>
+                <div className='d-flex justify-content-end mb-4 mr-4'>
+                    <div className='mr-2'>
+                        <Switch defaultChecked />
+                    </div>
+                    <span>Enable User</span>
+                </div>
                 <Row className="align-items-stretch  h-100">
+
                     <Col>
                         <div className="container d-flex flex-column justify-content-center h-100">
                             <Row>
                                 <UserInformation />
-                                <AddressInformation/>
-                                {/* <Description/> */}
+                                <AddressInformation />
+                                <Description />
                             </Row>
                         </div>
                     </Col>
                 </Row>
-                <div className="d-flex flex-row justify-content-center flex-wrap">
-                    <div className=" p-1">
-                        <Button type="primary" htmlType="submit" block >
-                            Save
-					</Button>
-                    </div>
-                    <div className=" p-1">
-                        <Button htmlType="submit" block >
-                            Cancel
-					</Button>
-                    </div>
-
-                </div>
+               
 
             </Card>
         </div>

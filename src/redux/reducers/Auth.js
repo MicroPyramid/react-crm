@@ -37,7 +37,9 @@ const auth = (state = initState, action) => {
 				redirect: '/',
 				token: action.token
 			}
-		case SHOW_AUTH_MESSAGE:			
+		case SHOW_AUTH_MESSAGE:		
+		// console.log('The value of SHOW_AUTH_MESSAGE  action :', action)	
+		// console.log('The value of SHOW_AUTH_MESSAGE  :', action.message)	
 			return {
 				...state,
 				message: action.message,

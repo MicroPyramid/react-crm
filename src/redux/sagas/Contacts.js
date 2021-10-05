@@ -10,8 +10,7 @@ export function* addContact() {
       service.defaults.headers['Authorization'] = 'jwt '+window.localStorage.getItem('Token')
       let response = yield call(service.post, url, data)       
     }
-    catch(err) {      
-      let response = err.response.data.errors.contact_errors            
+    catch(err) {                      
       yield(put(contactErrors(err.response)))
     }
   })

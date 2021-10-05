@@ -1,11 +1,8 @@
 import React from 'react'
 import { motion } from "framer-motion"
-import { Button, Form, Input, Divider, Alert, Upload, Select } from "antd";
-import { MailOutlined,
-     IdcardOutlined,
-     TeamOutlined,
-     GlobalOutlined,
-     UsergroupAddOutlined,
+import { Button, Form, Input, Upload, Select } from "antd";
+import { MailOutlined,     
+     GlobalOutlined,     
      UploadOutlined
     } from '@ant-design/icons';
 
@@ -68,22 +65,22 @@ const { Option } = Select;
 
 const ProjectDetails = props => {
 
-    const {
-        otherSignIn,
-        showForgetPassword,
-        hideAuthMessage,
-        onForgetPasswordClick,
-        showLoading,
-        extra,
-        loading,
-        showMessage,
-        message,
-        authenticated,
-        showAuthMessage,
-        token,
-        redirect,
-        allowRedirect
-    } = props
+    // const {
+        // otherSignIn,
+        // showForgetPassword,
+        // hideAuthMessage,
+        // onForgetPasswordClick,
+        // showLoading,
+        // extra,
+        // loading,
+        // showMessage,
+        // message,
+        // authenticated,
+        // showAuthMessage,
+        // token,
+        // redirect,
+        // allowRedirect
+    // } = props
     return (
         <>
             <motion.div

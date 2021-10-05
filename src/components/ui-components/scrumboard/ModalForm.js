@@ -178,8 +178,8 @@ const UpdateCardForm = ({onSubmit, cardData, listId}) => {
 			<Form.Item label="Assigned to" name="members" className="blockform-col col-3">
 				<Select 
 					filterOption={false}
-					tagRender={memberTagRender} 
-					mode="tags" 
+					tagRender={memberTagRender}
+					mode="tags"
 					removeIcon={null}
 					placeholder="None"
 					className="board-card-modal select"

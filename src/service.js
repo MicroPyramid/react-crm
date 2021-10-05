@@ -1,9 +1,8 @@
 import axios from 'axios';
 
-let origin = window.location.origin
-export const service = axios.create({
-  baseURL: `${origin}/api/`,    
+export const service = axios.create({  
+  baseURL: process.env.REACT_APP_BASE_URL,  
   headers: {
-    'Content-Type': 'application/json'    
+    'Content-Type': 'application/json'
   }
 })

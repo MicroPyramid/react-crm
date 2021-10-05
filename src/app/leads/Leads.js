@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Table, Tabs, Avatar, Tooltip, Tag, Drawer, Card } from 'antd'
+import { Tabs, Avatar, Tag } from 'antd'
 import { DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 import '../../assets/css/temp.css'
@@ -13,8 +13,9 @@ let colors = ["#f50", "#2db7f5", "#87d068", "#108ee9"]
 
 export const Leads = (props) => {    
   
+  // const [leadsObj, setLeadsObj] = useState()
   useEffect(() => {            
-    props.getData(`leads/?limit=50`, 'leads')
+    props.getData(`/api/leads/?limit=50`, 'leads')
   }, [])
 
   let { leads, loading } = props
@@ -25,12 +26,18 @@ export const Leads = (props) => {
                   "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"]
    
   
+  // useEffect(() => {
+    
+  // })
+
   const deleteLead = (e) => {        
-    props.deleteObject(`leads/${e}/`)
-    setTimeout(() => {
-      props.getData(`leads/?limit=50`, 'leads')
-    }, 300)    
+    props.deleteObject(`/api/leads/${e}/`)
+    props.getData(`/api/leads/?limit=50`, 'leads')
   }
+
+
+  // console.log('The value of leads :', leads)
+  // console.log('The value of leadsObj :', leadsObj)
 
   return (
     <div className="app-area">
@@ -45,9 +52,8 @@ export const Leads = (props) => {
       <Tabs className="custom-tabs">
       <TabPane className="custom-tabpane" tab="Open" key="1">
       {
-        
-          leads.data?.open_leads.open_leads.map(lead => { 
-                          
+        leads && leads.data.open_leads.open_leads.map(lead => { 
+            // console.log('The value fo single lead : ',lead)                            
             return(
               <div className="custom-tab-leads">    
                 <div className="custom-tab-leads-first">
@@ -95,8 +101,10 @@ export const Leads = (props) => {
                       <DeleteOutlined onClick={() => deleteLead(lead.id)}/>
                     </div>
                     <p className="m-0">created {momentTimeFormats(lead.created_on)[0]} by &nbsp;
-                        <Avatar className="custom-tab-createdby-avatar" src={lead.created_by.profile_pic}/> &nbsp;                     
-                        <span className="username">{lead.created_by.username}</span>
+                        <Avatar className="custom-tab-createdby-avatar" src={lead.created_by && lead.created_by.profile_pic}/> &nbsp;                                             
+                        <span className="username">
+                          { lead.created_by && lead.created_by.first_name + 
+                          lead.created_by &&  lead.created_by.last_name}</span>
                     </p>
                   </div>                                    
                 </div>
@@ -155,8 +163,11 @@ export const Leads = (props) => {
                       <DeleteOutlined onClick={() => deleteLead(lead.id)}/>
                     </div>
                     <p className="m-0">created {momentTimeFormats(lead.created_on)[0]} by &nbsp;
-                        <Avatar className="custom-tab-createdby-avatar" src={lead.created_by.profile_pic}/> &nbsp;                     
-                        <span className="username">{lead.created_by.username}</span>
+                      <Avatar className="custom-tab-createdby-avatar" src={lead.created_by && lead.created_by.profile_pic}/> &nbsp;                                             
+                        <span className="username">
+                          { lead.created_by && lead.created_by.first_name + 
+                          lead.created_by &&  lead.created_by.last_name}
+                        </span>
                     </p>
                   </div>                                    
                 </div>

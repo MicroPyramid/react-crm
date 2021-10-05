@@ -8,7 +8,7 @@ import {
     PaperClipOutlined,
     MoreOutlined
 } from '@ant-design/icons';
-const { Option } = Select;
+// const { Option } = Select;
 const { TextArea } = Input;
 
 const image = [
@@ -100,7 +100,7 @@ const Notes = () => {
                     <Row>
                         <Col span={12}>
                             <Row justify={"space-between"}>
-                                <Col>Lead-<a>Ashwin kumar-</a><ins>Add Note</ins></Col>
+                                <Col>Lead-<a href='!#'>Ashwin kumar-</a><ins>Add Note</ins></Col>
                                 <Col span={9}>
                                     -22 hrs. by kapil asthana
                                 </Col>

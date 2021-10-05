@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from "react-redux";
-import { Button, Form, Input, Divider, Alert } from "antd";
+import { Button, Form, Input, Alert } from "antd";
 import { MailOutlined, LockOutlined } from '@ant-design/icons';
 import {	
 	login,
@@ -31,32 +31,43 @@ const rules = {
 
 export const LoginForm = (props) => {		
 
+	const rules = {
+		email: [
+			{ 
+				required: true,
+				message: 'Please input your email address'
+			},
+			{ 
+				type: 'email',
+				message: 'Please enter a validate email!'
+			}
+		],
+		password: [
+			{ 
+				required: true,
+				message: 'Please input your password'
+			}
+		],
+	}
+	
 	const {				
 		showMessage,
 		message,
 		auth				
 	} = props
 
-	const onLogin = e => {								
+	const onLogin = e => {
 			props.login(e)
 	};		
 
-	useEffect(() => {		
+	useEffect(() => {			
 		if(window.localStorage.getItem('Token')) {
-			props.history.push('/home')
+			props.history.push('/companies-list')
 		}else{
 			props.history.push('/login')
 		}
 	}, [auth])
-
-	useEffect(() => {			
-		if(showMessage) {			
-			setTimeout(() => {				
-				props.hideAuthMessage();
-			}, 1000);
-		}
-	}, [showMessage])
-
+		
 	return (
 	
 		<>
@@ -77,20 +88,26 @@ export const LoginForm = (props) => {
 					name="email"
 					label="Email"
 					rules={rules.email}>
-					<Input prefix={<MailOutlined className="text-primary" />}/>
+					<Input className="sign-in-email" data-testid='sign-in-email'
+						prefix={<MailOutlined className="text-primary" />}
+					/>
 				</Form.Item>
 				<Form.Item
 					name="password"
 					label="Password"
-					rules={rules.password}
-				>
-					<Input.Password prefix={<LockOutlined className="text-primary" />}/>
-				</Form.Item>
-				<p>Don't have an account yet? <Link to="/register">Register</Link></p>
-				<p>Forgot password? <Link to="/forgot-password">Reset</Link></p>
+					rules={rules.password}>
+					<Input.Password className="sign-in-password" data-testid='sign-in-password'
+						prefix={<LockOutlined className="text-primary" />}
+					/>
+				</Form.Item>				
+				<p className="sign-in-forgotpassword">
+					<Link to="forgot-password">Forgot Password?</Link>
+				</p>				
 				<Form.Item>
-					<Button type="primary" htmlType="submit" block >
-						Login
+					<Button type="primary" htmlType="submit" block  
+						className="sign-in-button"
+						data-testid='sign-in-btn'>
+						Sign In
 					</Button>
 				</Form.Item>
 			</Form>

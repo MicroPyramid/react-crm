@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from "react-redux";
 import { Button, Form, Input, Alert } from "antd";
-import { MailOutlined, LockOutlined } from '@ant-design/icons';
+import { MailOutlined } from '@ant-design/icons';
 import { motion } from "framer-motion"
 import { Link } from 'react-router-dom'
 import { forgotPassword, hideAuthMessage } from '../../../redux/actions/Auth'

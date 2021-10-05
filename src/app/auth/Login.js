@@ -1,12 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom'
 import LoginForm from './components/LoginForm';
 import { Row, Col } from 'antd';
-import { connect, useSelector } from 'react-redux';
-import { EditOutlined } from '@ant-design/icons';
+import { connect } from 'react-redux';
 import { InfoPanel } from './infoPanel';
+import { ArrowLeftOutlined } from '@ant-design/icons'
 
 const LoginPage = (props) => {  
-  const { subdomain } = props;
+  // const { subdomain } = props;
   return (
     <div className="bg-white height-100">    
       <Row justify="center" className="align-items-stretch h-100">
@@ -14,7 +15,12 @@ const LoginPage = (props) => {
           <div className="container d-flex flex-column justify-content-center h-100">
             <Row justify="center">
               <Col xs={24} sm={24} md={20} lg={12} xl={8}>
-                <h1>Login</h1>
+                <h1 className="sign-in-text mb-0">Sign In</h1>
+                <p className='sign-in-signup-btn'>Don't Have an Account yet ? <Link to='/register' data-testid="signup-btn">Sign Up</Link></p>
+                <div className="sign-in-subdomain-info">
+                  {/* <ArrowLeftOutlined /> Your Subdomain */}
+                  {/* <p className='sign-in-subdomain-name'><b>micropyramid.bottlecrm.com</b></p> */}
+                </div>
                 <div className="mt-4">
                   <LoginForm {...props} />
                 </div>

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { Card, Row, Col, Breadcrumb, Form, Input, Collapse } from 'antd'
+import { Row, Col, Form, Collapse } from 'antd'
 
 import { motion } from "framer-motion"
 import JoditEditor from "jodit-react";
@@ -12,7 +12,7 @@ const { Panel } = Collapse;
 const Description = (props) => {
   const editor = useRef(null)
   const [content, setContent] = useState('')
-  const [form] = Form.useForm();
+  // const [form] = Form.useForm();
 
   const editorHandle = (data) => {
     setContent(data)
@@ -46,7 +46,7 @@ const Description = (props) => {
                         editor={ClassicEditor}
                         data={content}
                         onChange={(event, editor) => {
-                          const data = editor.getData()
+                          // const data = editor.getData()
                           // editorHandle(Parse(data))
                         }}
                       />

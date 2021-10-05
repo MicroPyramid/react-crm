@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { motion } from "framer-motion"
-import { Button, Form, Input, Divider, Alert, Col, Row, Upload, Select } from "antd";
+import { Form, Input, Col, Row, Select } from "antd";
 
 import {    
     UserOutlined,    
@@ -46,27 +46,27 @@ const rules = {
 
 const PersonalDetails = props => {
 
-    const [country, setCountry] = useState('')
+    // const [country, setCountry] = useState('')
     const {
-        otherSignIn,
-        showForgetPassword,
-        hideAuthMessage,
-        onForgetPasswordClick,
-        showLoading,
-        extra,
-        loading,
-        showMessage,
-        message,
-        authenticated,
-        showAuthMessage,
-        token,
-        redirect,
-        allowRedirect
+        // otherSignIn,
+        // showForgetPassword,
+        // hideAuthMessage,
+        // onForgetPasswordClick,
+        // showLoading,
+        // extra,
+        // loading,
+        // showMessage,
+        // message,
+        // authenticated,
+        // showAuthMessage,
+        // token,
+        // redirect,
+        // allowRedirect
     } = props
 
-    function handleChange(value) {
+    // function handleChange(value) {
         
-    }
+    // }
 
     return (
         <>

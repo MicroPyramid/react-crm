@@ -106,16 +106,15 @@ export const showLoading = () => {
 
 
 // Subdomain Validation
-
 export const subdomain = (domain) => {  
   return {
     type: SUB_DOMAIN,
     domain
   }
 }
-// Register
 
-export const register = (regDetails) => {
+// Register
+export const register = (regDetails) => {  
   return {
     type: REGISTER,
     regDetails

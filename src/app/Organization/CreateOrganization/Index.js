@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Card, Row, Col, Breadcrumb, Button } from 'antd'
-import { DownOutlined, LeftOutlined, CloseCircleOutlined, CheckOutlined } from '@ant-design/icons';
+import { LeftOutlined, CloseCircleOutlined, CheckOutlined } from '@ant-design/icons';
 import OrganizationDetails from './OrganizationDetails'
 import AddressInformation from './AddressInformation'
 import Description from './Description'
@@ -14,10 +14,10 @@ const users = (props) => {
                     <Breadcrumb style={{ color: "white" }}>
                         <Breadcrumb.Item>Home</Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <a href="">Organizations</a>
+                            <a href="!#">Organizations</a>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <a style={{ color: "white" }}> Add Organiation</a>
+                            <a href="!#" style={{ color: "white" }}> Add Organiation</a>
                         </Breadcrumb.Item>
                     </Breadcrumb>
                 </div>

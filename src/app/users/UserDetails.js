@@ -8,13 +8,13 @@ export const UserDetails = (props) => {
 
   const { userDetails, loading } = props
   
-  const [details, setDetails] = useState('')  
+  const [details, setDetails] = useState('')
   const [userStatus, setUserStatus] = useState()
 
   const id = props.match.params.id    
-
+  
   useEffect(() => {
-    props.getUserDetails(`users/${id}/`)
+    props.getUserDetails(`/api/users/${id}/`)
   }, [])
 
   useEffect(() => {
@@ -25,11 +25,10 @@ export const UserDetails = (props) => {
   const toggle = (id) => {        
     props.updateUserStatus(id, (!userStatus) ?  'Active' : 'Inactive')
     setUserStatus(!userStatus)
-  }
-
+  }  
   return (
     <div className="app-area">      
-      <DetailsToolbar module="users"/> 
+      <DetailsToolbar module="users" id={id} /> 
       <div className="user-details">
         <div className="est">
 
@@ -48,26 +47,26 @@ export const UserDetails = (props) => {
             <hr />
             <Row>
               <Col span={12}>
-                <p className="name">Name : <span>{details && details.data.user_obj.username}</span></p>                
-                <p className="user-type">User Type: <span>{details && details.data.user_type}</span></p>
-                <p className="user-role">User Role:  <span>{details && details.data.role}</span></p>
+                <p className="name">Name : <span>{userDetails.data && userDetails.data.data.user_obj.username}</span></p>                
+                <p className="user-type">User Type: <span>{userDetails.data && userDetails.data.data.user_obj.user_type}</span></p>
+                <p className="user-role">User Role:  <span>{userDetails.data && userDetails.data.data.user_obj.role}</span></p>
               </Col>
               <Col span={12}>
                 <Row className="email">
                   <Col><p className="label-email">Email:</p></Col>
                   <Col className="email-ids">
-                    <p>{details && details.data.email}</p>
-                    <p>{details && details.data.alternate_email}</p>
+                    <p>{userDetails.data && userDetails.data.data.user_obj.email}</p>
+                    <p>{userDetails.data && userDetails.data.data.user_obj.alternate_email}</p>
                   </Col>
                 </Row>
                 <Row className="mobile">
                   <Col><p className="label-mobile">Mobile:</p></Col>
                   <Col className="mobile-nums">
-                    <p>{details && details.data.phone}</p>
-                    <p>{details && details.data.alternate_phone}</p>
+                    <p>{userDetails.data && userDetails.data.data.user_obj.phone}</p>
+                    <p>{userDetails.data && userDetails.data.data.user_obj.alternate_phone}</p>
                   </Col>
                 </Row>
-                <p className="skype">Skype ID: <span>{details && details.data.skype_ID}</span></p>
+                <p className="skype">Skype ID: <span>{userDetails.data && userDetails.data.data.user_obj.skype_ID}</span></p>
               </Col>
             </Row>            
           </div>
@@ -75,18 +74,18 @@ export const UserDetails = (props) => {
           <div className="details-address">
             <h4>Address Details</h4>
             <hr />
-            {/* <Row>
+            <Row>
               <Col span={12}>
-                <p className="addresslane">Address Lane: <span>{details && details.data.address.address_line}</span></p>
-                <p className="state">State: <span>{details && details.data.address.state}</span></p>
-                <p className="pincode">Pincode: <span>{details && details.data.address.postcode}</span></p>                
+                <p className="addresslane">Address Lane: <span>{userDetails.data && userDetails.data.data.user_obj.address.address_line}</span></p>
+                <p className="state">State: <span>{userDetails.data && userDetails.data.data.user_obj.address.state}</span></p>
+                <p className="pincode">Pincode: <span>{userDetails.data && userDetails.data.data.user_obj.address.postcode}</span></p>                
               </Col>
               <Col span={12}>
-                <p className="street">Street: <span>{details && details.data.address.street}</span></p>
-                <p className="city">City: <span>{details && details.data.address.city}</span></p>
-                <p className="country">Country: <span>{details && details.data.address.country}</span></p>
+                <p className="street">Street: <span>{userDetails.data && userDetails.data.data.user_obj.address.street}</span></p>
+                <p className="city">City: <span>{userDetails.data && userDetails.data.data.user_obj.address.city}</span></p>
+                <p className="country">Country: <span>{userDetails.data && userDetails.data.data.user_obj.address.country}</span></p>
               </Col>
-            </Row> */}
+            </Row>
           </div>
           {/* Description Details */}
           <div className="details-description">
@@ -94,7 +93,7 @@ export const UserDetails = (props) => {
             <hr />
             <Row>
               <Col span={4}><p className="description">Description:</p></Col>
-              <Col span={20}><p className="description-text">{details && details.data.description}</p></Col>
+              <Col span={20}><p className="description-text">{userDetails.data && userDetails.data.data.user_obj.description}</p></Col>
             </Row>
           </div>
 

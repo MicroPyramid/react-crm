@@ -1,6 +1,6 @@
 import React from 'react'
-import {Row, Col, Form, Input, Card, Select, Avatar, Tag, Divider, Button  } from 'antd'
-import { scrumboardData, memberIds, labels } from '../../components/ui-components/scrumboard/ScrumboardData';
+import {Row, Col, Form, Input, Card, Select, Tag, Divider, Button  } from 'antd'
+import { memberIds } from '../../components/ui-components/scrumboard/ScrumboardData';
 import { AssigneeAvatar } from '../../components/ui-components/scrumboard/utils'
 import { UserOutlined,  
 	MobileOutlined, 

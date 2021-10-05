@@ -1,8 +1,8 @@
-import React, { lazy, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Layout, Row, Col } from "antd"
 import HeaderNav from '../components/layout-components/HeaderNav'
 import SideNav from '../components/layout-components/SideNav';
-import Footer from '../components/layout-components/Footer';
+// import Footer from '../components/layout-components/Footer';
 import AppRoutes from './routes'
 import { connect } from 'react-redux'
 import '../assets/css/temp.css'
@@ -26,10 +26,9 @@ const AppIndex = (props) => {
   
   useEffect(()=> {
     const token = localStorage.getItem('Token')    
-    if(!token) {      
-      props.history.push('/login')
-    }
-    setPath(window.location.pathname)
+    if(!token) {         
+        props.history.push('/login')
+      }          
   })
 
   return (      

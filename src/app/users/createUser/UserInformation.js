@@ -95,8 +95,8 @@ const UserInformation = (props) => {
 
                                 <Col span={10} xs={18} xl={10}>
                                 <Form.Item
-                                        name="role"
-                                        label="Role"
+                                        name="Email "
+                                        label="Email Address"
                                         rules={rules.userName}
                                     >
                                         <Input style={{ borderRadius: "4px", borderLeftColor: "red", marginLeft: "16px" }} placeholder="Role" />
@@ -117,11 +117,11 @@ const UserInformation = (props) => {
                                 <Col span={10} xs={18} xl={10}>
                                     <Form.Item
                                         name="lastName"
-                                        label="Last Name"
-                                        rules={rules.email}
+                                        label="      "
+                                        // rules={rules.email}
                                     >
                                         <Input
-                                            style={{ borderRadius: "4px", marginLeft: "16px" }} placeholder="Email Address" />
+                                            style={{ borderRadius: "4px", marginLeft: "16px" }} placeholder="Altername Email" />
 
                                     </Form.Item>
                                 </Col>
@@ -129,8 +129,8 @@ const UserInformation = (props) => {
                             <Row >
                                 <Col span={10} xs={18} xl={10}>
                                     <Form.Item
-                                        name="title"
-                                        label="Title"
+                                        name="lastName"
+                                        label="Last Name"
 
                                         rules={rules.lastName}
                                     >
@@ -142,8 +142,8 @@ const UserInformation = (props) => {
 
                                 <Col span={10} xs={18} xl={10}>
                                     <Form.Item
-                                        name="primaryEmail"
-                                        label="Primary Email"
+                                        name="mobileNumber"
+                                        label="Mobile Number"
                                     >
                                         <Input
                                             style={{ borderRadius: "4px", marginLeft: "16px" }} placeholder="phone number" />
@@ -154,8 +154,8 @@ const UserInformation = (props) => {
                             <Row >
                                 <Col span={10} xs={18} xl={10}>
                                 <Form.Item
-                                        name="secondaryEmail"
-                                        label="Secondary Email"
+                                        name="userType"
+                                        label="User Type"
                                     >
                                         <Input
                                             style={{ borderRadius: "4px", marginLeft: "16px" }} placeholder="phone number" />
@@ -166,11 +166,11 @@ const UserInformation = (props) => {
                                 <Col span={10} xs={18} xl={10}>
                                     <Form.Item
                                         name="mobileNumber"
-                                        label="Mobile Number"
-                                        rules={rules.email}
+                                        label="      "
+                                        // rules={rules.email}
                                     >
                                         <Input
-                                            style={{ borderRadius: "4px", marginLeft: "16px" }} placeholder="skypeID" />
+                                            style={{ borderRadius: "4px", marginLeft: "16px" }} placeholder="Altername mobile number" />
 
                                     </Form.Item>
                                 </Col>
@@ -179,8 +179,8 @@ const UserInformation = (props) => {
                             <Row >
                                 <Col span={10} xs={18} xl={10}>
                                 <Form.Item
-                                        name="secondaryNumber"
-                                        label="Secondary Number"
+                                        name="userRole"
+                                        label="User Role"
                                         rules={rules.email}
                                     >
                                         <Input
@@ -190,7 +190,15 @@ const UserInformation = (props) => {
                                 </Col>
 
                                 <Col className="ml-16" span={10} xs={18} xl={10}>
-                                   
+                                <Form.Item
+                                        name="skypeID"
+                                        label="Skype ID"
+                                        rules={rules.email}
+                                    >
+                                        <Input
+                                            style={{ borderRadius: "4px", marginLeft: "16px" }} placeholder="skypeID" />
+
+                                    </Form.Item>
                                 </Col>
                             </Row>
 

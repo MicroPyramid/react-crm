@@ -1,9 +1,23 @@
-import { GET_USERS, USER_DETAILS, USERS_DATA, UPDATE_USER_DETAILS, IS_LOADING } from '../constants/Users'
+import { 
+  GET_USERS, 
+  USERS_DATA, 
+  UPDATE_USER_DETAILS,
+  IS_LOADING, 
+  USERS_DELETED, 
+  USER_ADDED, 
+  USER_UPDATED, 
+  UPDATE_USER_FORM_DATA,
+  USER_ERRORS 
+} from '../constants/Users'
 
 const initUsers = {
-  users: '',
-  userDetails: '',
-  loading: true
+  users: '',  
+  userDetails: {},
+  loading: true,
+  areUsersDeleted: false,
+  userAdded: false,
+  userUpdated: false,
+  errors: ''
 }
 
 const users = (state = initUsers, action) => {    
@@ -19,17 +33,43 @@ const users = (state = initUsers, action) => {
         users: action.data,
         loading: false
     }
-    case UPDATE_USER_DETAILS:      
+    case UPDATE_USER_DETAILS:        
       return {
         ...state,
-        userDetails: action.data,
+        userDetails: action.data.data.data.user_obj,                
         loading: false
       }  
+    case UPDATE_USER_FORM_DATA:      
+      return {
+        ...state,
+        userDetails: { ...state.userDetails, [action.payload.target]: action.payload.data }
+      }
     case IS_LOADING:
       return {
         ...state,
         loading: true
       }  
+    case USERS_DELETED:      
+      return {
+        ...state,
+        areUsersDeleted: action.val
+      }
+    case USER_ADDED:      
+      return {
+        ...state,
+        userAdded: action.val
+      }
+    case USER_UPDATED:
+      return {
+        ...state,
+        userUpdated: action.val
+      }
+    case USER_ERRORS:
+      console.log('Reached user errors ', action.errors)
+      return {
+        ...state,
+        errors: action.errors
+      }
     default:
       return state
   }
