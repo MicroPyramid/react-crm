@@ -3,7 +3,7 @@ import {
   TOGGLE_TABLE_SCRUMBOARD
 } from '../constants/Theme'
 
-export function toggleCollapsedNav(navCollapsed) {
+export function toggleCollapsedNav(navCollapsed) {  
   return {
     type: TOGGLE_COLLAPSED_NAV,
     navCollapsed

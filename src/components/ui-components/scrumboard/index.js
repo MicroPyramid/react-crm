@@ -8,7 +8,7 @@ import reorder, { reorderQuoteMap } from './reoreder'
 import { memberIds } from './ScrumboardData';
 import ModalForm from './ModalForm';
 import { modalModeTypes, createCardObject, AssigneeAvatar } from './utils';
-import { Scrollbars } from 'react-custom-scrollbars';
+import { Scrollbars } from 'react-custom-scrollbars-2';
 
 const ScrumboardWrapper = props => {
 	

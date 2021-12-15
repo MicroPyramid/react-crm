@@ -19,7 +19,7 @@ export function* getUserDetails() {
   yield takeEvery(USER_DETAILS, function* ({ url }) {    
     try {
       service.defaults.headers['Authorization'] = 'jwt '+window.localStorage.getItem('Token')
-      let response = yield call(service, url)              
+      let response = yield call(service, url)
       yield put(updateUserDetails(response))
     }
     catch(err) {

@@ -1,6 +1,6 @@
 import { GET_DATA, POST_DATA, PUT_DATA } from '../constants/Fetch'
 
-export const getData = (url, obj) => {
+export const getData = (url, obj, hdata) => {
   return {
     type: GET_DATA,
     payload: {

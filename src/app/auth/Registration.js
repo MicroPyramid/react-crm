@@ -2,21 +2,29 @@ import React from 'react';
 import { Link } from 'react-router-dom'
 import { Row, Col } from 'antd';
 import RegistrationForm from './components/RegistrationForm';
+import { connect } from 'react-redux'
+import { updateErrors, alertMessage } from '../../redux/actions/Auth';
 
 const Registration = (props) => {
+
+  const clearAlerts = () => { 
+    props.updateErrors('')
+    props.alertMessage('')
+  }
+
   return(
     <div className="bg-white height-100 registration">
-      <Row>                  
+      <Row>
         <Col span={15}>
         <img src={require('../../assets/images/logo.png').default} alt="" className="register-logo" />
           <Row justify="center" align="middle">                  
                 <Col className="register-margin">
                   <h1>Sign Up</h1>
                   <p>Already have an account? &nbsp;
-                    <Link to="/signin">Sign In</Link>
+                    <Link to="/login" onClick={() =>  clearAlerts() }>Sign In</Link>
                   </p>
                   <RegistrationForm />
-                </Col>                                                                          
+                </Col>
           </Row>
         </Col>
         
@@ -35,4 +43,9 @@ const Registration = (props) => {
   )
 }
 
-export default Registration
+const mapDispatchToProps = {
+  updateErrors,
+  alertMessage
+}
+
+export default connect(null, mapDispatchToProps)(Registration)

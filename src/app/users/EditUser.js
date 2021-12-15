@@ -94,8 +94,7 @@ export class EditUser extends Component {
       description: this.state.description,
       is_active: this.state.is_active,
       id: this.props.match.params.id
-    }
-    console.log('The value from userObj from edituser :', userObj)
+    }    
     this.props.putData(`users/${this.props.match.params.id}/`, 'users', userObj, this.props.match.params.id)
   }  
 

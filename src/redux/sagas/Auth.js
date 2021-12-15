@@ -1,90 +1,77 @@
-import { all, takeEvery, put, fork, call } from 'redux-saga/effects';
-import {  
-  REGISTER,  
-  LOGIN,
-  FORGOT_PASSWORD,
-} from '../constants/Auth';
-import {
-  showAuthMessage,  
-  authenticate,
-} from '../actions/Auth';
+import { all, takeEvery, put, fork, call } from 'redux-saga/effects'
+import { LOGIN_CREDENTIALS,
+         REGISTRATION_DETAILS, 
+         FORGOT_PASSWORD} from '../constants/Auth'
+import { service } from '../../service'
+import { updateErrors, 
+         setToken, 
+         alertMessage } from '../actions/Auth'
 
-import { service } from '../../service';
-
-// Login function
-export function* validateLogin() {
-  yield takeEvery(LOGIN, function* ({ loginDetails }) {
-    const { email, password } = loginDetails;    
-    try {            
-      let response = yield call(service.post, '/api/auth/login/', {
-        email: email,
-        password: password,
-      });
-      if (!response.data.error) {        
-        yield put(authenticate(true));
-        localStorage.setItem('Token', response.data.token);
-      }
-    } catch (err) {
-      let response = err.response.data;      
-      if (response.error) {
-        yield put(showAuthMessage(response.errors));
+export function* checkLoginCredentials() {
+  yield takeEvery(LOGIN_CREDENTIALS, function* ({ payload }) {    
+    try {
+      let response = yield call(service.post, '/api/auth/login/', payload)
+      if(response.status === 200) {
+        localStorage.setItem('Token', response.data.token)
+        yield put(setToken(true))
       }
     }
-  });
+    catch(error) {      
+      if(error.response.data.error) {
+        yield put(updateErrors(error.response.data.errors))
+      }
+    }
+  })
 }
 
-// Register function
-export function* authenticateRegister() {
-  yield takeEvery(REGISTER, function* ({ regDetails }) {
-    const { first_name, company_name, email, password } = regDetails;    
+export function* registerCompany() {
+  yield takeEvery(REGISTRATION_DETAILS, function* ({ payload }) {
     try {
-      let response = yield call(service.post, '/api/auth/register/', {        
-        first_name: first_name,
-        company_name: company_name,
-        email: email,
-        password: password,
-      });      
-      if (!response.data.error) {
-        yield put(authenticate(true));
-      }
-    } catch (err) {
-      console.log(err.response)
-      if (err.response.data.error) {        
-        yield put(showAuthMessage(err.response.data.errors));
+      let response = yield call(service.post, '/api/auth/register/', payload)
+      if(!response.data.error) {        
+        yield put(alertMessage(response.data.message))
       }
     }
-  });
+    catch(error) {
+      let err = ''
+      if(error.response.data.error) {
+        for (let i in Object.values(error.response.data.errors)) {
+          err = err + Object.values(error.response.data.errors)[0] + ', '
+        }
+      }
+      yield put(updateErrors(err))
+    }
+  })
 }
 
 export function* forgotPassword() {
-  yield takeEvery(FORGOT_PASSWORD, function* ({ fpDetails }) {
-    let { email } = fpDetails;
+  yield takeEvery(FORGOT_PASSWORD, function* ({ payload }) {
     try {
-      let response = yield call(service.post, '/api/auth/forgot-password/', {
-        email: email,
-      });
-      if (!response.data.error) {
-        yield put(authenticate(true));
-      }
-    } catch (err) {
-      let response = err.response.data;
-      let errors = response.errors;
-      let errMessage = '';
-      for (let key of Object.keys(errors)) {
-        errMessage += errors[key] + ' ';
-      }
-      if (response.error) {
-        yield put(showAuthMessage(errMessage));
-      }
+      let response = yield call(service.post, '/api/auth/forgot-password/', payload)
+      if(!response.data.error) {
+        yield put(alertMessage('success'))
+      }            
+    } catch(error) {
+      let err = ''
+      if(error.response.data.error) {
+        if (typeof(error.response.data.errors) == 'string') {
+          yield put(updateErrors(error.response.data.errors))
+        } else {
+          for (let i in Object.values(error.response.data.errors)) {
+            err = err + Object.values(error.response.data.errors)[0] + ' '
+          }
+          yield put(updateErrors(err))
+        }        
+      }           
     }
-  });
+  })
 }
 
 
 export default function* rootSaga() {
-  yield all([    
-    fork(authenticateRegister),
-    fork(validateLogin),
-    fork(forgotPassword),
-  ]);
+  yield all([
+    fork(checkLoginCredentials),
+    fork(registerCompany),
+    fork(forgotPassword)
+  ])
 }

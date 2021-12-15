@@ -1,84 +1,47 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from "react-redux";
 import { Button, Form, Input, Alert } from "antd";
 import { MailOutlined, LockOutlined } from '@ant-design/icons';
 import {	
-	login,
-	hideAuthMessage,
-	authenticate
+	loginCredentials,
+	updateErrors,
+	alertMessage
 } from '../../../redux/actions/Auth';
-import { motion } from "framer-motion"
 import { Link } from "react-router-dom"
+import { motion } from 'framer-motion';
+import { rules } from '../../common/rules'
 
-const rules = {
-	email: [
-		{ 
-			required: true,
-			message: 'Please input your email address'
-		},
-		{ 
-			type: 'email',
-			message: 'Please enter a validate email!'
-		}
-	],
-	password: [
-		{ 
-			required: true,
-			message: 'Please input your password'
-		}
-	],
-}
 
-export const LoginForm = (props) => {		
-
-	const rules = {
-		email: [
-			{ 
-				required: true,
-				message: 'Please input your email address'
-			},
-			{ 
-				type: 'email',
-				message: 'Please enter a validate email!'
-			}
-		],
-		password: [
-			{ 
-				required: true,
-				message: 'Please input your password'
-			}
-		],
-	}
+export const LoginForm = (props) => {			
 	
-	const {				
-		showMessage,
-		message,
-		auth				
-	} = props
+	const { errors } = props	
 
-	const onLogin = e => {
-			props.login(e)
-	};		
+	const onLogin = e => {				
+		props.updateErrors('')
+		props.loginCredentials(e)		
+	};	
 
-	useEffect(() => {			
-		if(window.localStorage.getItem('Token')) {
+	useEffect(() => {					
+		if(localStorage.getItem('Token')) {
 			props.history.push('/companies-list')
-		}else{
-			props.history.push('/login')
 		}
-	}, [auth])
-		
+	})
+
+	const clearAlerts = () => {
+    props.updateErrors('')
+    props.alertMessage('')
+  }
+
 	return (
-	
 		<>
 			<motion.div
-				initial={{ opacity: 0, marginBottom: 0 }}
-				animate={{
-					opacity: showMessage ? 1 : 0,
-					marginBottom: showMessage ? 20 : 0
-				}}>
-				<Alert type="error" showIcon message={message}></Alert>
-			</motion.div>
+        initial={{ opacity: 0, marginBottom: 0 }}
+        animate={{
+          opacity:  1, 
+          marginBottom: 20
+        }}>
+        {(errors != '') ? <Alert type="error" closable message={props.errors}></Alert>: ''}				
+      </motion.div>
 			<Form
 				layout="vertical"
 				name="login-form"
@@ -101,7 +64,7 @@ export const LoginForm = (props) => {
 					/>
 				</Form.Item>				
 				<p className="sign-in-forgotpassword">
-					<Link to="forgot-password">Forgot Password?</Link>
+					<Link to="/forgot-password" onClick={() =>  clearAlerts()}>Forgot Password?</Link>					
 				</p>				
 				<Form.Item>
 					<Button type="primary" htmlType="submit" block  
@@ -117,14 +80,14 @@ export const LoginForm = (props) => {
 
 
 const mapStateToProps = (state) => {
-	const { auth, message, showMessage } = state.auth;
-	return { auth, message, showMessage }
+	const { errors, isTokenAvailable } = state.auth		
+	return { errors }
 }
 
 const mapDispatchToProps = {
-	login,
-	hideAuthMessage,
-	authenticate
+	loginCredentials,
+	updateErrors,
+	alertMessage
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginForm)

@@ -4,7 +4,7 @@ import {
   POST_DATA,
   PUT_DATA
 } from '../constants/Fetch'
-import { updateLeadsData } from '../actions/Leads'
+import { getCompaniesData } from '../actions/Companies'
 import { 
   updateUsersData, 
   isUserAdded, 
@@ -12,23 +12,30 @@ import {
   userErrors } from '../actions/Users'
 import { service } from '../../service'
 
-export function* getData() {
-  yield takeEvery(GET_DATA, function* ({ payload} ) {    
+export function* getData() {  
+  yield takeEvery(GET_DATA, function* ({ payload } ) {    
     let { url, obj } = payload    
     let response;
     try {
-      service.defaults.headers['Authorization'] = 'jwt '+window.localStorage.getItem('Token')
-      response = yield call(service.get, url)      
+      service.defaults.headers['Authorization'] = 'jwt '+window.localStorage.getItem('Token')  
+      response = yield call(service.get, url)       
       if(response.status === 200) {
         if(obj === "leads") {
-          yield put(updateLeadsData(response))
+          
         } else if (obj === "users") {          
           yield put(updateUsersData(response))          
+        } else if (obj === 'companies') {
+          yield put(getCompaniesData(response))
         }
       }
     }
     catch(err) {
-      
+      if(err.response) {
+        if(err.response.status === 401){
+          localStorage.clear()
+          window.location = '/login'
+        }
+      }
     }
   })
 }
@@ -43,14 +50,13 @@ export function* postData() {
       response = yield call(service.post, url, data)         
       if(!response.data.error) {
         if(obj === "leads") {
-          yield put(updateLeadsData(response))
+          
         } else if (obj === "users") {                    
           yield put(isUserAdded(true))
         }
       }
     }
-    catch(err) {      
-      console.log(err.response.data.errors.user_errors)
+    catch(err) {            
       if(obj === 'users') {
         yield put(userErrors(err.response.data.errors.user_errors))
       }
@@ -59,17 +65,15 @@ export function* postData() {
 }
 
 export function* putData() {
-  yield takeEvery(PUT_DATA, function* ({ payload} ) {
-    console.log('Entered into puData method in sagas ')
+  yield takeEvery(PUT_DATA, function* ({ payload} ) {    
     let { url, obj, data } = payload    
     let response;
     try {
       service.defaults.headers['Authorization'] = 'jwt '+window.localStorage.getItem('Token')
-      response = yield call(service.put, url, data)
-      console.log('The value of response : ', response)
+      response = yield call(service.put, url, data)      
       if(!response.data.error) {
         if(obj === "leads") {
-          yield put(updateLeadsData(response))
+          
         } else if (obj === "users") {                    
             yield put(isUserUpdated(true))
         }
