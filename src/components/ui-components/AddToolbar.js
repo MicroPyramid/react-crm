@@ -5,8 +5,7 @@ import { CloseCircleOutlined, CheckOutlined, LeftOutlined } from '@ant-design/ic
 
 const AddToolbar = (props) => {
 
-  let { module } = props;
-  // console.log(props)
+  let { module } = props;  
   let len = props.history.location.pathname.split('/').length  
   let mode = ((props.history.location.pathname.split('/')[len - 1]) === 'edit') ? 'Edit' : 'Add'
   

@@ -1,0 +1,12 @@
+.companies .ant-list-header {
+  border-bottom: none;
+}
+.companies .ant-list-item {
+  background: #eceff5;
+  margin-bottom: 10px;
+  border-radius: 2px; 
+}
+.companies h1 {
+  font-weight: 400;
+  color: #111111;
+}

@@ -15,7 +15,6 @@ export const momentTimeFormats = (created_on) => {
   ':' +
   date.getMinutes().toString() +
   ' ' +
-  merediam;
-
+  merediam;  
   return [elapsedTime, titleTime];
 };

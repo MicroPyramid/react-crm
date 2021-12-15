@@ -64,8 +64,7 @@ const users = (state = initUsers, action) => {
         ...state,
         userUpdated: action.val
       }
-    case USER_ERRORS:
-      console.log('Reached user errors ', action.errors)
+    case USER_ERRORS:      
       return {
         ...state,
         errors: action.errors

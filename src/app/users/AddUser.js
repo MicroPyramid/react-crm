@@ -17,9 +17,7 @@ export const AddUser = (props) => {
   const [showAlterEmail, setShowAlterEmail] = useState(false)
   const [showAlterMobile, setShowAlterMobile] = useState(false) 
 
-  let { errors } = props
-  console.log('Values of errors in add user page :', errors)
-  // console.log('Values of errors in add user page :', errors.email[0])
+  let { errors } = props  
   let errorVal = errors && errors.email[0]
 
   const rules = {

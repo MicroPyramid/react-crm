@@ -1,58 +1,53 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Input } from 'antd'
+import { Form, Button, Input, Alert } from 'antd'
 import { UserOutlined, MailOutlined, LockOutlined } from '@ant-design/icons'
 import { connect } from 'react-redux';
-import { register } from '../../../redux/actions/Auth'
+import { registrationDetails, 
+         updateErrors,
+         alertMessage } from '../../../redux/actions/Auth'
 import { withRouter } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { rules } from '../../common/rules'
 
 const RegistrationForm = (props) => {
-
-  const { auth, message } = props
-
-  const [name, setName] = useState([{
-      required : true, 
-      message: 'Please input name'
-  }])
-  const [company, setCompany] = useState([{
-      required: true,
-      message: 'Please input company'
-  }])
-  const [email, setEmail] = useState([
-    { 
-      required: true,
-      message: 'Please input your email address'
-    },
-    { 
-      type: 'email',
-      message: 'Please enter a validate email!'
-    }
-  ])
-  const [password, setPassword] = useState([
-      {
-        required: true,
-        message: 'Please input password'
-      }    
-  ])
   
-  const onRegister = (e) => {
-    props.register(e)
-  }    
+  const onRegister = (e) => {    
+    props.updateErrors('')
+    props.alertMessage('')
+    props.registrationDetails(e)
+  }      
+
+  const { errors, alert } = props
 
   useEffect(() => {
-    if(auth) {
-      props.history.push('/login')
+    let alertTimeoutId;
+    if(alert != '') {
+      alertTimeoutId = setTimeout(() => {
+        props.history.push('/login')
+      }, 1500)
     }
-  }, [auth])
-
-  useEffect(() => {
-    console.log('The va;ue of props in useeffect :', props)
-    if(message && message.company_name[0].length > 0) {
-      setCompany([{ required: true, message: message.company_name[0]}])
+    return () => {
+      clearTimeout(alertTimeoutId)
     }
-  }, [message])
-
-  console.log(props)
+  }, [alert])
+  
   return(
+    <>
+    <motion.div
+        initial={{ opacity: 0, marginBottom: 0 }}
+        animate={{
+          opacity:  1, 
+          marginBottom: 20
+        }}>
+        { (errors != '') 
+            ? <Alert type="error" closable message={errors}></Alert>
+            : ''
+        }
+        { (alert != '')
+            ? <Alert type="success" closable message={alert}></Alert>
+            : ''
+        }
+      </motion.div>
     <Form 
       layout="vertical"
       name="registration-form"
@@ -61,16 +56,16 @@ const RegistrationForm = (props) => {
       <Form.Item
         name="first_name"
         label="Name"
-        rules={name}
+        rules={rules.name}
         >
           <Input className="sign-in-email"
             prefix={<UserOutlined className="text-primary"/>}
           />
       </Form.Item>
       <Form.Item
-        name="company_name"
+        name="org_name"
         label="Organisation"
-        rules={company}        
+        rules={rules.company}        
         >
           <Input className="sign-in-email"
             prefix={<UserOutlined className="text-primary" />}
@@ -79,7 +74,7 @@ const RegistrationForm = (props) => {
       <Form.Item
         name="email"
         label="Email" 
-        rules={email}       
+        rules={rules.email}       
         >
           <Input className="sign-in-email"
             prefix={<MailOutlined className="text-primary"/>}
@@ -88,7 +83,7 @@ const RegistrationForm = (props) => {
       <Form.Item
         name="password"
         label="Password"
-        rules={password}
+        rules={rules.password}
         >
           <Input.Password className="sign-in-email"
             prefix={<LockOutlined />}
@@ -102,15 +97,18 @@ const RegistrationForm = (props) => {
         </Button>
       </Form.Item>
     </Form>
+    </>
   )
 }
 
 const mapStateToProps = (state) => {  
-  const { auth, message } = state.auth  
-  return { auth, message }
+  const { errors, alert } = state.auth
+  return { errors, alert }
 }
 
 const mapDispatchToProps = {
-  register
+  registrationDetails,
+  updateErrors,
+  alertMessage
 }
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(RegistrationForm))

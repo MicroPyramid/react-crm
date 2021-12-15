@@ -2,7 +2,6 @@ import React from 'react'
 import { Radio, Button  } from 'antd'
 import { AppstoreOutlined, BarsOutlined, PlusOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
-import '../../assets/css/temp.css'
 import { connect } from 'react-redux';
 import { toggleTableScrumBoard } from '../../redux/actions/Theme'
 

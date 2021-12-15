@@ -1,0 +1,2 @@
+export const GET_PROFILES = 'GET_PROFILES'
+export const SET_PROFILES = 'SET_PROFILES'

@@ -82,8 +82,7 @@ export const updateUserFormData = (data) => {
   }
 }
 
-export const userErrors = (errors) => {
-  console.log('Reached userErros action type', errors)
+export const userErrors = (errors) => {  
   return {
     type: USER_ERRORS,
     errors

@@ -4,7 +4,7 @@ import { Card, Tooltip, Tag } from 'antd';
 import { getLabelsColor, AssigneeAvatar } from './utils';
 import { CalendarOutlined, CommentOutlined, PaperClipOutlined } from '@ant-design/icons';
 import moment from 'moment';
-import { Scrollbars } from 'react-custom-scrollbars';
+import { Scrollbars } from 'react-custom-scrollbars-2';
 
 const InnerCardList = React.memo(function InnerCardList(props) {
   return props.contents?.map((item, index) => (
