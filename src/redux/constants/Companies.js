@@ -1,1 +1,0 @@
-export const COMPANIES_LIST = 'COMPANIES_LIST'
