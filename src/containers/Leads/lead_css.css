@@ -1,0 +1,149 @@
+.container{
+    background-color: #1A3353;
+    display:flex;
+    flex-direction: row;
+     justify-content: space-between;
+    align-items:center;   
+}
+.paginationContainer{
+    margin-right:10px;
+     display: flex;
+     flex-direction: row;
+     justify-content: center;
+     align-items:center;
+     color: white;
+}
+.paginationSubContainer{
+    text-align: center;
+    align-items: center;
+    font-size: 13px;
+    background-color: white;
+    color:black;
+    border-radius: 5px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.previousArrow{
+background-color: white;
+transform: none;
+cursor: pointer;
+border: none;
+margin-left: 5px;
+}
+.tag{
+    margin-left: 15px;
+     margin-top: 15px;
+     width: 30%;
+     display:flex;
+     flex-direction:row;
+    flex-wrap: wrap;
+}
+.deleteIcon{
+    display:flex;
+    justify-content: flex-end;
+}
+.creatorContainer{
+    font-size:10px;
+      display: flex;
+      justify-content: flex-end; 
+}
+.deleteContainer{
+    width: 28%;
+}
+.avtarGroup{
+     width: 30%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+.breadcomContainer{
+    display: flex;
+    flex-direction:row; 
+   justify-content: space-between;
+   align-items: center;
+}
+.saveClose{
+    display: flex; 
+    flex-direction: row;
+     justify-content: space-around;
+     flex-wrap: wrap;
+     align-items: center;
+     margin-right: 20px;
+}
+.leadContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 10px;    
+}
+.typography{
+   border-bottom: 1px solid lightgray; 
+    width: 100%;
+    color:#1A3353;
+}
+.fieldContainer{
+    display: flex;
+    flex-direction: row;
+     justify-content: space-around;
+}
+.fieldSubContainer{
+    width: 40%;
+    display: flex;
+    flex-direction: row; 
+    margin-top: 10px;
+}
+.fieldTitle{
+    margin-right: 10px;
+    font-size: 13px;
+     width: 29%;
+     text-align: right; 
+    font-weight: bold; 
+    color:"#1A3353";
+}
+.assignTo{
+    margin-left: 13px;
+    font-size: 13px;
+     width: 22%;
+     text-align: right; 
+    font-weight: bold;  
+}
+.fieldContainer2{
+    display: flex;
+    flex-direction: row;
+     justify-content: space-around;
+     margin-top: 10px;
+}
+.DescriptionDetail{
+    display: flex;
+    flex-direction: row;
+     justify-content: space-around;
+     margin-top: 10px;
+}
+.descriptionSubContainer{
+    width: 100%;
+    display: flex;
+    flex-direction: row; 
+    justify-content: flex-start;
+}
+.descriptionTitle{
+    margin-right: 10px;
+    font-size: 13px;
+     width: 10%;
+     text-align: right; 
+    font-weight: bold; 
+}
+.open{
+    color:blue;
+   background-color:#EBF7F5;
+    text-transform: lowercase;
+    border-radius: 8px 8px 0px 0px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0; 
+}
+input[type=number] {
+    -moz-appearance: textfield;
+  }
