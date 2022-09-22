@@ -1,0 +1,11 @@
+onCreate:
+  - sudo apt-get update -y
+  - sudo apt-get upgrade -y
+  - sudo corepack enable
+  - yarn
+
+onStart:
+  - |
+        WS_DOMAIN=`cat /home/ubuntu/runcode/ws-url-domain.txt`
+        printf "\nGO TO THIS URL TO VIEW PAGE \033[4;34m https://3000-${WS_DOMAIN}\033[0;30m\n\n"
+        yarn start
