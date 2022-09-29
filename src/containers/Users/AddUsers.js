@@ -36,6 +36,9 @@ export function AddUsers() {
   const [errors, setErrors] = useState("");
   const [msg, setMsg] = useState("");
   const [responceError, setResponceError] = useState(false);
+  const [assign, setAssignTo] = useState('');
+  const [source, setSource] = useState('');
+  const [status, setStatus] = useState('');
   const navigate = useNavigate();
   const { state } = useLocation();
   const textFieldClasses = textFieldStyled();
@@ -61,7 +64,7 @@ export function AddUsers() {
     val.tags = JSON.stringify(value)
   }
 
-  const  HandleDesc = (nextValues) => {
+  const HandleDesc = (nextValues) => {
     val.description = nextValues
     setDesc(nextValues)
   }
@@ -95,7 +98,7 @@ export function AddUsers() {
       setError("*required field")
       setMsg('title')
       flag = false
-    }else if ((val.hasOwnProperty('primary_email'))) {
+    } else if ((val.hasOwnProperty('primary_email'))) {
       let validEmail = isEmail(val.primary_email)
       if (validEmail === false) {
         setError("*email is not valid")
@@ -126,24 +129,24 @@ export function AddUsers() {
     let headers = {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: "jwt " + localStorage.getItem('Token'),
-      org: 3
+      Authorization: `jwt ${localStorage.getItem("Token")}`,
+      org: 'localStorage.getItem("org")'
     };
 
     if (validatation()) {
       fetchData(`${UserUrl}/`, "POST", JSON.stringify(val), headers)
-      .then((data) => {
-        if (!data.error) {
-          setResponceError(data.error);
-          navigate('/users')
-        }
-        if (data.error) {
-          setResponceError(data.error);
-          setErrors(data.errors);
-        }
-      })
-      .catch((error) => {
-      });
+        .then((data) => {
+          if (!data.error) {
+            setResponceError(data.error);
+            navigate('/users')
+          }
+          if (data.error) {
+            setResponceError(data.error);
+            setErrors(data.errors);
+          }
+        })
+        .catch((error) => {
+        });
     }
   };
 
@@ -158,8 +161,8 @@ export function AddUsers() {
 
   return (
     <div>
-      <form onSubmit={ onSubmit }>
-       <Appbar backbtnHandle={ backbtnHandle } module={ module } backBtn={ backBtn } crntPage={ crntPage }/>
+      <form onSubmit={onSubmit}>
+        <Appbar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} />
         {/* contact details */}
         <div style={{ padding: "10px" }}>
           <div className="leadContainer">
@@ -206,7 +209,7 @@ export function AddUsers() {
                       <TextField
                         name="lead_source"
                         select
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -227,7 +230,7 @@ export function AddUsers() {
                       <TextField
                         name="lead_source"
                         select
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -236,9 +239,9 @@ export function AddUsers() {
                         style={{ width: "70%" }}  >
                         {
                           state.roles && state.roles.map((option) => (
-                          <MenuItem key={option[1]} value={option[0]}>
-                            {option[0]}
-                          </MenuItem>
+                            <MenuItem key={option[1]} value={option[0]}>
+                              {option[0]}
+                            </MenuItem>
                           ))
                         }
                       </TextField>
@@ -249,7 +252,7 @@ export function AddUsers() {
                         error={msg == "title" || msg === "required" ? true : false}
                         name="title"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -259,7 +262,7 @@ export function AddUsers() {
                         size="small"
                         helperText={
                           (error && msg === "title") || msg === "required"
-                           ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
@@ -271,12 +274,12 @@ export function AddUsers() {
                         error={msg == "organization" || msg === "required" ? true : false}
                         name="organization"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         style={{ width: "70%" }}
                         size="small"
                         helperText={
                           (error && msg === "organization") || msg === "required"
-                           ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
@@ -286,7 +289,7 @@ export function AddUsers() {
                         error={msg == "title" || msg === "required" ? true : false}
                         name="title"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -306,179 +309,176 @@ export function AddUsers() {
             </Accordion>
           </div>
           {/* Email Information */}
-          <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", marginTop: "20px" }}>
-            <Accordion style={{ width: "98%" }} >
-              <AccordionSummary 
+          <div className="leadContainer">
+            <Accordion style={{ width: "98%" }}>
+              <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
                 id="panel1a-header" >
-                <div style={{ borderBottom: "1px solid lightgray", width: "100%" }}>
-                  <Typography style={{ marginBottom: "15px", fontWeight: "bold", color: "#1A3353" }} >Email Information</Typography>
+                <div
+                  className="typography"
+                >
+                  <Typography style={{ marginBottom: "15px", fontWeight: "bold" }}>Email Information</Typography>
                 </div>
               </AccordionSummary>
               <AccordionDetails>
-                <Box sx={{ width: '100%', color: "#1A3353" }}
+                <Box sx={{ width: '98%', color: "#1A3353" }}
                   component="form"
                   noValidate
                   autoComplete="off" >
-                  <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around" }}>
-                    <div style={{ width: "40%", display: "flex", flexDirection: "row" }}>
-                      <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>First Name</div>
+                  <div className="fieldContainer">
+                    <div className="fieldSubContainer">
+                      <div className="fieldTitle">First Name</div>
                       <TextField
-                        error={ msg == "address_line" ? true : false }
+                        error={msg == "address_line" ? true : false}
                         name="address_line"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
                           }
                         }}
                         style={{ width: "70%" }}
-                        size="small"
-                        required={ msg == "address_line" || msg === "required" ? true : false }
+                        required={msg == "address_line" || msg === "required" ? true : false}
                         helperText={
                           msg === "address_line" || msg === "required"
-                           ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
-                    <div style={{ width: "40%", display: "flex", flexDirection: "row" }}>
-                      <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Last Name</div>
+                    <div className="fieldSubContainer">
+                      <div className="fieldTitle">Last Name</div>
                       <TextField
                         name="city"
-                        error={ msg == "city" || msg === "required" ? true : false }
+                        error={msg == "city" || msg === "required" ? true : false}
                         id="outlined-error-helper-text"
-                        onChange={ onChange } style={{ width: "70%" }}
+                        onChange={onChange} style={{ width: "70%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
                           }
                         }}
-                        size="small"
                         helperText={
                           (error && msg === "city") || msg === "required"
-                           ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
                   </div>
-                  <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around", marginTop: "20px" }}>
-                    <div style={{ width: "40%", display: "flex", flexDirection: "row" }}>
-                      <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Title</div>
+                  <div className="fieldContainer2">
+                    <div className="fieldSubContainer">
+                      <div className="fieldTitle">Title</div>
                       <TextField
                         id="outlined-error-helper-text"
-                        error={ msg == "street" || msg === "required" ? true : false }
+                        error={msg == "street" || msg === "required" ? true : false}
                         name="street"
-                        onChange={ onChange } style={{ width: "70%" }}
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
                           }
                         }}
-                        size="small"
-                        helperText={
-                        (error && msg === "street") || msg === "required"
-                          ? error : ""
-                        }
-                      />
-                    </div>
-                    <div style={{ width: "40%", display: "flex", flexDirection: "row" }}>
-                      <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Primary Email</div>
-                      <TextField
-                        name="state"
-                        error={ msg == "state" || msg === "required" ? true : false }
-                        id="outlined-error-helper-text"
-                        onChange={ onChange } style={{ width: "70%" }}
-                        InputProps={{
-                          classes: {
-                            root: textFieldClasses.fieldHeight
-                          }
-                        }}
-                        size="small"
-                        helperText={
-                          (error && msg === "state") || msg === "required"
-                          ? error : ""
-                        }
-                      />
-                    </div>
-                  </div>
-                  <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around", marginTop: "20px" }}>
-                    <div style={{ width: "40%", display: "flex", flexDirection: "row" }}>
-                      <div style={{ marginRight: "10px", fontSize: "13px", textAlign: "right", fontWeight: "bold" }}>Secondary Email</div>
-                      <TextField
-                        id="outlined-error-helper-text"
-                        error={ msg == "street" || msg === "required" ? true : false }
-                        name="street"
-                        onChange={ onChange } style={{ width: "70%" }}
-                        InputProps={{
-                          classes: {
-                            root: textFieldClasses.fieldHeight
-                          }
-                        }}
-                        size="small"
+                        style={{ width: "70%" }}
                         helperText={
                           (error && msg === "street") || msg === "required"
-                           ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
-                    <div style={{ width: "40%", display: "flex", flexDirection: "row" }}>
-                      <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Mobile Number</div>
+                    <div className="fieldSubContainer">
+                      <div className="fieldTitle">Primary Email</div>
                       <TextField
                         name="state"
-                        error={ msg == "state" || msg === "required" ? true : false }
+                        error={msg == "state" || msg === "required" ? true : false}
                         id="outlined-error-helper-text"
-                        onChange={ onChange } style={{ width: "70%" }}
+                        onChange={onChange} style={{ width: "70%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
                           }
                         }}
-                        size="small"
                         helperText={
                           (error && msg === "state") || msg === "required"
-                           ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
                   </div>
-                  <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around", marginTop: "20px" }}>
-                    <div style={{ width: "40%", display: "flex", flexDirection: "row", marginLeft: "-19px" }}>
-                      <div style={{ marginRight: "10px", fontSize: "13px", textAlign: "right", fontWeight: "bold" }}>Secondary Number</div>
+                  <div className="fieldContainer2">
+                    <div className="fieldSubContainer">
+                      <div className="fieldTitle">Secondary Email</div>
                       <TextField
                         id="outlined-error-helper-text"
-                        error={ msg == "street" || msg === "required" ? true : false }
+                        error={msg == "street" || msg === "required" ? true : false}
                         name="street"
-                        onChange={ onChange } style={{ width: "70%" }}
+                        onChange={onChange} style={{ width: "70%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
                           }
                         }}
-                        size="small"
                         helperText={
                           (error && msg === "street") || msg === "required"
-                           ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
-                    <div style={{ width: "40%", display: "flex", flexDirection: "row", marginLeft: "14px" }}>
-                      <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Fax</div>
+                    <div className="fieldSubContainer">
+                      <div className="fieldTitle">Mobile Number</div>
                       <TextField
                         name="state"
-                        error={ msg == "state" || msg === "required" ? true : false }
+                        error={msg == "state" || msg === "required" ? true : false}
                         id="outlined-error-helper-text"
-                        onChange={ onChange } style={{ width: "70%" }}
+                        onChange={onChange}
+                        style={{ width: "70%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
                           }
                         }}
-                        size="small"
                         helperText={
                           (error && msg === "state") || msg === "required"
-                           ? error : ""
+                            ? error : ""
+                        }
+                      />
+                    </div>
+                  </div>
+                  <div className="fieldContainer2">
+                    <div className="fieldSubContainer">
+                      <div className="fieldTitle">Secondary Number</div>
+                      <TextField
+                        id="outlined-error-helper-text"
+                        error={msg == "street" || msg === "required" ? true : false}
+                        name="street"
+                        onChange={onChange}
+                        InputProps={{
+                          classes: {
+                            root: textFieldClasses.fieldHeight
+                          }
+                        }}
+                        style={{ width: "70%" }}
+                        helperText={
+                          (error && msg === "street") || msg === "required"
+                            ? error : ""
+                        }
+                      />
+                    </div>
+                    <div className="fieldSubContainer">
+                      <div className="fieldTitle">Fax</div>
+                      <TextField
+                        name="state"
+                        error={msg == "state" || msg === "required" ? true : false}
+                        id="outlined-error-helper-text"
+                        onChange={onChange} style={{ width: "70%" }}
+                        InputProps={{
+                          classes: {
+                            root: textFieldClasses.fieldHeight
+                          }
+                        }}
+                        helperText={
+                          (error && msg === "state") || msg === "required"
+                            ? error : ""
                         }
                       />
                     </div>
@@ -495,7 +495,7 @@ export function AddUsers() {
                 aria-controls="panel1a-content"
                 id="panel1a-header" >
                 <div className="typography">
-                  <Typography 
+                  <Typography
                     style={{ marginBottom: "15px", fontWeight: "bold" }}>
                     Address Details
                   </Typography>
@@ -523,8 +523,8 @@ export function AddUsers() {
                         size="small"
                         required={msg == "salutation" || msg === "required" ? true : false}
                         helperText={
-                        (error && msg === "salutation") || msg === "required" || responceError
-                          ? errors ? errors.title ? errors.title : "" : error : ""
+                          (error && msg === "salutation") || msg === "required" || responceError
+                            ? errors ? errors.title ? errors.title : "" : error : ""
                         } >
                       </TextField>
                     </div>
@@ -610,18 +610,18 @@ export function AddUsers() {
                         size="small"
                         required={msg == "salutation" || msg === "required" ? true : false}
                         helperText={
-                        (error && msg === "salutation") || msg === "required" || responceError
-                          ? errors ? errors.title ? errors.title : "" : error : ""
+                          (error && msg === "salutation") || msg === "required" || responceError
+                            ? errors ? errors.title ? errors.title : "" : error : ""
                         }>
                       </TextField>
                     </div>
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Country</div>
                       <TextField
-                        error={ msg == "title" || msg === "required" ? true : false }
+                        error={msg == "title" || msg === "required" ? true : false}
                         name="title"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -631,7 +631,7 @@ export function AddUsers() {
                         size="small"
                         helperText={
                           (error && msg === "title") || msg === "required"
-                          ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
@@ -648,7 +648,7 @@ export function AddUsers() {
                 aria-controls="panel1a-content"
                 id="panel1a-header" >
                 <div className="typography">
-                  <Typography 
+                  <Typography
                     style={{ marginBottom: "15px", fontWeight: "bold" }} >
                     Business Hours
                   </Typography>
@@ -659,13 +659,13 @@ export function AddUsers() {
                   component="form"
                   noValidate
                   autoComplete="off" >
-                  <div >
-                    <div className="fieldSubContainer" style={{ marginLeft: "60px" }}>
+                  <div>
+                    <div className="fieldSubContainer" style={{ marginLeft: "4.8%" }}>
                       <div className="fieldTitle">Business Hours</div>
                       <TextField
                         name="lead_source"
                         select
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -686,14 +686,14 @@ export function AddUsers() {
           </div>
           {/* Preferences */}
           <div className="leadContainer">
-            <Accordion style={{ width: "98%" }} >
+            <Accordion style={{ width: "98%" }}>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
                 id="panel1a-header" >
                 <div className="typography">
-                  <Typography 
-                    style={{ marginBottom: "15px", fontWeight: "bold" }} >
+                  <Typography
+                    style={{ marginBottom: "15px", fontWeight: "bold" }}>
                     Preferences
                   </Typography>
                 </div>
@@ -728,7 +728,7 @@ export function AddUsers() {
                       <TextField
                         name="lead_source"
                         select
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -750,7 +750,7 @@ export function AddUsers() {
                       <TextField
                         name="lead_source"
                         select
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -770,7 +770,7 @@ export function AddUsers() {
                       <TextField
                         name="lead_source"
                         select
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -792,7 +792,7 @@ export function AddUsers() {
                       <TextField
                         name="lead_source"
                         select
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -812,7 +812,7 @@ export function AddUsers() {
                       <TextField
                         name="lead_source"
                         select
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -836,7 +836,7 @@ export function AddUsers() {
           <div className="leadContainer">
             <Accordion style={{ width: "98%" }} >
               <AccordionSummary
-                expandIcon={ <ExpandMoreIcon /> }
+                expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
                 id="panel1a-header" >
                 <div className="typography">
@@ -854,9 +854,9 @@ export function AddUsers() {
                       <TextareaAutosize
                         aria-label="minimum height"
                         name="description"
-                        minRows={ 8 }
-                        defaultValue={ state.editData && state.editData.description ? state.editData.description:"" }
-                        onChange={ onChange } style={{ width: "70%", padding: "5px" }}
+                        minRows={8}
+                        defaultValue={state.editData && state.editData.description ? state.editData.description : ""}
+                        onChange={onChange} style={{ width: "70%", padding: "5px" }}
                         placeholder="Add Description"
                       />
                     </div>

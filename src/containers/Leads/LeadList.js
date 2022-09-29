@@ -149,66 +149,66 @@ export const LeadList = (props) => {
     Accept: "application/json",
     "Content-Type": "application/json",
     Authorization: `jwt ${localStorage.getItem("Token")}`,
-    org: 3,
+    org: 'localStorage.getItem("org")'
   };
 
   const getLeads = () => {
-    fetchData(`${LeadUrl}/?offset=${value === 0 ? openOffset : closeOffset}`, "GET", null, headers)
-    .then((data) => {
-      if (!data.error) {
-        SetStoreData(data)
-        if (initial) {
-          setLeads(...leads, {
-            open: data.open_leads.open_leads,
-            open_lead_count: data.open_leads.leads_count,
-            status: data.status,
-            source: data.source,
-            users: data.users,
-            tags: data.tags,
-            industries: data.industries,
-            close: data.close_leads.close_leads,
-            close_lead_count: data.close_leads.leads_count,
-            contacts: data.contacts
-          })
-          setLoader(false)
-          setOpenOffset(initial ? 0 : openOffset)
-          setCloseOffset(initial ? 0 : closeOffset)
-          setInitial(false)
-        } else {
-          if (value == 0) {
-            setLeads({
+    fetchData(`${LeadUrl}/`, "GET", null, headers)
+      .then((data) => {
+        if (!data.error) {
+          SetStoreData(data)
+          if (initial) {
+            setLeads(...leads, {
               open: data.open_leads.open_leads,
               open_lead_count: data.open_leads.leads_count,
               status: data.status,
               source: data.source,
               users: data.users,
+              tags: data.tags,
               industries: data.industries,
               close: data.close_leads.close_leads,
               close_lead_count: data.close_leads.leads_count,
               contacts: data.contacts
             })
+            setLoader(false)
             setOpenOffset(initial ? 0 : openOffset)
-          }
-          if (value == 1 || initial) {
-            setLeads({
-              open: data.open_leads.open_leads,
-              open_lead_count: data.open_leads.leads_count,
-              status: data.status,
-              source: data.source,
-              users: data.users,
-              industries: data.industries,
-              close: data.close_leads.close_leads,
-              close_lead_count: data.close_leads.leads_count,
-              contacts: data.contacts
-            })
             setCloseOffset(initial ? 0 : closeOffset)
+            setInitial(false)
+          } else {
+            if (value == 0) {
+              setLeads({
+                open: data.open_leads.open_leads,
+                open_lead_count: data.open_leads.leads_count,
+                status: data.status,
+                source: data.source,
+                users: data.users,
+                industries: data.industries,
+                close: data.close_leads.close_leads,
+                close_lead_count: data.close_leads.leads_count,
+                contacts: data.contacts
+              })
+              setOpenOffset(initial ? 0 : openOffset)
+            }
+            if (value == 1 || initial) {
+              setLeads({
+                open: data.open_leads.open_leads,
+                open_lead_count: data.open_leads.leads_count,
+                status: data.status,
+                source: data.source,
+                users: data.users,
+                industries: data.industries,
+                close: data.close_leads.close_leads,
+                close_lead_count: data.close_leads.leads_count,
+                contacts: data.contacts
+              })
+              setCloseOffset(initial ? 0 : closeOffset)
+            }
           }
         }
-      }
 
-    })
-    .catch((error) => {
-    });
+      })
+      .catch((error) => {
+      });
   }
 
   useEffect(() => {
@@ -228,14 +228,14 @@ export const LeadList = (props) => {
 
   const onDelete = (leadID) => {
     fetchData(`${LeadUrl}/${leadID}/`, "delete", null, headers)
-    .then((data) => {
-      if (!data.error) {
-        getLeads()
-        setIsDelete(false)
-      }
-    })
-    .catch((error) => {
-    });
+      .then((data) => {
+        if (!data.error) {
+          getLeads()
+          setIsDelete(false)
+        }
+      })
+      .catch((error) => {
+      });
   }
 
   const toggleDelete = (lead) => {
@@ -328,7 +328,7 @@ export const LeadList = (props) => {
 
   return (
     <div style={{ width: "100%", marginTop: '-3px', boxShadow: "none" }}>
-      <TabsUnstyled defaultValue={ value } onChange={ handleChangeTab }>
+      <TabsUnstyled defaultValue={value} onChange={handleChangeTab}>
         <TabsList>
           <Tab>Open</Tab>
           <Tab>Closed</Tab>
@@ -343,65 +343,65 @@ export const LeadList = (props) => {
             <div className='paginationContainer'>
               <TablePagination
                 style={{ display: "flex", flexDirection: "row" }}
-                rowsPerPageOptions={ [10, 20, 30, 40, 50] }
+                rowsPerPageOptions={[10, 20, 30, 40, 50]}
                 component="div"
-                labelRowsPerPage={ 'Records Per Page' }
-                count={ value === 0 ? leads.open_lead_count : leads.close_lead_count }
-                rowsPerPage={ rowsPerPage }
-                page={ page }
+                labelRowsPerPage={'Records Per Page'}
+                count={value === 0 ? leads.open_lead_count : leads.close_lead_count}
+                rowsPerPage={rowsPerPage}
+                page={page}
                 size="small"
                 sx={{
-                ".MuiTablePagination-displayedRows": {
-                  display: "none",
-                },
-                "	.MuiTablePagination-actions": {
-                  display: 'none'
-                },
-                ".MuiTablePagination-selectLabel": {
-                  marginTop: "4px",
-                  marginLeft: "-15px"
-                },
-                ".MuiTablePagination-select": {
+                  ".MuiTablePagination-displayedRows": {
+                    display: "none",
+                  },
+                  "	.MuiTablePagination-actions": {
+                    display: 'none'
+                  },
+                  ".MuiTablePagination-selectLabel": {
+                    marginTop: "4px",
+                    marginLeft: "-15px"
+                  },
+                  ".MuiTablePagination-select": {
+                    color: "black",
+                    marginRight: "0px",
+                    marginLeft: "-12px",
+                    marginTop: "-6px"
+                  },
+                  ".MuiSelect-icon": {
+                    color: "black",
+                    marginTop: "-5px",
+                  },
+                  backgroundColor: "white",
+                  borderRadius: 1,
+                  height: '10%',
+                  overflow: "hidden",
+                  p: 0,
+                  m: 0,
+                  width: '39%',
+                  pb: 5,
                   color: "black",
-                  marginRight: "0px",
-                  marginLeft: "-12px",
-                  marginTop: "-6px"
-                },
-                ".MuiSelect-icon": {
-                  color: "black",
-                  marginTop: "-5px",
-                },
-                backgroundColor: "white",
-                borderRadius: 1,
-                height: '10%',
-                overflow: "hidden",
-                p: 0,
-                m: 0,
-                width: '39%',
-                pb: 5,
-                color: "black",
-                mr: 1
+                  mr: 1
                 }}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
               />
               <Button size="small"
                 sx={{
-                backgroundColor: "white",
-                textTransform: "lowercase",
-                borderRadius: "7px",
-                mr: 1,
-                color: "black", '&:hover': {
-                  backgroundColor: 'white',
-                },
+                  backgroundColor: "white",
+                  textTransform: "lowercase",
+                  borderRadius: "7px",
+                  mr: 1,
+                  color: "black", '&:hover': {
+                    backgroundColor: 'white',
+                  },
                 }}>
                 <ChevronLeftIcon onClick={previous} sx={{ backgroundColor: "whitesmoke", color: "#1A3353", mr: 1 }} />
-                <Typography sx={{ mt: 0, textTransform: "lowercase", fontSize: "15px", color: "#1A3353", mr: 1 }}> 
+                <Typography sx={{ mt: 0, textTransform: "lowercase", fontSize: "15px", color: "#1A3353", mr: 1 }}>
                   {
                     value == 0 ?
-                    `${openOffset + 1} to ${leads.open_lead_count > 0 ? valued : 0}`
-                    :
-                    `${closeOffset + 1} to ${leads.close_lead_count > closeOffset + 10 ? closeOffset + 10 : 0}`
+                      `${openOffset + 1} to ${leads.open_lead_count > 0 ? valued : 0}`
+                      :
+                      `${closeOffset + 1} to ${leads.close_lead_count > closeOffset + 10 ? closeOffset + 10 : 0}`
                   }
                 </Typography>
                 <ChevronRightIcon onClick={next} sx={{ backgroundColor: "whitesmoke", color: "#1A3353", }} />
@@ -449,8 +449,8 @@ export const LeadList = (props) => {
               <div>
                 <Button
                   variant="contained"
-                  startIcon={ <AddCircleOutlinedIcon style={{ fill: "white" }} /> }
-                  onClick={ onAddHandle }
+                  startIcon={<AddCircleOutlinedIcon style={{ fill: "white" }} />}
+                  onClick={onAddHandle}
                   style={{ textTransform: "capitalize", fontWeight: "bold", height: "30px", mr: 2, color: "white" }}>
                   Add Lead
                 </Button>
@@ -458,167 +458,167 @@ export const LeadList = (props) => {
             </div>
           </div>
         </TabsList>
-        <TabPanel value={ value } index={ 0 } >
+        <TabPanel value={value} index={0} >
           <div style={{ padding: "10px", marginTop: "5px" }}>
-            { 
-              leads.open && leads.open
-              ? stableSort(leads.open && leads.open, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index) => (
-                <List
-                  key={ index }
-                  sx={{
-                  bgcolor: "background.paper",
-                  marginBottom: "-17px",
-                  paddingTop: "0px",
-                  boxShadow: "none",
-                  }}
-                >
-                  <div style={{ padding: "10px", marginTop: "1px" }}>
-                    <Card className={classes.card} style={{ boxShadow: "none" }} >
-                      <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                        <div style={{ color: "#1A3353", fontSize: "13px", fontWeight: "bold", padding: "10px", cursor: "pointer" }} onClick={() => leadHandle(item)}>
-                          { item.title }
-                        </div>
-                        <div
-                          onClick={() => toggleDelete(item)}>
-                          <DeleteOutlineIcon  color="inherit" style={{ fill: "inherit", cursor: "pointer" }} />
-                        </div>
-                      </div>
-                      <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                        <div style={{ width: "80%", display: "flex", flexDirection: "row", flexWrap: "wrap", paddingLeft: "10px" }}>
-                          <div style={{ color: "gray", fontSize: "12px", textTransform: "capitalize", paddingBottom: "40px" }}>
-                            {`${(item.country !== null) ? item.country : ""} source-${item.source !== null ? item.source : ""} status-${(item.status !== null) ? item.status : ""} Jan 9, 2014 `} 
-                          </div>
-                          {
-                            item.tags.map((tagData, index) => (
-                            <Label tags={tagData} key={index} />
-                            ))
-                          }
-                          {
-                            item.assigned_to.map((assignItem, index) => (
-                            assignItem.user_details.profile_pic ?
-                            <Avatar alt="Remy Sharp" src={assignItem.user_details.profile_pic} />
-                            : <Avatar alt="Remy Sharp" size="small" style={{ backgroundColor: deepOrange[500], color: "white", textTransform: "capitalize", marginTop: "-20px", marginLeft: "10px" }}>
-                            { assignItem.user_details.first_name.charAt(0) }
-                            </Avatar>
-                            ))
-                          }
-                        </div>
-                        <div style={{ color: "gray", fontSize: "12px", width: "30%", display: "flex", flexDirection: "row", justifyContent: "flex-end" }}>
-                          created on {formatDate(item.created_on)} by   &nbsp;<span>
-                            {
-                              item.created_by.user_details.profile_pic !== null ?
-                                <Avatar alt="Remy Sharp" src={ staticImg }
-                                  style={{
-                                    height: "20px",
-                                    width: "20px"
-                                  }}
-                                />
-                                :
-                                <Avatar src="/broken-image.jpg"
-                                  style={{
-                                    height: "20px",
-                                    width: "20px",
-                                    marginTop: "-4px"
-                                  }}
-                                />
-                            }
-                            &nbsp;
-                          </span> &nbsp;&nbsp;{item.created_by.user_details.first_name}</div>
-                      </div>
-                    </Card>
-                  </div>
-                </List>
-              ))
-              :
-              ""}
             {
-              isDelete ? 
-              <AlertDelete 
-              lead={lead} 
-              isDelete={isDelete}
-              onClose={onclose}
-              onDelete={onDelete}
-              /> : ""
+              leads.open && leads.open
+                ? stableSort(leads.open && leads.open, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index) => (
+                  <List
+                    key={index}
+                    sx={{
+                      bgcolor: "background.paper",
+                      marginBottom: "-17px",
+                      paddingTop: "0px",
+                      boxShadow: "none",
+                    }}
+                  >
+                    <div style={{ padding: "10px", marginTop: "1px" }}>
+                      <Card className={classes.card} style={{ boxShadow: "none" }} >
+                        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                          <div style={{ color: "#1A3353", fontSize: "13px", fontWeight: "bold", padding: "10px", cursor: "pointer" }} onClick={() => leadHandle(item)}>
+                            {item.title}
+                          </div>
+                          <div
+                            onClick={() => toggleDelete(item)}>
+                            <DeleteOutlineIcon color="inherit" style={{ fill: "inherit", cursor: "pointer" }} />
+                          </div>
+                        </div>
+                        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                          <div style={{ width: "80%", display: "flex", flexDirection: "row", flexWrap: "wrap", paddingLeft: "10px" }}>
+                            <div style={{ color: "gray", fontSize: "12px", textTransform: "capitalize", paddingBottom: "40px" }}>
+                              {`${(item.country !== null) ? item.country : ""} source-${item.source !== null ? item.source : ""} status-${(item.status !== null) ? item.status : ""} Jan 9, 2014 `}
+                            </div>
+                            {
+                              item.tags.map((tagData, index) => (
+                                <Label tags={tagData} key={index} />
+                              ))
+                            }
+                            {
+                              item.assigned_to.map((assignItem, index) => (
+                                assignItem.user_details.profile_pic ?
+                                  <Avatar alt="Remy Sharp" src={assignItem.user_details.profile_pic} />
+                                  : <Avatar alt="Remy Sharp" size="small" style={{ backgroundColor: deepOrange[500], color: "white", textTransform: "capitalize", marginTop: "-20px", marginLeft: "10px" }}>
+                                    {assignItem.user_details.first_name.charAt(0)}
+                                  </Avatar>
+                              ))
+                            }
+                          </div>
+                          <div style={{ color: "gray", fontSize: "12px", width: "30%", display: "flex", flexDirection: "row", justifyContent: "flex-end" }}>
+                            created on {formatDate(item.created_on)} by   &nbsp;<span>
+                              {
+                                item.created_by.user_details.profile_pic !== null ?
+                                  <Avatar alt="Remy Sharp" src={staticImg}
+                                    style={{
+                                      height: "20px",
+                                      width: "20px"
+                                    }}
+                                  />
+                                  :
+                                  <Avatar src="/broken-image.jpg"
+                                    style={{
+                                      height: "20px",
+                                      width: "20px",
+                                      marginTop: "-4px"
+                                    }}
+                                  />
+                              }
+                              &nbsp;
+                            </span> &nbsp;&nbsp;{item.created_by.user_details.first_name}</div>
+                        </div>
+                      </Card>
+                    </div>
+                  </List>
+                ))
+                :
+                ""}
+            {
+              isDelete ?
+                <AlertDelete
+                  lead={lead}
+                  isDelete={isDelete}
+                  onClose={onclose}
+                  onDelete={onDelete}
+                /> : ""
             }
           </div>
         </TabPanel>
-        <TabPanel value={ value } index={ 1 }>
+        <TabPanel value={value} index={1}>
           <div style={{ padding: "10px", marginTop: "5px" }}>
             {
-            leads.close
-              ? leads.close.map((item, i) => (
-                <List
-                  key={ i }
-                  sx={{
-                  bgcolor: "background.paper",
-                  marginBottom: "-17px",
-                  paddingTop: "0px"
-                  }}
-                >
-                  <div style={{ padding: "10px", marginTop: "1px" }}>
-                    <Card className={classes.card} sx={{ boxShadow: "none", }}>
-                      <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                        <div style={{ color: "#5B5C63 ", fontSize: "13px", fontWeight: "bold", textTransform: "capitalize", padding: "10px", cursor: "pointer" }} onClick={() => leadHandle(item)}>
-                          { item.title }
+              leads.close
+                ? leads.close.map((item, i) => (
+                  <List
+                    key={i}
+                    sx={{
+                      bgcolor: "background.paper",
+                      marginBottom: "-17px",
+                      paddingTop: "0px"
+                    }}
+                  >
+                    <div style={{ padding: "10px", marginTop: "1px" }}>
+                      <Card className={classes.card} sx={{ boxShadow: "none", }}>
+                        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                          <div style={{ color: "#5B5C63 ", fontSize: "13px", fontWeight: "bold", textTransform: "capitalize", padding: "10px", cursor: "pointer" }} onClick={() => leadHandle(item)}>
+                            {item.title}
+                          </div>
+                          <div onClick={() => toggleDelete(item)}>
+                            <DeleteOutlineIcon color="inherit" style={{ fill: "inherit", cursor: "pointer" }} />
+                          </div>
                         </div>
-                        <div onClick={() => toggleDelete(item)}>
-                          <DeleteOutlineIcon color="inherit" style={{ fill: "inherit", cursor: "pointer" }} />
-                        </div>
-                      </div>
-                      <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                        <div style={{ width: "80%", display: "flex", flexDirection: "row", flexWrap: "wrap", paddingLeft: "10px" }}>
-                          <div style={{ color: "gray", fontSize: "12px", textTransform: "capitalize", paddingBottom: "40px" }}>
-                            {`${(item.country !== null) ? item.country : ""} source-${item.source !== null ? item.source : ""} status-${(item.status !== null) ? item.status : ""} Jan 9, 2014 `} </div>
-                          {
-                            item.tags.map((tagData) => (
-                            <Label tags={tagData} />
-                            ))
-                          }
-                          <ListItemAvatar >
-                            <AvatarGroup max={item.assigned_to.length}>
-                              {
-                                item.assigned_to.map((assignItem) => (
-                                assignItem.user_details.profile_pic ?
-                                  <Avatar alt="Remy Sharp" src={assignItem.user_details.profile_pic} />
-                                  : <Avatar alt="Remy Sharp" size="small" style={{ backgroundColor: deepOrange[500], color: "white", textTransform: "capitalize", marginBottom: "70px", marginTop: "-20px", marginLeft: "3px" }}>
-                                  { assignItem.user_details.first_name.charAt(0) }
-                                  </Avatar>
-                                ))
-                              }
-                            </AvatarGroup>
-                          </ListItemAvatar>
-                        </div>
-                        <div style={{ color: "gray", fontSize: "12px", width: "30%", display: "flex", flexDirection: "row", justifyContent: "flex-end" }}>
-                          created on { formatDate(item.created_on) } by   &nbsp;<span>
+                        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                          <div style={{ width: "80%", display: "flex", flexDirection: "row", flexWrap: "wrap", paddingLeft: "10px" }}>
+                            <div style={{ color: "gray", fontSize: "12px", textTransform: "capitalize", paddingBottom: "40px" }}>
+                              {`${(item.country !== null) ? item.country : ""} source-${item.source !== null ? item.source : ""} status-${(item.status !== null) ? item.status : ""} Jan 9, 2014 `} </div>
                             {
-                              item.created_by.user_details.profile_pic !== null ?
-                                <Avatar alt="Remy Sharp" src={staticImg}
-                                  style={{
-                                    height: "20px",
-                                    width: "20px"
-                                  }}
-                                />
-                                :
-                                <Avatar src="/broken-image.jpg"
-                                  style={{
-                                    height: "20px",
-                                    width: "20px",
-                                    marginTop: "-4px"
-                                  }}
-                                />
+                              item.tags.map((tagData) => (
+                                <Label tags={tagData} />
+                              ))
                             }
-                            &nbsp;
-                          </span> &nbsp;&nbsp;{ item.created_by.user_details.first_name }
+                            <ListItemAvatar >
+                              <AvatarGroup max={item.assigned_to.length}>
+                                {
+                                  item.assigned_to.map((assignItem) => (
+                                    assignItem.user_details.profile_pic ?
+                                      <Avatar alt="Remy Sharp" src={assignItem.user_details.profile_pic} />
+                                      : <Avatar alt="Remy Sharp" size="small" style={{ backgroundColor: deepOrange[500], color: "white", textTransform: "capitalize", marginBottom: "70px", marginTop: "-20px", marginLeft: "3px" }}>
+                                        {assignItem.user_details.first_name.charAt(0)}
+                                      </Avatar>
+                                  ))
+                                }
+                              </AvatarGroup>
+                            </ListItemAvatar>
+                          </div>
+                          <div style={{ color: "gray", fontSize: "12px", width: "30%", display: "flex", flexDirection: "row", justifyContent: "flex-end" }}>
+                            created on {formatDate(item.created_on)} by   &nbsp;<span>
+                              {
+                                item.created_by.user_details.profile_pic !== null ?
+                                  <Avatar alt="Remy Sharp" src={staticImg}
+                                    style={{
+                                      height: "20px",
+                                      width: "20px"
+                                    }}
+                                  />
+                                  :
+                                  <Avatar src="/broken-image.jpg"
+                                    style={{
+                                      height: "20px",
+                                      width: "20px",
+                                      marginTop: "-4px"
+                                    }}
+                                  />
+                              }
+                              &nbsp;
+                            </span> &nbsp;&nbsp;{item.created_by.user_details.first_name}
+                          </div>
                         </div>
-                      </div>
-                    </Card>
-                  </div>
-                </List>
-              ))
-              : ""
+                      </Card>
+                    </div>
+                  </List>
+                ))
+                : ""
             }
             {
-              isDelete ? <AlertDelete lead={ lead } isDelete={ isDelete }
+              isDelete ? <AlertDelete lead={lead} isDelete={isDelete}
                 onClose={onclose}
                 onDelete={onDelete}
               /> : ""
@@ -634,5 +634,5 @@ export const LeadList = (props) => {
 };
 const TabPanel = (props) => {
   const { children, value, index } = props;
-  return <div>{ value === index && <div>{ children }</div> }</div>;
+  return <div>{value === index && <div>{children}</div>}</div>;
 };

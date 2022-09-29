@@ -101,23 +101,23 @@ export const EditOpportunities = (props) => {
     let headers = {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: "jwt " + localStorage.getItem('Token'),
-      org: 3
+      Authorization: `jwt ${localStorage.getItem("Token")}`,
+      org: 'localStorage.getItem("org")'
     };
 
     fetchData(`${OpportunitiesUrl}/${state.opportunities.opportunity_obj ? state.opportunities.opportunity_obj.id : ""}/`, "PUT", JSON.stringify(val), headers)
-    .then((data) => {
-      if (!data.error) {
-        setResponceError(data.error);
-        navigate('/opportunities');
-      }
-      if (data.error) {
-        setResponceError(data.error);
-        setErrors(data.errors);
-      }
-    })
-    .catch((error) => {
-    });
+      .then((data) => {
+        if (!data.error) {
+          setResponceError(data.error);
+          navigate('/opportunities');
+        }
+        if (data.error) {
+          setResponceError(data.error);
+          setErrors(data.errors);
+        }
+      })
+      .catch((error) => {
+      });
   };
 
   const backbtnHandle = () => {
@@ -132,7 +132,7 @@ export const EditOpportunities = (props) => {
     <div>
       <form
         onSubmit={onSubmit}>
-         <Appbar backbtnHandle={ backbtnHandle } module={ module } backBtn={ backBtn } crntPage={ crntPage }/>
+        <Appbar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} />
         {/* opportunities details */}
         <div style={{ padding: "10px" }}>
           <div className="leadContainer">
@@ -144,9 +144,9 @@ export const EditOpportunities = (props) => {
                 <div className="typography">
                   <Typography style={{
                     marginBottom: "15px",
-                    fontWeight: "bold", 
+                    fontWeight: "bold",
                     color: "#1A3353"
-                    }}>
+                  }}>
                     Opportunity Information
                   </Typography>
                 </div>
@@ -162,8 +162,8 @@ export const EditOpportunities = (props) => {
                       <TextField
                         name="name"
                         id="outlined-error-helper-text"
-                        defaultValue={ state.opportunities && state.opportunities.opportunity_obj ? state.opportunities.opportunity_obj.name : "" }
-                        onChange={ onChange }
+                        defaultValue={state.opportunities && state.opportunities.opportunity_obj ? state.opportunities.opportunity_obj.name : ""}
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -178,8 +178,8 @@ export const EditOpportunities = (props) => {
                       <TextField
                         name="lead_source"
                         select
-                        defaultValue={ state.opportunities && state.opportunities.opportunity_obj ? state.opportunities.opportunity_obj.lead_source : "" }
-                        onChange={ onChange }
+                        defaultValue={state.opportunities && state.opportunities.opportunity_obj ? state.opportunities.opportunity_obj.lead_source : ""}
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -189,9 +189,9 @@ export const EditOpportunities = (props) => {
                       >
                         {
                           state.lead_source && state.lead_source.map((option) => (
-                          <MenuItem key={ option[1] } value={ option[0] }>
-                            { option[0] }
-                          </MenuItem>
+                            <MenuItem key={option[1]} value={option[0]}>
+                              {option[0]}
+                            </MenuItem>
                           ))
                         }
                       </TextField>
@@ -200,7 +200,7 @@ export const EditOpportunities = (props) => {
                   <div className="fieldContainer2">
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Account</div>
-                      <FormControl sx={{ width: 330 }}>
+                      <FormControl sx={{ width: "70%" }}>
                         <InputLabel id="demo-multiple-name-label"></InputLabel>
                         <Select
                           labelId="demo-multiple-name-label"
@@ -208,16 +208,16 @@ export const EditOpportunities = (props) => {
                           name="account"
                           // defaultValue= {state.opportunities && state.opportunities.account ? state.opportunities.account.map((v) => v.name):""}
                           size="small"
-                          onChange={ onChange }
-                          MenuProps={ MenuProps }
+                          onChange={onChange}
+                          MenuProps={MenuProps}
                         >
                           {
                             state.accounts_list && state.accounts_list.map((name) => (
-                            <MenuItem
-                              key={ name }
-                              value={ name.id }>
-                              { name.name }
-                            </MenuItem>
+                              <MenuItem
+                                key={name}
+                                value={name.id}>
+                                {name.name}
+                              </MenuItem>
                             ))
                           }
                         </Select>
@@ -227,7 +227,7 @@ export const EditOpportunities = (props) => {
                       <div className="fieldTitle">Probability</div>
                       <TextField
                         name="probability"
-                        defaultValue={ state.opportunities && state.opportunities.opportunity_obj ? state.opportunities.opportunity_obj.probability : "" }
+                        defaultValue={state.opportunities && state.opportunities.opportunity_obj ? state.opportunities.opportunity_obj.probability : ""}
                         id="outlined-error-helper-text"
                         InputProps={{
                           classes: {
@@ -247,8 +247,8 @@ export const EditOpportunities = (props) => {
                       <TextField
                         name="amount"
                         id="outlined-error-helper-text"
-                        defaultValue={ state.opportunities && state.opportunities.opportunity_obj ? state.opportunities.opportunity_obj.amount : "" }
-                        onChange={ onChange }
+                        defaultValue={state.opportunities && state.opportunities.opportunity_obj ? state.opportunities.opportunity_obj.amount : ""}
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -265,7 +265,7 @@ export const EditOpportunities = (props) => {
                         name="teams"
                         id="outlined-error-helper-text"
                         // defaultValue={state.opportunities.team}
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -279,25 +279,25 @@ export const EditOpportunities = (props) => {
                   <div className="fieldContainer2">
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Currency</div>
-                      <FormControl sx={{ width: 330 }}>
+                      <FormControl sx={{ width: "70%" }}>
                         <InputLabel id="demo-multiple-name-label"></InputLabel>
                         <Select
                           labelId="demo-multiple-name-label"
                           id="demo-multiple-name"
                           // defautValue={state.opportunities && state.opportunities.opportunity_obj ? state.opportunities.opportunity_obj.currency:""}
-                          value={ currency }
+                          value={currency}
                           name="currency"
                           size="small"
-                          onChange={ onChange }
-                          MenuProps={ MenuProps }
+                          onChange={onChange}
+                          MenuProps={MenuProps}
                         >
                           {
                             state.currency.length > 0 && state.currency.map((name) => (
-                            <MenuItem
-                              key={ name[1] }
-                              value={ name[0] }>
-                              { name[0] }
-                            </MenuItem>
+                              <MenuItem
+                                key={name[1]}
+                                value={name[0]}>
+                                {name[0]}
+                              </MenuItem>
                             ))
                           }
                         </Select>
@@ -309,7 +309,7 @@ export const EditOpportunities = (props) => {
                         id="outlined-error-helper-text"
                         name="users"
                         // defaultValue={state.opportunities.users.id}
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -327,8 +327,8 @@ export const EditOpportunities = (props) => {
                         name="stage"
                         select
                         id="outlined-error-helper-text"
-                        defaultValue={ state.opportunities && state.opportunities.opportunity_obj ? state.opportunities.opportunity_obj.stage : "" }
-                        onChange={ (e) => handleChange(e.target) }
+                        defaultValue={state.opportunities && state.opportunities.opportunity_obj ? state.opportunities.opportunity_obj.stage : ""}
+                        onChange={(e) => handleChange(e.target)}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -339,9 +339,9 @@ export const EditOpportunities = (props) => {
                       >
                         {
                           state.stage && state.stage.map((option) => (
-                          <MenuItem key={ option[1] } value={ option[0] }>
-                            { option[0] }
-                          </MenuItem>
+                            <MenuItem key={option[1]} value={option[0]}>
+                              {option[0]}
+                            </MenuItem>
                           ))
                         }
                       </TextField>
@@ -352,7 +352,7 @@ export const EditOpportunities = (props) => {
                         name="assigned_to"
                         id="outlined-error-helper-text"
                         // defaultValue={state.opportunities && state.opportunities.opportunity_obj ? state.opportunities.opportunity_obj.assigned_users:""}
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -366,24 +366,24 @@ export const EditOpportunities = (props) => {
                   <div className="fieldContainer2">
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Contact</div>
-                      <FormControl sx={{ width: 330 }}>
+                      <FormControl sx={{ width: "70%" }}>
                         <InputLabel id="demo-multiple-name-label"></InputLabel>
                         <Select
                           labelId="demo-multiple-name-label"
                           id="demo-multiple-name"
                           name="contacts"
-                          defaultValue={ state.opportunities && state.opportunities.opportunity_obj ? state.opportunities.opportunity_obj.contacts.name : "" }
+                          defaultValue={state.opportunities && state.opportunities.opportunity_obj ? state.opportunities.opportunity_obj.contacts.name : ""}
                           size="small"
-                          onChange={ (e) => handleChange(e.target) }
-                          MenuProps={ MenuProps }>
+                          onChange={(e) => handleChange(e.target)}
+                          MenuProps={MenuProps}>
                           {
                             state.contacts_list.map((name) => (
-                            <MenuItem
-                              key={ name.id }
-                              value={ name }
-                              style={ getStyles(name, personName, theme) }>
-                              { name.id }
-                            </MenuItem>
+                              <MenuItem
+                                key={name.id}
+                                value={name}
+                                style={getStyles(name, personName, theme)}>
+                                {name.id}
+                              </MenuItem>
                             ))
                           }
                         </Select>
@@ -395,9 +395,9 @@ export const EditOpportunities = (props) => {
                         multiple
                         id="tags-filled"
                         name="tags"
-                        options={ state.tags ? state.tags.map((option) => option.name) : [""] }
+                        options={state.tags ? state.tags.map((option) => option.name) : [""]}
                         // defaultValue={state.opportunities && state.opportunities.opportunity_obj ? state.opportunities.opportunity_obj.tags.map((v) => v.name):"--"}
-                        onChange={ (event, value) => tagsHandle(event, value) }
+                        onChange={(event, value) => tagsHandle(event, value)}
                         style={{ width: "70%", display: "flex", flexDirection: "column", }}
                         size="small"
                         renderTags={(value, getTagProps) =>
@@ -408,30 +408,30 @@ export const EditOpportunities = (props) => {
                                 backgroundColor: "rgba(0, 0, 0, 0.08)",
                               }}
                               variant="outlined"
-                              label={ option }
-                              { ...getTagProps({ index }) }
-                              
+                              label={option}
+                              {...getTagProps({ index })}
+
                             />
                           ))
                         }
                         renderInput={(params) => (
                           <TextField style={{ display: "flex", flexDirection: "column" }}
                             sx={{ maxHeight: 70, overflow: "auto" }}
-                            { ...params }
+                            {...params}
                             placeholder="add Tags"
                           />
                         )}
                       />
                     </div>
                   </div>
-                  <div className="fieldContainer2" style={{ marginLeft: "95px", justifyContent: "left" }} >
+                  <div className="fieldContainer2" style={{ marginLeft: "8.5%", justifyContent: "left" }} >
                     <div className="fieldSubContainer" >
                       <div className="fieldTitle">Closed Date</div>
                       <TextField
                         name="closed_on"
                         id="outlined-error-helper-text"
-                        defaultValue={ state.opportunities && state.opportunities.opportunity_obj ? state.opportunities.opportunity_obj.closed_on : "" }
-                        onChange={ onChange }
+                        defaultValue={state.opportunities && state.opportunities.opportunity_obj ? state.opportunities.opportunity_obj.closed_on : ""}
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -449,16 +449,16 @@ export const EditOpportunities = (props) => {
           <div className="leadContainer">
             <Accordion style={{ width: "98%" }} >
               <AccordionSummary
-                expandIcon={ <ExpandMoreIcon /> }
+                expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
                 id="panel1a-header">
                 <div className="typography">
                   <Typography style={{
                     marginBottom: "15px",
-                    fontWeight: "bold", 
+                    fontWeight: "bold",
                     color: "#1A3353"
-                    }}>
-                    Description 
+                  }}>
+                    Description
                   </Typography>
                 </div>
               </AccordionSummary>
@@ -473,17 +473,17 @@ export const EditOpportunities = (props) => {
                       <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
                         <div style={{
                           display: "flex",
-                          flexDirection: "row", 
+                          flexDirection: "row",
                           justifyContent: "space-between"
-                          }}>
+                        }}>
                         </div>
                         <TextareaAutosize
                           aria-label="minimum height"
                           name="description"
-                          minRows={ 6 }
-                          onChange={ onChange }
+                          minRows={6}
+                          onChange={onChange}
                           style={{ width: "70%", padding: "5px", justifyContent: "center", marginTop: "6px" }}
-                          defaultValue={ state.opportunities && state.opportunities.opportunity_obj ? state.opportunities.opportunity_obj.description : "" }
+                          defaultValue={state.opportunities && state.opportunities.opportunity_obj ? state.opportunities.opportunity_obj.description : ""}
                         />
                       </div>
                     </div>

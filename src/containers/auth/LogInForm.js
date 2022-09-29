@@ -37,11 +37,10 @@ export const LogInForm = () => {
     fetchData(`${LoginUrl}/`, "POST", JSON.stringify(val), headers)
     .then((data) => {
       if (!data.error) {
-        localStorage.setItem("Token", data.token);
+        localStorage.setItem("Token", data.tokens.access_token);
         setMsg(data.error);
       }
       if (data.error) {
-
         setError(data.error);
         setErrors(data.errors);
       }

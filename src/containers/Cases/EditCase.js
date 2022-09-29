@@ -85,23 +85,23 @@ export const EditCase = (props) => {
     let headers = {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: "jwt " + localStorage.getItem('Token'),
-      org: 3
+      Authorization: `jwt ${localStorage.getItem("Token")}`,
+      org: 'localStorage.getItem("org")'
     };
     if (validatation()) {
       fetchData(`${CasesUrl}/${state.opportunitiesId}/`, "PUT", JSON.stringify(val), headers)
-      .then((data) => {
-        if (!data.error) {
-          setResponceError(data.error);
-          navigate('/cases')
-        }
-        if (data.error) {
-          setResponceError(data.error);
-          setErrors(data.errors);
-        }
-      })
-      .catch((error) => {
-      });
+        .then((data) => {
+          if (!data.error) {
+            setResponceError(data.error);
+            navigate('/cases')
+          }
+          if (data.error) {
+            setResponceError(data.error);
+            setErrors(data.errors);
+          }
+        })
+        .catch((error) => {
+        });
     }
   };
 
@@ -117,7 +117,7 @@ export const EditCase = (props) => {
   return (
     <div>
       <form onSubmit={onSubmit}>
-       <Appbar backbtnHandle={ backbtnHandle } module={ module } backBtn={ backBtn } crntPage={ crntPage }/>
+        <Appbar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} />
         {/* contact details */}
         <div style={{ padding: "10px" }}>
           <div className="leadContainer">
@@ -130,8 +130,9 @@ export const EditCase = (props) => {
                   <Typography style={{
                     marginBottom: "15px",
                     fontWeight: "bold",
-                    color: "#1A3353"}}>
-                   Cases Information
+                    color: "#1A3353"
+                  }}>
+                    Cases Information
                   </Typography>
                 </div>
               </AccordionSummary>
@@ -160,7 +161,7 @@ export const EditCase = (props) => {
                         required={msg == "name" || msg === "required" ? true : false}
                         helperText={
                           (error && msg === "name") || msg === "required" || responceError
-                          ? errors ? errors.name ? errors.name : "" : error : ""
+                            ? errors ? errors.name ? errors.name : "" : error : ""
                         }>
                       </TextField>
                     </div>
@@ -193,7 +194,8 @@ export const EditCase = (props) => {
                       <FormControl sx={{
                         width: 330,
                         borderLeft: "2px solid red",
-                        height: "40px"}} >
+                        height: "40px"
+                      }} >
                         <InputLabel id="demo-multiple-name-label"></InputLabel>
                         <Select
                           labelId="demo-multiple-name-label"
@@ -234,7 +236,7 @@ export const EditCase = (props) => {
                         size="small"
                         helperText={
                           (error && msg === "teams") || msg === "required" || responceError
-                          ? errors ? errors.teams ? errors.teams : "" : error : ""
+                            ? errors ? errors.teams ? errors.teams : "" : error : ""
                         } >
                       </TextField>
                     </div>
@@ -243,7 +245,7 @@ export const EditCase = (props) => {
                     style={{ color: "#1A3353", fontWeight: "normal" }}>
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Priority</div>
-                      <FormControl sx={{ width: 330 }}>
+                      <FormControl sx={{ width: "70%" }}>
                         <InputLabel id="demo-multiple-name-label"></InputLabel>
                         <Select
                           labelId="demo-multiple-name-label"
@@ -280,7 +282,7 @@ export const EditCase = (props) => {
                         required={msg == "users_mention" || msg === "required" ? true : false}
                         helperText={
                           (error && msg === "users_mention") || msg === "required" || responceError
-                          ? errors ? errors.users_mention ? errors.users_mention : "" : error : ""
+                            ? errors ? errors.users_mention ? errors.users_mention : "" : error : ""
                         }>
                       </TextField>
                     </div>
@@ -289,7 +291,7 @@ export const EditCase = (props) => {
                     style={{ color: "#1A3353", fontWeight: "normal" }}>
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Type Of Case</div>
-                      <FormControl sx={{ width: 330 }}>
+                      <FormControl sx={{ width: "70%" }}>
                         <InputLabel id="demo-multiple-name-label"></InputLabel>
                         <Select
                           labelId="demo-multiple-name-label"
@@ -371,7 +373,7 @@ export const EditCase = (props) => {
                         required={msg == "closed_on" || msg === "required" ? true : false}
                         helperText={
                           (error && msg === "closed_on") || msg === "required" || responceError
-                          ? errors ? errors.closed_on ? errors.closed_on : "" : error : ""
+                            ? errors ? errors.closed_on ? errors.closed_on : "" : error : ""
                         }>
                       </TextField>
                     </div>

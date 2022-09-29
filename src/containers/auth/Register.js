@@ -2,7 +2,8 @@ import React from "react";
 import {
   Grid,
   Typography,
-  Link
+  Link,
+  CssBaseline
 } from "@mui/material";
 
 import img_logo from "../../assets/images/auth/img_logo.png";
@@ -13,13 +14,11 @@ import "../../css/auth.css";
 
 export const Registration = () => {
   return (
-    <div style={{ marginRight: "-8px" }}>
+    <div>
+      <CssBaseline />
       <Grid container xs={12} direction="row"
         sx={{
-          mt: -2,
-          mb: -2,
-          mr: -2,
-          height: "691px",
+          height: "100%",
           overflow: "hidden",
           position: 'fixed'
         }}>
@@ -30,10 +29,10 @@ export const Registration = () => {
           direction="column"
           justifyContent="space-evenly"
           alignItems="center"
-          sx={{ height: "724px", overflow: "hidden" }}>
+          sx={{ height: "100%", overflow: "hidden" }}>
           <Grid item>
-            <Grid> 
-            <img src={img_logo} alt="register_logo" className="register-logo" />
+            <Grid>
+              <img src={img_logo} alt="register_logo" className="register-logo" />
             </Grid>
             <Typography variant="h5" style={{ fontWeight: "bolder" }}>Sign Up</Typography>
             <Typography variant="subtitle1">
@@ -45,7 +44,15 @@ export const Registration = () => {
             <RegistrationForm />
           </Grid>
         </Grid>
-        <Grid item xs={5} sx={{ mb: 0, height: "730px", mr: 0 }}>
+        <Grid
+          container
+          item
+          xs={5}
+          sx={{ overflow: "hidden", height: "100%" }}
+          direction="column"
+          justifyContent="center"
+          alignItems="center"
+        >
           <img
             src={img_BG}
             alt="register_image"

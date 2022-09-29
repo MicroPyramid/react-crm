@@ -201,6 +201,7 @@ export const Contact = () => {
   const [isDelete, setIsDelete] = useState(false);
   const [contact, setContact] = useState('');
   const [loader, setLoader] = useState(true);
+  const [closeValue,setCloseValue] = useState(0);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [order, setOrder] = useState('asc');
@@ -225,7 +226,7 @@ export const Contact = () => {
     Accept: "application/json",
     "Content-Type": "application/json",
     Authorization: `jwt ${localStorage.getItem("Token")}`,
-    org: 3,
+    org: 'localStorage.getItem("org")'
   };
 
   const getContacts = () => {
@@ -281,7 +282,7 @@ export const Contact = () => {
       setOpenOffset(valued);
       setValued(valued + rowsPerPage);
     }
-    else if (value == 1 && opportunity.close_opportunities_count > closeOffset + 10) {
+    else if (value == 1 && contacts.close_opportunities_count > closeOffset + 10) {
       setCloseOffset(closeOffset + 10);
       setCloseValue(closeValue + 10);
     }

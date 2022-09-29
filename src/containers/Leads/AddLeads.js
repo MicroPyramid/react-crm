@@ -181,7 +181,7 @@ export function AddLeads() {
     let newKey = []
     let stringVal = ""
     value.map((item) => {
-    stringVal = newKey.push(item.id.toString())
+      stringVal = newKey.push(item.id.toString())
     })
     val.assigned_to = JSON.stringify(newKey)
   }
@@ -225,24 +225,24 @@ export function AddLeads() {
     let headers = {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: "jwt " + localStorage.getItem('Token'),
-      org: 3
+      Authorization: `Jwt ${localStorage.getItem("Token")}`,
+      org: 'localStorage.getItem("org")'
     };
 
     if (validatation()) {
       fetchData(`${LeadUrl}/`, "POST", JSON.stringify(val), headers)
-      .then((data) => {
-        if (!data.error) {
-          setResponceError(data.error);
-          navigate('/leads')
-        }
-        if (data.error) {
-          setResponceError(data.error);
-          setErrors(data.errors);
-        }
-      })
-      .catch((error) => {
-      });
+        .then((data) => {
+          if (!data.error) {
+            setResponceError(data.error);
+            navigate('/leads')
+          }
+          if (data.error) {
+            setResponceError(data.error);
+            setErrors(data.errors);
+          }
+        })
+        .catch((error) => {
+        });
     }
   };
 
@@ -257,12 +257,12 @@ export function AddLeads() {
 
   return (
     <div>
-      <form onSubmit={ onSubmit }>
-        <Appbar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage}/>
+      <form onSubmit={onSubmit}>
+        <Appbar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} />
         {/* lead details */}
         <div style={{ padding: "10px" }}>
           <div className="leadContainer">
-            <Accordion style={{ width: "98%" }}  >
+            <Accordion style={{ width: "98%" }}>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
@@ -293,8 +293,8 @@ export function AddLeads() {
                         size="small"
                         required={msg == "title" || msg === "required" ? true : false}
                         helperText={
-                        (error && msg === "title") || msg === "required" || responceError
-                          ? errors ? errors.title ? errors.title : "" : error : ""
+                          (error && msg === "title") || msg === "required" || responceError
+                            ? errors ? errors.title ? errors.title : "" : error : ""
                         }>
                       </TextField>
                     </div>
@@ -315,7 +315,7 @@ export function AddLeads() {
                         required={msg == "opportunity_amount" || msg === "required" ? true : false}
                         helperText={
                           msg === "opportunity_amount" || msg === "required"
-                           ? error : ""
+                            ? error : ""
                         }>
                       </TextField>
                     </div>
@@ -348,24 +348,24 @@ export function AddLeads() {
                         select
                         id="tags-filled"
                         name="contacts"
-                        error={ msg == "contacts" || msg === "required" ? true : false }
-                        options={ state.contacts ? state.contacts.map((option) => option.first_name) : [""] }
-                        onChange={ onChange }
+                        error={msg == "contacts" || msg === "required" ? true : false}
+                        options={state.contacts ? state.contacts.map((option) => option.first_name) : [""]}
+                        onChange={onChange}
                         style={{ width: "80%" }}
                         size="small"
-                        renderTags={ (value, getTagProps) =>
-                        value.map((option, index) => (
-                          <Chip
-                            className={{ deleteIcon: classes.chipIcon }}
-                            deleteIcon={ <Cancel className={ classes.icon } color="primary" /> }
-                            style={{
-                              backgroundColor: "rgba(0, 0, 0, 0.08)"
-                            }}
-                            variant="outlined"
-                            label={ option }
-                            {...getTagProps({ index })
-                            }
-                          />
+                        renderTags={(value, getTagProps) =>
+                          value.map((option, index) => (
+                            <Chip
+                              className={{ deleteIcon: classes.chipIcon }}
+                              deleteIcon={<Cancel className={classes.icon} color="primary" />}
+                              style={{
+                                backgroundColor: "rgba(0, 0, 0, 0.08)"
+                              }}
+                              variant="outlined"
+                              label={option}
+                              {...getTagProps({ index })
+                              }
+                            />
                           ))
                         }
                         renderInput={(params) => (
@@ -376,7 +376,7 @@ export function AddLeads() {
                         )}
                         helperText={
                           (error && msg === "contacts") || msg === "required"
-                          ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
@@ -388,22 +388,27 @@ export function AddLeads() {
                         multiple
                         id="assigned-filled"
                         name="assigned_to"
-                        options={ state.users ? state.users : "" }
-                        getOptionLabel={ (option) => option.user__email }
-                        onChange={ (object, option) => assignToHandle(object, option) }
+                        options={state.users ? state.users : ""}
+                        getOptionLabel={(option) => option.user__email}
+                        onChange={(object, option) => assignToHandle(object, option)}
                         // defaultValue={[state.users[1].user__email]}
                         style={{ width: "80%" }}
+                        InputProps={{
+                          classes: {
+                            root: textFieldClasses.fieldHeight
+                          }
+                        }}
                         size="small"
-                        renderTags={ (value, getTagProps) =>
-                         value.map((option, index) => (
+                        renderTags={(value, getTagProps) =>
+                          value.map((option, index) => (
                             <Chip
-                              className={ { deleteIcon: classes.chipIcon }}
-                              deleteIcon={ <Cancel className={ classes.icon } color="primary" /> }
+                              className={{ deleteIcon: classes.chipIcon }}
+                              deleteIcon={<Cancel className={classes.icon} color="primary" />}
                               style={{
                                 backgroundColor: "rgba(0, 0, 0, 0.08)"
                               }}
                               variant="outlined"
-                              label={ option.user__email }
+                              label={option.user__email}
                               {...getTagProps({ index })
                               }
                             />
@@ -411,7 +416,7 @@ export function AddLeads() {
                         }
                         renderInput={(params) => (
                           <TextField
-                            { ...params }
+                            {...params}
                           />
                         )}
                       />
@@ -419,16 +424,16 @@ export function AddLeads() {
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Organization</div>
                       <TextField
-                        error={ msg == "company" || msg === "required" ? true : false }
+                        error={msg == "company" || msg === "required" ? true : false}
                         name="company"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <AddIcon />
-                          </InputAdornment>
-                        ),
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <AddIcon />
+                            </InputAdornment>
+                          ),
                           classes: {
                             root: textFieldClasses.fieldHeight
                           }
@@ -437,7 +442,7 @@ export function AddLeads() {
                         size="small"
                         helperText={
                           (error && msg === "company") || msg === "company"
-                          ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
@@ -448,8 +453,8 @@ export function AddLeads() {
                       <TextField
                         name="status"
                         select
-                        value={ status }
-                        onChange={ (e) => handleChange(e.target) }
+                        value={status}
+                        onChange={(e) => handleChange(e.target)}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -481,7 +486,7 @@ export function AddLeads() {
                         size="small"
                         helperText={
                           (error && msg === "skype_ID") || msg === "required"
-                          ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
@@ -492,8 +497,8 @@ export function AddLeads() {
                       <TextField
                         name="source"
                         select
-                        value={ source }
-                        onChange={ (e) => handleChange(e.target) }
+                        value={source}
+                        onChange={(e) => handleChange(e.target)}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -502,9 +507,9 @@ export function AddLeads() {
                         style={{ width: "80%" }} >
                         {
                           state.source && state.source.map((option) => (
-                          <MenuItem key={ option[1] } value={ option[0] }>
-                            { option[0] }
-                          </MenuItem>
+                            <MenuItem key={option[1]} value={option[0]}>
+                              {option[0]}
+                            </MenuItem>
                           ))
                         }
                       </TextField>
@@ -546,27 +551,32 @@ export function AddLeads() {
                         multiple
                         id="tags-filled"
                         name="tags"
-                        options={ state.tags ? state.tags.map((option) => option.name) : [""] }
-                        onChange={ (event, value) => tagsHandle(event, value) }
+                        options={state.tags ? state.tags.map((option) => option.name) : [""]}
+                        onChange={(event, value) => tagsHandle(event, value)}
                         style={{ width: "80%" }}
+                        InputProps={{
+                          classes: {
+                            root: textFieldClasses.fieldHeight
+                          }
+                        }}
                         size="small"
-                        renderTags={ (value, getTagProps) =>
+                        renderTags={(value, getTagProps) =>
                           value.map((option, index) => (
                             <Chip
                               className={{ deleteIcon: classes.chipIcon }}
-                              deleteIcon={ <Cancel className={classes.icon} color="primary" /> }
+                              deleteIcon={<Cancel className={classes.icon} color="primary" />}
                               style={{
                                 backgroundColor: "rgba(0, 0, 0, 0.08)"
                               }}
                               variant="outlined"
-                              label={ option }
-                              { ...getTagProps({ index }) }
+                              label={option}
+                              {...getTagProps({ index })}
                             />
                           ))
                         }
-                        renderInput={ (params) => (
+                        renderInput={(params) => (
                           <TextField
-                            { ...params }
+                            {...params}
                             placeholder="add Tags"
                           />
                         )}
@@ -574,8 +584,8 @@ export function AddLeads() {
                     </div>
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Industry</div>
-                      <FormControl sx={{ width: 398 }}
-                        error={ msg == "industry" || msg === "required" ? true : false }
+                      <FormControl sx={{ width: "80%" }}
+                        error={msg == "industry" || msg === "required" ? true : false}
                         name="industry">
                         <InputLabel id="demo-multiple-name-label"></InputLabel>
                         <Select
@@ -583,19 +593,19 @@ export function AddLeads() {
                           id="demo-multiple-name"
                           name="industry"
                           size="small"
-                          required={ msg == "industry" || msg === "required" ? true : false }
+                          required={msg == "industry" || msg === "required" ? true : false}
                           helperText={
                             (error && msg === "industry") || msg === "required"
-                            ? error : ""
+                              ? error : ""
                           }
-                          onChange={ onChange }
-                          MenuProps={ MenuProps }
+                          onChange={onChange}
+                          MenuProps={MenuProps}
                         >
                           {
                             state.industry && state.industry.map((option) => (
-                            <MenuItem key={ option[1] } value={ option[0] } >
-                              { option[0] }
-                            </MenuItem>
+                              <MenuItem key={option[1]} value={option[0]} >
+                                {option[0]}
+                              </MenuItem>
                             ))
                           }
                         </Select>
@@ -606,7 +616,7 @@ export function AddLeads() {
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Account Name</div>
                       <TextField
-                        error={ msg == "account_name" || msg === "required" ? true : false }
+                        error={msg == "account_name" || msg === "required" ? true : false}
                         name="account_name"
                         id="outlined-error-helper-text"
                         InputProps={{
@@ -614,19 +624,19 @@ export function AddLeads() {
                             root: textFieldClasses.fieldHeight
                           }
                         }}
-                        required={ msg == "account_name" || msg === "required" ? true : false }
-                        onChange={ onChange } style={{ width: "80%" }}
+                        required={msg == "account_name" || msg === "required" ? true : false}
+                        onChange={onChange} style={{ width: "80%" }}
                         size="small"
                         helperText={
                           (error && msg === "account_name") || msg === "required"
-                          ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
                     <div className="fieldSubContainer">
                       <div className="fieldTitle"> Close Date</div>
                       <TextField
-                        error={ msg == "expected_close_date" || msg === "required" ? true : false }
+                        error={msg == "expected_close_date" || msg === "required" ? true : false}
                         name="expected_close_date"
                         id="outlined-error-helper-text"
                         InputProps={{
@@ -635,11 +645,11 @@ export function AddLeads() {
                           }
                         }}
                         type="date"
-                        onChange={ onChange } style={{ width: "80%" }}
+                        onChange={onChange} style={{ width: "80%" }}
                         size="small"
                         helperText={
                           (error && msg === "expected_close_date") || msg === "required"
-                          ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
@@ -648,7 +658,7 @@ export function AddLeads() {
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Pipeline</div>
                       <TextField
-                        error={ msg == "pipeline" || msg === "required" ? true : false }
+                        error={msg == "pipeline" || msg === "required" ? true : false}
                         name="pipeline"
                         id="outlined-error-helper-text"
                         InputProps={{
@@ -656,11 +666,11 @@ export function AddLeads() {
                             root: textFieldClasses.fieldHeight
                           }
                         }}
-                        onChange={ onChange } style={{ width: "80%" }}
+                        onChange={onChange} style={{ width: "80%" }}
                         size="small"
                         helperText={
                           (error && msg === "pipeline") || msg === "required"
-                          ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
@@ -669,37 +679,34 @@ export function AddLeads() {
                       <TextareaAutosize
                         aria-label="minimum height"
                         name="lost_reason"
-                        minRows={ 2 }
-                        onChange={ onChange } style={{ width: "80%", }}
+                        minRows={2}
+                        onChange={onChange} style={{ width: "80%", }}
                       />
                     </div>
                   </div>
-
-                  <div style={{ paddingLeft: "48px", marginLeft: "43px" }}>
-                    <div className="fieldSubContainer">
-                      <div className="fieldTitle">Probability</div>
-                      <TextField
-                        error={ msg == "probability" || msg === "required" ? true : false }
-                        name="probability"
-                        id="outlined-error-helper-text"
-                        InputProps={{
-                          endAdornment: (
+                  <div className="fieldSubContainer" style={{ marginLeft: "5%" }}>
+                    <div className="fieldTitle">Probability</div>
+                    <TextField
+                      error={msg == "probability" || msg === "required" ? true : false}
+                      name="probability"
+                      id="outlined-error-helper-text"
+                      InputProps={{
+                        endAdornment: (
                           <InputAdornment position="end">
-                            <PercentIcon className={ classes.plusIcon } color="primary" />
+                            <PercentIcon className={classes.plusIcon} color="primary" />
                           </InputAdornment>
-                          ),
-                          classes: {
-                            root: textFieldClasses.fieldHeight
-                          }
-                        }}
-                        onChange={ onChange } style={{ width: "110%" }}
-                        size="small"
-                        helperText={
-                          (error && msg === "probability") || msg === "required"
-                          ? error : ""
+                        ),
+                        classes: {
+                          root: textFieldClasses.fieldHeight
                         }
-                      />
-                    </div>
+                      }}
+                      onChange={onChange} style={{ width: "80%" }}
+                      size="small"
+                      helperText={
+                        (error && msg === "probability") || msg === "required"
+                          ? error : ""
+                      }
+                    />
                   </div>
                 </Box>
               </AccordionDetails>
@@ -707,9 +714,9 @@ export function AddLeads() {
           </div>
           {/* contact details */}
           <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", marginTop: "20px" }}>
-            <Accordion style={{ width: "98%" }} >
+            <Accordion style={{ width: "98%" }}>
               <AccordionSummary
-                expandIcon={ <ExpandMoreIcon /> }
+                expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
                 id="panel1a-header" >
                 <div style={{ borderBottom: "1px solid lightgray", width: "100%" }}>
@@ -721,14 +728,14 @@ export function AddLeads() {
                   component="form"
                   noValidate
                   autoComplete="off" >
-                  <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around" }}>
-                    <div style={{ width: "40%", display: "flex", flexDirection: "row" }}>
-                      <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>First Name</div>
+                  <div className="fieldContainer">
+                    <div className="fieldSubContainer">
+                      <div className="fieldTitle">First Name</div>
                       <TextField
                         name="first_name"
-                        error={ msg == "first_name" || msg === "required" ? true : false }
+                        error={msg == "first_name" || msg === "required" ? true : false}
                         id="outlined-error-helper-text"
-                        onChange={ onChange } style={{ width: "80%" }}
+                        onChange={onChange} style={{ width: "80%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -737,17 +744,17 @@ export function AddLeads() {
                         size="small"
                         helperText={
                           (error && msg === "first_name") || msg === "required"
-                          ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
-                    <div style={{ width: "40%", display: "flex", flexDirection: "row" }}>
-                      <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Last Name</div>
+                    <div className="fieldSubContainer">
+                      <div className="fieldTitle">Last Name</div>
                       <TextField
                         id="outlined-error-helper-text"
                         name="last_name"
-                        error={ msg == "last_name" || msg === "required" ? true : false }
-                        onChange={ onChange } style={{ width: "80%" }}
+                        error={msg == "last_name" || msg === "required" ? true : false}
+                        onChange={onChange} style={{ width: "80%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -756,19 +763,19 @@ export function AddLeads() {
                         size="small"
                         helperText={
                           (error && msg === "last_name") || msg === "required"
-                          ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
                   </div>
-                  <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around", marginTop: "20px" }}>
-                    <div style={{ width: "40%", display: "flex", flexDirection: "row" }}>
-                      <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Job Title</div>
+                  <div className="fieldContainer2">
+                    <div className="fieldSubContainer">
+                      <div className="fieldTitle">Job Title</div>
                       <TextField
                         name="job_title"
                         error={msg == "job_title" || msg === "required" ? true : false}
                         id="outlined-error-helper-text"
-                        onChange={onChange} 
+                        onChange={onChange}
                         style={{ width: "80%" }}
                         InputProps={{
                           classes: {
@@ -778,39 +785,39 @@ export function AddLeads() {
                         size="small"
                         helperText={
                           (error && msg === "job_title") || msg === "required"
-                          ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
-                    <div style={{ width: "40%", display: "flex", flexDirection: "row" }}>
-                      <div style={{ marginRight: "10px", fontSize: "13px", width: "23%", fontWeight: "bold" }}>Phone Number</div>
+                    <div className="fieldSubContainer">
+                      <div className="fieldTitle">Phone Number</div>
                       <TextField
                         name="phone"
-                        error={ msg == "phone" || msg === "required" || errors.phone ? true : false }
+                        error={msg == "phone" || msg === "required" || errors.phone ? true : false}
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         style={{ width: "80%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
                           }
                         }}
-                        display={ "none" }
+                        display={"none"}
                         size="small"
                         helperText={
                           (error && msg === "phone") || msg === "required" || responceError
-                          ? errors ? errors.phone ? errors.phone : "" : error : ""
+                            ? errors ? errors.phone ? errors.phone : "" : error : ""
                         }
                       />
                     </div>
                   </div>
-                  <div style={{ width: "40%", display: "flex", flexDirection: "row", marginTop: "19px", marginLeft: "58px" }}>
+                  <div style={{ width: "40%", display: "flex", flexDirection: "row", marginTop: "19px", marginLeft: "6.6%" }}>
                     <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Email Address</div>
                     <TextField
                       name="email"
-                      error={ msg == "email" || msg === "required" ? true : false }
+                      error={msg == "email" || msg === "required" ? true : false}
                       id="outlined-error-helper-text"
-                      onChange={ onChange } style={{ width: "80%" }}
+                      onChange={onChange} style={{ width: "72.6%" }}
                       InputProps={{
                         classes: {
                           root: textFieldClasses.fieldHeight
@@ -819,7 +826,7 @@ export function AddLeads() {
                       size="small"
                       helperText={
                         (error && msg === "email") || msg === "required"
-                        ? error : ""
+                          ? error : ""
                       }
                     />
                   </div>
@@ -847,10 +854,10 @@ export function AddLeads() {
                     <div style={{ width: "40%", display: "flex", flexDirection: "row" }}>
                       <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Address Lane</div>
                       <TextField
-                        error={ msg == "address_line" ? true : false }
+                        error={msg == "address_line" ? true : false}
                         name="address_line"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -858,10 +865,10 @@ export function AddLeads() {
                         }}
                         style={{ width: "80%" }}
                         size="small"
-                        required={ msg == "address_line" || msg === "required" ? true : false }
+                        required={msg == "address_line" || msg === "required" ? true : false}
                         helperText={
                           msg === "address_line" || msg === "required"
-                          ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
@@ -869,9 +876,9 @@ export function AddLeads() {
                       <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>City</div>
                       <TextField
                         name="city"
-                        error={ msg == "city" || msg === "required" ? true : false }
+                        error={msg == "city" || msg === "required" ? true : false}
                         id="outlined-error-helper-text"
-                        onChange={ onChange } style={{ width: "80%" }}
+                        onChange={onChange} style={{ width: "80%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -880,7 +887,7 @@ export function AddLeads() {
                         size="small"
                         helperText={
                           (error && msg === "city") || msg === "required"
-                          ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
@@ -890,9 +897,9 @@ export function AddLeads() {
                       <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Street</div>
                       <TextField
                         id="outlined-error-helper-text"
-                        error={ msg == "street" || msg === "required" ? true : false }
+                        error={msg == "street" || msg === "required" ? true : false}
                         name="street"
-                        onChange={ onChange } style={{ width: "80%" }}
+                        onChange={onChange} style={{ width: "80%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -901,7 +908,7 @@ export function AddLeads() {
                         size="small"
                         helperText={
                           (error && msg === "street") || msg === "required"
-                          ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
@@ -909,9 +916,9 @@ export function AddLeads() {
                       <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>State</div>
                       <TextField
                         name="state"
-                        error={ msg == "state" || msg === "required" ? true : false }
+                        error={msg == "state" || msg === "required" ? true : false}
                         id="outlined-error-helper-text"
-                        onChange={ onChange } style={{ width: "80%" }}
+                        onChange={onChange} style={{ width: "80%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -920,7 +927,7 @@ export function AddLeads() {
                         size="small"
                         helperText={
                           (error && msg === "state") || msg === "required"
-                          ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
@@ -929,11 +936,11 @@ export function AddLeads() {
                     <div style={{ width: "40%", display: "flex", flexDirection: "row" }}>
                       <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Pincode</div>
                       <TextField
-                        error={ msg == "postcode" || msg === "required" ? true : false }
+                        error={msg == "postcode" || msg === "required" ? true : false}
                         name="postcode"
                         type="number"
                         id="outlined-error-helper-text"
-                        onChange={ onChange } style={{ width: "80%" }}
+                        onChange={onChange} style={{ width: "80%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -942,17 +949,17 @@ export function AddLeads() {
                         size="small"
                         helperText={
                           (error && msg === "postcode") || msg === "required"
-                          ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
                     <div style={{ width: "40%", display: "flex", flexDirection: "row" }}>
                       <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Country</div>
                       <TextField
-                        error={ msg == "country" || msg === "required" ? true : false }
+                        error={msg == "country" || msg === "required" ? true : false}
                         name="country"
                         id="outlined-error-helper-text"
-                        onChange={ onChange } style={{ width: "80%" }}
+                        onChange={onChange} style={{ width: "80%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -961,7 +968,7 @@ export function AddLeads() {
                         size="small"
                         helperText={
                           (error && msg === "country") || msg === "required"
-                          ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
@@ -992,8 +999,8 @@ export function AddLeads() {
                       <TextareaAutosize
                         aria-label="minimum height"
                         name="description"
-                        minRows={ 8 }
-                        onChange={ onChange } style={{ width: "80%", padding: "5px" }}
+                        minRows={8}
+                        onChange={onChange} style={{ width: "80%", padding: "5px" }}
                         placeholder="Add Description"
                       />
                     </div>

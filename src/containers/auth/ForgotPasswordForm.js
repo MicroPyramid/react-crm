@@ -37,7 +37,6 @@ export const ForgotPasswordForm = (props) => {
       }
     })
     .catch((error) => {
-      console.error("Error:", error);
     });
   };
   

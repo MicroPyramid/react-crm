@@ -93,23 +93,23 @@ export const AddCases = (props) => {
     let headers = {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: "jwt " + localStorage.getItem('Token'),
-      org: 3
+      Authorization: `jwt ${localStorage.getItem("Token")}`,
+      org: 'localStorage.getItem("org")'
     };
     if (validatation()) {
       fetchData(`${CasesUrl}/`, "POST", JSON.stringify(val), headers)
-      .then((data) => {
-        if (!data.error) {
-          setResponceError(data.error);
-          navigate('/cases')
-        }
-        if (data.error) {
-          setResponceError(data.error);
-          setErrors(data.errors);
-        }
-      })
-      .catch((error) => {
-      });
+        .then((data) => {
+          if (!data.error) {
+            setResponceError(data.error);
+            navigate('/cases')
+          }
+          if (data.error) {
+            setResponceError(data.error);
+            setErrors(data.errors);
+          }
+        })
+        .catch((error) => {
+        });
     }
   };
 
@@ -125,7 +125,7 @@ export const AddCases = (props) => {
   return (
     <div>
       <form onSubmit={onSubmit}>
-       <Appbar backbtnHandle={ backbtnHandle } module={ module } backBtn={ backBtn } crntPage={ crntPage }/>
+        <Appbar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} />
         {/* contact details */}
         <div style={{ padding: "10px" }}>
           <div className="leadContainer">
@@ -137,7 +137,8 @@ export const AddCases = (props) => {
                 <div className="typography">
                   <Typography style={{
                     marginBottom: "15px",
-                    fontWeight: "bold", color: "#1A3353"}} >
+                    fontWeight: "bold", color: "#1A3353"
+                  }} >
                     Cases Information
                   </Typography>
                 </div>
@@ -166,7 +167,7 @@ export const AddCases = (props) => {
                         required={msg == "name" || msg === "required" ? true : false}
                         helperText={
                           (error && msg === "name") || msg === "required" || responceError
-                          ? errors ? errors.name ? errors.name : "" : error : ""
+                            ? errors ? errors.name ? errors.name : "" : error : ""
                         }>
                       </TextField>
                     </div>
@@ -186,7 +187,7 @@ export const AddCases = (props) => {
                         size="small"
                         helperText={
                           (error && msg === "contacts") || msg === "required" || responceError
-                          ? errors ? errors.contacts ? errors.contacts : "" : error : ""
+                            ? errors ? errors.contacts ? errors.contacts : "" : error : ""
                         }>
                       </TextField>
                     </div>
@@ -212,10 +213,10 @@ export const AddCases = (props) => {
                           (error && msg === "status") || msg === "required" || responceError
                             ? errors ? errors.status ? errors.status : "" : error : ""
                         }>
-                          {state.status && state.status.map((option) => (
-                        <MenuItem key={option[1]} value={option[0]}>
-                          {option[0]}
-                        </MenuItem>))}
+                        {state.status && state.status.map((option) => (
+                          <MenuItem key={option[1]} value={option[0]}>
+                            {option[0]}
+                          </MenuItem>))}
                       </TextField>
                     </div>
                     <div className="fieldSubContainer">
@@ -234,7 +235,7 @@ export const AddCases = (props) => {
                         size="small"
                         helperText={
                           (error && msg === "teams") || msg === "required" || responceError
-                          ? errors ? errors.teams ? errors.teams : "" : error : ""
+                            ? errors ? errors.teams ? errors.teams : "" : error : ""
                         }>
                       </TextField>
                     </div>
@@ -243,7 +244,7 @@ export const AddCases = (props) => {
                     style={{ color: "#1A3353", fontWeight: "normal" }}>
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Priority</div>
-                      <FormControl sx={{ width: 330 }}>
+                      <FormControl sx={{ width: "70%" }}>
                         <InputLabel id="demo-multiple-name-label"></InputLabel>
                         <Select
                           labelId="demo-multiple-name-label"
@@ -288,7 +289,7 @@ export const AddCases = (props) => {
                     style={{ color: "#1A3353", fontWeight: "normal" }}>
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Type Of Case</div>
-                      <FormControl sx={{ width: 330 }}>
+                      <FormControl sx={{ width: "70%" }}>
                         <InputLabel id="demo-multiple-name-label"></InputLabel>
                         <Select
                           labelId="demo-multiple-name-label"

@@ -19,7 +19,7 @@ import isEmail from 'validator/lib/isEmail';
 import { UseContactForm } from "../../components/UseContactForm";
 import { ContactUrl } from '../../components/ApiUrls'
 import { fetchData } from "../../components/FetchData";
-import {Appbar} from "../../components/Appbar";
+import { Appbar } from "../../components/Appbar";
 
 const useStyles = makeStyles({
   chipStyle: {
@@ -63,7 +63,7 @@ export function EditContact(props) {
       setSource(target.value)
     } else if (target.name === "industry") {
       val.industry = target.value
-    }else if (target.name === "do_not_call") {
+    } else if (target.name === "do_not_call") {
       setChecked(target.checked);
       val.do_not_call = !checked
     }
@@ -134,20 +134,20 @@ export function EditContact(props) {
     let headers = {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: "jwt " + localStorage.getItem('Token'),
-      org: 3
+      Authorization: `jwt ${localStorage.getItem("Token")}`,
+      org: 'localStorage.getItem("org")'
     };
 
     if (validatation()) {
-    fetchData(`${ContactUrl}/${state.newvalue.id}/`, "PUT", JSON.stringify(val), headers)
-    .then((data) => {
-      if (!data.error) {
-        setResponceError(data.error);
-        navigate('/contacts')
-      }
-    })
-    .catch((error) => {
-    });
+      fetchData(`${ContactUrl}/${state.newvalue.id}/`, "PUT", JSON.stringify(val), headers)
+        .then((data) => {
+          if (!data.error) {
+            setResponceError(data.error);
+            navigate('/contacts')
+          }
+        })
+        .catch((error) => {
+        });
     }
   };
 
@@ -203,13 +203,13 @@ export function EditContact(props) {
   return (
     <div>
       <form onSubmit={onSubmit}>
-       <Appbar module={module} backBtn={backBtn} crntPage={crntPage} backbtnHandle={backbtnHandle}/>
+        <Appbar module={module} backBtn={backBtn} crntPage={crntPage} backbtnHandle={backbtnHandle} />
         {/* contact details */}
         <div style={{ padding: "10px" }}>
           <div className="leadContainer">
             <Accordion style={{ width: "98%" }}>
               <AccordionSummary
-                expandIcon={ <ExpandMoreIcon /> }
+                expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
                 id="panel1a-header">
                 <div className="typography">
@@ -217,7 +217,7 @@ export function EditContact(props) {
                 </div>
               </AccordionSummary>
               <AccordionDetails>
-                <Box sx={{ width: '98%',color:"#1A3353" }}
+                <Box sx={{ width: '98%', color: "#1A3353" }}
                   component="form"
                   noValidate
                   autoComplete="off">
@@ -227,8 +227,8 @@ export function EditContact(props) {
                       <TextField
                         name="salutation"
                         id="outlined-error-helper-text"
-                        defaultValue={ state.newvalue && state.newvalue.salutation }
-                        onChange={ onChange }
+                        defaultValue={state.newvalue && state.newvalue.salutation}
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -242,10 +242,10 @@ export function EditContact(props) {
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">First Name</div>
                       <TextField
-                        defaultValue={ state.newvalue && state.newvalue.first_name }
+                        defaultValue={state.newvalue && state.newvalue.first_name}
                         name="first_name"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -261,14 +261,14 @@ export function EditContact(props) {
                       <div className="fieldTitle">Last Name</div>
                       <TextField
                         name="last_name"
-                        defaultValue={ state.newvalue && state.newvalue.last_name }
+                        defaultValue={state.newvalue && state.newvalue.last_name}
                         id="outlined-error-helper-text"
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
                           }
                         }}
-                        onChange={ onChange }
+                        onChange={onChange}
                         style={{ width: "70%" }}
                         size="small"
                       />
@@ -279,13 +279,13 @@ export function EditContact(props) {
                         name="date_of_birth"
                         id="outlined-error-helper-text"
                         type="date"
-                        defaultValue={ state.newvalue && state.newvalue.date_of_birth }
+                        defaultValue={state.newvalue && state.newvalue.date_of_birth}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
                           }
                         }}
-                        onChange={ onChange } style={{ width: "70%" }}
+                        onChange={onChange} style={{ width: "70%" }}
                         size="small"
                       />
                     </div>
@@ -296,8 +296,13 @@ export function EditContact(props) {
                       <TextField
                         name="organization"
                         id="outlined-error-helper-text"
-                        defaultValue={ state.newvalue && state.newvalue.organization }
-                        onChange={ onChange }
+                        defaultValue={state.newvalue && state.newvalue.organization}
+                        onChange={onChange}
+                        InputProps={{
+                          classes: {
+                            root: textFieldClasses.fieldHeight
+                          }
+                        }}
                         style={{ width: "70%" }}
                         size="small"
                       />
@@ -307,8 +312,8 @@ export function EditContact(props) {
                       <TextField
                         name="title"
                         id="outlined-error-helper-text"
-                        defaultValue={ state.newvalue && state.newvalue.title }
-                        onChange={ onChange }
+                        defaultValue={state.newvalue && state.newvalue.title}
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -325,8 +330,8 @@ export function EditContact(props) {
                       <TextField
                         name="primary_email"
                         id="outlined-error-helper-text"
-                        defaultValue={ state.newvalue && state.newvalue.primary_email }
-                        onChange={ onChange }
+                        defaultValue={state.newvalue && state.newvalue.primary_email}
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -341,8 +346,8 @@ export function EditContact(props) {
                       <TextField
                         name="secondary_email"
                         id="outlined-error-helper-text"
-                        defaultValue={ state.newvalue && state.newvalue.secondary_email }
-                        onChange={ onChange }
+                        defaultValue={state.newvalue && state.newvalue.secondary_email}
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -359,8 +364,8 @@ export function EditContact(props) {
                       <TextField
                         name="secondary_number"
                         id="outlined-error-helper-text"
-                        defaultValue={ state.newvalue && state.newvalue.secondary_number }
-                        onChange={ onChange }
+                        defaultValue={state.newvalue && state.newvalue.secondary_number}
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -375,8 +380,8 @@ export function EditContact(props) {
                       <TextField
                         name="mobile_number"
                         id="outlined-error-helper-text"
-                        defaultValue={ state.newvalue && state.newvalue.mobile_number }
-                        onChange={ onChange }
+                        defaultValue={state.newvalue && state.newvalue.mobile_number}
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -393,8 +398,8 @@ export function EditContact(props) {
                       <TextField
                         name="department"
                         id="outlined-error-helper-text"
-                        defaultValue={ state.newvalue && state.newvalue.department }
-                        onChange={ onChange }
+                        defaultValue={state.newvalue && state.newvalue.department}
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -409,8 +414,8 @@ export function EditContact(props) {
                       <TextField
                         name="language"
                         id="outlined-error-helper-text"
-                        defaultValue={ state.newvalue && state.newvalue.language }
-                        onChange={ onChange }
+                        defaultValue={state.newvalue && state.newvalue.language}
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -424,12 +429,12 @@ export function EditContact(props) {
                   <div className="fieldContainer2">
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Do Not Call</div>
-                      <AntSwitch 
-                      defaultChecked={ state.newvalue.do_not_call }
-                       inputProps={{ 'aria-label': 'ant design' }}
-                       name="do_not_call"
-                       checked={ checked }
-                       onChange={ (e) => handleChange(e.target) } />
+                      <AntSwitch
+                        defaultChecked={state.newvalue.do_not_call}
+                        inputProps={{ 'aria-label': 'ant design' }}
+                        name="do_not_call"
+                        checked={checked}
+                        onChange={(e) => handleChange(e.target)} />
                     </div>
                     <div className="fieldSubContainer">
                       &nbsp;
@@ -447,11 +452,11 @@ export function EditContact(props) {
                 aria-controls="panel1a-content"
                 id="panel1a-header">
                 <div style={{ borderBottom: "1px solid lightgray", width: "100%" }}>
-                  <Typography style={{ marginBottom: "15px", fontWeight: "bold",color:"#1A3353" }}>Address Details</Typography>
+                  <Typography style={{ marginBottom: "15px", fontWeight: "bold", color: "#1A3353" }}>Address Details</Typography>
                 </div>
               </AccordionSummary>
               <AccordionDetails>
-                <Box sx={{ width: '98%',color:"#1A3353" }}
+                <Box sx={{ width: '98%', color: "#1A3353" }}
                   component="form"
                   noValidate
                   autoComplete="off">
@@ -461,8 +466,8 @@ export function EditContact(props) {
                       <TextField
                         name="address_line"
                         id="outlined-error-helper-text"
-                        defaultValue={ state.address && state.address.addreslane }
-                        onChange={ onChange }
+                        defaultValue={state.address && state.address.addreslane}
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -477,8 +482,8 @@ export function EditContact(props) {
                       <TextField
                         name="city"
                         id="outlined-error-helper-text"
-                        defaultValue={ state.address && state.address.city }
-                        onChange={ onChange } style={{ width: "70%" }}
+                        defaultValue={state.address && state.address.city}
+                        onChange={onChange} style={{ width: "70%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -490,7 +495,7 @@ export function EditContact(props) {
                   </div>
                   <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around", marginTop: "20px" }}>
                     <div style={{ width: "40%", display: "flex", flexDirection: "row" }}>
-                      <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold"}}>Street</div>
+                      <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Street</div>
                       <TextField
                         id="outlined-error-helper-text"
                         name="street"
@@ -509,8 +514,8 @@ export function EditContact(props) {
                       <TextField
                         name="state"
                         id="outlined-error-helper-text"
-                        defaultValue={ state.address && state.address.state }
-                        onChange={ onChange } style={{ width: "70%" }}
+                        defaultValue={state.address && state.address.state}
+                        onChange={onChange} style={{ width: "70%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -526,8 +531,8 @@ export function EditContact(props) {
                       <TextField
                         name="pincode"
                         id="outlined-error-helper-text"
-                        defaultValue={ state.address && state.address.postcode }
-                        onChange={ onChange }
+                        defaultValue={state.address && state.address.postcode}
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -542,8 +547,8 @@ export function EditContact(props) {
                       <TextField
                         name="country"
                         id="outlined-error-helper-text"
-                        defaultValue={ state.address && state.address.country }
-                        onChange={ onChange }
+                        defaultValue={state.address && state.address.country}
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -562,7 +567,7 @@ export function EditContact(props) {
           <div className="leadContainer">
             <Accordion style={{ width: "98%" }} >
               <AccordionSummary
-                expandIcon={ <ExpandMoreIcon /> }
+                expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
                 id="panel1a-header">
                 <div className="typography">
@@ -570,7 +575,7 @@ export function EditContact(props) {
                 </div>
               </AccordionSummary>
               <AccordionDetails>
-                <Box sx={{ width: '98%',color:"#1A3353"  }}
+                <Box sx={{ width: '98%', color: "#1A3353" }}
                   component="form"
                   noValidate
                   autoComplete="off">
@@ -580,9 +585,9 @@ export function EditContact(props) {
                       <TextareaAutosize
                         aria-label="minimum height"
                         name="description"
-                        minRows={ 8 }
-                        defaultValue={ state.newvalue && state.newvalue.description }
-                        onChange={ onChange } style={{ width: "70%" }}
+                        minRows={8}
+                        defaultValue={state.newvalue && state.newvalue.description}
+                        onChange={onChange} style={{ width: "70%" }}
                         placeholder="Add Description"
                       />
                     </div>
@@ -591,19 +596,19 @@ export function EditContact(props) {
               </AccordionDetails>
             </Accordion>
           </div>
-          {/* Socials */} 
+          {/* Socials */}
           <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", marginTop: "20px" }}>
             <Accordion style={{ width: "98%" }}>
               <AccordionSummary
-                expandIcon={ <ExpandMoreIcon /> }
+                expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
                 id="panel1a-header">
                 <div style={{ borderBottom: "1px solid lightgray", width: "100%" }}>
-                  <Typography style={{ marginBottom: "15px", fontWeight: "bold",color:"#1A3353"  }} >Socials</Typography>
+                  <Typography style={{ marginBottom: "15px", fontWeight: "bold", color: "#1A3353" }} >Socials</Typography>
                 </div>
               </AccordionSummary>
               <AccordionDetails>
-                <Box sx={{ width: '100%',color:"#1A3353"  }}
+                <Box sx={{ width: '100%', color: "#1A3353" }}
                   component="form"
                   noValidate
                   autoComplete="off">
@@ -611,11 +616,11 @@ export function EditContact(props) {
                     <div style={{ width: "40%", display: "flex", flexDirection: "row" }}>
                       <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Linkedin Url</div>
                       <TextField
-                        error={ msg == "linked_in_url" ? true : false }
+                        error={msg == "linked_in_url" ? true : false}
                         name="linked_in_url"
-                        defaultValue={ state.newvalue.linked_in_url ? state.newvalue.linked_in_url:"" }
+                        defaultValue={state.newvalue.linked_in_url ? state.newvalue.linked_in_url : ""}
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -623,7 +628,7 @@ export function EditContact(props) {
                         }}
                         style={{ width: "70%" }}
                         size="small"
-                        required={ msg == "linked_in_url" || msg === "required" ? true : false }
+                        required={msg == "linked_in_url" || msg === "required" ? true : false}
                         helperText={
                           msg === "linked_in_url" || msg === "required"
                             ? error : ""
@@ -634,10 +639,10 @@ export function EditContact(props) {
                       <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Facebook Url</div>
                       <TextField
                         name="facebook_url"
-                        defaultValue={ state.newvalue.facebook_url ? state.newvalue.facebook_url:"" }
-                        error={ msg == "facebook_url" || msg === "required" ? true : false }
+                        defaultValue={state.newvalue.facebook_url ? state.newvalue.facebook_url : ""}
+                        error={msg == "facebook_url" || msg === "required" ? true : false}
                         id="outlined-error-helper-text"
-                        onChange={ onChange } style={{ width: "70%" }}
+                        onChange={onChange} style={{ width: "70%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -652,14 +657,14 @@ export function EditContact(props) {
                     </div>
                   </div>
                   <div style={{ marginTop: "20px" }}>
-                    <div style={{  width: "40%", display: "flex", flexDirection: "row", marginLeft:"57px" }}>
-                      <div style={{ marginRight: "10px", fontSize: "13px",  textAlign: "right", fontWeight: "bold" }}>Twitter Username</div>
+                    <div style={{ width: "40%", display: "flex", flexDirection: "row", marginLeft: "7.5%" }}>
+                      <div style={{ marginRight: "10px", fontSize: "13px", textAlign: "right", fontWeight: "bold" }}>Twitter Username</div>
                       <TextField
                         id="outlined-error-helper-text"
-                        defaultValue={ state.newvalue.twitter_username ? state.newvalue.twitter_username:"" }
-                        error={ msg == "twitter_username" || msg === "required" ? true : false }
+                        defaultValue={state.newvalue.twitter_username ? state.newvalue.twitter_username : ""}
+                        error={msg == "twitter_username" || msg === "required" ? true : false}
                         name="twitter_username"
-                        onChange={ onChange } style={{ width: "70%" }}
+                        onChange={onChange} style={{ width: "70%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
