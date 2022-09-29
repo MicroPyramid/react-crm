@@ -39,7 +39,7 @@ const textFieldStyled = makeStyles(() => ({
 
 function getStyles(name, personName, theme) {
   return {
-    fontWeight:theme.typography.fontWeightRegular
+    fontWeight: theme.typography.fontWeightRegular
   };
 }
 
@@ -69,9 +69,9 @@ export const AddOpportunity = () => {
   const textFieldClasses = textFieldStyled();
   const theme = useTheme();
 
-  const handleFormat = (event, newFormats) => {
-    setFormats(newFormats);
-  };
+  // const handleFormat = (event, newFormats) => {
+  //   setFormats(newFormats);
+  // };
 
   const handleChangeSmile = (event) => {
     setAge(event.target.value);
@@ -83,7 +83,7 @@ export const AddOpportunity = () => {
       newKey.push((key.key).replace(/[^0-9]/g, "", '$'))
       val.assigned_users = JSON.stringify(newKey)
       setAssignTo(target.value)
-    }  else if (target.name === "lead_source") {
+    } else if (target.name === "lead_source") {
       val.lead_source = target.value
       setSource(target.value)
     } else if (target.name === "name") {
@@ -102,7 +102,7 @@ export const AddOpportunity = () => {
     }
     else if (target.name === "stage") {
       val.stage = target.value
-    }else if (target.name === "contacts") {
+    } else if (target.name === "contacts") {
       val.contacts = target.value
     }
     else if (target.name === "closed_on") {
@@ -155,24 +155,24 @@ export const AddOpportunity = () => {
     let headers = {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: "jwt " + localStorage.getItem('Token'),
-      org: 3
+      Authorization: `jwt ${localStorage.getItem("Token")}`,
+      org: 'localStorage.getItem("org")'
     };
-    
+
     if (validatation()) {
       fetchData(`${OpportunitiesUrl}/`, "POST", JSON.stringify(val), headers)
-      .then((data) => { 
-        if (!data.error) {
-          setResponceError(data.error);
-          navigate('/opportunities')
-        }
-        if (data.error) {
-          setResponceError(data.error);
-          setErrors(data.errors);
-        }
-      })
-      .catch((error) => {
-      });
+        .then((data) => {
+          if (!data.error) {
+            setResponceError(data.error);
+            navigate('/opportunities')
+          }
+          if (data.error) {
+            setResponceError(data.error);
+            setErrors(data.errors);
+          }
+        })
+        .catch((error) => {
+        });
     }
   };
 
@@ -187,8 +187,8 @@ export const AddOpportunity = () => {
 
   return (
     <div>
-      <form onSubmit={ onSubmit }>
-      <Appbar backbtnHandle={ backbtnHandle } module={ module } backBtn={ backBtn } crntPage={ crntPage }/>
+      <form onSubmit={onSubmit}>
+        <Appbar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} />
         {/* contact details */}
         <div style={{ padding: "10px" }}>
           <div className="leadContainer">
@@ -198,17 +198,18 @@ export const AddOpportunity = () => {
                 aria-controls="panel1a-content"
                 id="panel1a-header" >
                 <div className="typography">
-                  <Typography 
-                   style={{
-                   marginBottom: "15px", 
-                   fontWeight: "bold", 
-                   color: "#1A3353" }}>
-                   Opportunity Information
+                  <Typography
+                    style={{
+                      marginBottom: "15px",
+                      fontWeight: "bold",
+                      color: "#1A3353"
+                    }}>
+                    Opportunity Information
                   </Typography>
                 </div>
               </AccordionSummary>
               <AccordionDetails>
-                <Box sx={{ width: '98%',color: "#1A3353", }}
+                <Box sx={{ width: '98%', color: "#1A3353", }}
                   component="form"
                   noValidate
                   autoComplete="off" >
@@ -216,10 +217,10 @@ export const AddOpportunity = () => {
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Name</div>
                       <TextField
-                        error={ msg == "name" || errors.name ? true : false }
+                        error={msg == "name" || errors.name ? true : false}
                         name="name"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -227,10 +228,10 @@ export const AddOpportunity = () => {
                         }}
                         style={{ width: "70%" }}
                         size="small"
-                        required={ msg == "name" || msg === "required" ? true : false }
+                        required={msg == "name" || msg === "required" ? true : false}
                         helperText={
                           (error && msg === "name") || msg === "required" || responceError
-                          ? errors ? errors.name ? errors.name : "" : error : ""
+                            ? errors ? errors.name ? errors.name : "" : error : ""
                         }
                       >
                       </TextField>
@@ -240,18 +241,18 @@ export const AddOpportunity = () => {
                       <TextField
                         name="lead_source"
                         select
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
-                          root: textFieldClasses.fieldHeight
+                            root: textFieldClasses.fieldHeight
                           }
                         }}
                         style={{ width: "70%" }}>
                         {
                           state.lead_source && state.lead_source.map((option) => (
-                          <MenuItem key={ option[1] } value={ option[0] }>
-                            { option[0] }
-                          </MenuItem>
+                            <MenuItem key={option[1]} value={option[0]}>
+                              {option[0]}
+                            </MenuItem>
                           ))
                         }
                       </TextField>
@@ -260,24 +261,26 @@ export const AddOpportunity = () => {
                   <div className="fieldContainer2">
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Account</div>
-                      <FormControl sx={{ width: 330 }}>
+                      <FormControl sx={{ width: "70%" }}>
                         <InputLabel id="demo-multiple-name-label"></InputLabel>
                         <Select
                           labelId="demo-multiple-name-label"
                           id="demo-multiple-name "
                           name="account"
                           size="small"
-                          onChange={ onChange }
-                          MenuProps={ MenuProps }>
-                          {
-                            state.accounts_list  && state.accounts_list.map((name) => (
-                            <MenuItem
-                              key={ name }
-                              value={ name.id } >
-                              { name.name }
-                            </MenuItem>
+                          onChange={onChange}
+                          MenuProps={MenuProps}>
+                          {/* {
+                            state.accounts_list ?
+                            state.accounts_list && state.accounts_list.length > 0 && state.accounts_list.map((name) => (
+                              <MenuItem
+                                key={name}
+                                value={name.id} >
+                                {name.name}
+                              </MenuItem>
                             ))
-                          }
+                            : null
+                          } */}
                         </Select>
                       </FormControl>
                     </div>
@@ -292,7 +295,7 @@ export const AddOpportunity = () => {
                           }
                         }}
                         type="number"
-                        onChange={ onChange } style={{ width: "70%" }}
+                        onChange={onChange} style={{ width: "70%" }}
                         size="small"
                       />
                     </div>
@@ -301,10 +304,10 @@ export const AddOpportunity = () => {
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Ammount</div>
                       <TextField
-                        error={ msg == "amount" || msg === "required" ? true : false }
+                        error={msg == "amount" || msg === "required" ? true : false}
                         name="amount"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -315,17 +318,17 @@ export const AddOpportunity = () => {
                         size="small"
                         helperText={
                           (error && msg === "amount") || msg === "required"
-                          ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Teams</div>
                       <TextField
-                        error={ msg == "teams" || msg === "required" ? true : false }
+                        error={msg == "teams" || msg === "required" ? true : false}
                         name="teams"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -335,7 +338,7 @@ export const AddOpportunity = () => {
                         size="small"
                         helperText={
                           (error && msg === "teams") || msg === "required"
-                          ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
@@ -343,23 +346,23 @@ export const AddOpportunity = () => {
                   <div className="fieldContainer2">
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Currency</div>
-                      <FormControl sx={{ width: 330 }}>
+                      <FormControl sx={{ width: "70%" }}>
                         <InputLabel id="demo-multiple-name-label"></InputLabel>
                         <Select
                           labelId="demo-multiple-name-label"
                           id="demo-multiple-name"
                           name="currency"
                           size="small"
-                          onChange={ onChange }
-                          MenuProps={ MenuProps } >
+                          onChange={onChange}
+                          MenuProps={MenuProps} >
                           {
-                            state.currency.length > 0 && state.currency.map((name) => (
-                            <MenuItem
-                              key={ name[1] }
-                              value={ name[0] }
-                              style={ getStyles(name, personName, theme) }>
-                              { name[0] }
-                            </MenuItem>
+                            state.currency && state.currency.length > 0 && state.currency.map((name) => (
+                              <MenuItem
+                                key={name[1]}
+                                value={name[0]}
+                                style={getStyles(name, personName, theme)}>
+                                {name[0]}
+                              </MenuItem>
                             ))
                           }
                         </Select>
@@ -368,10 +371,10 @@ export const AddOpportunity = () => {
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Users</div>
                       <TextField
-                        error={ msg == "users" || msg === "required" ? true : false }
+                        error={msg == "users" || msg === "required" ? true : false}
                         name="users"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -381,7 +384,7 @@ export const AddOpportunity = () => {
                         size="small"
                         helperText={
                           (error && msg === "users") || msg === "required"
-                          ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
@@ -390,11 +393,11 @@ export const AddOpportunity = () => {
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Stage</div>
                       <TextField
-                        error={ msg == "stage" || msg === "required" ? true : false }
+                        error={msg == "stage" || msg === "required" ? true : false}
                         name="stage"
                         select
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -404,13 +407,13 @@ export const AddOpportunity = () => {
                         size="small"
                         helperText={
                           (error && msg === "stage") || msg === "required"
-                          ? error : ""
+                            ? error : ""
                         }>
                         {
                           state.stage && state.stage.map((option) => (
-                          <MenuItem key={option[1]} value={option[0]}>
-                            {option[0]}
-                          </MenuItem>
+                            <MenuItem key={option[1]} value={option[0]}>
+                              {option[0]}
+                            </MenuItem>
                           ))
                         }
                       </TextField>
@@ -418,10 +421,10 @@ export const AddOpportunity = () => {
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Assigned users</div>
                       <TextField
-                        error={ msg == "assigned_to" || msg === "required" ? true : false }
+                        error={msg == "assigned_to" || msg === "required" ? true : false}
                         name="assigned_to"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -431,7 +434,7 @@ export const AddOpportunity = () => {
                         size="small"
                         helperText={
                           (error && msg === "assigned_to") || msg === "required"
-                          ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
@@ -439,25 +442,27 @@ export const AddOpportunity = () => {
                   <div className="fieldContainer2">
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Contact</div>
-                      <FormControl sx={{ width: 330 }}>
+                      <FormControl sx={{ width: "70%" }}>
                         <InputLabel id="demo-multiple-name-label"></InputLabel>
                         <Select
                           labelId="demo-multiple-name-label"
                           id="demo-multiple-name"
                           name="contacts"
                           size="small"
-                          onChange={ (e)=>handleChange(e.target) }
-                          MenuProps={ MenuProps }
+                          onChange={(e) => handleChange(e.target)}
+                          MenuProps={MenuProps}
                           type="number">
-                          {
-                            state.contacts_list.length && state.contacts_list.map((name) => (
-                            <MenuItem
-                              key={ name.id }
-                              value={ name.id }>
-                              { name.id }
-                            </MenuItem>
+                          {/* {
+                            state.contacts_list ?
+                            state.contacts_list && state.contacts_list.length && state.contacts_list.map((name) => (
+                              <MenuItem
+                                key={name.id}
+                                value={name.id}>
+                                {name.id}
+                              </MenuItem>
                             ))
-                          }
+                            : null
+                          } */}
                         </Select>
                       </FormControl>
                     </div>
@@ -467,41 +472,42 @@ export const AddOpportunity = () => {
                         multiple
                         id="tags-filled"
                         name="tags"
-                        sx={{  maxHeight: 70,overFlow:"hidden" }}
-                        options={ state.tags && state.tags.length ? state.tags.map((option) => option.name) : [""] }
-                        onChange={ (event, value) => tagsHandle(event, value) }
-                        style={{ width: "70%",display:"flex",flexDirection:"column"  }}
+                        sx={{ maxHeight: 70, overFlow: "hidden" }}
+                        options={state.tags && state.tags.length ? state.tags.map((option) => option.name) : [""]}
+                        onChange={(event, value) => tagsHandle(event, value)}
+                        style={{ width: "70%", display: "flex", flexDirection: "column" }}
                         size="small"
                         renderTags={(value, getTagProps) =>
-                        value.map((option, index) => (
-                        <div style={{overFlow:"scroll"}}>
-                          <Chip
-                            deleteIcon={ <Cancel color="primary" /> }
-                            style={{
-                              backgroundColor: "rgba(0, 0, 0, 0.08)", 
-                            }}
-                            variant="outlined"
-                            label={ option }
-                            { ...getTagProps({ index }) }
-                            />
-                        </div>
-                        ))}
+                          value.map((option, index) => (
+                            <div style={{ overFlow: "scroll" }}>
+                              <Chip
+                                deleteIcon={<Cancel color="primary" />}
+                                style={{
+                                  backgroundColor: "rgba(0, 0, 0, 0.08)",
+                                }}
+                                variant="outlined"
+                                label={option}
+                                {...getTagProps({ index })}
+                              />
+                            </div>
+                          ))}
                         renderInput={(params) => (
-                          <TextField style={{display:"flex", flexDirection:"column" }}
-                          sx={{ maxHeight: 60,display:"flex", flexDirection:"column", overflow:"auto" }}
-                          { ...params }
-                          placeholder="add Tags"
+                          <TextField style={{ display: "flex", flexDirection: "column" }}
+                            sx={{ maxHeight: 60, display: "flex", flexDirection: "column", overflow: "auto" }}
+                            {...params}
+                            placeholder="add Tags"
                           />
                         )}
                       />
                     </div>
                   </div>
                   <div className="fieldContainer2"
-                   style={{ 
-                   marginLeft: "95px",
-                   justifyContent: "left" }} >
+                    style={{
+                      marginLeft: "8.5%",
+                      justifyContent: "left"
+                    }} >
                     <div className="fieldSubContainer" >
-                     <div className="fieldTitle">Closed Date</div>
+                      <div className="fieldTitle">Closed Date</div>
                       <TextField
                         error={msg == "closed_on" || msg === "required" ? true : false}
                         name="closed_on"
@@ -512,10 +518,10 @@ export const AddOpportunity = () => {
                             root: textFieldClasses.fieldHeight
                           }
                         }}
-                        style={{ width: "100%" }}
+                        sx={{ width: "100%" }}
                         helperText={
                           (error && msg === "closed_on") || msg === "required"
-                          ? error : ""
+                            ? error : ""
                         }
                       />
                     </div>
@@ -526,7 +532,7 @@ export const AddOpportunity = () => {
           </div>
           {/* Description details  */}
           <div className="leadContainer">
-            <Accordion style={{ width: "98%",color: "#1A3353", }} >
+            <Accordion style={{ width: "98%", color: "#1A3353", }} >
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
@@ -547,7 +553,7 @@ export const AddOpportunity = () => {
                         aria-label="minimum height"
                         name="description"
                         minRows={8}
-                        onChange={onChange} 
+                        onChange={onChange}
                         style={{ width: "80%", padding: "5px" }}
                         placeholder="Add Description"
                       />

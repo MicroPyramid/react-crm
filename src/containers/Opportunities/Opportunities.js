@@ -25,7 +25,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
-import {getComparator, stableSort} from "../../components/Sorting";
+import { getComparator, stableSort } from "../../components/Sorting";
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { fetchData } from "../../components/FetchData";
 import { OpportunitiesUrl } from "../../components/ApiUrls";
@@ -52,20 +52,20 @@ const AntTab = styled((props) =>
     color: 'white',
     borderRadius: '5px',
     backgroundColor: "rgb(34, 61, 96)",
-    fontWeight:"bold",
-    paddingTop:"1px",
-    marginTop:"1px",
+    fontWeight: "bold",
+    paddingTop: "1px",
+    marginTop: "1px",
     '&:hover': {
-    color: '#40a9ff',
-    opacity: 1,
+      color: '#40a9ff',
+      opacity: 1,
     },
     '&.Mui-selected': {
-    color: '#1890ff',
-    backgroundColor: "#F0F7FF",
-    fontWeight:"bold"
+      color: '#1890ff',
+      backgroundColor: "#F0F7FF",
+      fontWeight: "bold"
     },
     '&.Mui-focusVisible': {
-    backgroundColor: '#d1eaff',
+      backgroundColor: '#d1eaff',
     },
   }));
 
@@ -81,10 +81,10 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(even)': {
-  backgroundColor: "#F2F2F7",
+    backgroundColor: "#F2F2F7",
   },
   '&:last-child td, &:last-child th': {
-  border: 0,
+    border: 0,
   },
 }));
 
@@ -170,56 +170,19 @@ export const Opportunities = () => {
     Accept: "application/json",
     "Content-Type": "application/json",
     Authorization: `jwt ${localStorage.getItem("Token")}`,
-    org: 3,
+    org: 'localStorage.getItem("org")'
   };
 
   const getOpportunity = () => {
     fetchData(`${OpportunitiesUrl}/?offset=${value === 0 ? openOffset : closeOffset}`, "GET", null, headers)
-    .then((data) => {
-      if (!data.error) {
-        if (initial) {
-          setOpportunity(...opportunity, {
-            opportunityObj: data.opportunities,
-            offset: data.opportunities.offset,
-            opportunities_count: data.opportunities_count,
-            opportunitiesId: data.opportunities.id,
-            accounts_list: data.accounts_list,
-            contacts_list: data.contacts_list,
-            currency: data.currency,
-            lead_source: data.lead_source,
-            stage: data.stage,
-            tags: data.tags,
-            accountId: data.accounts_list.id,
-            accountName: data.opportunities.length > 0 &&
-            data.opportunities && data.opportunities.account ?
-            data.opportunities.account.name : ""
-          })
-          setOpenOffset(initial ? 0 : openOffset);
-          setCloseOffset(initial ? 0 : closeOffset);
-          setInitial(false);
-          setLoader(false);
-        } else {
-          if (value == 0) {
-            setOpportunity({
+      .then((data) => {
+        if (!data.error) {
+          if (initial) {
+            setOpportunity(...opportunity, {
               opportunityObj: data.opportunities,
+              offset: data.opportunities.offset,
               opportunities_count: data.opportunities_count,
               opportunitiesId: data.opportunities.id,
-              accounts_list: data.accounts_list,
-              contacts_list: data.contacts_list,
-              currency: data.currency,
-              lead_source: data.lead_source,
-              stage: data.stage,
-              tags: data.tags,
-            })
-            setOpenOffset(initial ? 0 : openOffset);
-            setLoader(false);
-          }
-          if (value == 1 || initial) {
-            setOpportunity({
-              opportunityObj: data.opportunities,
-              opportunities_count: data.opportunities_count,
-              opportunitiesId: data.opportunities.id,
-              close_opportunities_count: data.offset,
               accounts_list: data.accounts_list,
               contacts_list: data.contacts_list,
               currency: data.currency,
@@ -227,16 +190,53 @@ export const Opportunities = () => {
               stage: data.stage,
               tags: data.tags,
               accountId: data.accounts_list.id,
-              accountName:data.opportunities.account.name
-            });
+              accountName: data.opportunities.length > 0 &&
+                data.opportunities && data.opportunities.account ?
+                data.opportunities.account.name : ""
+            })
+            setOpenOffset(initial ? 0 : openOffset);
             setCloseOffset(initial ? 0 : closeOffset);
+            setInitial(false);
             setLoader(false);
+          } else {
+            if (value == 0) {
+              setOpportunity({
+                opportunityObj: data.opportunities,
+                opportunities_count: data.opportunities_count,
+                opportunitiesId: data.opportunities.id,
+                accounts_list: data.accounts_list,
+                contacts_list: data.contacts_list,
+                currency: data.currency,
+                lead_source: data.lead_source,
+                stage: data.stage,
+                tags: data.tags,
+              })
+              setOpenOffset(initial ? 0 : openOffset);
+              setLoader(false);
+            }
+            if (value == 1 || initial) {
+              setOpportunity({
+                opportunityObj: data.opportunities,
+                opportunities_count: data.opportunities_count,
+                opportunitiesId: data.opportunities.id,
+                close_opportunities_count: data.offset,
+                accounts_list: data.accounts_list,
+                contacts_list: data.contacts_list,
+                currency: data.currency,
+                lead_source: data.lead_source,
+                stage: data.stage,
+                tags: data.tags,
+                accountId: data.accounts_list.id,
+                accountName: data.opportunities.account.name
+              });
+              setCloseOffset(initial ? 0 : closeOffset);
+              setLoader(false);
+            }
           }
         }
-      }
-    })
-    .catch((error) => {
-    });
+      })
+      .catch((error) => {
+      });
   }
 
   useEffect(() => {
@@ -251,14 +251,14 @@ export const Opportunities = () => {
 
   const onDelete = (id) => {
     fetchData(`${OpportunitiesUrl}/${id}/`, "delete", null, headers)
-    .then((data) => {
-      if (!data.error) {
-        getOpportunity()
-        setIsDelete(false)
-      }
-    })
-    .catch((error) => {
-    });
+      .then((data) => {
+        if (!data.error) {
+          getOpportunity()
+          setIsDelete(false)
+        }
+      })
+      .catch((error) => {
+      });
   }
 
   const next = () => {
@@ -273,7 +273,7 @@ export const Opportunities = () => {
 
   const previous = () => {
     if (value == 0 && openOffset > 0) {
-      setOpenOffset(openOffset -rowsPerPage)
+      setOpenOffset(openOffset - rowsPerPage)
       setValues(values - rowsPerPage)
     } else if (value == 1 && closeOffset > 0) {
       setCloseOffset(closeOffset - 10)
@@ -318,7 +318,7 @@ export const Opportunities = () => {
       }
     });
   }
-  
+
   const EditBtnHandle = (opportunities) => {
     navigate('/opportunities/opportunities-edit', {
       state: {
@@ -330,116 +330,116 @@ export const Opportunities = () => {
         contacts_list: opportunity.contacts_list,
         tags: opportunity.tags,
         accounts_list: opportunity.accounts_list,
-        accountName:opportunity.accountName
+        accountName: opportunity.accountName
       }
     });
   }
   return (
     <div>
       <AppBar style={{
-        backgroundColor: "#1A3353", 
+        backgroundColor: "#1A3353",
         height: "44px",
-        justifyContent: "center", 
+        justifyContent: "center",
         width: "100%",
-        marginTop: '-3px', 
+        marginTop: '-3px',
         boxShadow: "none",
         overflow: "hidden"
-        }} position="static">
+      }} position="static">
         <div style={{
           display: "flex",
-          flexDirection: "row", 
+          flexDirection: "row",
           justifyContent: "space-between",
-          }}>
-          <AntTabs 
-            value={value} 
+        }}>
+          <AntTabs
+            value={value}
             onChange={handleChangeTabPanel}
             aria-label="basic tabs example"
             sx={{ borderBottom: "none" }}>
             <AntTab label="Open" {...a11yProps(0)} />
             <AntTab label="Close" {...a11yProps(1)} />
           </AntTabs>
-          <div style={{ display: "flex", flexDirection: "row"}}>
+          <div style={{ display: "flex", flexDirection: "row" }}>
             <div style={{
-              display: "flex", 
-              flexDirection: "row", 
+              display: "flex",
+              flexDirection: "row",
               alignItems: "center",
               justifyContent: "space-evenly"
-              }}>
+            }}>
               {/* <Button style={{ backgroundColor: "	rgb(34 61 96)", }}>
                 {<FilterAltIcon style={{ fill: "white" }} onClick={createSortHandlerBtn(headCells[0].id)} />}
               </Button> */}
               <TablePagination
                 style={{ display: "flex", flexDirection: "row" }}
-                rowsPerPageOptions={ [10, 20, 30, 40, 50] }
+                rowsPerPageOptions={[10, 20, 30, 40, 50]}
                 component="div"
-                labelRowsPerPage={ 'Records Per Page' }
-                count={ value === 0 ? opportunity.opportunities_count : "5" }
-                rowsPerPage={ rowsPerPage }
-                page={ page }
+                labelRowsPerPage={'Records Per Page'}
+                count={value === 0 ? opportunity.opportunities_count : "5"}
+                rowsPerPage={rowsPerPage}
+                page={page}
                 size="small"
                 sx={{
-                ".MuiTablePagination-displayedRows": {
-                  display: "none",
-                },
-                "	.MuiTablePagination-actions": {
-                  display: 'none'
-                },
-                ".MuiTablePagination-selectLabel": {
-                  marginTop: "4px",
-                  marginLeft:"-15px"
-                },
-                ".MuiTablePagination-select": {
-                  color: "black",
-                  marginRight: "0px",
-                  marginLeft:"-12px",
-                  marginTop:"-6px"
-                },
-                ".MuiSelect-icon":{
-                  color:"black",
-                  marginTop: "-5px",
-                },
-              backgroundColor: "white",
-              borderRadius: 1,
-              height: '10%',
-              overflow: "hidden",
-              p: 0,
-              m: 0,
-              width: '37%',
-              pb: 5,
-              color: "black"
-              }}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
+                  ".MuiTablePagination-displayedRows": {
+                    display: "none",
+                  },
+                  "	.MuiTablePagination-actions": {
+                    display: 'none'
+                  },
+                  ".MuiTablePagination-selectLabel": {
+                    marginTop: "4px",
+                    marginLeft: "-15px"
+                  },
+                  ".MuiTablePagination-select": {
+                    color: "black",
+                    marginRight: "0px",
+                    marginLeft: "-12px",
+                    marginTop: "-6px"
+                  },
+                  ".MuiSelect-icon": {
+                    color: "black",
+                    marginTop: "-5px",
+                  },
+                  backgroundColor: "white",
+                  borderRadius: 1,
+                  height: '10%',
+                  overflow: "hidden",
+                  p: 0,
+                  m: 0,
+                  width: '37%',
+                  pb: 5,
+                  color: "black"
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
               />
               <Button style={{
                 backgroundColor: "white",
-                color: "#1A3353", 
+                color: "#1A3353",
                 textTransform: "lowercase",
-                borderRadius:"5px",
-                }} size="small">
-                <ChevronLeftIcon onClick={previous} sx={{ backgroundColor: "whitesmoke", fill: "#1A3353",mr:1 }}  />
-                <Typography sx={{ mt: 0, textTransform: "lowercase", fontSize: "15px", color:"#1A3353", }}> 
+                borderRadius: "5px",
+              }} size="small">
+                <ChevronLeftIcon onClick={previous} sx={{ backgroundColor: "whitesmoke", fill: "#1A3353", mr: 1 }} />
+                <Typography sx={{ mt: 0, textTransform: "lowercase", fontSize: "15px", color: "#1A3353", }}>
                   {
                     value == 0 ?
-                    `${openOffset + 1} to  ${opportunity.opportunities_count > 0 ? values : 0}`
-                    :
-                    `${closeOffset + 1} to ${opportunity.close_opportunities_count > closeOffset + 10 ? closeOffset + 10 : 0}`
+                      `${openOffset + 1} to  ${opportunity.opportunities_count > 0 ? values : 0}`
+                      :
+                      `${closeOffset + 1} to ${opportunity.close_opportunities_count > closeOffset + 10 ? closeOffset + 10 : 0}`
                   }
                 </Typography>
-                <ChevronRightIcon onClick={ next } sx={{ backgroundColor: "whitesmoke", fill: "#1A3353" }}/>
+                <ChevronRightIcon onClick={next} sx={{ backgroundColor: "whitesmoke", fill: "#1A3353" }} />
               </Button>
               <Button
-                onClick={ onAddHandle }
+                onClick={onAddHandle}
                 type="submit"
                 variant="contained"
                 size="small"
-                startIcon={ <AddCircleOutlineIcon style={{ fill: "white" }} /> }
+                startIcon={<AddCircleOutlineIcon style={{ fill: "white" }} />}
                 style={{
-                textTransform: "capitalize",
-                fontWeight: "bold", 
-                fontSize: "13px",
-                backgroundColor: "rgb(28 16 215)", 
-                marginRight: "6px"
+                  textTransform: "capitalize",
+                  fontWeight: "bold",
+                  fontSize: "13px",
+                  backgroundColor: "rgb(28 16 215)",
+                  marginRight: "6px"
                 }} >
                 Add Opportunity
               </Button>
@@ -468,7 +468,7 @@ export const Opportunities = () => {
                   {
                     opportunity.opportunityObj && opportunity.opportunityObj ? stableSort(opportunity.opportunityObj && opportunity.opportunityObj, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index) => (
                       <StyledTableRow key={index} >
-                        <StyledTableCell align="left" onClick={() => opportunitiesHandle(item)} style={{ color: "#1A3353",cursor:"pointer" }}>{item.name}</StyledTableCell>
+                        <StyledTableCell align="left" onClick={() => opportunitiesHandle(item)} style={{ color: "#1A3353", cursor: "pointer" }}>{item.name}</StyledTableCell>
                         <StyledTableCell align="left">
                           {
                             item.account ? item.account.name : "--"
@@ -484,11 +484,11 @@ export const Opportunities = () => {
                         </StyledTableCell>
                         <StyledTableCell align="left"
                           style={{ textTransform: "lowercase", color: "#1A3353" }}>
-                          { item.stage }
+                          {item.stage}
                         </StyledTableCell>
                         <StyledTableCell align="left"
-                          style={{ color: "#1A3353" }}> 
-                          { item.created_on_arrow }
+                          style={{ color: "#1A3353" }}>
+                          {item.created_on_arrow}
                         </StyledTableCell>
                         <StyledTableCell align="left" >
                           <div style={{ display: "flex" }}>
@@ -496,40 +496,40 @@ export const Opportunities = () => {
                               item.tags ? item.tags.map((tagData) => (
                                 <Tags tags={tagData}
                                 />
-                              )):"--"
+                              )) : "--"
                             }
                           </div>
                         </StyledTableCell>
                         <StyledTableCell align="left"
                           style={{ textTransform: "lowercase", color: "#1A3353" }} >
-                          { item.lead_source }
+                          {item.lead_source}
                         </StyledTableCell>
                         <StyledTableCell align="left" >
                           <div style={{ display: "flex", flexDirection: "row" }}>
                             <div onClick={() => EditBtnHandle(item)}>
-                              { <EditIcon style={{ fill: "#1A3353", cursor: "pointer" }} /> }
+                              {<EditIcon style={{ fill: "#1A3353", cursor: "pointer" }} />}
                             </div>
                             <div onClick={() => deleteItemBox(item)}>
-                              { <DeleteOutlineIcon style={{ fill: "#1A3353" ,cursor:"pointer"}} /> }
+                              {<DeleteOutlineIcon style={{ fill: "#1A3353", cursor: "pointer" }} />}
                             </div>
                           </div>
                         </StyledTableCell>
                       </StyledTableRow>
                     ))
-                    : null
+                      : null
                   }
                 </TableBody>
               </Table>
             </TableContainer>
             {
               isDelete ? <OpportunityDelete opportunityId={opportunityId} isDelete={isDelete}
-              onClose={onclose}
-              onDelete={onDelete}
+                onClose={onclose}
+                onDelete={onDelete}
               /> : ""
             }
           </Card>
         </TabPanel>
-        { loader && <Spinner/> }
+        {loader && <Spinner />}
       </div>
     </div>
   )

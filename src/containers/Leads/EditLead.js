@@ -73,11 +73,15 @@ export function EditLead() {
   const [error, setError] = useState(false);
   const [msg, setMsg] = useState("");
   const [leads, SetLeads] = useState([]);
+  const [logo, setLogo] = useState([]);
+  const [logot, setLogot] = useState(null);
+  const [imgData, setImgData] = useState([]);
   const [openLeads, SetOpenLeads] = useState([state.editLead])
   const [responceError, setResponceError] = useState(false)
   const classes = useStyles();
   const navigate = useNavigate();
   const textFieldClasses = textFieldStyled();
+
   useEffect(() => {
     SetLeads({
       ...openLeads,
@@ -186,20 +190,20 @@ export function EditLead() {
     let headers = {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: "jwt " + localStorage.getItem('Token'),
-      org: 3
+      Authorization: `Jwt ${localStorage.getItem("Token")}`,
+      org: 'localStorage.getItem("org")'
     };
 
     if (validatation()) {
       fetchData(`${LeadUrl}/${state.data.id}/`, "PUT", JSON.stringify(val), headers)
-      .then((data) => {
-        if (!data.error) {
-          setResponceError(data.error);
-          navigate('/leads')
-        }
-      })
-      .catch((error) => {
-      });
+        .then((data) => {
+          if (!data.error) {
+            setResponceError(data.error);
+            navigate('/leads')
+          }
+        })
+        .catch((error) => {
+        });
     }
   };
 
@@ -214,7 +218,7 @@ export function EditLead() {
   return (
     <div>
       <form onSubmit={onSubmit}>
-        <Appbar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage}/>
+        <Appbar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} />
         {/* lead details */}
         <div style={{ padding: "10px" }}>
           <div className="leadContainer">
@@ -254,8 +258,8 @@ export function EditLead() {
                       <TextField
                         name="opportunity_amount"
                         id="outlined-error-helper-text"
-                        defaultValue={ state.data && state.data.opportunity_amount ? state.data.opportunity_amount : "--" }
-                        onChange={ onChange }
+                        defaultValue={state.data && state.data.opportunity_amount ? state.data.opportunity_amount : "--"}
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -271,7 +275,7 @@ export function EditLead() {
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Website</div>
                       <TextField
-                        defaultValue={ state.data && state.data.website }
+                        defaultValue={state.data && state.data.website}
                         name="website"
                         id="outlined-error-helper-text"
                         InputProps={{
@@ -279,7 +283,7 @@ export function EditLead() {
                             root: textFieldClasses.fieldHeight
                           }
                         }}
-                        onChange={ onChange }
+                        onChange={onChange}
                         style={{ width: "80%" }}
                         size="small"
                       />
@@ -290,20 +294,20 @@ export function EditLead() {
                         id="free-solo-demo"
                         select
                         name="contacts"
-                        options={ leads.leadContacts ? leads.leadContacts.map((option) => option.first_name) : [""] }
-                        onChange={ (e) => handleChange(e.target) }
+                        options={leads.leadContacts ? leads.leadContacts.map((option) => option.first_name) : [""]}
+                        onChange={(e) => handleChange(e.target)}
                         style={{ width: "80%" }}
                         size="small"
-                        renderTags={ (value, getContactProps) =>
+                        renderTags={(value, getContactProps) =>
                           value.map((option, index) => (
                             <Chip
-                              deleteIcon={ <Cancel color="primary" /> }
+                              deleteIcon={<Cancel color="primary" />}
                               style={{
                                 backgroundColor: "rgba(0, 0, 0, 0.08)"
                               }}
                               variant="outlined"
-                              label={ option }
-                              { ...getContactProps({ index }) }
+                              label={option}
+                              {...getContactProps({ index })}
                             />
                           ))
                         }
@@ -312,11 +316,11 @@ export function EditLead() {
                             InputProps={{
                               endAdornment: (
                                 <InputAdornment position="end">
-                                  <AddIcon  color="primary" />
+                                  <AddIcon color="primary" />
                                 </InputAdornment>
                               )
                             }}
-                            { ...params }
+                            {...params}
                           />
                         )}
                       />
@@ -330,28 +334,33 @@ export function EditLead() {
                         select
                         id="assigned-filled"
                         name="assignTo"
-                        options={ leads.leadAssign ? leads.leadAssign : "" }
+                        options={leads.leadAssign ? leads.leadAssign : ""}
                         // defaultValue={state.data && state.data.industry}
-                        getOptionLabel={ (option) => option.user__email }
-                        onChange={ (object, option) => assignToHandle(object, option) }
+                        getOptionLabel={(option) => option.user__email}
+                        onChange={(object, option) => assignToHandle(object, option)}
                         style={{ width: "80%" }}
+                        InputProps={{
+                          classes: {
+                            root: textFieldClasses.fieldHeight
+                          }
+                        }}
                         size="small"
-                        renderTags={ (value, getTagProps) =>
+                        renderTags={(value, getTagProps) =>
                           value.map((option, index) => (
                             <Chip
-                              deleteIcon={ <Cancel color="primary" /> }
+                              deleteIcon={<Cancel color="primary" />}
                               style={{
                                 backgroundColor: "rgba(0, 0, 0, 0.08)"
                               }}
                               variant="outlined"
-                              label={ option.user__email }
-                              { ...getTagProps({ index }) }
+                              label={option.user__email}
+                              {...getTagProps({ index })}
                             />
                           ))
                         }
-                        renderInput={ (params) => (
+                        renderInput={(params) => (
                           <TextField
-                            { ...params }
+                            {...params}
                           />
                         )}
                       />
@@ -361,7 +370,7 @@ export function EditLead() {
                       <TextField
                         name="company"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           endAdornment: (
                             <InputAdornment position="end">
@@ -383,8 +392,8 @@ export function EditLead() {
                       <TextField
                         name="status"
                         select
-                        value={ status }
-                        onChange={ (e) => handleChange(e.target) }
+                        value={status}
+                        onChange={(e) => handleChange(e.target)}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -394,9 +403,9 @@ export function EditLead() {
                         {
                           leads.leadStatus && leads.leadStatus.length && leads.leadStatus.map((option) =>
                           (
-                          <MenuItem key={option[1]} value={option[0]}>
-                            {option[0]}
-                          </MenuItem>
+                            <MenuItem key={option[1]} value={option[0]}>
+                              {option[0]}
+                            </MenuItem>
                           ))
                         }
                       </TextField>
@@ -412,7 +421,7 @@ export function EditLead() {
                             root: textFieldClasses.fieldHeight
                           }
                         }}
-                        onChange={onChange} 
+                        onChange={onChange}
                         style={{ width: "80%" }}
                         size="small"
                       />
@@ -423,9 +432,9 @@ export function EditLead() {
                       <div className="fieldTitle">Source</div>
                       <TextField
                         name="source"
-                        defaultValue={ state.data.source ? state.data.source : "--" }
+                        defaultValue={state.data.source ? state.data.source : "--"}
                         select
-                        onChange={ (e) => handleChange(e.target) }
+                        onChange={(e) => handleChange(e.target)}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -435,9 +444,9 @@ export function EditLead() {
                         {
                           leads.leadSource && leads.leadSource.length && leads.leadSource.map((option, index) =>
                           (
-                          <MenuItem key={ option[1] } value={ option[1] } >
-                            { option[1] }
-                          </MenuItem>
+                            <MenuItem key={option[1]} value={option[1]} >
+                              {option[1]}
+                            </MenuItem>
                           ))
                         }
                       </TextField>
@@ -455,7 +464,7 @@ export function EditLead() {
                                   id="icon-button-file"
                                   type="file"
                                   name="lead_attachment"
-                                  onChange={ changeHandler }
+                                  onChange={changeHandler}
                                 />
                                 <PublishIcon color="primary" />
                               </label>
@@ -467,7 +476,7 @@ export function EditLead() {
                         }}
                         name="attachment"
                         id="outlined-error-helper-text"
-                        onChange={ onChange } style={{ width: "80%" }}
+                        onChange={onChange} style={{ width: "80%" }}
                         size="small"
                       />
                     </div>
@@ -479,36 +488,41 @@ export function EditLead() {
                         multiple
                         id="tags-filled"
                         name="tags"
-                        defaultValue={ state.data && state.data.tags ? state.data.tags.map((v) => v.name) : "--" }
-                        options={ leads.leadTags ? leads.leadTags.map((option) => option.name) : [""] }
-                        onChange={ (event, value) => tagsHandle(event, value) }
+                        defaultValue={state.data && state.data.tags ? state.data.tags.map((v) => v.name) : "--"}
+                        options={leads.leadTags ? leads.leadTags.map((option) => option.name) : [""]}
+                        onChange={(event, value) => tagsHandle(event, value)}
                         style={{ width: "80%" }}
                         size="small"
-                        renderTags={ (value, getTagProps) =>
-                        value.map((option, index) => (
-                          <Chip
-                            deleteIcon={ <Cancel color="primary" /> }
-                            style={{
-                              backgroundColor: "rgba(0, 0, 0, 0.08)"
-                            }}
-                            variant="outlined"
-                            label={ option }
-                            {...getTagProps({ index })
-                            }
-                          />
-                        ))
+                        InputProps={{
+                          classes: {
+                            root: textFieldClasses.fieldHeight
+                          }
+                        }}
+                        renderTags={(value, getTagProps) =>
+                          value.map((option, index) => (
+                            <Chip
+                              deleteIcon={<Cancel color="primary" />}
+                              style={{
+                                backgroundColor: "rgba(0, 0, 0, 0.08)"
+                              }}
+                              variant="outlined"
+                              label={option}
+                              {...getTagProps({ index })
+                              }
+                            />
+                          ))
                         }
-                        renderInput={ (params) => (
+                        renderInput={(params) => (
                           <TextField
-                            { ...params }
+                            {...params}
                           />
                         )}
                       />
                     </div>
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Industry</div>
-                      <FormControl sx={{ width: 398 }}
-                        error={ msg == "industry" || msg === "required" ? true : false }
+                      <FormControl sx={{ width: "80%" }}
+                        error={msg == "industry" || msg === "required" ? true : false}
                         name="industry">
                         <InputLabel id="demo-multiple-name-label"></InputLabel>
                         <Select
@@ -516,19 +530,19 @@ export function EditLead() {
                           id="demo-multiple-name"
                           name="industry"
                           size="small"
-                          defaultValue={ state.data && state.data.industry }
-                          required={ msg == "industry" || msg === "required" ? true : false }
+                          defaultValue={state.data && state.data.industry}
+                          required={msg == "industry" || msg === "required" ? true : false}
                           helperText={
                             (error && msg === "industry") || msg === "required"
-                            ? error : ""
+                              ? error : ""
                           }
-                          onChange={ onChange }
-                          MenuProps={ MenuProps }>
+                          onChange={onChange}
+                          MenuProps={MenuProps}>
                           {
                             leads.leadIndustries && leads.leadIndustries.length && leads.leadIndustries.map((option) => (
-                            <MenuItem key={option[1]} value={option[0]}>
-                              {option[1]}
-                            </MenuItem>
+                              <MenuItem key={option[1]} value={option[0]}>
+                                {option[1]}
+                              </MenuItem>
                             ))
                           }
                         </Select>
@@ -540,15 +554,15 @@ export function EditLead() {
                       <div className="fieldTitle">Account Name</div>
                       <TextField
                         name="account_name"
-                        defaultValue={ state.data.account_name && state.data.account_name }
+                        defaultValue={state.data.account_name && state.data.account_name}
                         id="outlined-error-helper-text"
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
                           }
                         }}
-                        required={ msg == "account_name" || msg === "required" ? true : false }
-                        onChange={ onChange } style={{ width: "80%" }}
+                        required={msg == "account_name" || msg === "required" ? true : false}
+                        onChange={onChange} style={{ width: "80%" }}
                         size="small"
                       />
                     </div>
@@ -556,7 +570,7 @@ export function EditLead() {
                       <div className="fieldTitle">Close Date </div>
                       <TextField
                         name="expected_close_date"
-                        defaultValue={ state.data.expected_close_date }
+                        defaultValue={state.data.expected_close_date}
                         id="outlined-error-helper-text"
                         InputProps={{
                           classes: {
@@ -564,7 +578,7 @@ export function EditLead() {
                           }
                         }}
                         type="date"
-                        onChange={ onChange } style={{ width: "80%" }}
+                        onChange={onChange} style={{ width: "80%" }}
                         size="small"
                       />
                     </div>
@@ -580,7 +594,7 @@ export function EditLead() {
                             root: textFieldClasses.fieldHeight
                           }
                         }}
-                        onChange={ onChange } style={{ width: "80%" }}
+                        onChange={onChange} style={{ width: "80%" }}
                         size="small"
                       />
                     </div>
@@ -589,12 +603,12 @@ export function EditLead() {
                       <TextareaAutosize
                         aria-label="minimum height"
                         name="lost_reason"
-                        minRows={ 2 }
-                        onChange={ onChange } style={{ width: "80%" }}
+                        minRows={2}
+                        onChange={onChange} style={{ width: "80%" }}
                       />
                     </div>
                   </div>
-                  <div style={{ paddingLeft: "48px", marginLeft: "43px" }}>
+                  <div style={{ paddingLeft: "48px", marginLeft: "5%" }}>
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Probability</div>
                       <TextField
@@ -610,7 +624,7 @@ export function EditLead() {
                             root: textFieldClasses.fieldHeight
                           }
                         }}
-                        onChange={ onChange } style={{ width: "110%" }}
+                        onChange={onChange} style={{ width: "80%" }}
                         size="small"
                       />
                     </div>
@@ -623,7 +637,7 @@ export function EditLead() {
           <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", marginTop: "20px" }}>
             <Accordion style={{ width: "98%" }}  >
               <AccordionSummary
-                expandIcon={ <ExpandMoreIcon /> }
+                expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
                 id="panel1a-header" >
                 <div style={{ borderBottom: "1px solid lightgray", width: "100%" }}>
@@ -635,14 +649,14 @@ export function EditLead() {
                   component="form"
                   noValidate
                   autoComplete="off">
-                  <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around" }}>
-                    <div style={{ width: "40%", display: "flex", flexDirection: "row" }}>
-                      <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>First Name</div>
+                  <div className="fieldContainer">
+                    <div className="fieldSubContainer">
+                      <div className="fieldTitle">First Name</div>
                       <TextField
                         name="first_name"
                         id="outlined-error-helper-text"
-                        defaultValue={ state.data && state.data.first_name }
-                        onChange={ onChange } 
+                        defaultValue={state.data && state.data.first_name}
+                        onChange={onChange}
                         style={{ width: "80%" }}
                         InputProps={{
                           classes: {
@@ -652,13 +666,13 @@ export function EditLead() {
                         size="small"
                       />
                     </div>
-                    <div style={{ width: "40%", display: "flex", flexDirection: "row" }}>
-                      <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Last Name</div>
+                    <div className="fieldSubContainer">
+                      <div className="fieldTitle">Last Name</div>
                       <TextField
                         id="outlined-error-helper-text"
                         name="last_name"
-                        defaultValue={ state.data && state.data.last_name }
-                        onChange={ onChange } style={{ width: "80%" }}
+                        defaultValue={state.data && state.data.last_name}
+                        onChange={onChange} style={{ width: "80%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -668,14 +682,14 @@ export function EditLead() {
                       />
                     </div>
                   </div>
-                  <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around", marginTop: "20px" }}>
-                    <div style={{ width: "40%", display: "flex", flexDirection: "row" }}>
-                      <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Job Title</div>
+                  <div className="fieldContainer2">
+                    <div className="fieldSubContainer">
+                      <div className="fieldTitle">Job Title</div>
                       <TextField
                         name="job_title"
-                        defaultValue={ state.data && state.data.title }
+                        defaultValue={state.data && state.data.title}
                         id="outlined-error-helper-text"
-                        onChange={ onChange } style={{ width: "80%" }}
+                        onChange={onChange} style={{ width: "80%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -684,13 +698,13 @@ export function EditLead() {
                         size="small"
                       />
                     </div>
-                    <div style={{ width: "40%", display: "flex", flexDirection: "row" }}>
-                      <div style={{ marginRight: "10px", fontSize: "13px", width: "23%", fontWeight: "bold" }}>Phone Number</div>
+                    <div className="fieldSubContainer">
+                      <div className="fieldTitle">Phone Number</div>
                       <TextField
                         name="phone"
-                        defaultValue={ state.data && state.data.phone}
+                        defaultValue={state.data && state.data.phone}
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         helperText=""
                         style={{ width: "80%" }}
                         InputProps={{
@@ -698,18 +712,18 @@ export function EditLead() {
                             root: textFieldClasses.fieldHeight
                           }
                         }}
-                        display={ "none" }
+                        display={"none"}
                         size="small"
                       />
                     </div>
                   </div>
-                  <div style={{ width: "40%", display: "flex", flexDirection: "row", marginTop: "19px", marginLeft: "58px" }}>
+                  <div style={{ width: "40%", display: "flex", flexDirection: "row", marginTop: "19px", marginLeft: "6.6%" }}>
                     <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Email</div>
                     <TextField
                       name="email"
                       id="outlined-error-helper-text"
-                      defaultValue={ state.data && state.data.email }
-                      onChange={ onChange } style={{ width: "80%" }}
+                      defaultValue={state.data && state.data.email}
+                      onChange={onChange} style={{ width: "72.6%" }}
                       InputProps={{
                         classes: {
                           root: textFieldClasses.fieldHeight
@@ -744,8 +758,8 @@ export function EditLead() {
                       <TextField
                         name="address_line"
                         id="outlined-error-helper-text"
-                        defaultValue={ state.data && state.data.address_line }
-                        onChange={ onChange }
+                        defaultValue={state.data && state.data.address_line}
+                        onChange={onChange}
                         style={{ width: "80%" }}
                         size="small"
                       />
@@ -755,8 +769,8 @@ export function EditLead() {
                       <TextField
                         name="city"
                         id="outlined-error-helper-text"
-                        defaultValue={ state.data && state.data.city }
-                        onChange={ onChange } style={{ width: "80%" }}
+                        defaultValue={state.data && state.data.city}
+                        onChange={onChange} style={{ width: "80%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -772,8 +786,8 @@ export function EditLead() {
                       <TextField
                         id="outlined-error-helper-text"
                         name="street"
-                        defaultValue={ state.data && state.data.street }
-                        onChange={ onChange } style={{ width: "80%" }}
+                        defaultValue={state.data && state.data.street}
+                        onChange={onChange} style={{ width: "80%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -787,8 +801,8 @@ export function EditLead() {
                       <TextField
                         name="state"
                         id="outlined-error-helper-text"
-                        defaultValue={ state.data && state.data.state }
-                        onChange={ onChange } style={{ width: "80%" }}
+                        defaultValue={state.data && state.data.state}
+                        onChange={onChange} style={{ width: "80%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -802,12 +816,12 @@ export function EditLead() {
                     <div style={{ width: "40%", display: "flex", flexDirection: "row" }}>
                       <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Pincode</div>
                       <TextField
-                        defaultValue={ state.data && state.data.postcode }
-                        error={ msg == "country" || msg === "required" ? true : false }
+                        defaultValue={state.data && state.data.postcode}
+                        error={msg == "country" || msg === "required" ? true : false}
                         name="postcode"
                         type="number"
                         id="outlined-error-helper-text"
-                        onChange={ onChange } style={{ width: "80%" }}
+                        onChange={onChange} style={{ width: "80%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -815,7 +829,7 @@ export function EditLead() {
                         }}
                         helperText={
                           (error && msg === "country") || msg === "required"
-                          ? error : ""
+                            ? error : ""
                         }
                         size="small"
                       />
@@ -823,10 +837,10 @@ export function EditLead() {
                     <div style={{ width: "40%", display: "flex", flexDirection: "row" }}>
                       <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Country</div>
                       <TextField
-                        defaultValue={ state.data && state.data.country }
+                        defaultValue={state.data && state.data.country}
                         name="country"
                         id="outlined-error-helper-text"
-                        onChange={ onChange } style={{ width: "80%" }}
+                        onChange={onChange} style={{ width: "80%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -862,9 +876,9 @@ export function EditLead() {
                       <TextareaAutosize
                         aria-label="minimum height"
                         name="description"
-                        defaultValue={ state.data && state.data.description }
-                        minRows={ 8 }
-                        onChange={ onChange } style={{ width: "80%", padding: "5px" }}
+                        defaultValue={state.data && state.data.description}
+                        minRows={8}
+                        onChange={onChange} style={{ width: "80%", padding: "5px" }}
                         placeholder="Add Description"
                       />
                     </div>

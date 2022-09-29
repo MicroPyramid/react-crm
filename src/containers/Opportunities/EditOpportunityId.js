@@ -70,15 +70,15 @@ export const EditOpportunityId = (props) => {
   const [errors, setErrors] = useState("");
   const [msg, setMsg] = useState("");
   const [responceError, setResponceError] = useState(false);
-  const [currency,setCurrency] = useState([state.opportunities.currency]);
+  const [currency, setCurrency] = useState([state.opportunities.currency]);
   const textFieldClasses = textFieldStyled();
   const [personName, setPersonName] = useState([]);
-  
+
   const handleChange = (target, key) => {
-     if (target.name === "currency") {
+    if (target.name === "currency") {
       val.currency = target.value
       setCurrency(target.value)
-    }else if (target.name === "contacts") {
+    } else if (target.name === "contacts") {
       val.contacts = target.value
     }
   }
@@ -91,22 +91,22 @@ export const EditOpportunityId = (props) => {
     let headers = {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: "jwt " + localStorage.getItem('Token'),
-      org: 3
+      Authorization: `jwt ${localStorage.getItem("Token")}`,
+      org: 'localStorage.getItem("org")'
     };
     fetchData(`${OpportunitiesUrl}/${state.opportunitiesId}/`, "PUT", JSON.stringify(val), headers)
-    .then((data) => {
-      if (!data.error) {
-        setResponceError(data.error);
-        navigate('/opportunities');
-      }
-      if (data.error) {
-        setResponceError(data.error);
-        setErrors(data.errors);
-      }
-    })
-    .catch((error) => {
-    });
+      .then((data) => {
+        if (!data.error) {
+          setResponceError(data.error);
+          navigate('/opportunities');
+        }
+        if (data.error) {
+          setResponceError(data.error);
+          setErrors(data.errors);
+        }
+      })
+      .catch((error) => {
+      });
   };
 
   const backbtnHandle = () => {
@@ -121,12 +121,12 @@ export const EditOpportunityId = (props) => {
   return (
     <div>
       <form
-        onSubmit={ onSubmit }>
-          <Appbar backbtnHandle={ backbtnHandle } module={ module } backBtn={ backBtn } crntPage={ crntPage }/>
+        onSubmit={onSubmit}>
+        <Appbar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} />
         {/* opportunities details */}
         <div style={{ padding: "10px" }}>
           <div className="leadContainer">
-            <Accordion style={{ width: "98%",color: "#1A3353" }}>
+            <Accordion style={{ width: "98%", color: "#1A3353" }}>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
@@ -134,11 +134,11 @@ export const EditOpportunityId = (props) => {
                 <div className="typography">
                   <Typography style={{
                     marginBottom: "15px",
-                    fontWeight: "bold", 
+                    fontWeight: "bold",
                     color: "#1A3353"
                   }}
                   >
-                   Opportunity Information
+                    Opportunity Information
                   </Typography>
                 </div>
               </AccordionSummary>
@@ -154,8 +154,8 @@ export const EditOpportunityId = (props) => {
                       <TextField
                         name="name"
                         id="outlined-error-helper-text"
-                        defaultValue={ state.opportunities ? state.opportunities.name : "" }
-                        onChange={ onChange }
+                        defaultValue={state.opportunities ? state.opportunities.name : ""}
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -171,8 +171,8 @@ export const EditOpportunityId = (props) => {
                       <TextField
                         name="lead_source"
                         select
-                        defaultValue={ state.opportunities && state.opportunities.lead_source }
-                        onChange={ onChange }
+                        defaultValue={state.opportunities && state.opportunities.lead_source}
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -182,9 +182,9 @@ export const EditOpportunityId = (props) => {
                       >
                         {
                           state.lead_source && state.lead_source.map((option) => (
-                          <MenuItem key={ option[1] } value={ option[0] }>
-                            { option[0] }
-                          </MenuItem>
+                            <MenuItem key={option[1]} value={option[0]}>
+                              {option[0]}
+                            </MenuItem>
                           ))
                         }
                       </TextField>
@@ -193,24 +193,24 @@ export const EditOpportunityId = (props) => {
                   <div className="fieldContainer2">
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Account</div>
-                      <FormControl sx={{ width: 330 }}>
+                      <FormControl sx={{ width: "70%" }}>
                         <InputLabel id="demo-multiple-name-label"></InputLabel>
                         <Select
                           labelId="demo-multiple-name-label"
                           id="demo-multiple-name"
                           name="account"
-                          defaultValue={ state.accountName && state.accountName }
+                          defaultValue={state.accountName && state.accountName}
                           size="small"
-                          onChange={ onChange }
-                          MenuProps={ MenuProps }
+                          onChange={onChange}
+                          MenuProps={MenuProps}
                         >
                           {
                             state.accounts_list && state.accounts_list.map((name) => (
-                            <MenuItem
-                              key={ name }
-                              value={ name.id }>
-                              { name.name }
-                            </MenuItem>
+                              <MenuItem
+                                key={name}
+                                value={name.id}>
+                                {name.name}
+                              </MenuItem>
                             ))
                           }
                         </Select>
@@ -220,7 +220,7 @@ export const EditOpportunityId = (props) => {
                       <div className="fieldTitle">Probability</div>
                       <TextField
                         name="probability"
-                        defaultValue={ state.opportunities && state.opportunities.probability }
+                        defaultValue={state.opportunities && state.opportunities.probability}
                         id="outlined-error-helper-text"
                         InputProps={{
                           classes: {
@@ -228,7 +228,7 @@ export const EditOpportunityId = (props) => {
                           }
                         }}
                         type="number"
-                        onChange={ onChange }
+                        onChange={onChange}
                         style={{ width: "70%" }}
                         size="small"
                       />
@@ -240,8 +240,8 @@ export const EditOpportunityId = (props) => {
                       <TextField
                         name="amount"
                         id="outlined-error-helper-text"
-                        defaultValue={ state.opportunities && state.opportunities.amount }
-                        onChange={ onChange }
+                        defaultValue={state.opportunities && state.opportunities.amount}
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -257,7 +257,7 @@ export const EditOpportunityId = (props) => {
                       <TextField
                         name="teams"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -271,23 +271,23 @@ export const EditOpportunityId = (props) => {
                   <div className="fieldContainer2">
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Currency</div>
-                      <FormControl sx={{ width: 330 }}>
+                      <FormControl sx={{ width: "70%" }}>
                         <InputLabel id="demo-multiple-name-label"></InputLabel>
                         <Select
                           labelId="demo-multiple-name-label"
                           id="demo-multiple-name"
-                          value={ currency }
+                          value={currency}
                           name="currency"
                           size="small"
-                          onChange={ onChange }
-                          MenuProps={ MenuProps }>
+                          onChange={onChange}
+                          MenuProps={MenuProps}>
                           {
                             state.currency.length > 0 && state.currency.map((name) => (
-                            <MenuItem
-                              key={ name[1] }
-                              value={ name[0] }>
-                              { name[0] }
-                            </MenuItem>
+                              <MenuItem
+                                key={name[1]}
+                                value={name[0]}>
+                                {name[0]}
+                              </MenuItem>
                             ))
                           }
                         </Select>
@@ -299,7 +299,7 @@ export const EditOpportunityId = (props) => {
                         id="outlined-error-helper-text"
                         name="users"
                         // defaultValue={state.opportunities.users.id}
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -317,8 +317,8 @@ export const EditOpportunityId = (props) => {
                         name="stage"
                         select
                         id="outlined-error-helper-text"
-                        defaultValue={ state.opportunities && state.opportunities.stage }
-                        onChange={ onChange }
+                        defaultValue={state.opportunities && state.opportunities.stage}
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -329,9 +329,9 @@ export const EditOpportunityId = (props) => {
                       >
                         {
                           state.stage && state.stage.map((option) => (
-                          <MenuItem key={ option[1] } value={ option[0] }>
-                            { option[0] }
-                          </MenuItem>
+                            <MenuItem key={option[1]} value={option[0]}>
+                              {option[0]}
+                            </MenuItem>
                           ))
                         }
                       </TextField>
@@ -342,7 +342,7 @@ export const EditOpportunityId = (props) => {
                         name="assigned_to"
                         id="outlined-error-helper-text"
                         // defaultValue={state.opportunities && state.opportunities.assig_to.name}
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -356,24 +356,24 @@ export const EditOpportunityId = (props) => {
                   <div className="fieldContainer2">
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Contact</div>
-                      <FormControl sx={{ width: 330 }}>
+                      <FormControl sx={{ width: "70%" }}>
                         <InputLabel id="demo-multiple-name-label"></InputLabel>
                         <Select
                           labelId="demo-multiple-name-label"
                           id="demo-multiple-name"
                           name="contacts"
-                          defaultValue={ state.opportunities && state.opportunities.contacts && state.opportunities.contacts.name }
+                          defaultValue={state.opportunities && state.opportunities.contacts && state.opportunities.contacts.name}
                           size="small"
-                          onChange={ (e) => handleChange(e.target) }
-                          MenuProps={ MenuProps }>
+                          onChange={(e) => handleChange(e.target)}
+                          MenuProps={MenuProps}>
                           {
                             state.contacts_list.map((name) => (
-                            <MenuItem
-                              key={ name }
-                              value={ name }
-                              style={ getStyles(name, personName, theme) }>
-                              { name.first_name }
-                            </MenuItem>
+                              <MenuItem
+                                key={name}
+                                value={name}
+                                style={getStyles(name, personName, theme)}>
+                                {name.first_name}
+                              </MenuItem>
                             ))
                           }
                         </Select>
@@ -385,28 +385,28 @@ export const EditOpportunityId = (props) => {
                         multiple
                         id="tags-filled"
                         name="tags"
-                        options={ state.tags ? state.tags.map((option) => option.name) : [""] }
+                        options={state.tags ? state.tags.map((option) => option.name) : [""]}
                         // defaultValue={state.opportunities && state.opportunities ? state.opportunities.tags.map((v) => v.name):""}
-                        onChange={ (event, value) => tagsHandle(event, value) }
+                        onChange={(event, value) => tagsHandle(event, value)}
                         style={{ width: "70%", display: "flex", flexDirection: "column", }}
                         size="small"
-                        renderTags={ (value, getTagProps) =>
+                        renderTags={(value, getTagProps) =>
                           value.map((option, index) => (
                             <Chip
-                              deleteIcon={ <Cancel color="primary" /> }
+                              deleteIcon={<Cancel color="primary" />}
                               style={{
                                 backgroundColor: "rgba(0, 0, 0, 0.08)",
                               }}
                               variant="outlined"
-                              label={ option }
-                              { ...getTagProps({ index }) }
+                              label={option}
+                              {...getTagProps({ index })}
                             />
                           ))
                         }
-                        renderInput={ (params) => (
+                        renderInput={(params) => (
                           <TextField style={{ display: "flex", flexDirection: "column" }}
                             sx={{ maxHeight: 70, overflow: "auto" }}
-                            { ...params }
+                            {...params}
                             placeholder="add Tags"
                           />
                         )}
@@ -414,14 +414,14 @@ export const EditOpportunityId = (props) => {
                     </div>
                   </div>
                   <div className="fieldContainer2"
-                    style={{ marginLeft: "95px", justifyContent: "left" }} >
+                    style={{ marginLeft: "8.5%", justifyContent: "left" }} >
                     <div className="fieldSubContainer" >
                       <div className="fieldTitle">Closed Date</div>
                       <TextField
                         name="closed_on"
                         id="outlined-error-helper-text"
-                        defaultValue={ state.opportunities && state.opportunities.closed_on }
-                        onChange={ onChange }
+                        defaultValue={state.opportunities && state.opportunities.closed_on}
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -439,7 +439,7 @@ export const EditOpportunityId = (props) => {
           <div className="leadContainer">
             <Accordion style={{ width: "98%" }} >
               <AccordionSummary
-                expandIcon={ <ExpandMoreIcon /> }
+                expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
                 id="panel1a-header" >
                 <div className="typography">
@@ -447,13 +447,13 @@ export const EditOpportunityId = (props) => {
                     marginBottom: "15px",
                     fontWeight: "bold",
                     color: "#1A3353"
-                    }}>
-                    Description 
+                  }}>
+                    Description
                   </Typography>
                 </div>
               </AccordionSummary>
               <AccordionDetails>
-                <Box sx={{ width: '100%',color: "#1A3353", }}
+                <Box sx={{ width: '100%', color: "#1A3353", }}
                   component="form"
                   noValidate
                   autoComplete="off">
@@ -462,18 +462,18 @@ export const EditOpportunityId = (props) => {
                       <div className="descriptionTitle">Description</div>
                       <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
                         <div style={{
-                          display: "flex", 
+                          display: "flex",
                           flexDirection: "row",
-                          justifyContent:"space-between"
-                          }}>
+                          justifyContent: "space-between"
+                        }}>
                         </div>
                         <TextareaAutosize
                           aria-label="minimum height"
                           name="description"
-                          minRows={ 6 }
-                          onChange={ onChange }
+                          minRows={6}
+                          onChange={onChange}
                           style={{ width: "70%", padding: "5px", justifyContent: "center", marginTop: "6px" }}
-                          defaultValue={ state.opportunities && state.opportunities.description }
+                          defaultValue={state.opportunities && state.opportunities.description}
                         />
                       </div>
                     </div>

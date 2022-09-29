@@ -145,6 +145,8 @@ export const Cases = (props) => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('calories');
+  const [closeValue, setCloseValue] = useState(0);
+  const [openValue, setOpenValue] = useState(0);
   const [loader, setLoader] = useState(true);
   const navigate = useNavigate();
 
@@ -166,7 +168,7 @@ export const Cases = (props) => {
     Accept: "application/json",
     "Content-Type": "application/json",
     Authorization: `jwt ${localStorage.getItem("Token")}`,
-    org: 3,
+    org: 'localStorage.getItem("org")'
   };
 
   const getCases = () => {

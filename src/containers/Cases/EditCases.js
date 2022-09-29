@@ -86,23 +86,23 @@ export const EditCases = (props) => {
     let headers = {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: "jwt " + localStorage.getItem('Token'),
-      org: 3
+      Authorization: `jwt ${localStorage.getItem("Token")}`,
+      org: 'localStorage.getItem("org")'
     };
     if (validatation()) {
       fetchData(`${CasesUrl}/${state.caseId}/`, "PUT", JSON.stringify(val), headers)
-      .then((data) => {
-        if (!data.error) {
-          setResponceError(data.error);
-          navigate('/cases')
-        }
-        if (data.error) {
-          setResponceError(data.error);
-          setErrors(data.errors);
-        }
-      })
-      .catch((error) => {
-      });
+        .then((data) => {
+          if (!data.error) {
+            setResponceError(data.error);
+            navigate('/cases')
+          }
+          if (data.error) {
+            setResponceError(data.error);
+            setErrors(data.errors);
+          }
+        })
+        .catch((error) => {
+        });
     }
   };
 
@@ -117,8 +117,8 @@ export const EditCases = (props) => {
 
   return (
     <div>
-      <form onSubmit={ onSubmit }>
-       <Appbar backbtnHandle={ backbtnHandle } module={ module } backBtn={ backBtn } crntPage={ crntPage }/>
+      <form onSubmit={onSubmit}>
+        <Appbar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} />
         {/* contact details */}
         <div style={{ padding: "10px" }}>
           <div className="leadContainer">
@@ -146,11 +146,11 @@ export const EditCases = (props) => {
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Name</div>
                       <TextField
-                        error={ msg == "name" || errors.name ? true : false }
+                        error={msg == "name" || errors.name ? true : false}
                         name="name"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
-                        defaultValue={ state.cases_obj && state.cases_obj.name }
+                        onChange={onChange}
+                        defaultValue={state.cases_obj && state.cases_obj.name}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -161,18 +161,18 @@ export const EditCases = (props) => {
                         required={msg == "name" || msg === "required" ? true : false}
                         helperText={
                           (error && msg === "name") || msg === "required" || responceError
-                           ? errors ? errors.name ? errors.name : "" : error : ""
+                            ? errors ? errors.name ? errors.name : "" : error : ""
                         }>
                       </TextField>
                     </div>
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Contacts</div>
                       <TextField
-                        error={ msg == "contacts" || errors.contacts ? true : false }
+                        error={msg == "contacts" || errors.contacts ? true : false}
                         name="contacts"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
-                        defaultValue={ state.cases_obj && state.cases_obj.contacts }
+                        onChange={onChange}
+                        defaultValue={state.cases_obj && state.cases_obj.contacts}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -182,7 +182,7 @@ export const EditCases = (props) => {
                         size="small"
                         helperText={
                           (error && msg === "contacts") || msg === "required" || responceError
-                           ? errors ? errors.contacts ? errors.contacts : "" : error : ""
+                            ? errors ? errors.contacts ? errors.contacts : "" : error : ""
                         }>
                       </TextField>
                     </div>
@@ -226,7 +226,7 @@ export const EditCases = (props) => {
                         error={msg == "teams" || errors.teams ? true : false}
                         name="teams"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -236,7 +236,7 @@ export const EditCases = (props) => {
                         size="small"
                         helperText={
                           (error && msg === "teams") || msg === "required" || responceError
-                          ? errors ? errors.teams ? errors.teams : "" : error : ""
+                            ? errors ? errors.teams ? errors.teams : "" : error : ""
                         }>
                       </TextField>
                     </div>
@@ -245,20 +245,20 @@ export const EditCases = (props) => {
                     style={{ color: "#1A3353", fontWeight: "normal" }}>
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Priority</div>
-                      <FormControl sx={{ width: 330 }}>
+                      <FormControl sx={{ width: "70%" }}>
                         <InputLabel id="demo-multiple-name-label"></InputLabel>
                         <Select
                           labelId="demo-multiple-name-label"
                           id="demo-multiple-name"
                           name="priority"
                           size="small"
-                          value={ state.cases_obj && state.cases_obj.priority }
-                          onChange={ onChange }
-                          MenuProps={ MenuProps }>
+                          value={state.cases_obj && state.cases_obj.priority}
+                          onChange={onChange}
+                          MenuProps={MenuProps}>
                           {
                             state.priority && state.priority.map((option) => (
-                              <MenuItem key={ option[1]} value={option[0] }>
-                                { option[0] }
+                              <MenuItem key={option[1]} value={option[0]}>
+                                {option[0]}
                               </MenuItem>
                             ))
                           }
@@ -268,10 +268,10 @@ export const EditCases = (props) => {
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Users</div>
                       <TextField
-                        error={ msg == "users_mention" || errors.users_mention ? true : false }
+                        error={msg == "users_mention" || errors.users_mention ? true : false}
                         name="users_mention"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -279,10 +279,10 @@ export const EditCases = (props) => {
                         }}
                         style={{ width: "70%" }}
                         size="small"
-                        required={ msg == "users_mention" || msg === "required" ? true : false }
+                        required={msg == "users_mention" || msg === "required" ? true : false}
                         helperText={
                           (error && msg === "users_mention") || msg === "required" || responceError
-                          ? errors ? errors.users_mention ? errors.users_mention : "" : error : ""
+                            ? errors ? errors.users_mention ? errors.users_mention : "" : error : ""
                         }>
                       </TextField>
                     </div>
@@ -291,16 +291,16 @@ export const EditCases = (props) => {
                     style={{ color: "#1A3353", fontWeight: "normal" }}>
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Type Of Case</div>
-                      <FormControl sx={{ width: 330 }}>
+                      <FormControl sx={{ width: "70%" }}>
                         <InputLabel id="demo-multiple-name-label"></InputLabel>
                         <Select
                           labelId="demo-multiple-name-label"
                           id="demo-multiple-name"
                           name="case_type"
                           size="small"
-                          value={ state.cases_obj && state.cases_obj.case_type }
-                          onChange={ onChange }
-                          MenuProps={ MenuProps }>
+                          value={state.cases_obj && state.cases_obj.case_type}
+                          onChange={onChange}
+                          MenuProps={MenuProps}>
                           {
                             state.type_of_case && state.type_of_case.map((option) => (
                               <MenuItem key={option[1]} value={option[0]}>
@@ -314,10 +314,10 @@ export const EditCases = (props) => {
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Assigned Users</div>
                       <TextField
-                        error={ msg == "assigned_to" || errors.assigned_to ? true : false }
+                        error={msg == "assigned_to" || errors.assigned_to ? true : false}
                         name="assigned_to"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -337,10 +337,10 @@ export const EditCases = (props) => {
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Account</div>
                       <TextField
-                        error={ msg == "account" || errors.account ? true : false }
+                        error={msg == "account" || errors.account ? true : false}
                         name="account"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -348,21 +348,21 @@ export const EditCases = (props) => {
                         }}
                         style={{ width: "70%" }}
                         size="small"
-                        required={ msg == "account" || msg === "required" ? true : false }
+                        required={msg == "account" || msg === "required" ? true : false}
                         helperText={
                           (error && msg === "account") || msg === "required" || responceError
-                          ? errors ? errors.account ? errors.account : "" : error : ""
+                            ? errors ? errors.account ? errors.account : "" : error : ""
                         }>
                       </TextField>
                     </div>
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Closed Date</div>
                       <TextField
-                        error={ msg == "closed_on" || errors.closed_on ? true : false }
+                        error={msg == "closed_on" || errors.closed_on ? true : false}
                         name="closed_on"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
-                        defaultValue={ state.cases_obj && state.cases_obj.closed_on }
+                        onChange={onChange}
+                        defaultValue={state.cases_obj && state.cases_obj.closed_on}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -370,7 +370,7 @@ export const EditCases = (props) => {
                         }}
                         style={{ width: "70%" }}
                         size="small"
-                        required={ msg == "closed_on" || msg === "required" ? true : false }
+                        required={msg == "closed_on" || msg === "required" ? true : false}
                         helperText={
                           (error && msg === "closed_on") || msg === "required" || responceError
                             ? errors ? errors.closed_on ? errors.closed_on : "" : error : ""
@@ -411,9 +411,9 @@ export const EditCases = (props) => {
                       <TextareaAutosize
                         aria-label="minimum height"
                         name="description"
-                        minRows={ 8 }
-                        defaultValue={ state.cases_obj && state.cases_obj.description }
-                        onChange={ onChange } style={{ width: "80%", padding: "5px" }}
+                        minRows={8}
+                        defaultValue={state.cases_obj && state.cases_obj.description}
+                        onChange={onChange} style={{ width: "80%", padding: "5px" }}
                         placeholder="Add Description"
                       />
                     </div>

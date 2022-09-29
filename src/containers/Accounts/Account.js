@@ -194,8 +194,8 @@ const EnhancedTableToolbar = (props) => {
   let headers = {
     Accept: "application/json",
     "Content-Type": "application/json",
-    Authorization: `jwt ${ localStorage.getItem("Token") }`,
-    org: 3,
+    Authorization: `jwt ${localStorage.getItem("Token")}`,
+    org: 'localStorage.getItem("org")'
   };
 
   const onDelete = (id) => {
@@ -354,7 +354,7 @@ export function Account(props) {
     Accept: "application/json",
     "Content-Type": "application/json",
     Authorization: `jwt ${localStorage.getItem("Token")}`,
-    org: 3,
+    org: 'localStorage.getItem("org")'
   };
 
   const getAccount = () => {

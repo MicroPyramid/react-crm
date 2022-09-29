@@ -66,6 +66,8 @@ export const EditAccount = (props) => {
   const [logo, setLogo] = useState([]);
   const [responceError, setResponceError] = useState(false);
   const textFieldClasses = textFieldStyled();
+  const [imgData, setImgData] = useState([]);
+  const [logot, setLogot] = useState(null);
   const [personName, setPersonName] = useState([]);
   const [accountData, setAccountData] = useState([]);
   const theme = useTheme();
@@ -74,22 +76,22 @@ export const EditAccount = (props) => {
     Accept: "application/json",
     "Content-Type": "application/json",
     Authorization: `jwt ${localStorage.getItem("Token")}`,
-    org: 3,
+    org: 'localStorage.getItem("org")'
   };
 
   useEffect(() => {
     fetchData(`${accountUrl}/${state.editData}/`, "GET", null, headers)
-    .then((data) => {
-      if (!data.error) {
-        setAccountData(...accountData, {
-          account_obj: data.account_obj.name,
-        })
-      }
-      if (data.error) {
-      }
-    })
-    .catch((error) => {
-    });
+      .then((data) => {
+        if (!data.error) {
+          setAccountData(...accountData, {
+            account_obj: data.account_obj.name,
+          })
+        }
+        if (data.error) {
+        }
+      })
+      .catch((error) => {
+      });
   }, [])
 
   const handleChange = (target, key) => {
@@ -171,24 +173,24 @@ export const EditAccount = (props) => {
     let headers = {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: "jwt " + localStorage.getItem('Token'),
-      org: 3
+      Authorization: `jwt ${localStorage.getItem("Token")}`,
+      org: 'localStorage.getItem("org")'
     };
 
     if (validatation()) {
       fetchData(`${accountUrl}/${state.editData}/`, "PUT", JSON.stringify(val), headers)
-      .then((data) => {
-        if (!data.error) {
-          setResponceError(data.error);
-          navigate('/accounts');
-        }
-        if (data.error) {
-          setResponceError(data.error);
-          setErrors(data.errors);
-        }
-      })
-      .catch((error) => {
-      });
+        .then((data) => {
+          if (!data.error) {
+            setResponceError(data.error);
+            navigate('/accounts');
+          }
+          if (data.error) {
+            setResponceError(data.error);
+            setErrors(data.errors);
+          }
+        })
+        .catch((error) => {
+        });
     }
   };
 
@@ -203,8 +205,8 @@ export const EditAccount = (props) => {
 
   return (
     <div>
-      <form onSubmit={ onSubmit }>
-       <Appbar backbtnHandle={ backbtnHandle } module={ module } backBtn={ backBtn } crntPage={ crntPage }/>
+      <form onSubmit={onSubmit}>
+        <Appbar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} />
         {/* contact details */}
         <div style={{ padding: "10px" }}>
           <div className="leadContainer">
@@ -215,9 +217,9 @@ export const EditAccount = (props) => {
                 id="panel1a-header" >
                 <div className="typography">
                   <Typography style={{
-                      marginBottom: "15px",
-                      fontWeight: "bold", color: "#1A3353"
-                    }} >
+                    marginBottom: "15px",
+                    fontWeight: "bold", color: "#1A3353"
+                  }} >
                     Account Information
                   </Typography>
                 </div>
@@ -234,9 +236,9 @@ export const EditAccount = (props) => {
                       <TextField
                         error={msg == "name" || errors.name ? true : false}
                         name="name"
-                        defaultValue={ state.accountData ? state.accountData.name : "" }
+                        defaultValue={state.accountData ? state.accountData.name : ""}
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -246,19 +248,19 @@ export const EditAccount = (props) => {
                         size="small"
                         required={msg == "name" || msg === "required" ? true : false}
                         helperText={
-                        (error && msg === "name") || msg === "required" || responceError
-                          ? errors ? errors.name ? errors.name : "" : error : ""
+                          (error && msg === "name") || msg === "required" || responceError
+                            ? errors ? errors.name ? errors.name : "" : error : ""
                         }
                       />
                     </div>
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Website</div>
                       <TextField
-                        error={ msg == "website" || errors.website ? true : false }
+                        error={msg == "website" || errors.website ? true : false}
                         name="website"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
-                        defaultValue={ state.accountData && state.accountData.website ? state.accountData.website : "" }
+                        onChange={onChange}
+                        defaultValue={state.accountData && state.accountData.website ? state.accountData.website : ""}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -267,8 +269,8 @@ export const EditAccount = (props) => {
                         style={{ width: "70%" }}
                         size="small"
                         helperText={
-                        (error && msg === "website") || msg === "required" || responceError
-                          ? errors ? errors.website ? errors.website : "" : error : ""
+                          (error && msg === "website") || msg === "required" || responceError
+                            ? errors ? errors.website ? errors.website : "" : error : ""
                         } >
                       </TextField>
                     </div>
@@ -278,11 +280,11 @@ export const EditAccount = (props) => {
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Phone Number</div>
                       <TextField
-                        error={ msg == "phone" || errors.phone ? true : false }
-                        defaultValue={ state.accountData.phone ? state.accountData.phone : "" }
+                        error={msg == "phone" || errors.phone ? true : false}
+                        defaultValue={state.accountData.phone ? state.accountData.phone : ""}
                         name="phone"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -290,21 +292,21 @@ export const EditAccount = (props) => {
                         }}
                         style={{ width: "70%" }}
                         size="small"
-                        required={ msg == "phone" || msg === "required" ? true : false }
+                        required={msg == "phone" || msg === "required" ? true : false}
                         helperText={
-                        (error && msg === "phone") || msg === "required" || responceError
-                          ? errors ? errors.phone ? errors.phone : "" : error : ""
+                          (error && msg === "phone") || msg === "required" || responceError
+                            ? errors ? errors.phone ? errors.phone : "" : error : ""
                         } >
                       </TextField>
                     </div>
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Email Address</div>
                       <TextField
-                        error={ msg == "email" || errors.email ? true : false }
-                        defaultValue={ state.accountData.email ? state.accountData.email : "" }
+                        error={msg == "email" || errors.email ? true : false}
+                        defaultValue={state.accountData.email ? state.accountData.email : ""}
                         name="email"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -312,10 +314,10 @@ export const EditAccount = (props) => {
                         }}
                         style={{ width: "70%" }}
                         size="small"
-                        required={ msg == "email" || msg === "required" ? true : false }
+                        required={msg == "email" || msg === "required" ? true : false}
                         helperText={
-                        (error && msg === "email") || msg === "required" || responceError
-                          ? errors ? errors.email ? errors.email : "" : error : ""
+                          (error && msg === "email") || msg === "required" || responceError
+                            ? errors ? errors.email ? errors.email : "" : error : ""
                         } >
                       </TextField>
                     </div>
@@ -324,11 +326,11 @@ export const EditAccount = (props) => {
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Skype ID</div>
                       <TextField
-                        error={ msg == "skype_ID" || errors.skype_ID ? true : false }
+                        error={msg == "skype_ID" || errors.skype_ID ? true : false}
                         name="skype_ID"
-                        defaultValue={ state.accountData.skype_ID ? state.accountData.skype_ID : "" }
+                        defaultValue={state.accountData.skype_ID ? state.accountData.skype_ID : ""}
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -337,8 +339,8 @@ export const EditAccount = (props) => {
                         style={{ width: "70%" }}
                         size="small"
                         helperText={
-                        (error && msg === "skype_ID") || msg === "required" || responceError
-                          ? errors ? errors.skype_ID ? errors.skype_ID : "" : error : ""
+                          (error && msg === "skype_ID") || msg === "required" || responceError
+                            ? errors ? errors.skype_ID ? errors.skype_ID : "" : error : ""
                         } >
                       </TextField>
                     </div>
@@ -347,8 +349,8 @@ export const EditAccount = (props) => {
                       <TextField
                         name="lead"
                         select
-                        onChange={ onChange }
-                        value={ state.leads && state.leads ? state.leads.title : "" }
+                        onChange={onChange}
+                        value={state.leads && state.leads ? state.leads.title : ""}
                         // defaultValue={ state.accountData && state.accountData.lead ? state.accountData.lead[0].title:"" }
                         InputProps={{
                           classes: {
@@ -356,8 +358,8 @@ export const EditAccount = (props) => {
                           }
                         }}
                         helperText={
-                        (error && msg === "skype_ID") || msg === "required" || responceError
-                          ? errors ? errors.skype_ID ? errors.skype_ID : "" : error : ""
+                          (error && msg === "skype_ID") || msg === "required" || responceError
+                            ? errors ? errors.skype_ID ? errors.skype_ID : "" : error : ""
                         }
                         style={{ width: "70%" }}>
                         {/* { state.lead_source && state.lead_source.map((option) => (
@@ -386,17 +388,17 @@ export const EditAccount = (props) => {
                         size="small"
                         helperText={
                           (error && msg === "organization") || msg === "required" || responceError
-                          ? errors ? errors.organization ? errors.organization : "" : error : ""
+                            ? errors ? errors.organization ? errors.organization : "" : error : ""
                         } >
                       </TextField>
                     </div>
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Teams</div>
                       <TextField
-                        error={ msg == "teams" || errors.teams ? true : false }
+                        error={msg == "teams" || errors.teams ? true : false}
                         name="teams"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -406,8 +408,8 @@ export const EditAccount = (props) => {
                         style={{ width: "70%" }}
                         size="small"
                         helperText={
-                        (error && msg === "teams") || msg === "required" || responceError
-                          ? errors ? errors.teams ? errors.teams : "" : error : ""
+                          (error && msg === "teams") || msg === "required" || responceError
+                            ? errors ? errors.teams ? errors.teams : "" : error : ""
                         }
                       >
                       </TextField>
@@ -416,11 +418,11 @@ export const EditAccount = (props) => {
                   <div className="fieldContainer2" style={{ color: "#1A3353", fontWeight: "normal" }}>
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Contact Name</div>
-                      <FormControl sx={{ width: 330 }}
+                      <FormControl sx={{ width: "70%" }}
                         error={msg == "contacts" || errors.contacts ? true : false}
                         helperText={
-                        (error && msg === "contacts") || msg === "required" || responceError
-                          ? errors ? errors.contacts ? errors.contacts : "" : error : ""
+                          (error && msg === "contacts") || msg === "required" || responceError
+                            ? errors ? errors.contacts ? errors.contacts : "" : error : ""
                         }>
                         <InputLabel id="demo-multiple-name-label"></InputLabel>
                         <Select
@@ -444,19 +446,19 @@ export const EditAccount = (props) => {
                     </div>
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Assigned To</div>
-                      <FormControl sx={{ width: 330 }}>
+                      <FormControl sx={{ width: "70%" }}>
                         <InputLabel id="demo-multiple-name-label"></InputLabel>
                         <Select
                           labelId="demo-multiple-name-label"
-                          defaultValue={ state.assign_to ? state.assign_to.first_name : "" }
+                          defaultValue={state.assign_to ? state.assign_to.first_name : ""}
                           id="demo-multiple-name"
                           name="assigned_to"
                           size="small"
-                          onChange={ onChange }
-                          MenuProps={ MenuProps }
+                          onChange={onChange}
+                          MenuProps={MenuProps}
                           helperText={
-                          (error && msg === "assigned_to") || msg === "required" || responceError
-                            ? errors ? errors.assigned_to ? errors.assigned_to : "" : error : ""
+                            (error && msg === "assigned_to") || msg === "required" || responceError
+                              ? errors ? errors.assigned_to ? errors.assigned_to : "" : error : ""
                           }>
                           {/* { state.accounts_list  && state.accounts_list.map((name) => (
                             <MenuItem
@@ -473,7 +475,7 @@ export const EditAccount = (props) => {
                   <div className="fieldContainer2" style={{ color: "#1A3353", fontWeight: "normal" }}>
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Status</div>
-                      <FormControl sx={{ width: 330 }}>
+                      <FormControl sx={{ width: "70%" }}>
                         <InputLabel id="demo-multiple-name-label"></InputLabel>
                         <Select
                           labelId="demo-multiple-name-label"
@@ -538,10 +540,10 @@ export const EditAccount = (props) => {
                       />
                     </div>
                   </div>
-                  <div style={{ display: "flex", flexDirection: "column", marginTop: "10px", marginLeft: '93px', color: "#1A3353", fontWeight: "normal" }}>
+                  <div style={{ display: "flex", flexDirection: "column", marginTop: "10px", marginLeft: '5%', color: "#1A3353", width: '100%', fontWeight: "normal" }}>
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Industry</div>
-                      <FormControl sx={{ width: 398 }}
+                      <FormControl sx={{ width: "70%" }}
                         defaultValue={state.accountData.industry ? state.accountData.industry : ""}>
                         <InputLabel id="demo-multiple-name-label"></InputLabel>
                         <Select
@@ -549,8 +551,8 @@ export const EditAccount = (props) => {
                           id="demo-multiple-name"
                           name="industry"
                           size="small"
-                          onChange={ onChange }
-                          MenuProps={ MenuProps } >
+                          onChange={onChange}
+                          MenuProps={MenuProps} >
                           {/* { state.accounts && state.accounts.industry ? state.accounts.industry.map((name) => (
                             <MenuItem
                               key={ name[1] }
@@ -564,11 +566,11 @@ export const EditAccount = (props) => {
                         </Select>
                       </FormControl>
                     </div>
-                    <div className="fieldSubContainer">
+                    <div className="fieldSubContainer" style={{ marginTop: '1%' }}>
                       <div className="fieldTitle">Attachment</div>
                       <TextField
                         name="account_attachment"
-                        defaultValue={ state.accountData.attachment ? state.accountData.attachment : "" }
+                        defaultValue={state.accountData.attachment ? state.accountData.attachment : ""}
                         InputProps={{
                           endAdornment: (
                             <InputAdornment position="end">
@@ -590,7 +592,7 @@ export const EditAccount = (props) => {
                           }
                         }}
                         id="outlined-error-helper-text"
-                        onChange={ onChange } style={{ width: "80%" }}
+                        onChange={onChange} style={{ width: "70%" }}
                         size="small"
                       />
                     </div>
@@ -614,8 +616,8 @@ export const EditAccount = (props) => {
                 <div style={{ borderBottom: "1px solid lightgray", width: "100%" }}>
                   <Typography style={{
                     marginBottom: "15px",
-                     fontWeight: "bold",
-                    fontWeight: "bold", 
+                    fontWeight: "bold",
+                    fontWeight: "bold",
                     color: "#1A3353"
                   }}>
                     Contact Details
@@ -640,11 +642,11 @@ export const EditAccount = (props) => {
                         Billing Address
                       </div>
                       <TextField
-                        error={ msg == "billing_address_line" ? true : false }
+                        error={msg == "billing_address_line" ? true : false}
                         name="billing_address_line"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
-                        defaultValue={ state.accountData.billing_address_line ? state.accountData.billing_address_line : "" }
+                        onChange={onChange}
+                        defaultValue={state.accountData.billing_address_line ? state.accountData.billing_address_line : ""}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -652,7 +654,7 @@ export const EditAccount = (props) => {
                         }}
                         style={{ width: "70%" }}
                         size="small"
-                        required={ msg == "billing_address_line" || msg === "required" ? true : false }
+                        required={msg == "billing_address_line" || msg === "required" ? true : false}
                         helperText={
                           msg === "billing_address_line" || msg === "required"
                             ? error : ""
@@ -663,17 +665,17 @@ export const EditAccount = (props) => {
                       <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Street</div>
                       <TextField
                         id="outlined-error-helper-text"
-                        error={ msg == "billing_street" || msg === "required" ? true : false }
+                        error={msg == "billing_street" || msg === "required" ? true : false}
                         name="billing_street"
-                        onChange={ onChange } style={{ width: "70%" }}
-                        defaultValue={ state.accountData.billing_street ? state.accountData.billing_street : "" }
+                        onChange={onChange} style={{ width: "70%" }}
+                        defaultValue={state.accountData.billing_street ? state.accountData.billing_street : ""}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
                           }
                         }}
                         size="small"
-                        required={ msg == "billing_street" || msg === "required" ? true : false }
+                        required={msg == "billing_street" || msg === "required" ? true : false}
                         helperText={
                           (error && msg === "billing_street") || msg === "required"
                             ? error : ""
@@ -686,11 +688,11 @@ export const EditAccount = (props) => {
                       <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Postal Code</div>
                       <TextField
                         id="outlined-error-helper-text"
-                        error={ msg == "billing_postcode" || msg === "required" ? true : false }
+                        error={msg == "billing_postcode" || msg === "required" ? true : false}
                         name="billing_postcode"
-                        defaultValue={ state.accountData.billing_postcode ? state.accountData.billing_postcode : "" }
-                        required={ msg == "billing_postcode" || msg === "required" ? true : false }
-                        onChange={ onChange } style={{ width: "70%" }}
+                        defaultValue={state.accountData.billing_postcode ? state.accountData.billing_postcode : ""}
+                        required={msg == "billing_postcode" || msg === "required" ? true : false}
+                        onChange={onChange} style={{ width: "70%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -706,11 +708,11 @@ export const EditAccount = (props) => {
                     <div style={{ width: "40%", display: "flex", flexDirection: "row", color: "#1A3353", fontWeight: "normal" }}>
                       <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>City</div>
                       <TextField
-                        error={ msg == "billing_city" ? true : false }
+                        error={msg == "billing_city" ? true : false}
                         name="billing_city"
                         id="outlined-error-helper-text"
-                        defaultValue={ state.accountData.billing_city ? state.accountData.billing_city : "" }
-                        onChange={ onChange }
+                        defaultValue={state.accountData.billing_city ? state.accountData.billing_city : ""}
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -718,7 +720,7 @@ export const EditAccount = (props) => {
                         }}
                         style={{ width: "70%" }}
                         size="small"
-                        required={ msg == "billing_city" || msg === "required" ? true : false }
+                        required={msg == "billing_city" || msg === "required" ? true : false}
                         helperText={
                           msg === "billing_city" || msg === "required"
                             ? error : ""
@@ -731,16 +733,16 @@ export const EditAccount = (props) => {
                       <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>State</div>
                       <TextField
                         name="billing_state"
-                        error={ msg == "billing_state" || msg === "required" ? true : false }
+                        error={msg == "billing_state" || msg === "required" ? true : false}
                         id="outlined-error-helper-text"
-                        defaultValue={ state.accountData.billing_state ? state.accountData.billing_state : "" }
-                        onChange={ onChange } style={{ width: "70%" }}
+                        defaultValue={state.accountData.billing_state ? state.accountData.billing_state : ""}
+                        onChange={onChange} style={{ width: "70%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
                           }
                         }}
-                        required={ msg == "billing_state" || msg === "required" ? true : false }
+                        required={msg == "billing_state" || msg === "required" ? true : false}
                         size="small"
                         helperText={
                           (error && msg === "billing_state") || msg === "required"
@@ -751,11 +753,11 @@ export const EditAccount = (props) => {
                     <div style={{ width: "40%", display: "flex", flexDirection: "row" }}>
                       <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Country</div>
                       <TextField
-                        error={ msg == "billing_country" ? true : false }
+                        error={msg == "billing_country" ? true : false}
                         name="billing_country"
-                        onChange={ onChange }
+                        onChange={onChange}
                         id="outlined-error-helper-text"
-                        defaultValue={ state.accountData.billing_country ? state.accountData.billing_country : "" }
+                        defaultValue={state.accountData.billing_country ? state.accountData.billing_country : ""}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -763,7 +765,7 @@ export const EditAccount = (props) => {
                         }}
                         style={{ width: "70%" }}
                         size="small"
-                        required={ msg == "billing_country" || msg === "required" ? true : false }
+                        required={msg == "billing_country" || msg === "required" ? true : false}
                         helperText={
                           msg === "billing_country" || msg === "required"
                             ? error : ""
@@ -788,7 +790,7 @@ export const EditAccount = (props) => {
                     fontWeight: "bold",
                     color: "#1A3353"
                   }}>
-                    Description 
+                    Description
                   </Typography>
                 </div>
               </AccordionSummary>
@@ -804,9 +806,9 @@ export const EditAccount = (props) => {
                       <TextareaAutosize
                         aria-label="minimum height"
                         name="description"
-                        defaultValue={ state.accountData.description ? state.accountData.description : "" }
-                        minRows={ 8 }
-                        onChange={ onChange } style={{ width: "80%", padding: "5px" }}
+                        defaultValue={state.accountData.description ? state.accountData.description : ""}
+                        minRows={8}
+                        onChange={onChange} style={{ width: "80%", padding: "5px" }}
                         placeholder="Add Description"
                       />
                     </div>

@@ -95,7 +95,7 @@ export function AddContact() {
       setSource(target.value)
     } else if (target.name === "industry") {
       val.industry = target.value
-    }else if (target.name === "do_not_call") {
+    } else if (target.name === "do_not_call") {
       setChecked(target.checked);
       val.do_not_call = !checked
     }
@@ -170,24 +170,24 @@ export function AddContact() {
     let headers = {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: "jwt " + localStorage.getItem('Token'),
-      org: 3
+      Authorization: `jwt ${localStorage.getItem("Token")}`,
+      org: 'localStorage.getItem("org")'
     };
 
     if (validatation()) {
       fetchData(`${ContactUrl}/`, "POST", JSON.stringify(val), headers)
-      .then((data) => {
-        if (!data.error) {
-          setResponceError(data.error);
-          navigate('/contacts')
-        }
-        if (data.error) {
-          setResponceError(data.error);
-          setErrors(data.errors);
-        }
-      })
-      .catch((error) => {
-      });
+        .then((data) => {
+          if (!data.error) {
+            setResponceError(data.error);
+            navigate('/contacts')
+          }
+          if (data.error) {
+            setResponceError(data.error);
+            setErrors(data.errors);
+          }
+        })
+        .catch((error) => {
+        });
     }
   };
 
@@ -235,11 +235,11 @@ export function AddContact() {
   }));
 
   const [val, onChange, onSubmit] = UseForm(submitCallBack);
-  
+
   return (
     <div>
-      <form onSubmit={ onSubmit }>
-        <Appbar backbtnHandle={ backbtnHandle } module={ contacts } backBtn={ backBtn } crntPage={ crntPage }/>
+      <form onSubmit={onSubmit}>
+        <Appbar backbtnHandle={backbtnHandle} module={contacts} backBtn={backBtn} crntPage={crntPage} />
         {/* contact details */}
         <div style={{ padding: "10px" }}>
           <div className="leadContainer">
@@ -253,7 +253,7 @@ export function AddContact() {
                 </div>
               </AccordionSummary>
               <AccordionDetails>
-                <Box sx={{ width: '98%',color:"#1A3353"  }}
+                <Box sx={{ width: '98%', color: "#1A3353" }}
                   component="form"
                   noValidate
                   autoComplete="off">
@@ -261,10 +261,10 @@ export function AddContact() {
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Salution</div>
                       <TextField
-                        error={ msg == "salutation" || errors.title ? true : false }
+                        error={msg == "salutation" || errors.title ? true : false}
                         name="salutation"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -272,7 +272,7 @@ export function AddContact() {
                         }}
                         style={{ width: "70%" }}
                         size="small"
-                        required={ msg == "salutation" || msg === "required" ? true : false }
+                        required={msg == "salutation" || msg === "required" ? true : false}
                         helperText={
                           (error && msg === "salutation") || msg === "required" || responceError
                             ? errors ? errors.title ? errors.title : "" : error : ""
@@ -283,10 +283,10 @@ export function AddContact() {
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">First Name</div>
                       <TextField
-                        error={ msg == "first_name" ? true : false }
+                        error={msg == "first_name" ? true : false}
                         name="first_name"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -294,7 +294,7 @@ export function AddContact() {
                         }}
                         style={{ width: "70%" }}
                         size="small"
-                        required={ msg == "first_name" || msg === "required" ? true : false }
+                        required={msg == "first_name" || msg === "required" ? true : false}
                         helperText={
                           msg === "first_name" || msg === "required"
                             ? error : ""
@@ -307,8 +307,8 @@ export function AddContact() {
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Last Name</div>
                       <TextField
-                        error={ msg == "last_name" || msg === "required" ? true : false }
-                        required={ msg == "last_name" ? true : false }
+                        error={msg == "last_name" || msg === "required" ? true : false}
+                        required={msg == "last_name" ? true : false}
                         name="last_name"
                         id="outlined-error-helper-text"
                         InputProps={{
@@ -316,7 +316,7 @@ export function AddContact() {
                             root: textFieldClasses.root
                           }
                         }}
-                        onChange={ onChange }
+                        onChange={onChange}
                         style={{ width: "70%" }}
                         size="small"
                         helperText={
@@ -328,7 +328,7 @@ export function AddContact() {
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Date Of Birth</div>
                       <TextField
-                        error={ msg == "date_of_birth" || msg === "required" ? true : false }
+                        error={msg == "date_of_birth" || msg === "required" ? true : false}
                         name="date_of_birth"
                         id="outlined-error-helper-text"
                         InputProps={{
@@ -336,8 +336,8 @@ export function AddContact() {
                             root: textFieldClasses.fieldHeight
                           }
                         }}
-                        required={ msg == "date_of_birth" || msg === "required" ? true : false }
-                        onChange={ onChange } style={{ width: "70%" }}
+                        required={msg == "date_of_birth" || msg === "required" ? true : false}
+                        onChange={onChange} style={{ width: "70%" }}
                         size="small"
                         type="date"
                         helperText={
@@ -351,12 +351,17 @@ export function AddContact() {
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Organization</div>
                       <TextField
-                        error={ msg == "organization" || msg === "required" ? true : false }
+                        error={msg == "organization" || msg === "required" ? true : false}
                         name="organization"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         style={{ width: "70%" }}
                         size="small"
+                        InputProps={{
+                          classes: {
+                            root: textFieldClasses.fieldHeight
+                          }
+                        }}
                         helperText={
                           (error && msg === "organization") || msg === "required"
                             ? error : ""
@@ -366,10 +371,10 @@ export function AddContact() {
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Title</div>
                       <TextField
-                        error={ msg == "title" || msg === "required" ? true : false }
+                        error={msg == "title" || msg === "required" ? true : false}
                         name="title"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -388,11 +393,11 @@ export function AddContact() {
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Primary Email</div>
                       <TextField
-                        error={ msg == "primary_email" ? true : false }
+                        error={msg == "primary_email" ? true : false}
                         required={msg == "primary_email" || msg === "required" ? true : false}
                         name="primary_email"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -409,10 +414,10 @@ export function AddContact() {
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Secondary Email</div>
                       <TextField
-                        error={ msg == "secondary_email" || msg === "required" ? true : false }
+                        error={msg == "secondary_email" || msg === "required" ? true : false}
                         name="secondary_email"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -431,10 +436,10 @@ export function AddContact() {
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Secondary Number</div>
                       <TextField
-                        error={ msg == "secondary_number" || msg === "required" ? true : false }
+                        error={msg == "secondary_number" || msg === "required" ? true : false}
                         name="secondary_number"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -443,18 +448,18 @@ export function AddContact() {
                         style={{ width: "70%" }}
                         size="small"
                         helperText={
-                        (error && msg === "secondary_number") || msg === "required"
-                        ? error : ""
+                          (error && msg === "secondary_number") || msg === "required"
+                            ? error : ""
                         }
                       />
                     </div>
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Mobile Number</div>
                       <TextField
-                        error={ msg == "mobile_number" || msg === "required" ? true : false }
+                        error={msg == "mobile_number" || msg === "required" ? true : false}
                         name="mobile_number"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -473,10 +478,10 @@ export function AddContact() {
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Department</div>
                       <TextField
-                        error={ msg == "department" || msg === "required" ? true : false }
+                        error={msg == "department" || msg === "required" ? true : false}
                         name="department"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -494,7 +499,7 @@ export function AddContact() {
                       <TextField
                         name="language"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -508,10 +513,10 @@ export function AddContact() {
                   <div className="fieldContainer2">
                     <div className="fieldSubContainer">
                       <div className="fieldTitle">Do Not Call</div>
-                      <AntSwitch  inputProps={{ 'aria-label': 'ant design' }}
-                      name="do_not_call"
-                      checked={ checked }
-                      onChange={ (e) => handleChange(e.target) }/>
+                      <AntSwitch inputProps={{ 'aria-label': 'ant design' }}
+                        name="do_not_call"
+                        checked={checked}
+                        onChange={(e) => handleChange(e.target)} />
                     </div>
                     <div className="fieldSubContainer">
                       &nbsp;
@@ -525,15 +530,15 @@ export function AddContact() {
           <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", marginTop: "20px" }}>
             <Accordion style={{ width: "98%" }}>
               <AccordionSummary
-                expandIcon={ <ExpandMoreIcon /> }
+                expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
                 id="panel1a-header">
                 <div style={{ borderBottom: "1px solid lightgray", width: "100%" }}>
-                  <Typography style={{ marginBottom: "15px", fontWeight: "bold",color:"#1A3353"  }} >Address Details</Typography>
+                  <Typography style={{ marginBottom: "15px", fontWeight: "bold", color: "#1A3353" }} >Address Details</Typography>
                 </div>
               </AccordionSummary>
               <AccordionDetails>
-                <Box sx={{ width: '100%',color:"#1A3353"  }}
+                <Box sx={{ width: '100%', color: "#1A3353" }}
                   component="form"
                   noValidate
                   autoComplete="off">
@@ -541,10 +546,10 @@ export function AddContact() {
                     <div style={{ width: "40%", display: "flex", flexDirection: "row" }}>
                       <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Address Lane</div>
                       <TextField
-                        error={ msg == "address_line" ? true : false }
+                        error={msg == "address_line" ? true : false}
                         name="address_line"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.root
@@ -552,7 +557,7 @@ export function AddContact() {
                         }}
                         style={{ width: "70%" }}
                         size="small"
-                        required={ msg == "address_line" || msg === "required" ? true : false }
+                        required={msg == "address_line" || msg === "required" ? true : false}
                         helperText={
                           msg === "address_line" || msg === "required"
                             ? error : ""
@@ -563,7 +568,7 @@ export function AddContact() {
                       <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>City</div>
                       <TextField
                         name="city"
-                        error={ msg == "city" || msg === "required" ? true : false }
+                        error={msg == "city" || msg === "required" ? true : false}
                         id="outlined-error-helper-text"
                         onChange={onChange} style={{ width: "70%" }}
                         InputProps={{
@@ -584,9 +589,9 @@ export function AddContact() {
                       <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Street</div>
                       <TextField
                         id="outlined-error-helper-text"
-                        error={ msg == "street" || msg === "required" ? true : false }
+                        error={msg == "street" || msg === "required" ? true : false}
                         name="street"
-                        onChange={ onChange } style={{ width: "70%" }}
+                        onChange={onChange} style={{ width: "70%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -603,9 +608,9 @@ export function AddContact() {
                       <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>State</div>
                       <TextField
                         name="state"
-                        error={ msg == "state" || msg === "required" ? true : false }
+                        error={msg == "state" || msg === "required" ? true : false}
                         id="outlined-error-helper-text"
-                        onChange={ onChange } style={{ width: "70%" }}
+                        onChange={onChange} style={{ width: "70%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -623,10 +628,10 @@ export function AddContact() {
                     <div style={{ width: "40%", display: "flex", flexDirection: "row" }}>
                       <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Pincode</div>
                       <TextField
-                        error={ msg == "postcode" ? true : false }
+                        error={msg == "postcode" ? true : false}
                         name="postcode"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -634,7 +639,7 @@ export function AddContact() {
                         }}
                         style={{ width: "70%" }}
                         size="small"
-                        required={ msg == "postcode" || msg === "required" ? true : false }
+                        required={msg == "postcode" || msg === "required" ? true : false}
                         helperText={
                           msg === "postcode" || msg === "required"
                             ? error : ""
@@ -644,10 +649,10 @@ export function AddContact() {
                     <div style={{ width: "40%", display: "flex", flexDirection: "row" }}>
                       <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Country</div>
                       <TextField
-                        error={ msg == "country" ? true : false }
+                        error={msg == "country" ? true : false}
                         name="country"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -655,7 +660,7 @@ export function AddContact() {
                         }}
                         style={{ width: "70%" }}
                         size="small"
-                        required={ msg == "country" || msg === "required" ? true : false }
+                        required={msg == "country" || msg === "required" ? true : false}
                         helperText={
                           msg === "country" || msg === "required"
                             ? error : ""
@@ -671,7 +676,7 @@ export function AddContact() {
           <div className="leadContainer">
             <Accordion style={{ width: "98%" }} >
               <AccordionSummary
-                expandIcon={ <ExpandMoreIcon /> }
+                expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
                 id="panel1a-header">
                 <div className="typography">
@@ -679,7 +684,7 @@ export function AddContact() {
                 </div>
               </AccordionSummary>
               <AccordionDetails>
-                <Box sx={{ width: '100%',color:"#1A3353"  }}
+                <Box sx={{ width: '100%', color: "#1A3353" }}
                   component="form"
                   noValidate
                   autoComplete="off">
@@ -689,8 +694,8 @@ export function AddContact() {
                       <TextareaAutosize
                         aria-label="minimum height"
                         name="description"
-                        minRows={ 8 }
-                        onChange={ onChange } style={{ width: "70%", padding: "5px" }}
+                        minRows={8}
+                        onChange={onChange} style={{ width: "70%", padding: "5px" }}
                         placeholder="Add Description"
                       />
                     </div>
@@ -699,19 +704,19 @@ export function AddContact() {
               </AccordionDetails>
             </Accordion>
           </div>
-          {/* Socials */} 
+          {/* Socials */}
           <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", marginTop: "20px" }}>
             <Accordion style={{ width: "98%" }}>
               <AccordionSummary
-                expandIcon={ <ExpandMoreIcon /> }
+                expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
                 id="panel1a-header" >
                 <div style={{ borderBottom: "1px solid lightgray", width: "100%" }}>
-                  <Typography style={{ marginBottom: "15px", fontWeight: "bold",color:"#1A3353"  }} >Socials</Typography>
+                  <Typography style={{ marginBottom: "15px", fontWeight: "bold", color: "#1A3353" }} >Socials</Typography>
                 </div>
               </AccordionSummary>
               <AccordionDetails>
-                <Box sx={{ width: '100%',color:"#1A3353"  }}
+                <Box sx={{ width: '100%', color: "#1A3353" }}
                   component="form"
                   noValidate
                   autoComplete="off">
@@ -719,10 +724,10 @@ export function AddContact() {
                     <div style={{ width: "40%", display: "flex", flexDirection: "row" }}>
                       <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Linkedin Url</div>
                       <TextField
-                        error={ msg == "linked_in_url" ? true : false }
+                        error={msg == "linked_in_url" ? true : false}
                         name="linked_in_url"
                         id="outlined-error-helper-text"
-                        onChange={ onChange }
+                        onChange={onChange}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -730,7 +735,7 @@ export function AddContact() {
                         }}
                         style={{ width: "70%" }}
                         size="small"
-                        required={ msg == "linked_in_url" || msg === "required" ? true : false }
+                        required={msg == "linked_in_url" || msg === "required" ? true : false}
                         helperText={
                           msg === "linked_in_url" || msg === "required"
                             ? error : ""
@@ -741,9 +746,9 @@ export function AddContact() {
                       <div style={{ marginRight: "10px", fontSize: "13px", width: "22%", textAlign: "right", fontWeight: "bold" }}>Facebook Url</div>
                       <TextField
                         name="facebook_url"
-                        error={ msg == "facebook_url" || msg === "required" ? true : false }
+                        error={msg == "facebook_url" || msg === "required" ? true : false}
                         id="outlined-error-helper-text"
-                        onChange={ onChange } style={{ width: "70%" }}
+                        onChange={onChange} style={{ width: "70%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight
@@ -758,13 +763,13 @@ export function AddContact() {
                     </div>
                   </div>
                   <div style={{ marginTop: "20px" }}>
-                    <div style={{  width: "40%", display: "flex", flexDirection: "row", marginLeft:"57px" }}>
-                      <div style={{ marginRight: "10px", fontSize: "13px",  textAlign: "right", fontWeight: "bold" }}>Twitter Username</div>
+                    <div style={{ width: "40%", display: "flex", flexDirection: "row", marginLeft: "7.5%" }}>
+                      <div style={{ marginRight: "10px", fontSize: "13px", textAlign: "right", fontWeight: "bold" }}>Twitter Username</div>
                       <TextField
                         id="outlined-error-helper-text"
-                        error={ msg == "twitter_username" || msg === "required" ? true : false }
+                        error={msg == "twitter_username" || msg === "required" ? true : false}
                         name="twitter_username"
-                        onChange={ onChange } style={{ width: "70%" }}
+                        onChange={onChange} style={{ width: "70%" }}
                         InputProps={{
                           classes: {
                             root: textFieldClasses.fieldHeight

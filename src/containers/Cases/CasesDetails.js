@@ -24,7 +24,7 @@ export const CasesDetails = (props) => {
     Accept: "application/json",
     "Content-Type": "application/json",
     Authorization: `jwt ${localStorage.getItem("Token")}`,
-    org: 3,
+    org: 'localStorage.getItem("org")'
   };
 
   useEffect(() => {

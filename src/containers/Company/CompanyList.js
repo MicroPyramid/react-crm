@@ -17,7 +17,8 @@ export const CompanyList = () => {
   let headers = {
     Accept: "application/json",
     "Content-Type": "application/json",
-    Authorization: "jwt " + window.localStorage.getItem("Token"),
+    Authorization: `jwt ${localStorage.getItem("Token")}`,
+    org: 'localStorage.getItem("org")'
   };
   let navigate = useNavigate();
   useEffect(() => {

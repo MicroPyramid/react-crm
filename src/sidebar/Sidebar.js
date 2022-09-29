@@ -209,9 +209,7 @@ export const Sidebar = (props) => {
         <DrawerHeader />
         {
           activeScreen === "Dashboard" ?
-          <div style={{ margin: "10px" }}>
-            <h3>dashboard</h3>
-          </div>
+          navigate('/')
           : null
         }
         <div style={{ width: "100%" }}>

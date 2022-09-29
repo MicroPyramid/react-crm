@@ -31,6 +31,7 @@
 .register-logo {
     width: 150px;
     height: 40px;
+    margin-top: 10%;
 }
 .register-ad-bg-image {
     /* height: 600px; */
@@ -43,7 +44,7 @@
 .register-ad-text {
     position: absolute;
     top: 0;
-    margin-top: 100px;
+    margin-top: 5%;
     display: flex;
     flex-direction: column;
     align-items: center; 
@@ -55,6 +56,7 @@
   }
   .register-ad-text p {
     text-align: center;
+    margin-top: 4%;
     color: #fff;
     /* margin-left: 20px;
     margin-right: 20px; */
@@ -63,11 +65,13 @@
   }
   .register-ad-image { 
   height: 250px;
+  margin-top: 7%;
   }
   .register-footer {
   position: absolute;
-  right: 3px;
-  top:510px;
+  right: 0%;
+  bottom: 2%;
+  top:110%;
   color: #fff;
   align-items: "right";
   }

@@ -203,7 +203,7 @@ const EnhancedTableToolbar = (props) => {
     Accept: "application/json",
     "Content-Type": "application/json",
     Authorization: `jwt ${localStorage.getItem("Token")}`,
-    org: 3,
+    org: 'localStorage.getItem("org")'
   };
 
   const onDelete = (id) => {
@@ -367,7 +367,7 @@ export function Users(props) {
     Accept: "application/json",
     "Content-Type": "application/json",
     Authorization: `jwt ${localStorage.getItem("Token")}`,
-    org: 3,
+    org: 'localStorage.getItem("org")'
   };
 
   const getUsers = () => {
@@ -418,15 +418,15 @@ export function Users(props) {
   }, [closeOffset, openOffset])
 
   const next = () => {
-    if (value == 0 &&
-      accountData.accountLength > 0) {
-      setOpenOffset(values)
-      setValues(values + rowsPerPage)
-    } else if (value == 1 &&
-      accountData.closed_accounts_length > closeOffset + 10) {
-      setCloseOffset(closeOffset + 10)
-      setCloseValue(closeValue + 10)
-    }
+    // if (value == 0 &&
+    //   accountData.accountLength > 0) {
+    //   setOpenOffset(values)
+    //   setValues(values + rowsPerPage)
+    // } else if (value == 1 &&
+    //   accountData.closed_accounts_length > closeOffset + 10) {
+    //   setCloseOffset(closeOffset + 10)
+    //   setCloseValue(closeValue + 10)
+    // }
   }
 
   const previous = () => {
@@ -756,7 +756,7 @@ export function Users(props) {
                             id={ labelId }
                             scope="row"
                             sx={{ border: 0, color: "rgb(26, 51, 83)", cursor: "pointer" }}
-                            onClick={() => accountHandle(item)}
+                            // onClick={() => accountHandle(item)}
                             align="left" >
                             { item.user_name ? item.user_name : "---" }
                           </TableCell>
