@@ -3,6 +3,7 @@ onCreate:
   - sudo apt-get upgrade -y
   - sudo corepack enable
   - yarn
+  - cp ENV.md .env
 
 onStart:
   - |

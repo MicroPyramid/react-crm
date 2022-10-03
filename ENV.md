@@ -1,3 +1,4 @@
 # List of env variables
 
-API_BASE_URL= "https://api.bottle-dev.com/"
+#Replace your django-crm API URL below
+REACT_APP_BASE_URL= "https://api.bottle-dev.com/api/"
