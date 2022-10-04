@@ -1,11 +1,8 @@
 # React CRM (bottlecrm.com)
 
-## installation
-sudo apt update -y && sudo apt upgrade -y
-sudo corepack enable
-yarn
-cp ENV.md .env
-yarn start
+CRM UI developed in react for django-crm
+
+[![RunCode](https://runcode-app-public.s3.amazonaws.com/images/dark_btn.png)](https://runcode.io)
 
 ### standards to follow
 * two space indentation
