@@ -1,5 +1,5 @@
 {
-  "name": "workspace",
+  "name": "react-crm",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -44,5 +44,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "npm-check-updates": "^16.3.8",
+    "standard": "^17.0.0"
   }
 }

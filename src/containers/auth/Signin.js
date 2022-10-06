@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import GoogleLogin from './GoogleLogin';
-import { SERVER } from '../../components/ApiUrls';
+import React from 'react'
+// import React, { useEffect, useState } from 'react'
+import GoogleLogin from './GoogleLogin'
+import { SERVER } from '../../components/ApiUrls'
 
-export function Signin(props) {
-
+export function Signin (props) {
   const responseGoogle = (data) => {
     if (data.accessToken) {
       const formData = new FormData()
       formData.append('accessToken', data.accessToken)
-      fetch('${SERVER}auth/google/', {
+      fetch(SERVER + 'auth/google/', {
         method: 'post',
         body: formData
       })
@@ -18,7 +18,7 @@ export function Signin(props) {
             localStorage.setItem('token', response.token)
             localStorage.setItem('id', response.id)
             localStorage.setItem('username', response.employee_name)
-            props.LoginSuccess();
+            props.LoginSuccess()
           } else {
             alert('Something went wrong. Please Try again!!')
           }
