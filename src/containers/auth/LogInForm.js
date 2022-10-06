@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import {
@@ -49,23 +48,6 @@ export const LogInForm = () => {
       .catch((error) => {
         console.error('Error:', error)
       })
-    if (localStorage.getItem('Token')) {
-      // const OrgHeaders = {
-      //   Accept: 'application/json',
-      //   'Content-Type': 'application/json',
-      //   Authorization: `jwt ${localStorage.getItem('Token')}`
-      // }
-      // fetchData(`${OrgUrl}/`, 'GET', null, OrgHeaders)
-      //   .then((data) => {
-      //     if (data.status === 200) {
-      //       localStorage.setItem('org', data.profile_org_list.org.id)
-      //       console.log(data.profile_org_list.org.id, 'id')
-      //     }
-      //   })
-      //   .catch((error) => {
-      //     console.error('Error:', error)
-      //   })
-    }
   }
 
   const [val, onChange, onSubmit] = UseForm(submitCallBack)
