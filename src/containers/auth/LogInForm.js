@@ -128,8 +128,8 @@ export const LogInForm = () => {
                     >
                       {
                         showPassword
-                          ? <VisibilityOff color='primary' />
-                          : <Visibility color='primary' />
+                          ? <Visibility color='primary' />
+                          : <VisibilityOff color='primary' />
                       }
                     </IconButton>
                   </InputAdornment>

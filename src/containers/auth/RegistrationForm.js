@@ -80,12 +80,12 @@ export const RegistrationForm = () => {
               size='small'
               error={errors.first_name}
               helperText={
-              error
-                ? `${errors.first_name instanceof Array
-                ? errors.first_name[0]
-                : ''
-              }`
-                : 'please enter your name'
+                error
+                  ? `${errors.first_name instanceof Array
+                    ? errors.first_name[0]
+                    : ''
+                  }`
+                  : 'please enter your name'
               }
               type='text'
               name='first_name'
@@ -111,10 +111,10 @@ export const RegistrationForm = () => {
               size='small'
               error={errors.org_name}
               helperText={
-              error
-                ? `${errors.org_name instanceof Array ? errors.org_name[0] : ''
-                }`
-                : 'please enter your name'
+                error
+                  ? `${errors.org_name instanceof Array ? errors.org_name[0] : ''
+                  }`
+                  : 'please enter your name'
               }
               type={showPassword ? 'text' : 'password'}
               name='org_name'
@@ -171,7 +171,7 @@ export const RegistrationForm = () => {
                       onClick={() => setShowPassword(!showPassword)}
                       edge='end'
                     >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
                   </InputAdornment>
                 )
@@ -181,7 +181,7 @@ export const RegistrationForm = () => {
               helperText={
                 error
                   ? `${errors.password instanceof Array ? errors.password[0] : ''
-                }`
+                  }`
                   : 'please enter your password'
               }
               type={showPassword ? 'text' : 'password'}
