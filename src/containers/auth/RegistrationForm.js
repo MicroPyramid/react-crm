@@ -42,7 +42,11 @@ export const RegistrationForm = () => {
       .then((data) => {
         if (!data.error) {
           setMsg(data.error)
-          alert(data.message)
+          console.log(data.error, 'error')
+          console.log(data, 'data')
+          console.log(data.message, 'msg')
+          // alert(data.message)
+          alert('Account Created Sucessfully!')
         }
         if (data.error) {
           setError(data.error)

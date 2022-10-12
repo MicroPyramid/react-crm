@@ -57,7 +57,6 @@ export const AddCases = (props) => {
   const [responceError, setResponceError] = useState(false)
   const navigate = useNavigate()
   const { state } = useLocation()
-  // const theme = useTheme()
 
   // const tagsHandle = (event, value) => {
   //   val.tags = JSON.stringify(value)

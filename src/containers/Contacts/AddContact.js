@@ -21,42 +21,6 @@ import { ContactUrl } from '../../components/ApiUrls'
 import { fetchData } from '../../components/FetchData'
 import { Appbar } from '../../components/Appbar'
 
-// const useStyles = makeStyles({
-//   btnIcon: {
-//     height: '14px',
-//     color: '#5B5C63'
-//   },
-//   cancelBtn: {
-//     backgroundColor: '#3E79F7'
-//   },
-//   breadcrumbs: {
-//     color: 'white'
-//   },
-//   fields: {
-//     height: '5px'
-//   },
-//   saveIcon: {
-//     color: 'white'
-//   },
-//   cancelIcon: {
-//     height: '14px',
-//     color: 'white'
-//   },
-//   plusIcon: {
-//     color: 'gray',
-//     height: '18px',
-//     marginRight: '-10px'
-//   },
-//   chipStyle: {
-//     backgroundColor: 'red'
-//   },
-//   icon: {
-//     '&.MuiChip-deleteIcon': {
-//       color: 'darkgray'
-//     }
-//   }
-// })
-
 const textFieldStyled = makeStyles(() => ({
   root: {
     borderLeft: '2px solid red',
@@ -77,7 +41,6 @@ export function AddContact () {
   const [errors, setErrors] = useState('')
   const [msg, setMsg] = useState('')
   const [responceError, setResponceError] = useState(false)
-  // const classes = useStyles()
   const textFieldClasses = textFieldStyled()
 
   const handleChange = (target, key) => {
