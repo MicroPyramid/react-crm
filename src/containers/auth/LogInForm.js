@@ -26,7 +26,6 @@ export const LogInForm = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [msg, setMsg] = useState(true)
   const navigate = useNavigate()
-  console.log(LoginUrl, 'login url')
 
   const headers = {
     Accept: 'application/json',

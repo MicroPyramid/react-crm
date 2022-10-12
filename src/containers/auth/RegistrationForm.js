@@ -19,8 +19,10 @@ import { RegisterUrl } from '../../components/ApiUrls'
 import { UseForm } from '../../components/UseForm'
 import { fetchData } from '../../components/FetchData'
 import '../../css/auth.css'
+import { useNavigate } from 'react-router'
 
 export const RegistrationForm = () => {
+  const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
   const [errors, setErrors] = useState('')
   const [error, setError] = useState(false)
@@ -46,7 +48,8 @@ export const RegistrationForm = () => {
           console.log(data, 'data')
           console.log(data.message, 'msg')
           // alert(data.message)
-          alert('Account Created Sucessfully!')
+          alert('Account Created Sucessfully!');
+          navigate('/login')
         }
         if (data.error) {
           setError(data.error)
