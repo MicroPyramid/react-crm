@@ -48,7 +48,7 @@ export const RegistrationForm = () => {
           console.log(data, 'data')
           console.log(data.message, 'msg')
           // alert(data.message)
-          alert('Account Created Sucessfully!');
+          alert('Account Created Sucessfully!')
           navigate('/login')
         }
         if (data.error) {
