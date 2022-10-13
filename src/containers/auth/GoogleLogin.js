@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
 
-function GoogleLogin(props) {
-  const [disabled,setDisabled] = useState(true);
+function GoogleLogin (props) {
+  const [disabled, setDisabled] = useState(true)
 
   useEffect(() => {
     const { clientId, cookiePolicy, loginHint, hostedDomain, fetchBasicProfile, redirectUri, discoveryDocs, onFailure, uxMode } = props;
@@ -27,7 +27,7 @@ function GoogleLogin(props) {
         ux_mode: uxMode,
         redirect_uri: redirectUri
       }
-      
+
       window.gapi.load('auth2', () => {
         setDisabled(false)
         if (!window.gapi.auth2.getAuthInstance()) {
@@ -40,9 +40,9 @@ function GoogleLogin(props) {
     })
   })
 
-  function signIn(e) {
+  function signIn (e) {
     if (e) {
-      e.preventDefault();
+      e.preventDefault()
     }
     if (!disabled) {
       const auth2 = window.gapi.auth2.getAuthInstance()
@@ -57,45 +57,44 @@ function GoogleLogin(props) {
       onRequest()
       if (offline) {
         auth2.grantOfflineAccess(options)
-        .then(
-          res => onSuccess(res),
-          err => onFailure(err)
-        )
+          .then(
+            res => onSuccess(res),
+            err => onFailure(err)
+          )
       } else {
         auth2.signIn(options)
-        .then((res) => {
-        const basicProfile = res.getBasicProfile()
-        const authResponse = res.getAuthResponse()
-        res.googleId = basicProfile.getId()
-        res.tokenObj = authResponse
-        res.tokenId = authResponse.id_token
-        res.accessToken = authResponse.access_token
-        res.profileObj = {
-        googleId: basicProfile.getId(),
-        imageUrl: basicProfile.getImageUrl(),
-        email: basicProfile.getEmail(),
-        name: basicProfile.getName(),
-        givenName: basicProfile.getGivenName(),
-        familyName: basicProfile.getFamilyName()
-        }
-        onSuccess(res)
-        }, err =>
-          onFailure(err)
-        )
+          .then((res) => {
+            const basicProfile = res.getBasicProfile()
+            const authResponse = res.getAuthResponse()
+            res.googleId = basicProfile.getId()
+            res.tokenObj = authResponse
+            res.tokenId = authResponse.id_token
+            res.accessToken = authResponse.access_token
+            res.profileObj = {
+              googleId: basicProfile.getId(),
+              imageUrl: basicProfile.getImageUrl(),
+              email: basicProfile.getEmail(),
+              name: basicProfile.getName(),
+              givenName: basicProfile.getGivenName(),
+              familyName: basicProfile.getFamilyName()
+            }
+            onSuccess(res)
+          }, err =>
+            onFailure(err)
+          )
       }
     }
   }
 
-    return (
-      <button type='button' onClick={signIn} className='primary_btn btn google_btn' > 
-        <div style={{ padding: "1px", display: "flex", justifyContent: "space-between", flexDirection: "row", cursor: "pointer",border:"none" }}>
-          <img alt='' src='https://cdn4.iconfinder.com/data/icons/new-google-logo-2015/400/new-google-favicon-512.png'  width="39px"/>
-          <p style={{fontWeight:"bold"}}>Login With Google</p>
-        </div>
-        {props.buttonText}
-      </button>
-    )
-  
+  return (
+    <button type='button' onClick={signIn} className='primary_btn btn google_btn'>
+      <div style={{ padding: '1px', display: 'flex', justifyContent: 'space-between', flexDirection: 'row', cursor: 'pointer', border: 'none' }}>
+        <img alt='' src='https://cdn4.iconfinder.com/data/icons/new-google-logo-2015/400/new-google-favicon-512.png' width='39px' />
+        <p style={{ fontWeight: 'bold' }}>Login With Google</p>
+      </div>
+      {props.buttonText}
+    </button>
+  )
 }
 GoogleLogin.propTypes = {
   onSuccess: PropTypes.func.isRequired,
