@@ -25,3 +25,10 @@ REACT_APP_BASE_URL=https://<your-backend-url.com>/api/
 standard from https://github.com/standard/eslint-config-standard
 \
 ]
+
+### Docker / docker-compose
+To run project please run the next commands after cloning repo:
+```
+docker-compose build
+docker-compose up
+```

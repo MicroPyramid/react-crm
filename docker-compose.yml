@@ -1,0 +1,17 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: react-crm:v0
+    volumes:
+      - .:/app
+      - /app/node_modules
+    stdin_open: true
+    tty: true
+    ports:
+      - 3000:3000
+    command: npm start
+    environment:
+      - CHOKIDAR_USEPOLLING=true
