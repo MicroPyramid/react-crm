@@ -1,67 +1,60 @@
-import React from 'react'
-import { useNavigate } from 'react-router'
+import React from "react";
+import { useNavigate } from "react-router";
 import {
   Grid,
   Typography,
   Link,
   CssBaseline
-} from '@mui/material'
+} from "@mui/material";
 
-import imgLogo from '../../assets/images/auth/img_logo.png'
-import imgBG from '../../assets/images/auth/img_BG.jpg'
-import imgLogin from '../../assets/images/auth/img_login.png'
-import { LogInForm } from './LogInForm'
-import '../../css/auth.css'
-import { Signin } from './Signin'
+import img_logo from "../../assets/images/auth/img_logo.png";
+import img_BG from "../../assets/images/auth/img_BG.jpg";
+import img_login from "../../assets/images/auth/img_login.png";
+import { LogInForm } from "./LogInForm";
+import "../../css/auth.css";
+import { Signin } from "./Signin";
 
 export const LogIn = () => {
-  const navigate = useNavigate()
+  let navigate = useNavigate();
 
   const LoginSuccess = () => {
-    navigate('/company')
+    navigate("/company");
   }
   return (
     <div>
       <CssBaseline />
-      <Grid
-        container xs={12} direction='row' justifyContent='center'
+      <Grid container xs={12} direction="row" justifyContent="center"
         sx={{
-          height: '100%',
-          overflow: 'hidden',
+          height: "100%",
+          overflow: "hidden",
           position: 'fixed'
-        }}
-      >
+        }}>
         <Grid
           container
           item
           xs={7}
-          direction='column'
-          justifyContent='space-evenly'
-          alignItems='center'
-          sx={{ height: '100%', overflow: 'hidden' }}
-        >
+          direction="column"
+          justifyContent="space-evenly"
+          alignItems="center"
+          sx={{ height: "100%", overflow: "hidden" }}>
           <Grid item>
             <Grid sx={{ mt: 2 }}>
-              <img src={imgLogo} alt='register_logo' className='register-logo' />
+              <img src={img_logo} alt="register_logo" className="register-logo" />
             </Grid>
-            <Typography
-              variant='h5'
-              style={{ fontWeight: 'bolder' }}
-            >Sign In
+            <Typography variant="h5"
+              style={{ fontWeight: "bolder" }}>Sign In
             </Typography>
-            <Typography variant='subtitle1'>
+            <Typography variant="subtitle1">
               Don't have an account yet?
-              <Link href='/register' underline='none'>
+              <Link href="/register" underline="none">
                 Sign Up
               </Link>
             </Typography>
-            <Grid
-              item
-              sx={{ mt: 4 }}
-            >
+            <Grid item
+              sx={{ mt: 4 }}>
               <LogInForm />
             </Grid>
-            <Grid item sx={{ mt: 2, alignItems: 'center', alignContent: 'center' }}>
+            <Grid item sx={{ mt: 2, alignItems: "center", alignContent: "center" }}>
               <Typography sx={{ ml: 15 }}>Or</Typography>
               <Grid item sx={{ mt: 1, ml: 6 }}>
                 <Signin LoginSuccess={LoginSuccess} />
@@ -73,36 +66,35 @@ export const LogIn = () => {
           container
           item
           xs={5}
-          direction='column'
-          justifyContent='center'
-          alignItems='center'
-          sx={{ height: '100%', overflow: 'hidden', justifyItems: 'center' }}
+          direction="column"
+          justifyContent="center"
+          alignItems="center"
+          sx={{ height: "100%", overflow: "hidden", justifyItems: 'center' }}
         >
           <img
-            src={imgBG}
-            alt='register_image'
-            className='register-ad-bg-image'
+            src={img_BG}
+            alt="register_image"
+            className="register-ad-bg-image"
           />
           <div
-            className='register-ad-text'
-          >
+            className="register-ad-text">
             <h3>Welcome to BottleCRM</h3>
             <p>
               Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-              <br />Sunt
+              <br></br>Sunt
               consequatur itaque qui, aliquid id provident delectus.
             </p>
             <img
-              src={imgLogin}
-              alt='register_ad_image'
-              className='register-ad-image'
+              src={img_login}
+              alt="register_ad_image"
+              className="register-ad-image"
             />
-            <footer className='register-footer'>
+            <footer className="register-footer">
               www.bottlecrm.com | About Us | Contact Us
             </footer>
           </div>
         </Grid>
       </Grid>
     </div>
-  )
-}
+  );
+};
