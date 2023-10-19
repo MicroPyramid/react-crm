@@ -1,0 +1,114 @@
+body {
+  background-color: #fafafb;
+  font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+.list {
+  background: #eceff5 !important;
+  margin-bottom: 10px;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 10px;
+  color: #455560;
+}
+
+.link {
+  color: #455560 !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+}
+
+* {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji' !important;
+}
+
+.MuiTypography-h5 {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  line-height: 1.5 !important;
+  color: #1a3353 !important;
+  font-size: 30px !important;
+  font-weight: 500 !important;
+}
+
+.MuiTypography-subtitle1 {
+  color: #72849a !important;
+  font-size: 15px !important;
+  line-height: 1.75;
+}
+
+.MuiTypography-h6 {
+  color: #1a3353 !important;
+  font-weight: 400 !important;
+  font-size: 16px !important;
+}
+
+.css-i4bv87-MuiSvgIcon-root {
+  color: #3f51b5 !important;
+}
+
+.MuiTypography-body2 {
+  font-size: 0.8rem !important;
+}
+
+.passwordField {
+  width: 270px !important;
+}
+
+/* ================================= */
+.register-logo {
+  width: 150px;
+  height: 40px;
+  margin-top: 10%;
+}
+
+.register-ad-bg-image {
+  /* height: 600px; */
+  width: 100%;
+  overflow: "hidden";
+  height: 170%;
+  /* max-height: 160%; */
+
+}
+
+.register-ad-text {
+  position: absolute;
+  top: 0;
+  margin-top: 5%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-left: 29px;
+}
+
+.register-ad-text h3 {
+  color: #fff;
+}
+
+.register-ad-text p {
+  text-align: center;
+  margin-top: 4%;
+  color: #fff;
+  /* margin-left: 20px;
+    margin-right: 20px; */
+  padding-left: 41px;
+  padding-right: 41px;
+}
+
+.register-ad-image {
+  height: 250px;
+  margin-top: 7%;
+}
+
+.register-footer {
+  position: absolute;
+  right: 0%;
+  bottom: 2%;
+  top: 110%;
+  color: #fff;
+  align-items: "right";
+}

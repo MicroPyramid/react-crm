@@ -1,25 +1,28 @@
 {
-  "name": "workspace",
+  "name": "react-crm-v2.0",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@emotion/react": "^11.10.0",
-    "@emotion/styled": "^11.10.0",
-    "@material-ui/icons": "^4.11.3",
-    "@mui/icons-material": "^5.8.4",
-    "@mui/material": "^5.10.0",
-    "@mui/styles": "^5.9.3",
+    "@emotion/css": "^11.11.2",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.13.6",
+    "@react-icons/all-files": "^4.1.0",
+    "@react-oauth/google": "^0.11.0",
     "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.3.0",
+    "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
-    "mui-quill": "0.1.0-alpha.3",
+    "@types/jest": "^29.5.2",
+    "@types/material-ui": "^0.21.12",
+    "@types/node": "^20.3.2",
+    "@types/react-dom": "^18.2.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-phone-number-input": "^3.2.7",
-    "react-router-dom": "^6.3.0",
-    "react-scripts": "5.0.0",
-    "validator": "^13.7.0",
-    "web-vitals": "^2.1.0"
+    "react-icons": "^4.10.1",
+    "react-router-dom": "^6.14.0",
+    "react-scripts": "^5.0.1",
+    "typescript": "^5.1.6",
+    "web-vitals": "^3.3.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -44,5 +47,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@mui/types": "^7.2.4",
+    "@types/react": "^18.2.14"
+  },
+  "overrides": {
+    "typescript": "^5.1.6"
   }
 }
