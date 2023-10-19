@@ -1,9 +1,0 @@
-.flex-container{
-     display: flex;
-     margin-left: auto;
-}
-.flex-container > div{
-     margin: 10px;
-     padding: '20px';
-     align-items: center;
-}

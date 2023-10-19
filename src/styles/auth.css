@@ -1,0 +1,53 @@
+.rightBg{
+  background-image: url(../assets/images/auth/img_BG.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.register-logo {
+    width: 150px;
+    height: 40px;
+    margin-top: 10%;
+}
+.register-ad-bg-image {
+    /* height: 600px; */
+    width: 100%;
+    overflow:"hidden";
+    height: 170%;
+    /* max-height: 160%; */
+   
+  }
+.register-ad-text {
+    position: absolute;
+    top: 0;
+    margin-top: 5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center;
+    padding-left: 29px;
+  }
+  .register-ad-text h3 {
+    color: #fff;
+  }
+  .register-ad-text p {
+    text-align: center;
+    margin-top: 4%;
+    color: #fff;
+    /* margin-left: 20px;
+    margin-right: 20px; */
+    padding-left: 41px;
+    padding-right: 41px;
+  }
+  .register-ad-image { 
+  height: 250px;
+  margin-top: 7%;
+  }
+  .register-footer {
+  position: absolute;
+  right: 0%;
+  bottom: 2%;
+  top:110%;
+  color: #fff;
+  align-items: "right";
+  }
