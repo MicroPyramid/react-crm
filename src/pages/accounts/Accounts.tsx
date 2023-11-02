@@ -1,5 +1,5 @@
 import React, { SyntheticEvent, useEffect, useState } from 'react'
-import { Box, Button, Card, Stack, Tab, Table, TableBody, TableContainer, TableHead, TablePagination, TableRow, Tabs, Toolbar, Typography, Paper, TableCell, IconButton, Checkbox, Tooltip, TableSortLabel, alpha, MenuItem, Select, Avatar, Fab, Container } from '@mui/material'
+import { Box, Button, Card, Stack, Tab, Table, TableBody, TableContainer, TableHead, TablePagination, TableRow, Tabs, Toolbar, Typography, Paper, TableCell, IconButton, Checkbox, Tooltip, TableSortLabel, alpha, MenuItem, Select, Avatar, Fab, Container, TextField } from '@mui/material'
 import { FiPlus } from "@react-icons/all-files/fi/FiPlus";
 import { FiChevronLeft } from "@react-icons/all-files/fi/FiChevronLeft";
 import { FiChevronRight } from "@react-icons/all-files/fi/FiChevronRight";
@@ -9,7 +9,7 @@ import { CustomTab, CustomToolbar, FabLeft, FabRight } from '../../styles/CssSty
 import { getComparator, stableSort } from '../../components/Sorting';
 import { FaAd, FaEdit, FaTrashAlt } from 'react-icons/fa';
 import { fetchData } from '../../components/FetchData';
-import { AccountsUrl } from '../../services/ApiUrls';
+import { AccountsUrl, Header } from '../../services/ApiUrls';
 import { useNavigate } from 'react-router-dom';
 import { DeleteModal } from '../../components/DeleteModal';
 import { Tags } from '../../components/Tags';
@@ -78,13 +78,13 @@ function EnhancedTableHead(props: any) {
     return (
         <TableHead>
             <TableRow>
-                <TableCell padding='checkbox'>
+                {/* <TableCell padding='checkbox'>
                     <Checkbox
                         onChange={onSelectAllClick}
                         checked={numSelected === rowCount}
                         sx={{ color: 'inherit' }}
                     />
-                </TableCell>
+                </TableCell> */}
                 {
                     headCells.map((headCell) => (
                         headCell.label === 'Actions' || headCell.label === 'Tags' ?
@@ -126,7 +126,6 @@ function EnhancedTableHead(props: any) {
 
 type Item = {
     id: string;
-    // Other properties
 };
 export default function Accounts() {
     const navigate = useNavigate()
@@ -150,6 +149,17 @@ export default function Accounts() {
     const [isDelete, setIsDelete] = useState(false)
     const [selectOpen, setSelectOpen] = useState(false);
 
+    const [contacts, setContacts] = useState([])
+    const [status, setStatus] = useState([])
+    const [source, setSource] = useState([])
+    const [companies, setCompanies] = useState([])
+    const [tags, setTags] = useState([])
+    const [users, setUsers] = useState([])
+    const [countries, setCountries] = useState([])
+    const [industries, setIndustries] = useState([])
+    const [leads, setLeads] = useState([])
+    const [teams, setTeams] = useState([])
+
     const [openAccounts, setOpenAccounts] = useState<Item[]>([])
     const [openAccountsCount, setOpenAccountsCount] = useState(0)
     const [openAccountsOffset, setOpenAccountsOffset] = useState(0)
@@ -166,6 +176,7 @@ export default function Accounts() {
     const [recordsPerPage, setRecordsPerPage] = useState<number>(10);
     const [totalPages, setTotalPages] = useState<number>(0);
 
+
     useEffect(() => {
         getAccounts()
     }, [])
@@ -174,14 +185,8 @@ export default function Accounts() {
         setTab(val)
     }
 
-    const headers = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: localStorage.getItem('Token'),
-        org: localStorage.getItem('org')
-    }
     const getAccounts = () => {
-        fetchData(`${AccountsUrl}/?offset=${tab === "open" ? openOffset : closeOffset}`, 'GET', null as any, headers)
+        fetchData(`${AccountsUrl}/?offset=${tab === "open" ? openOffset : closeOffset}`, 'GET', null as any, Header)
             .then((res: any) => {
                 if (!res.error) {
                     console.log(res, 'accounts')
@@ -192,22 +197,22 @@ export default function Accounts() {
                         setClosedAccounts(res?.closed_accounts?.close_accounts)
                         // setClosedAccountsCount(res?.closed_accounts?.close_accounts_count)
                         setClosedAccountsOffset(res?.closed_accounts?.offset)
+                        setContacts(res?.contacts)
+                        setIndustries(res?.industries)
+                        setUsers(res?.users)
+                        setStatus(res?.status)
+                        setCountries(res?.countries)
+                        setLeads(res?.leads)
+                        setTags(res?.tags)
+                        setTeams(res?.teams)
                     }
-                    //  else {
-                    //     if (tab === 'open') {
-
-                    //     }
-                    //     if (tab === 'closed' || initial) {
-
-                    //     }
-                    // }
                 }
             })
             .catch((error: any) => console.error('error', error))
     }
 
     const accountDetail = (accountId: any) => {
-        navigate(`/app/accounts/account-details`, { state: { accountId, detail: true } })
+        navigate(`/app/accounts/account-details`, { state: { accountId, detail: true ,contacts: contacts || [], status: status || [], tags: tags || [], users: users || [], countries: countries || [], teams: teams || [], leads: leads || []} })
     }
 
     const next = () => {
@@ -254,7 +259,7 @@ export default function Accounts() {
     }
 
     const onDelete = (id: any) => {
-        fetchData(`${AccountsUrl}/${id}/`, 'delete', null as any, headers)
+        fetchData(`${AccountsUrl}/${id}/`, 'delete', null as any, Header)
             .then((data) => {
                 if (!data.error) {
                     getAccounts()
@@ -268,48 +273,19 @@ export default function Accounts() {
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - 7) : 0
 
     const onAddAccount = () => {
-        navigate('/app/accounts/add-account')
-        // navigate('/users/add-users', {
-        //   state: {
-        //     roles: usersData.roles,
-        //     status: usersData.status
-        //   }
-        // })
+        navigate('/app/accounts/add-account', {
+            state: {
+                detail: false,
+                contacts: contacts || [], status: status || [], tags: tags || [], users: users || [], countries: countries || [], teams: teams || [], leads: leads || []
+            }
+        })
     }
     const deleteRow = (id: any) => {
         setSelectedId(id)
         setDeleteRowModal(!deleteRowModal)
     }
 
-    const getAccountDetail = (id: any) => {
-        fetchData(`${AccountsUrl}/${id}/`, 'GET', null as any, headers)
-            .then((res) => {
-                console.log(res, 'res');
-                if (!res.error) {
-                    // const data = res?.data?.profile_obj
-                    navigate('/app/accounts/edit-account', {
-                        state: {
-                            value: {
-                                // email: data?.user_details?.email,
-                                // role: data?.role,
-                                // phone: data?.phone,
-                                // alternate_phone: data?.alternate_phone,
-                                // address_line: data?.address?.address_line,
-                                // street: data?.address?.street,
-                                // city: data?.address?.city,
-                                // state: data?.address?.state,
-                                // pincode: data?.address?.postcode,
-                                // country: data?.address?.country,
-                                // profile_pic: data?.user_details?.profile_pic,
-                                // has_sales_access: data?.has_sales_access,
-                                // has_marketing_access: data?.has_marketing_access,
-                                // is_organization_admin: data?.is_organization_admin,
-                            }, id: id, edit: true
-                        }
-                    })
-                }
-            })
-    }
+
 
     const EditItem = (accountId: any) => {
         getAccountDetail(accountId)
@@ -319,8 +295,8 @@ export default function Accounts() {
         setDeleteRowModal(false)
         setSelectedId([])
     }
-    const DeleteItem = () => {
-        fetchData(`${AccountsUrl}/${selectedId}/`, 'DELETE', null as any, headers)
+    const deleteItem = () => {
+        fetchData(`${AccountsUrl}/${selectedId}/`, 'DELETE', null as any, Header)
             .then((res: any) => {
                 console.log('delete:', res);
                 if (!res.error) {
@@ -379,13 +355,44 @@ export default function Accounts() {
         setSelectedId(newSelectedIds);
         setIsSelectedId(newIsSelectedId);
     };
+
+    const getAccountDetail = (id: any) => {
+        fetchData(`${AccountsUrl}/${id}/`, 'GET', null as any, Header)
+            .then((res) => {
+                console.log(res, 'resDetail');
+                if (!res.error) {
+                    const data = res?.account_obj
+                    navigate('/app/accounts/edit-account', {
+                        state: {
+                            value: {
+                                // email: data?.email,
+                                // name: data?.name,
+                                // role: data?.role,
+                                // phone: data?.phone,
+                                // alternate_phone: data?.alternate_phone,
+                                // address_line: data?.address?.address_line,
+                                // street: data?.address?.street,
+                                // city: data?.address?.city,
+                                // state: data?.address?.state,
+                                // pincode: data?.address?.postcode,
+                                // country: data?.address?.country,
+                                // profile_pic: data?.user_details?.profile_pic,
+                                // has_sales_access: data?.has_sales_access,
+                                // has_marketing_access: data?.has_marketing_access,
+                                // is_organization_admin: data?.is_organization_admin,
+                            }, accountId: id, edit: true
+                        }
+                    })
+                }
+            })
+    }
     const handleDelete = (id: any) => {
         console.log(id, 's;ected')
     }
     const modalDialog = 'Are You Sure You want to delete this Account?'
     const modalTitle = 'Delete Account'
 
-    const recordsList = [10, 20, 30, 40, 50]
+    const recordsList = [[10, '10 Records per page'], [20, '20 Records per page'], [30, '30 Records per page'], [40, '40 Records per page'], [50, '50 Records per page']]
 
     // const selectClasses = selectOpen ? 'select-opened' : '';
     // console.log(!!(selectedId?.length === 0), 'asd');
@@ -409,45 +416,29 @@ export default function Accounts() {
                 </Tabs>
 
                 <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <Box sx={{ position: 'relative' }}>
-                        <Typography sx={{ position: 'absolute', top: '9px', left: '36px', fontSize: '15px', zIndex: 1 }}>Records Per Page</Typography>
-                        <Select
-                            value={recordsPerPage}
-                            onChange={(e: any) => setRecordsPerPage(e.target.value)}
-                            open={selectOpen}
-                            onOpen={() => setSelectOpen(true)}
-                            onClose={() => setSelectOpen(false)}
-                            className={`custom-select`}
-                            onClick={() => setSelectOpen(!selectOpen)}
-                            IconComponent={() => (
-                                <div onClick={() => setSelectOpen(!selectOpen)} className="custom-select-icon">
-                                    {selectOpen ? <FiChevronUp style={{ marginTop: '12px' }} /> : <FiChevronDown style={{ marginTop: '12px' }} />}
-                                </div>
-                            )}
-                            MenuProps={{
-                                anchorOrigin: {
-                                    vertical: 'bottom',
-                                    horizontal: 'right',
-                                },
-                                transformOrigin: {
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                },
-                                PaperProps: {
-                                    style: {
-                                        width: '40px',
-                                        minWidth: '40px'
-                                    },
-                                },
-                            }}
-                        >
-                            {recordsList?.length && recordsList.map((item: any) => (
-                                <MenuItem key={item} value={item} sx={{ ml: '-5px' }}>
-                                    {item}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </Box>
+                    <Select
+                        value={recordsPerPage}
+                        onChange={(e: any) => setRecordsPerPage(e.target.value)}
+                        open={selectOpen}
+                        onOpen={() => setSelectOpen(true)}
+                        onClose={() => setSelectOpen(false)}
+                        className={`custom-select`}
+                        onClick={() => setSelectOpen(!selectOpen)}
+                        IconComponent={() => (
+                            <div onClick={() => setSelectOpen(!selectOpen)} className="custom-select-icon">
+                                {selectOpen ? <FiChevronUp style={{ marginTop: '12px' }} /> : <FiChevronDown style={{ marginTop: '12px' }} />}
+                            </div>
+                        )}
+                        sx={{
+                            '& .MuiSelect-select': { overflow: 'visible !important' }
+                        }}
+                    >
+                        {recordsList?.length && recordsList.map((item: any, i: any) => (
+                            <MenuItem key={i} value={item[0]}>
+                                {item[1]}
+                            </MenuItem>
+                        ))}
+                    </Select>
                     <Box sx={{ borderRadius: '7px', backgroundColor: 'white', height: '40px', minHeight: '40px', maxHeight: '40px', display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 1, p: '0px' }}>
                         <FabLeft>
                             <FiChevronLeft
@@ -474,9 +465,9 @@ export default function Accounts() {
                 </Stack>
             </CustomToolbar>
             <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%' }}>
-                <Container sx={{ width: '101%', minWidth: '101%', m: '15px 0px 0px -30px' }}>
-                    <Paper sx={{ width: '100%', mb: 2, p: '0px 15px 0px 15px' }}>
-                        <Toolbar sx={{ pl: { sm: 2 }, pr: { xs: 1, sm: 1 } }}>
+                <Box sx={{ width: '100%', minWidth: '100%', m: '15px 0px 0px 0px' }}>
+                    <Paper sx={{ width: 'cal(100%-15px)', mb: 2, p: '0px 15px 15px 15px' }}>
+                        {/* <Toolbar sx={{ pl: { sm: 2 }, pr: { xs: 1, sm: 1 } }}>
                             <Tooltip title='Delete'>
                                 <Button
                                     variant='outlined'
@@ -496,7 +487,7 @@ export default function Accounts() {
                             ) : (
                                 ''
                             )}
-                        </Toolbar>
+                        </Toolbar> */}
                         <TableContainer>
                             <Table>
                                 <EnhancedTableHead
@@ -523,7 +514,7 @@ export default function Accounts() {
                                                                 key={index}
                                                                 sx={{ border: 0, '&:nth-of-type(even)': { backgroundColor: 'whitesmoke' }, color: 'rgb(26, 51, 83)', textTransform: 'capitalize' }}
                                                             >
-                                                                <TableCell
+                                                                {/* <TableCell
                                                                     padding='checkbox'
                                                                     sx={{ border: 0, color: 'inherit' }}
                                                                     align='left'
@@ -536,7 +527,7 @@ export default function Accounts() {
                                                                         }}
                                                                         sx={{ border: 0, color: 'inherit' }}
                                                                     />
-                                                                </TableCell>
+                                                                </TableCell> */}
                                                                 <TableCell
                                                                     align='left'
                                                                     sx={{ cursor: 'pointer', color: '#3E79F7', textTransform: 'none', border: 0 }}
@@ -571,12 +562,12 @@ export default function Accounts() {
                                                                     {item?.tags?.length ? item?.tags.map((tag: any, i: any) => <Stack sx={{ mr: 0.5 }}> Tags(tag)</Stack>) : '---'}
                                                                 </TableCell>
                                                                 <TableCell align='left' sx={{ border: 0 }}>
-                                                                    <IconButton>
+                                                                    {/* <IconButton>
                                                                         <FaEdit
                                                                             onClick={() => EditItem(item?.id)}
                                                                             style={{ fill: '#1A3353', cursor: 'pointer', width: '18px' }}
                                                                         />
-                                                                    </IconButton>
+                                                                    </IconButton> */}
                                                                     <IconButton>
                                                                         <FaTrashAlt
                                                                             onClick={() => deleteRow(item?.id)}
@@ -614,7 +605,7 @@ export default function Accounts() {
                                                                 key={index}
                                                                 sx={{ border: 0, '&:nth-of-type(even)': { backgroundColor: 'whitesmoke' }, color: 'rgb(26, 51, 83)', textTransform: 'capitalize' }}
                                                             >
-                                                                <TableCell
+                                                                {/* <TableCell
                                                                     padding='checkbox'
                                                                     sx={{ border: 0, color: 'inherit' }}
                                                                     align='left'
@@ -627,7 +618,7 @@ export default function Accounts() {
                                                                         }}
                                                                         sx={{ border: 0, color: 'inherit' }}
                                                                     />
-                                                                </TableCell>
+                                                                </TableCell> */}
                                                                 <TableCell
                                                                     align='left'
                                                                     sx={{ cursor: 'pointer', color: '#3E79F7', textTransform: 'none', border: 0 }}
@@ -662,12 +653,12 @@ export default function Accounts() {
                                                                     {item?.tags?.length ? item?.tags.map((tag: any, i: any) => <Stack sx={{ mr: 0.5 }}> Tags(tag)</Stack>) : '---'}
                                                                 </TableCell>
                                                                 <TableCell align='left' sx={{ border: 0 }}>
-                                                                    <IconButton>
+                                                                    {/* <IconButton>
                                                                         <FaEdit
                                                                             onClick={() => EditItem(item?.id)}
                                                                             style={{ fill: '#1A3353', cursor: 'pointer', width: '18px' }}
                                                                         />
-                                                                    </IconButton>
+                                                                    </IconButton> */}
                                                                     <IconButton>
                                                                         <FaTrashAlt
                                                                             onClick={() => deleteRow(item?.id)}
@@ -685,7 +676,7 @@ export default function Accounts() {
                             </Table>
                         </TableContainer>
                     </Paper>
-                </Container>
+                </Box>
             </Container>
             <DeleteModal
                 onClose={deleteRowModalClose}
@@ -693,7 +684,7 @@ export default function Accounts() {
                 id={selectedId}
                 modalDialog={modalDialog}
                 modalTitle={modalTitle}
-                DeleteItem={DeleteItem}
+                DeleteItem={deleteItem}
             />
         </Box>
     )

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useRef, useState } from 'react'
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import {
     TextField,
@@ -15,75 +15,19 @@ import {
     Autocomplete,
     FormHelperText,
     IconButton,
-    Tooltip
+    Select,
+    Divider
 } from '@mui/material'
 import '../../styles/style.css'
-import { LeadUrl, OpportunityUrl } from '../../services/ApiUrls'
+import { AccountsUrl, Header, OpportunityUrl } from '../../services/ApiUrls'
 import { fetchData } from '../../components/FetchData'
 import { CustomAppBar } from '../../components/CustomAppBar'
-import { FaArrowDown, FaFileUpload, FaPalette, FaPercent, FaPlus, FaTimes, FaUpload } from 'react-icons/fa'
-import { useForm } from '../../components/UseForm'
-import { CustomSelectField, RequiredTextField, StyledSelect } from '../../styles/CssStyled'
-
-
+import { FaFileUpload, FaPlus, FaTimes, FaUpload } from 'react-icons/fa'
+import { CustomPopupIcon, RequiredSelect, RequiredTextField } from '../../styles/CssStyled'
+import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown'
+import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp'
 
 type FormErrors = {
-    // title?: string[],
-    // first_name?: string[],
-    // last_name?: string[],
-    // account_name?: string[],
-    // phone?: string[],
-    // email?: string[],
-    // lead_attachment?: string[],
-    // opportunity_amount?: string[],
-    // website?: string[],
-    // description?: string[],
-    // teams?: string[],
-    // assigned_to?: string[],
-    // contacts?: string[],
-    // status?: string[],
-    // source?: string[],
-    // address_line?: string[],
-    // street?: string[],
-    // city?: string[],
-    // state?: string[],
-    // postcode?: string[],
-    // country?: string[],
-    // tags?: string[],
-    // company?: string[],
-    // probability?: number[],
-    // industry?: string[],
-    // skype_ID?: string[],
-    // file?: string[],
-    // {
-    //     "name": "string",
-    //     "phone": "string",
-    //     "email": "user@example.com",
-    //     "billing_address_line": "string",
-    //     "billing_street": "string",
-    //     "billing_city": "string",
-    //     "billing_state": "string",
-    //     "billing_postcode": "string",
-    //     "billing_country": "GB",
-    //     "contacts": [
-    //       "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-    //     ],
-    //     "teams": [
-    //       "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-    //     ],
-    //     "assigned_to": [
-    //       "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-    //     ],
-    //     "tags": [
-    //       "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-    //     ],
-    //     "account_attachment": [
-    //       "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-    //     ],
-    //     "website": "string",
-    //     "status": "open",
-    //     "lead": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-    //   }
     name?: string[],
     account?: string[],
     amount?: string[],
@@ -98,39 +42,10 @@ type FormErrors = {
     due_date?: string[],
     tags?: string[],
     opportunity_attachment?: string[],
-    file?: string[]
-
-
+    file?: string[],
+    contact_name?: string[],
 };
 interface FormData {
-    // title: string,
-    // first_name: string,
-    // last_name: string,
-    // account_name: string,
-    // phone: string,
-    // email: string,
-    // lead_attachment: string | null,
-    // opportunity_amount: string,
-    // website: string,
-    // description: string,
-    // teams: string,
-    // assigned_to: string[],
-    // contacts: string[],
-    // status: string,
-    // source: string,
-    // address_line: string,
-    // street: string,
-    // city: string,
-    // state: string,
-    // postcode: string,
-    // country: string,
-    // tags: string[],
-    // company: string,
-    // probability: number,
-    // industry: string,
-    // skype_ID: string,
-    // file: string | null
-
     name: string,
     account: string,
     amount: string,
@@ -145,49 +60,30 @@ interface FormData {
     due_date: string,
     tags: string[],
     opportunity_attachment: string | null,
-    file: string | null
+    file: string | null,
+    contact_name: string,
 }
 
-export function AddAccount() {
+export function EditOpportunity() {
     const navigate = useNavigate()
     const { state } = useLocation()
     const autocompleteRef = useRef<any>(null);
     const [error, setError] = useState(false)
+    const [reset, setReset] = useState(false)
     const [selectedContacts, setSelectedContacts] = useState<any[]>([]);
     const [selectedAssignTo, setSelectedAssignTo] = useState<any[]>([]);
     const [selectedTags, setSelectedTags] = useState<any[]>([]);
     const [selectedTeams, setSelectedTeams] = useState<any[]>([]);
     const [selectedCountry, setSelectedCountry] = useState<any[]>([]);
+    const [leadSelectOpen, setLeadSelectOpen] = useState(false)
+    const [statusSelectOpen, setStatusSelectOpen] = useState(false)
+    const [countrySelectOpen, setCountrySelectOpen] = useState(false)
+    const [contactSelectOpen, setContactSelectOpen] = useState(false)
+    const [currencySelectOpen, setCurrencySelectOpen] = useState(false)
+    const [accountSelectOpen, setAccountSelectOpen] = useState(false)
+    const [stageSelectOpen, setStageSelectOpen] = useState(false)
     const [errors, setErrors] = useState<FormErrors>({});
     const [formData, setFormData] = useState<FormData>({
-        // title: '',
-        // first_name: '',
-        // last_name: '',
-        // account_name: '',
-        // phone: '',
-        // email: '',
-        // lead_attachment: null,
-        // opportunity_amount: '',
-        // website: '',
-        // description: '',
-        // teams: '',
-        // assigned_to: [],
-        // contacts: [],
-        // status: 'assigned',
-        // source: 'call',
-        // address_line: '',
-        // street: '',
-        // city: '',
-        // state: '',
-        // postcode: '',
-        // country: '',
-        // tags: [],
-        // company: '',
-        // probability: 1,
-        // industry: 'ADVERTISING',
-        // skype_ID: '',
-        // file: null
-
         name: '',
         account: '',
         amount: '',
@@ -202,9 +98,30 @@ export function AddAccount() {
         due_date: '',
         tags: [],
         opportunity_attachment: null,
-        file: null
+        file: null,
+        contact_name: '',
     })
 
+    useEffect(() => {
+        setFormData(state?.value)
+    }, [state?.id])
+
+    useEffect(() => {
+        if (reset) {
+            setFormData(state?.value)
+        }
+        return () => {
+            setReset(false)
+        }
+    }, [reset])
+
+    const backbtnHandle = () => {
+        if (state?.edit) {
+            navigate('/app/opportunities')
+        } else {
+            navigate('/app/opportunities/opportunity-details', { state: { opportunityId: state?.id, detail: true } })
+        }
+    }
     const handleChange2 = (title: any, val: any) => {
         if (title === 'contacts') {
             setFormData({ ...formData, contacts: val.length > 0 ? val.map((item: any) => item.id) : [] });
@@ -235,9 +152,25 @@ export function AddAccount() {
             setFormData({ ...formData, [name]: value });
         }
     };
-    const backbtnHandle = () => {
-        navigate('/app/opportunities')
-    }
+    const handleFileChange = (event:any) => {
+        const file = event.target.files?.[0] || null;
+        if (file) {
+            setFormData((prevData) => ({
+                ...prevData,
+                opportunity_attachment: file.name,
+                file: prevData.file,
+            }));
+    
+            const reader = new FileReader();
+            reader.onload = () => {
+                setFormData((prevData) => ({
+                    ...prevData,
+                    file: reader.result as string,
+                }));
+            };
+            reader.readAsDataURL(file);
+        }
+    };
     const handleSubmit = (e: any) => {
         e.preventDefault();
         submitForm();
@@ -245,38 +178,11 @@ export function AddAccount() {
     const submitForm = () => {
         // console.log('Form data:', formData.lead_attachment,'sfs', formData.file);
         const data = {
-            // title: formData.title,
-            // first_name: formData.first_name,
-            // last_name: formData.last_name,
-            // account_name: formData.account_name,
-            // phone: formData.phone,
-            // email: formData.email,
-            // // lead_attachment: formData.lead_attachment,
-            // lead_attachment: formData.file,
-            // opportunity_amount: formData.opportunity_amount,
-            // website: formData.website,
-            // description: formData.description,
-            // teams: formData.teams,
-            // assigned_to: formData.assigned_to,
-            // contacts: formData.contacts,
-            // status: formData.status,
-            // source: formData.source,
-            // address_line: formData.address_line,
-            // street: formData.street,
-            // city: formData.city,
-            // state: formData.state,
-            // postcode: formData.postcode,
-            // country: formData.country,
-            // tags: formData.tags,
-            // company: formData.company,
-            // probability: formData.probability,
-            // industry: formData.industry,
-            // skype_ID: formData.skype_ID
-
             name: formData.name,
             account: formData.account,
             amount: formData.amount,
             currency: formData.currency,
+            contact_name: formData.contact_name,
             stage: formData.stage,
             teams: formData.teams,
             lead_source: formData.lead_source,
@@ -289,13 +195,8 @@ export function AddAccount() {
             // opportunity_attachment: formData.opportunity_attachment,
             opportunity_attachment: formData.file
         }
-        const headers = {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: localStorage.getItem('Token'),
-            org: localStorage.getItem('org')
-        }
-        fetchData(`${OpportunityUrl}/`, 'POST', JSON.stringify(data), headers)
+
+        fetchData(`${OpportunityUrl}/${state?.id}/`, 'PUT', JSON.stringify(data), Header)
             .then((res: any) => {
                 // console.log('Form data:', res);
                 if (!res.error) {
@@ -312,40 +213,13 @@ export function AddAccount() {
     };
     const resetForm = () => {
         setFormData({
-            // title: '',
-            // first_name: '',
-            // last_name: '',
-            // account_name: '',
-            // phone: '',
-            // email: '',
-            // lead_attachment: null,
-            // opportunity_amount: '',
-            // website: '',
-            // description: '',
-            // teams: '',
-            // assigned_to: [],
-            // contacts: [],
-            // status: 'assigned',
-            // source: 'call',
-            // address_line: '',
-            // street: '',
-            // city: '',
-            // state: '',
-            // postcode: '',
-            // country: '',
-            // tags: [],
-            // company: '',
-            // probability: 1,
-            // industry: 'ADVERTISING',
-            // skype_ID: '',
-            // file: null
-
             name: '',
             account: '',
             amount: '',
             currency: '',
             stage: '',
             teams: [],
+            contact_name: '',
             lead_source: '',
             probability: 1,
             description: '',
@@ -363,42 +237,29 @@ export function AddAccount() {
         setSelectedTeams([])
     }
     const onCancel = () => {
-        resetForm()
+        // resetForm()
+        setReset(true)
     }
 
+
     const module = 'Opportunities'
-    const crntPage = 'Add Opportunity'
-    const backBtn = 'Back To Opportunities'
+    const crntPage = 'Add Opportunities'
+    const backBtn = state?.edit ? 'Back To Opportunities' : 'Back To OpportunityDetails'
 
-    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0] || null;
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                // setFormData({ ...formData, lead_attachment: reader.result as string });
-                setFormData({ ...formData, file: reader.result as string });
-                // setFormData({ ...formData, opportunity_attachment: reader.result as string });
-            };
-            reader.readAsDataURL(file);
-        }
-    };
 
-    // console.log(formData, 'leadsform')
+    console.log(state, 'opportunityedit')
     return (
         <Box sx={{ mt: '60px' }}>
             <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} onCancel={onCancel} onSubmit={handleSubmit} />
-            <Box sx={{ mt: "100px" }}>
+            <Box sx={{ mt: "120px" }}>
                 <form onSubmit={handleSubmit}>
                     <div style={{ padding: '10px' }}>
                         <div className='leadContainer'>
                             <Accordion defaultExpanded style={{ width: '98%' }}>
-                                <AccordionSummary
-                                    expandIcon={<FaArrowDown />}
-                                >
-                                    <div className='typography'>
-                                        <Typography style={{ marginBottom: '15px', fontWeight: 'bold', color: '#1A3353' }}>Account Information</Typography>
-                                    </div>
+                                <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                                    <Typography className='accordion-header'>Account Information</Typography>
                                 </AccordionSummary>
+                                <Divider className='divider' />
                                 <AccordionDetails>
                                     <Box sx={{ width: '98%', color: '#1A3353', mb: 1 }}>
                                         <div className='fieldContainer'>
@@ -414,105 +275,161 @@ export function AddAccount() {
                                                     error={!!errors?.name?.[0]}
                                                 />
                                             </div>
-                                            {/* <div className='fieldSubContainer'>
-                                                <div className='fieldTitle'>Website</div>
+                                            <div className='fieldSubContainer'>
+                                                <div className='fieldTitle'>Amount</div>
                                                 <TextField
-                                                    name='website'
-                                                    value={formData.website}
+                                                    type={'number'}
+                                                    name='amount'
+                                                    value={formData.amount}
                                                     onChange={handleChange}
                                                     style={{ width: '70%' }}
                                                     size='small'
                                                     helperText={errors?.amount?.[0] ? errors?.amount[0] : ''}
                                                     error={!!errors?.amount?.[0]}
                                                 />
-                                            </div> */}
+                                            </div>
                                         </div>
                                         <div className='fieldContainer2'>
                                             <div className='fieldSubContainer'>
                                                 <div className='fieldTitle'>Account</div>
-                                                <TextField
-                                                    name='account'
-                                                    value={formData.account}
-                                                    onChange={handleChange}
-                                                    style={{ width: '70%' }}
-                                                    size='small'
-                                                    helperText={errors?.account?.[0] ? errors?.account[0] : ''}
-                                                    error={!!errors?.account?.[0]}
-                                                />
+                                                <FormControl sx={{ width: '70%' }}>
+                                                    <Select
+                                                        name='account'
+                                                        value={formData.account}
+                                                        open={accountSelectOpen}
+                                                        onClick={() => setAccountSelectOpen(!accountSelectOpen)}
+                                                        IconComponent={() => (
+                                                            <div onClick={() => setAccountSelectOpen(!accountSelectOpen)} className="select-icon-background">
+                                                                {accountSelectOpen ? <FiChevronUp className='select-icon' /> : <FiChevronDown className='select-icon' />}
+                                                            </div>
+                                                        )}
+                                                        className={'select'}
+                                                        onChange={handleChange}
+                                                        error={!!errors?.account?.[0]}
+                                                    >
+                                                        {state?.account?.length && state?.account.map((option: any) => (
+                                                            <MenuItem key={option?.id} value={option?.id}>
+                                                                {option?.name}
+                                                            </MenuItem>
+                                                        ))}
+                                                    </Select>
+                                                    <FormHelperText className='helperText'>{errors?.currency?.[0] ? errors?.currency[0] : ''}</FormHelperText>
+                                                </FormControl>
                                             </div>
                                             <div className='fieldSubContainer'>
                                                 <div className='fieldTitle'>Currency</div>
-                                                <TextField
-                                                    name='currency'
-                                                    value={formData.currency}
-                                                    onChange={handleChange}
-                                                    style={{ width: '70%' }}
-                                                    size='small'
-                                                    helperText={errors?.currency?.[0] ? errors?.currency[0] : ''}
-                                                    error={!!errors?.currency?.[0]}
-                                                />
+                                                <FormControl sx={{ width: '70%' }}>
+                                                    <Select
+                                                        name='currency'
+                                                        value={formData.currency}
+                                                        open={currencySelectOpen}
+                                                        onClick={() => setCurrencySelectOpen(!currencySelectOpen)}
+                                                        IconComponent={() => (
+                                                            <div onClick={() => setCurrencySelectOpen(!currencySelectOpen)} className="select-icon-background">
+                                                                {currencySelectOpen ? <FiChevronUp className='select-icon' /> : <FiChevronDown className='select-icon' />}
+                                                            </div>
+                                                        )}
+                                                        className={'select'}
+                                                        onChange={handleChange}
+                                                        error={!!errors?.currency?.[0]}
+                                                    >
+                                                        {state?.currency?.length && state?.currency.map((option: any) => (
+                                                            <MenuItem key={option[0]} value={option[0]}>
+                                                                {option[1]}
+                                                            </MenuItem>
+                                                        ))}
+                                                    </Select>
+                                                    <FormHelperText className='helperText'>{errors?.currency?.[0] ? errors?.currency[0] : ''}</FormHelperText>
+                                                </FormControl>
                                             </div>
                                         </div>
                                         <div className='fieldContainer2'>
                                             <div className='fieldSubContainer'>
                                                 <div className='fieldTitle'>Stage</div>
-                                                <TextField
-                                                    name='stage'
-                                                    value={formData.stage}
-                                                    onChange={handleChange}
-                                                    style={{ width: '70%' }}
-                                                    size='small'
-                                                    helperText={errors?.stage?.[0] ? errors?.stage[0] : ''}
-                                                    error={!!errors?.stage?.[0]}
-                                                />
+                                                <FormControl sx={{ width: '70%' }}>
+                                                    <RequiredSelect
+                                                        name='stage'
+                                                        value={formData.stage}
+                                                        open={stageSelectOpen}
+                                                        onClick={() => setStageSelectOpen(!stageSelectOpen)}
+                                                        IconComponent={() => (
+                                                            <div onClick={() => setStageSelectOpen(!stageSelectOpen)} className="select-icon-background">
+                                                                {stageSelectOpen ? <FiChevronUp className='select-icon' /> : <FiChevronDown className='select-icon' />}
+                                                            </div>
+                                                        )}
+                                                        className={'select'}
+                                                        onChange={handleChange}
+                                                        error={!!errors?.stage?.[0]}
+                                                    >
+                                                        {state?.stage?.length && state?.stage.map((option: any) => (
+                                                            <MenuItem key={option[0]} value={option[0]}>
+                                                                {option[1]}
+                                                            </MenuItem>
+                                                        ))}
+                                                    </RequiredSelect>
+                                                    <FormHelperText className='helperText'>{errors?.stage?.[0] ? errors?.stage[0] : ''}</FormHelperText>
+                                                </FormControl>
                                             </div>
                                             <div className='fieldSubContainer'>
                                                 <div className='fieldTitle'>Contact Name</div>
-                                                <FormControl error={!!errors?.contacts?.[0]} sx={{ width: '70%' }}>
+                                                <FormControl sx={{ width: '70%' }}>
+                                                    <RequiredSelect
+                                                        name='contact_name'
+                                                        value={formData.contact_name}
+                                                        open={contactSelectOpen}
+                                                        onClick={() => setContactSelectOpen(!contactSelectOpen)}
+                                                        IconComponent={() => (
+                                                            <div onClick={() => setContactSelectOpen(!contactSelectOpen)} className="select-icon-background">
+                                                                {contactSelectOpen ? <FiChevronUp className='select-icon' /> : <FiChevronDown className='select-icon' />}
+                                                            </div>
+                                                        )}
+                                                        className='select'
+                                                        onChange={handleChange}
+                                                        error={!!errors?.contact_name?.[0]}
+                                                    >
+                                                        {state?.contacts?.length && state?.contacts.map((option: any) => (
+                                                            <MenuItem key={option?.id} value={option?.first_name}>
+                                                                {option?.first_name}
+                                                            </MenuItem>
+                                                        ))}
+                                                    </RequiredSelect>
+                                                    <FormHelperText className='helperText'>{errors?.contact_name?.[0] ? errors?.contact_name[0] : ''}</FormHelperText>
+                                                </FormControl>
+                                                {/* <FormControl error={!!errors?.contacts?.[0]} sx={{ width: '70%' }}>
                                                     <Autocomplete
-                                                        // ref={autocompleteRef}
                                                         multiple
                                                         value={selectedContacts}
                                                         limitTags={2}
-                                                        options={state.contacts}
-                                                        // options={state.contacts ? state.contacts.map((option: any) => option) : ['']}
-                                                        getOptionLabel={(option: any) => option?.first_name}
-                                                        // value={formData.contacts}
-                                                        // onChange={handleChange}
+                                                        options={state.contacts || []}
+                                                        getOptionLabel={(option: any) => state.contacts ? option?.first_name : option}
                                                         onChange={(e: any, value: any) => handleChange2('contacts', value)}
-                                                        // style={{ width: '80%' }}
                                                         size='small'
                                                         filterSelectedOptions
-                                                        renderTags={(value, getTagProps) =>
-                                                            value.map((option, index) => (
+                                                        renderTags={(value: any, getTagProps: any) =>
+                                                            value.map((option: any, index: any) => (
                                                                 <Chip
                                                                     deleteIcon={<FaTimes style={{ width: '9px' }} />}
                                                                     sx={{
                                                                         backgroundColor: 'rgba(0, 0, 0, 0.08)',
                                                                         height: '18px'
-
                                                                     }}
                                                                     variant='outlined'
-                                                                    label={option?.first_name}
+                                                                    label={state.contacts ? option?.first_name : option}
                                                                     {...getTagProps({ index })}
                                                                 />
                                                             ))
                                                         }
-                                                        popupIcon=<IconButton
-                                                            sx={{
-                                                                width: '45px', height: '40px',
-                                                                borderRadius: '0px',
-                                                                backgroundColor: '#d3d3d34a'
-                                                            }}><FaPlus style={{ width: '15px' }} /></IconButton>
-                                                        renderInput={(params) => (
+                                                        popupIcon={<CustomPopupIcon><FaPlus className='input-plus-icon' /></CustomPopupIcon>}
+                                                        renderInput={(params: any) => (
                                                             <TextField {...params}
                                                                 placeholder='Add Contacts'
                                                                 InputProps={{
                                                                     ...params.InputProps,
                                                                     sx: {
+                                                                        '& .MuiAutocomplete-popupIndicator': { '&:hover': { backgroundColor: 'white' } },
                                                                         '& .MuiAutocomplete-endAdornment': {
-                                                                            mt: '-9px',
-                                                                            mr: '-8px'
+                                                                            mt: '-8px',
+                                                                            mr: '-8px',
                                                                         }
                                                                     }
                                                                 }}
@@ -520,33 +437,35 @@ export function AddAccount() {
                                                         )}
                                                     />
                                                     <FormHelperText>{errors?.contacts?.[0] || ''}</FormHelperText>
-                                                </FormControl>
+                                                </FormControl> */}
                                             </div>
                                         </div>
                                         <div className='fieldContainer2'>
                                             <div className='fieldSubContainer'>
                                                 <div className='fieldTitle'>Lead Source</div>
-                                                <CustomSelectField
-                                                    name='lead_source'
-                                                    select
-                                                    value={formData.lead_source}
-                                                    InputProps={{
-                                                        style: {
-                                                            height: '40px',
-                                                            maxHeight: '40px'
-                                                        }
-                                                    }}
-                                                    onChange={handleChange}
-                                                    sx={{ width: '70%' }}
-                                                    helperText={errors?.lead_source?.[0] ? errors?.lead_source[0] : ''}
-                                                    error={!!errors?.lead_source?.[0]}
-                                                >
-                                                    {state?.source?.length && state?.source.map((option: any) => (
-                                                        <MenuItem key={option[0]} value={option[0]}>
-                                                            {option[1]}
-                                                        </MenuItem>
-                                                    ))}
-                                                </CustomSelectField>
+                                                <FormControl sx={{ width: '70%' }}>
+                                                    <Select
+                                                        name='lead_source'
+                                                        value={formData.lead_source}
+                                                        open={leadSelectOpen}
+                                                        onClick={() => setLeadSelectOpen(!leadSelectOpen)}
+                                                        IconComponent={() => (
+                                                            <div onClick={() => setLeadSelectOpen(!leadSelectOpen)} className="select-icon-background">
+                                                                {leadSelectOpen ? <FiChevronUp className='select-icon' /> : <FiChevronDown className='select-icon' />}
+                                                            </div>
+                                                        )}
+                                                        className={'select'}
+                                                        onChange={handleChange}
+                                                        error={!!errors?.lead_source?.[0]}
+                                                    >
+                                                        {state?.leadSource?.length && state?.leadSource.map((option: any) => (
+                                                            <MenuItem key={option[0]} value={option[0]}>
+                                                                {option[1]}
+                                                            </MenuItem>
+                                                        ))}
+                                                    </Select>
+                                                    <FormHelperText className='helperText'>{errors?.lead_source?.[0] ? errors?.lead_source[0] : ''}</FormHelperText>
+                                                </FormControl>
                                             </div>
                                             <div className='fieldSubContainer'>
                                                 <div className='fieldTitle'>Probability</div>
@@ -567,14 +486,11 @@ export function AddAccount() {
                                                 <div className='fieldTitle'>Assign To</div>
                                                 <FormControl error={!!errors?.assigned_to?.[0]} sx={{ width: '70%' }}>
                                                     <Autocomplete
-                                                        // ref={autocompleteRef}
                                                         multiple
                                                         value={selectedAssignTo}
-                                                        // name='contacts'
                                                         limitTags={2}
-                                                        options={state.users}
-                                                        // options={state.contacts ? state.contacts.map((option: any) => option) : ['']}
-                                                        getOptionLabel={(option: any) => option?.user__email}
+                                                        options={state.users || []}
+                                                        getOptionLabel={(option: any) => state.users ? option?.user_details?.email : option}
                                                         onChange={(e: any, value: any) => handleChange2('assigned_to', value)}
                                                         size='small'
                                                         filterSelectedOptions
@@ -588,26 +504,22 @@ export function AddAccount() {
 
                                                                     }}
                                                                     variant='outlined'
-                                                                    label={option?.user__email}
+                                                                    label={state.users ? option?.user_details?.email : option}
                                                                     {...getTagProps({ index })}
                                                                 />
                                                             ))
                                                         }
-                                                        popupIcon=<IconButton
-                                                            sx={{
-                                                                width: '45px', height: '40px',
-                                                                borderRadius: '0px',
-                                                                backgroundColor: '#d3d3d34a'
-                                                            }}><FaPlus style={{ width: '15px' }} /></IconButton>
+                                                        popupIcon={<CustomPopupIcon><FaPlus className='input-plus-icon' /></CustomPopupIcon>}
                                                         renderInput={(params) => (
                                                             <TextField {...params}
                                                                 placeholder='Add Users'
                                                                 InputProps={{
                                                                     ...params.InputProps,
                                                                     sx: {
+                                                                        '& .MuiAutocomplete-popupIndicator': { '&:hover': { backgroundColor: 'white' } },
                                                                         '& .MuiAutocomplete-endAdornment': {
-                                                                            mt: '-9px',
-                                                                            mr: '-8px'
+                                                                            mt: '-8px',
+                                                                            mr: '-8px',
                                                                         }
                                                                     }
                                                                 }}
@@ -628,6 +540,13 @@ export function AddAccount() {
                                                     size='small'
                                                     helperText={errors?.due_date?.[0] ? errors?.due_date[0] : ''}
                                                     error={!!errors?.due_date?.[0]}
+                                                    sx={{
+                                                        '& input[type="date"]::-webkit-calendar-picker-indicator': {
+                                                            backgroundColor: 'whitesmoke',
+                                                            padding: '13px',
+                                                            marginRight: '-15px'
+                                                        }
+                                                    }}
                                                 />
                                             </div>
                                         </div>
@@ -661,23 +580,17 @@ export function AddAccount() {
                                                                 />
                                                             ))
                                                         }
-                                                        popupIcon={<IconButton
-                                                            disableFocusRipple
-                                                            disableTouchRipple
-                                                            sx={{
-                                                                width: '45px', height: '40px',
-                                                                borderRadius: '0px',
-                                                                backgroundColor: '#d3d3d34a'
-                                                            }}><FaPlus style={{ width: '15px' }} /></IconButton>}
+                                                        popupIcon={<CustomPopupIcon><FaPlus className='input-plus-icon' /></CustomPopupIcon>}
                                                         renderInput={(params) => (
                                                             <TextField {...params}
                                                                 placeholder='Add Tags'
                                                                 InputProps={{
                                                                     ...params.InputProps,
                                                                     sx: {
+                                                                        '& .MuiAutocomplete-popupIndicator': { '&:hover': { backgroundColor: 'white' } },
                                                                         '& .MuiAutocomplete-endAdornment': {
-                                                                            mt: '-9px',
-                                                                            mr: '-8px'
+                                                                            mt: '-8px',
+                                                                            mr: '-8px',
                                                                         }
                                                                     }
                                                                 }}
@@ -691,15 +604,13 @@ export function AddAccount() {
                                                 <div className='fieldTitle'>Lead Attachment</div>
                                                 <TextField
                                                     name='opportunity_attachment'
-                                                    // value={formData.opportunity_attachment``}
                                                     value={formData.opportunity_attachment}
-                                                    // value={formData.opportunity_attachment`` !== null ? <Avatar src={formData.opportunity_attachment``} /> : null}
                                                     InputProps={{
                                                         endAdornment: (
                                                             <InputAdornment position='end'>
                                                                 <IconButton disableFocusRipple
                                                                     disableTouchRipple
-                                                                    sx={{ width: '45px', height: '40px', backgroundColor: '#d3d3d34a', borderRadius: '0px', mr: '-12px' }}
+                                                                    sx={{ width: '40px', height: '40px', backgroundColor: 'whitesmoke', borderRadius: '0px', mr: '-13px', cursor: 'pointer' }}
                                                                 >
                                                                     <label htmlFor='icon-button-file'>
                                                                         <input
@@ -708,9 +619,12 @@ export function AddAccount() {
                                                                             id='icon-button-file'
                                                                             type='file'
                                                                             name='opportunity_attachment'
-                                                                            onChange={(e: any) => { handleChange(e); handleFileChange(e) }}
+                                                                            onChange={(e: any) => {
+                                                                                //  handleChange(e); 
+                                                                                handleFileChange(e)
+                                                                            }}
                                                                         />
-                                                                        <FaFileUpload color='primary' />
+                                                                        <FaUpload color='primary' style={{ fontSize: '15px', cursor: 'pointer' }} />
                                                                     </label>
                                                                 </IconButton>
                                                             </InputAdornment>
@@ -725,7 +639,7 @@ export function AddAccount() {
                                         </div>
                                         <div className='fieldContainer2'>
                                             <div className='fieldSubContainer'>
-                                                <div className='fieldTitle' style={{width:'35%'}}>Teams</div>
+                                                <div className='fieldTitle' style={{ width: '35%' }}>Teams</div>
                                                 <FormControl error={!!errors?.teams?.[0]} sx={{ width: '85%' }}>
                                                     <Autocomplete
                                                         // ref={autocompleteRef}
@@ -753,23 +667,17 @@ export function AddAccount() {
                                                                 />
                                                             ))
                                                         }
-                                                        popupIcon={<IconButton
-                                                            disableFocusRipple
-                                                            disableTouchRipple
-                                                            sx={{
-                                                                width: '45px', height: '40px',
-                                                                borderRadius: '0px',
-                                                                backgroundColor: '#d3d3d34a'
-                                                            }}><FaPlus style={{ width: '15px' }} /></IconButton>}
+                                                        popupIcon={<CustomPopupIcon><FaPlus className='input-plus-icon' /></CustomPopupIcon>}
                                                         renderInput={(params) => (
                                                             <TextField {...params}
                                                                 placeholder='Add Teams'
                                                                 InputProps={{
                                                                     ...params.InputProps,
                                                                     sx: {
+                                                                        '& .MuiAutocomplete-popupIndicator': { '&:hover': { backgroundColor: 'white' } },
                                                                         '& .MuiAutocomplete-endAdornment': {
-                                                                            mt: '-9px',
-                                                                            mr: '-8px'
+                                                                            mt: '-8px',
+                                                                            mr: '-8px',
                                                                         }
                                                                     }
                                                                 }}
@@ -789,13 +697,10 @@ export function AddAccount() {
                         {/* Description details  */}
                         <div className='leadContainer'>
                             <Accordion defaultExpanded style={{ width: '98%' }}>
-                                <AccordionSummary
-                                    expandIcon={<FaArrowDown />}
-                                >
-                                    <div className='typography'>
-                                        <Typography style={{ marginBottom: '15px', fontWeight: 'bold' }}>Description</Typography>
-                                    </div>
+                                <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                                    <Typography className='accordion-header'>Description</Typography>
                                 </AccordionSummary>
+                                <Divider className='divider' />
                                 <AccordionDetails>
                                     <Box
                                         sx={{ width: '100%', mb: 1 }}
@@ -824,7 +729,7 @@ export function AddAccount() {
                         </div>
                     </div>
                 </form>
-            </Box>
+            </Box >
         </Box >
     )
 }

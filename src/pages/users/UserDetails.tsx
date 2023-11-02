@@ -14,7 +14,7 @@ import { Fa500Px, FaAccusoft, FaAd, FaAddressCard, FaEnvelope, FaRegAddressCard,
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { AntSwitch } from '../../styles/CssStyled'
-import { ContactUrl, UserUrl } from '../../services/ApiUrls'
+import { ContactUrl, Header, UserUrl } from '../../services/ApiUrls'
 import { fetchData } from '../../components/FetchData'
 
 type response = {
@@ -53,12 +53,6 @@ export default function UserDetails() {
     const { state } = useLocation()
     const [userDetails, setUserDetails] = useState<response | null>(null)
 
-    const headers = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: localStorage.getItem('Token'),
-        org: localStorage.getItem('org')
-    }
     useEffect(() => {
         getUserDetail(state.userId)
     }, [state.userId])
@@ -67,7 +61,7 @@ export default function UserDetails() {
     // }, [state.contactId.id])
 
     const getUserDetail = (id: any) => {
-        fetchData(`${UserUrl}/${id}/`, 'GET', null as any, headers)
+        fetchData(`${UserUrl}/${id}/`, 'GET', null as any, Header)
             .then((res) => {
                 console.log(res, 'res');
                 if (!res.error) {
@@ -133,14 +127,14 @@ export default function UserDetails() {
         <Box sx={{ mt: '60px' }}>
             <div>
                 <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} editHandle={editHandle} />
-                <Box sx={{ mt: '100px', p: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Box sx={{ mt: '120px', p: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Box sx={{ width: '100%' }}>
                         <Card sx={{ borderRadius: '7px' }}>
                             <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <div style={{ fontWeight: 'bold', fontSize: '16px', color: 'rgb(26, 51, 83)' }}>
+                                <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a3353f0' }}>
                                     User Information
                                 </div>
-                                {/* <div style={{ color: 'gray', fontSize: '14px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                {/* <div style={{ color: 'gray', fontSize: '16px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginRight: '15px', textTransform: 'capitalize' }}>
                                         created on
                                         {formatDate(contactDetails?.created_on)}
@@ -162,8 +156,8 @@ export default function UserDetails() {
                             </div>
                             {/* <div style={{ padding: '14px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Account Title</div>
-                                    <div style={{ fontSize: '14px', color: 'gray', display: 'flex', flexDirection: 'row', marginTop: '5%' }}>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Account Title</div>
+                                    <div style={{ fontSize: '16px', color: 'gray', display: 'flex', flexDirection: 'row', marginTop: '5%' }}>
                                         <div style={{ display: 'flex' }}>
                                             <AvatarGroup
                                                 total={2}
@@ -185,20 +179,20 @@ export default function UserDetails() {
                             </div> */}
                             <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Email Name</div>
-                                    <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Email Name</div>
+                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                         {userDetails?.user_details?.email || '---'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Is Active</div>
-                                    <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Is Active</div>
+                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                         <AntSwitch checked={userDetails?.user_details?.is_active} />
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Profile pic</div>
-                                    <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Profile pic</div>
+                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                         <Avatar alt={'sdf'}>
                                             {userDetails?.user_details?.profile_pic}
                                         </Avatar>
@@ -208,20 +202,20 @@ export default function UserDetails() {
                             </div>
                             <div style={{ padding: '20px', marginTop: '15px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Role</div>
-                                    <div style={{ fontSize: '14px', color: '#1E90FF', marginTop: '5%' }}>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Role</div>
+                                    <div style={{ fontSize: '16px', color: '#1E90FF', marginTop: '5%' }}>
                                         {userDetails?.role || '---'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Mobile Number</div>
-                                    <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Mobile Number</div>
+                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                         {userDetails?.phone || '---'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Marketing Access</div>
-                                    <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Marketing Access</div>
+                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                         <AntSwitch checked={userDetails?.has_marketing_access} />
                                     </div>
                                 </div>
@@ -231,20 +225,20 @@ export default function UserDetails() {
                                 // , justifyContent: 'space-between' 
                             }}>
                                 <div style={{ width: '34%' }}>
-                                    <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Sales Access</div>
-                                    <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Sales Access</div>
+                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                         <AntSwitch checked={userDetails?.has_sales_access} />
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Date of joining</div>
-                                    <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Date of joining</div>
+                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                         {userDetails?.date_of_joining || '---'}
                                     </div>
                                 </div>
                                 {/* <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Do Not Call</div>
-                                    <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Do Not Call</div>
+                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                         <AntSwitch
                                             checked={contactDetails?.do_not_call}
                                             inputProps={{ 'aria-label': 'ant design' }} />
@@ -254,46 +248,46 @@ export default function UserDetails() {
                             {/* Address details */}
                             <div style={{ marginTop: '15px' }}>
                                 <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <div style={{ fontWeight: 'bold', fontSize: '16px', color: 'rgb(26, 51, 83)' }}>
+                                    <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a3353f0' }}>
                                         Address
                                     </div>
                                 </div>
                                 <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Address Lane</div>
-                                        <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Address Lane</div>
+                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                             {userDetails?.address?.address_line || '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Street</div>
-                                        <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Street</div>
+                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                             {userDetails?.address?.street || '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>City</div>
-                                        <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>City</div>
+                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                             {userDetails?.address?.city || '---'}
                                         </div>
                                     </div>
                                 </div>
                                 <div style={{ padding: '20px', marginTop: '15px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Pincode</div>
-                                        <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Pincode</div>
+                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                             {userDetails?.address?.postcode || '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>State</div>
-                                        <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>State</div>
+                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                             {userDetails?.address?.state || '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Country</div>
-                                        <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Country</div>
+                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                             {userDetails?.address?.country || '---'}
                                         </div>
                                     </div>
@@ -302,11 +296,11 @@ export default function UserDetails() {
                             {/* Description */}
                             {/* <div style={{ marginTop: '15px' }}>
                                 <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <div style={{ fontWeight: 'bold', fontSize: '16px', color: 'rgb(26, 51, 83)' }}>
+                                    <div style={{ fontWeight: 600, fontSize: '16px', color: '#1a3353f0' }}>
                                         Description
                                     </div>
                                 </div>
-                                <p style={{ fontSize: '14px', color: 'gray', padding: '20px' }}>
+                                <p style={{ fontSize: '16px', color: 'gray', padding: '20px' }}>
                                     {contactDetails?.description || '---'}
                                 </p>
                             </div> */}
@@ -315,22 +309,22 @@ export default function UserDetails() {
                     {/* <Box sx={{ width: '34%' }}>
                         <Card sx={{ borderRadius: '7px', p: '20px' }}>
                             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <div style={{ fontWeight: 'bold', fontSize: '16px', color: 'rgb(26, 51, 83)' }}>
+                                <div style={{ fontWeight: 600, fontSize: '16px', color: '#1a3353f0' }}>
                                     Social
                                 </div>
-                                <div style={{ color: '#3E79F7', fontSize: '16px', fontWeight: 'bold' }}>
+                                <div style={{ color: '#3E79F7', fontSize: '16px', fontWeight: 600 }}>
                                     <Button
                                         type='submit'
                                         variant='text'
                                         size='small'
                                         startIcon={<FaEnvelope style={{ fill: '#3E79F7' }} />}
-                                        style={{ textTransform: 'capitalize', fontWeight: 'bold', fontSize: '14px' }}
+                                        style={{ textTransform: 'capitalize', fontWeight: 600, fontSize: '16px' }}
                                     >
                                         Add Socials
                                     </Button>
                                 </div>
                             </div>
-                            <div style={{ fontSize: '14px', marginTop: '15px' }}>
+                            <div style={{ fontSize: '16px', marginTop: '15px' }}>
                                 LinkedIn URL
                             </div>
                             <div style={{ paddingBottom: '10px', width: '80%', marginBottom: '10px' }}>
@@ -341,7 +335,7 @@ export default function UserDetails() {
                                     sx={{ height: '40px', width: '100%', mt: 1 }}
                                 />
                             </div>
-                            <div style={{ fontSize: '14px' }}>
+                            <div style={{ fontSize: '16px' }}>
                                 Facebook URL
                             </div>
                             <div style={{ paddingBottom: '10px', width: '80%', marginBottom: '10px' }}>
@@ -352,7 +346,7 @@ export default function UserDetails() {
                                     sx={{ height: '40px', width: '100%', mt: 1 }}
                                 />
                             </div>
-                            <div style={{ fontSize: '14px', marginTop: '15px' }}>
+                            <div style={{ fontSize: '16px', marginTop: '15px' }}>
                                 Twitter URL
                             </div>
                             <div style={{ paddingBottom: '10px', width: '80%', marginBottom: '10px' }}>

@@ -14,12 +14,6 @@ export const DialogModal = (props: any) => {
     const { onClose, open, modalDialog, modalTitle, id, DeleteItem } = props
     const [deleteItem, setDeleteItem] = useState(false)
 
-    const headers = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: localStorage.getItem('Token'),
-        org: localStorage.getItem('org')
-    }
     // useEffect(() => {
     //     if (deleteItem) {
     //         onClose(deleteItem)
@@ -27,7 +21,7 @@ export const DialogModal = (props: any) => {
     // }, [deleteItem])
 
     // const deleteId = () => {
-    //     fetchData(`${ContactUrl}/${id}/`, 'DELETE', null as any, headers)
+    //     fetchData(`${ContactUrl}/${id}/`, 'DELETE', null as any, Header)
     //         .then((res: any) => {
     //             console.log('delete:', res);
     //             if (!res.error) {

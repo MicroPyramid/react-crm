@@ -8,24 +8,18 @@ import {
     DialogContentText
 } from '@mui/material'
 import { fetchData } from '../../components/FetchData'
-import { UserUrl } from '../../services/ApiUrls'
+import { Header, UserUrl } from '../../services/ApiUrls'
 
 export const DialogModal = (props: any) => {
     const { onClose, open, modalDialog, modalTitle, id } = props
 
-    const headers = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: localStorage.getItem('Token'),
-        org: localStorage.getItem('org')
-    }
     useEffect(() => {
 
 
     }, [id])
 
     const deleteId = () => {
-        fetchData(`${UserUrl}/${id}/`, 'DELETE', null as any, headers)
+        fetchData(`${UserUrl}/${id}/`, 'DELETE', null as any, Header)
             .then((res: any) => {
                 console.log('delete:', res);
                 if (!res.error) {

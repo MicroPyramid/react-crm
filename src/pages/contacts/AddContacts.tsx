@@ -8,15 +8,17 @@ import {
   Typography,
   Box,
   MenuItem,
-  Tooltip
+  Tooltip,
+  Divider
 } from '@mui/material'
 import { FaArrowDown } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ContactUrl } from '../../services/ApiUrls';
+import { ContactUrl, Header } from '../../services/ApiUrls';
 import { CustomAppBar } from '../../components/CustomAppBar';
 import { fetchData } from '../../components/FetchData';
 import { AntSwitch, CustomSelectField, RequiredTextField } from '../../styles/CssStyled';
 import '../../styles/style.css'
+import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 
 // interface FormErrors {
 //   [key: string]: string;
@@ -300,12 +302,7 @@ function AddContacts() {
   const isValidPhoneNumber = (phoneNumber: any) => {
     return /^\+91\d{10}$/.test(phoneNumber);
   };
-  const headers = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-    Authorization: localStorage.getItem('Token'),
-    org: localStorage.getItem('org')
-  }
+
   const submitForm = () => {
     // console.log('Form data:', data);
     const data = {
@@ -328,7 +325,7 @@ function AddContacts() {
       facebook_url: formData.facebook_url,
       twitter_username: formData.twitter_username
     }
-    fetchData(`${ContactUrl}/`, 'POST', JSON.stringify(data), headers)
+    fetchData(`${ContactUrl}/`, 'POST', JSON.stringify(data), Header)
       .then((res: any) => {
         console.log('Form data:', res);
         if (!res.error) {
@@ -387,7 +384,7 @@ function AddContacts() {
   return (
     <Box sx={{ mt: '60px' }}>
       <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} onCancel={onCancel} onSubmit={handleSubmit} />
-      <Box sx={{ mt: "100px" }}>
+      <Box sx={{ mt: "120px" }}>
         <form onSubmit={handleSubmit}>
           {/* lead details */}
           <div style={{ padding: '10px' }}>
@@ -395,16 +392,13 @@ function AddContacts() {
               <Accordion style={{ width: '98%' }}
                 defaultExpanded
               >
-                <AccordionSummary
-                  expandIcon={<FaArrowDown />}
-                >
-                  <div className='typography'>
-                    <Typography style={{ marginBottom: '15px', fontWeight: 'bold' }}>Basic Information</Typography>
-                  </div>
+                <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                  <Typography className='accordion-header'>Account Information</Typography>
                 </AccordionSummary>
+                <Divider className='divider' />
                 <AccordionDetails>
                   <Box
-                    sx={{ width: '98%', color: '#1A3353',mb:1 }}
+                    sx={{ width: '98%', color: '#1A3353', mb: 1 }}
                     component='form'
                     // noValidate
                     autoComplete='off'
@@ -650,16 +644,13 @@ function AddContacts() {
               <Accordion style={{ width: '98%' }}
                 defaultExpanded
               >
-                <AccordionSummary
-                  expandIcon={<FaArrowDown />}
-                >
-                  <div style={{ borderBottom: '1px solid lightgray', width: '100%' }}>
-                    <Typography style={{ marginBottom: '15px', fontWeight: 'bold', color: '#1A3353' }}>Address</Typography>
-                  </div>
+                <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                  <Typography className='accordion-header'>Account Information</Typography>
                 </AccordionSummary>
+                <Divider className='divider' />
                 <AccordionDetails>
                   <Box
-                    sx={{ width: '98%', color: '#1A3353',mb:1 }}
+                    sx={{ width: '98%', color: '#1A3353', mb: 1 }}
                     component='form'
                   // noValidate
                   // autoComplete='off'
@@ -750,16 +741,13 @@ function AddContacts() {
               <Accordion
                 defaultExpanded
                 style={{ width: '98%' }}>
-                <AccordionSummary
-                  expandIcon={<FaArrowDown />}
-                >
-                  <div className='typography'>
-                    <Typography style={{ marginBottom: '15px', fontWeight: 'bold' }}>Description</Typography>
-                  </div>
+                <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                  <Typography className='accordion-header'>Account Information</Typography>
                 </AccordionSummary>
+                <Divider className='divider' />
                 <AccordionDetails>
                   <Box
-                    sx={{ width: '100%', color: '#1A3353',mb:1 }}
+                    sx={{ width: '100%', color: '#1A3353', mb: 1 }}
                     component='form'
                     noValidate
                     autoComplete='off'
@@ -789,16 +777,13 @@ function AddContacts() {
               <Accordion
                 defaultExpanded
                 style={{ width: '98%' }}>
-                <AccordionSummary
-                  expandIcon={<FaArrowDown />}
-                >
-                  <div style={{ borderBottom: '1px solid lightgray', width: '100%' }}>
-                    <Typography style={{ marginBottom: '15px', fontWeight: 'bold', color: '#1A3353' }}>Socials</Typography>
-                  </div>
+                <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                  <Typography className='accordion-header'>Account Information</Typography>
                 </AccordionSummary>
+                <Divider className='divider' />
                 <AccordionDetails>
                   <Box
-                    sx={{ width: '100%', color: '#1A3353',mb:1 }}
+                    sx={{ width: '100%', color: '#1A3353', mb: 1 }}
                     component='form'
                     noValidate
                     autoComplete='off'

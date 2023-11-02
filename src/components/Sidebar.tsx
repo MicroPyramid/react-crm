@@ -14,7 +14,7 @@ import Cases from '../pages/cases/Cases';
 import logo from '../assets/images/auth/img_logo.png';
 import { AddLeads } from '../pages/leads/AddLeads';
 import Accounts from '../pages/accounts/Accounts';
-import { AddAccount } from '../pages/accounts/AddAccounts';
+import { AddAccount } from '../pages/accounts/AddAccount';
 import { AccountDetails } from '../pages/accounts/AccountDetails';
 import { AddUsers } from '../pages/users/AddUsers';
 import { AddOpportunity } from '../pages/opportunities/AddOpportunity';
@@ -36,6 +36,8 @@ import CompanyDetails from '../pages/company/CompanyDetails';
 import EditCompany from '../pages/company/EditCompany';
 import { EditLead } from '../pages/leads/EditLead';
 import UserDetails from '../pages/users/UserDetails';
+import { EditAccount } from '../pages/accounts/EditAccount';
+import { EditOpportunity } from '../pages/opportunities/EditOpportunity';
 
 
 // declare global {
@@ -172,7 +174,7 @@ export default function Sidebar(props: any) {
                             <IconButton sx={{ ml: '-10px' }} onClick={() => setDrawerWidth(drawerWidth === 60 ? 200 : 60)}>
                                 <FaBars style={{ height: '20px' }} />
                             </IconButton>
-                            <Typography sx={{ fontWeight: 'bold', color: 'black', ml: '20px', textTransform: 'capitalize' }}>
+                            <Typography sx={{ fontWeight: 'bold', color: 'black', ml: '20px', textTransform: 'capitalize',fontSize:'20px',mt:'5px' }}>
                                 {screen}
                                 {/* Bottle-CRM */}
                             </Typography>
@@ -297,13 +299,15 @@ export default function Sidebar(props: any) {
                             <Route path='/app/accounts' element={<Accounts />} />
                             <Route path='/app/accounts/add-account' element={<AddAccount />} />
                             <Route path='/app/accounts/account-details' element={<AccountDetails />} />
+                            <Route path='/app/accounts/edit-account' element={<EditAccount />} />
                             <Route path='/app/users' element={<Users />} />
                             <Route path='/app/users/add-users' element={<AddUsers />} />
                             <Route path='/app/users/edit-user' element={<EditUser />} />
                             <Route path='/app/users/user-details' element={<UserDetails />} />
                             <Route path='/app/opportunities' element={<Opportunities />} />
-                            <Route path='/app/opportunities/add-opportunities' element={<AddOpportunity />} />
+                            <Route path='/app/opportunities/add-opportunity' element={<AddOpportunity />} />
                             <Route path='/app/opportunities/opportunity-details' element={<OpportunityDetails />} />
+                            <Route path='/app/opportunities/edit-opportunity' element={<EditOpportunity />} />
                             <Route path='/app/cases' element={<Cases />} />
                             <Route path='/app/add-cases' element={<AddCases />} />
                         </Routes>
