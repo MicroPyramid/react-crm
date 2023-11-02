@@ -14,17 +14,23 @@ import {
     Input,
     Avatar,
     IconButton,
-    Stack
+    Stack,
+    Divider,
+    Select,
+    FormControl,
+    FormHelperText
 } from '@mui/material'
 // import { makeStyles } from '@mui/styles'
 // import isEmail from 'validator/lib/isEmail'
 
 import '../../styles/style.css'
-import { UsersUrl } from '../../services/ApiUrls'
+import { Header, UsersUrl } from '../../services/ApiUrls'
 import { fetchData } from '../../components/FetchData'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { FaArrowAltCircleDown, FaArrowDown, FaTimes, FaUpload } from 'react-icons/fa'
 import { AntSwitch, CustomSelectField, CustomSelectTextField, RequiredTextField } from '../../styles/CssStyled'
+import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown'
+import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp'
 
 type FormErrors = {
     email?: string[];
@@ -64,11 +70,13 @@ export function AddUsers() {
     const { state } = useLocation()
     const navigate = useNavigate()
 
+    const [roleSelectOpen, setRoleSelectOpen] = useState(false)
     const [error, setError] = useState(false)
     // const [desc, setDesc] = useState('')
 
     const [msg, setMsg] = useState('')
     const [responceError, setResponceError] = useState(false)
+
     // const [assign, setAssignTo] = useState('')
     // const [source, setSource] = useState('')
     // const [status, setStatus] = useState('')
@@ -210,13 +218,6 @@ export function AddUsers() {
         }
     };
 
-
-    const headers = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: localStorage.getItem('Token'),
-        org: localStorage.getItem('org')
-    }
     const submitForm = () => {
         // console.log('Form data:', data);
 
@@ -237,7 +238,7 @@ export function AddUsers() {
             is_organization_admin: formData.is_organization_admin
         }
 
-        fetchData(`${UsersUrl}/`, 'POST', JSON.stringify(data), headers)
+        fetchData(`${UsersUrl}/`, 'POST', JSON.stringify(data), Header)
             .then((res: any) => {
                 console.log('Form data:', res);
                 if (!res.error) {
@@ -307,23 +308,18 @@ export function AddUsers() {
     return (
         <Box sx={{ mt: '60px' }}>
             <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} onCancel={onCancel} onSubmit={handleSubmit} />
-            <Box sx={{ mt: "100px" }}>
+            <Box sx={{ mt: "120px" }}>
                 <form onSubmit={handleSubmit}>
                     <div style={{ padding: '10px' }}>
                         <div className='leadContainer'>
                             <Accordion defaultExpanded style={{ width: '98%' }}>
-                                <AccordionSummary
-                                    expandIcon={<FaArrowDown />}
-                                >
-                                    <div className='typography'>
-                                        <Typography style={{ marginBottom: '15px', fontWeight: 'bold' }}>
-                                            User Information
-                                        </Typography>
-                                    </div>
+                                <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                                    <Typography className='accordion-header'>Account Information</Typography>
                                 </AccordionSummary>
+                                <Divider className='divider' />
                                 <AccordionDetails>
                                     <Box
-                                        sx={{ width: '98%', color: '#1A3353' ,mb:1}}
+                                        sx={{ width: '98%', color: '#1A3353', mb: 1 }}
                                         component='form'
                                         noValidate
                                         autoComplete='off'
@@ -344,26 +340,29 @@ export function AddUsers() {
                                             </div>
                                             <div className='fieldSubContainer'>
                                                 <div className='fieldTitle'>Role</div>
-                                                <CustomSelectField
-                                                    name='role'
-                                                    select
-                                                    value={formData.role}
-                                                    className="custom-textfield"
-                                                    InputProps={{
-                                                        style: {
-                                                            height: '40px',
-                                                            maxHeight: '40px'
-                                                        }
-                                                    }}
-                                                    onChange={handleChange}
-                                                    sx={{ width: '70%' }}
-                                                >
-                                                    {['ADMIN', 'USER'].map((option) => (
-                                                        <MenuItem key={option} value={option}>
-                                                            {option}
-                                                        </MenuItem>
-                                                    ))}
-                                                </CustomSelectField>
+                                                <FormControl sx={{ width: '70%' }}>
+                                                    <Select
+                                                        name='role'
+                                                        value={formData.role}
+                                                        open={roleSelectOpen}
+                                                        onClick={() => setRoleSelectOpen(!roleSelectOpen)}
+                                                        IconComponent={() => (
+                                                            <div onClick={() => setRoleSelectOpen(!roleSelectOpen)} className="select-icon-background">
+                                                                {roleSelectOpen ? <FiChevronUp className='select-icon' /> : <FiChevronDown className='select-icon' />}
+                                                            </div>
+                                                        )}
+                                                        className={'select'}
+                                                        onChange={handleChange}
+                                                        error={!!errors?.role?.[0]}
+                                                    >
+                                                        {['ADMIN', 'USER'].map((option) => (
+                                                            <MenuItem key={option} value={option}>
+                                                                {option}
+                                                            </MenuItem>
+                                                        ))}
+                                                    </Select>
+                                                    {/* <FormHelperText>{errors?.[0] ? errors[0] : ''}</FormHelperText> */}
+                                                </FormControl>
                                             </div>
                                         </div>
                                         <div className='fieldContainer2'>
@@ -510,17 +509,10 @@ export function AddUsers() {
                         {/* Email Information */}
                         {/* <div className='leadContainer'>
                             <Accordion style={{ width: '98%' }}>
-                                <AccordionSummary
-                                    expandIcon={<FaArrowDown />}
-                                    aria-controls='panel1a-content'
-                                    id='panel1a-header'
-                                >
-                                    <div
-                                        className='typography'
-                                    >
-                                        <Typography style={{ marginBottom: '15px', fontWeight: 'bold' }}>Email Information</Typography>
-                                    </div>
+                              <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                                    <Typography className='accordion-header'>Account Information</Typography>
                                 </AccordionSummary>
+                                <Divider className='divider' />
                                 <AccordionDetails>
                                     <Box
                                         sx={{ width: '98%', color: '#1A3353' }}
@@ -708,20 +700,13 @@ export function AddUsers() {
                         {/* Address Details */}
                         <div className='leadContainer'>
                             <Accordion defaultExpanded style={{ width: '98%' }}>
-                                <AccordionSummary
-                                    expandIcon={<FaArrowDown />}
-                                >
-                                    <div className='typography'>
-                                        <Typography
-                                            style={{ marginBottom: '15px', fontWeight: 'bold' }}
-                                        >
-                                            Address
-                                        </Typography>
-                                    </div>
+                                <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                                    <Typography className='accordion-header'>Account Information</Typography>
                                 </AccordionSummary>
+                                <Divider className='divider' />
                                 <AccordionDetails>
                                     <Box
-                                        sx={{ width: '98%', color: '#1A3353',mb:1 }}
+                                        sx={{ width: '98%', color: '#1A3353', mb: 1 }}
                                         component='form'
                                         noValidate
                                         autoComplete='off'
@@ -731,7 +716,7 @@ export function AddUsers() {
                                                 <div className='fieldTitle'>Address Lane</div>
                                                 <TextField
                                                     required
-                                                    name='address'
+                                                    name='address_line'
                                                     value={formData.address_line}
                                                     onChange={handleChange}
                                                     style={{ width: '70%' }}
@@ -817,19 +802,10 @@ export function AddUsers() {
                         {/* Business Hours */}
                         {/* <div className='leadContainer'>
                             <Accordion defaultExpanded style={{ width: '98%' }}>
-                                <AccordionSummary
-                                    expandIcon={<FaArrowDown />}
-                                    aria-controls='panel1a-content'
-                                    id='panel1a-header'
-                                >
-                                    <div className='typography'>
-                                        <Typography
-                                            style={{ marginBottom: '15px', fontWeight: 'bold' }}
-                                        >
-                                            Business Hours
-                                        </Typography>
-                                    </div>
+                        <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                                    <Typography className='accordion-header'>Account Information</Typography>
                                 </AccordionSummary>
+                                <Divider className='divider' />
                                 <AccordionDetails>
                                     <Box
                                         sx={{ width: '98%', color: '#1A3353' }}
@@ -867,19 +843,10 @@ export function AddUsers() {
                         {/* Preferences */}
                         {/* <div className='leadContainer'>
                             <Accordion defaultExpanded style={{ width: '98%' }}>
-                                <AccordionSummary
-                                    expandIcon={<FaArrowDown />}
-                                    aria-controls='panel1a-content'
-                                    id='panel1a-header'
-                                >
-                                    <div className='typography'>
-                                        <Typography
-                                            style={{ marginBottom: '15px', fontWeight: 'bold' }}
-                                        >
-                                            Preferences
-                                        </Typography>
-                                    </div>
+                       <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                                    <Typography className='accordion-header'>Account Information</Typography>
                                 </AccordionSummary>
+                                <Divider className='divider' />
                                 <AccordionDetails>
                                     <Box
                                         sx={{ width: '98%', color: '#1A3353' }}
@@ -1026,15 +993,10 @@ export function AddUsers() {
                         {/* Signature Block */}
                         {/* <div className='leadContainer'>
                             <Accordion defaultExpanded style={{ width: '98%' }}>
-                                <AccordionSummary
-                                    expandIcon={<FaArrowDown />}
-                                    aria-controls='panel1a-content'
-                                    id='panel1a-header'
-                                >
-                                    <div className='typography'>
-                                        <Typography style={{ marginBottom: '15px', fontWeight: 'bold' }}>Signature Block</Typography>
-                                    </div>
+                              <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                                    <Typography className='accordion-header'>Account Information</Typography>
                                 </AccordionSummary>
+                                <Divider className='divider' />
                                 <AccordionDetails>
                                     <Box
                                         sx={{ width: '100%', color: '#1A3353' }}

@@ -1,20 +1,22 @@
 import styled from '@emotion/styled';
-import { Avatar, AvatarGroup, Box, Button, Card, List, Stack, Tab, TablePagination, Tabs, Toolbar, Typography, Link } from '@mui/material'
+import { Avatar, AvatarGroup, Box, Button, Card, List, Stack, Tab, TablePagination, Tabs, Toolbar, Typography, Link, MenuItem, Select } from '@mui/material'
 import React, { SyntheticEvent, useEffect, useState } from 'react'
 import { Spinner } from '../../components/Spinner';
 import { FiPlus } from "@react-icons/all-files/fi/FiPlus";
 import { FiChevronLeft } from "@react-icons/all-files/fi/FiChevronLeft";
 import { FiChevronRight } from "@react-icons/all-files/fi/FiChevronRight";
-import { CustomTab, CustomToolbar } from '../../styles/CssStyled';
+import { CustomTab, CustomToolbar, FabLeft, FabRight } from '../../styles/CssStyled';
 import { useNavigate } from 'react-router-dom';
 import { fetchData } from '../../components/FetchData';
 import { getComparator, stableSort } from '../../components/Sorting';
 import { Label } from '../../components/Label';
 import { FaTrashAlt } from 'react-icons/fa';
 import { DialogModal } from './DeleteModal';
-import { LeadUrl } from '../../services/ApiUrls';
+import { Header, LeadUrl } from '../../services/ApiUrls';
 import { DeleteModal } from '../../components/DeleteModal';
 import FormateTime from '../../components/FormateTime';
+import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
+import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 // import css from './css';
 // import emotionStyled from '@emotion/styled';
 // import { styled } from '@mui/system';
@@ -96,23 +98,14 @@ export const ToolbarNew = styled(Toolbar)({
 export default function LeadList(props: any) {
   // const {drawer}=props
   const navigate = useNavigate()
-  const [value, setValue] = useState('Open');
+  const [tab, setTab] = useState('open');
   const [loading, setLoading] = useState(true);
 
   const [leads, setLeads] = useState([])
   const [valued, setValued] = useState(10)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [page, setPage] = useState(0)
-  // const [value, setValue] = useState(0)
   const [initial, setInitial] = useState(true)
-  const [openOffset, setOpenOffset] = useState(0)
-  const [openValue, setOpenValue] = useState(1)
-  const [closeOffset, setCloseOffset] = useState(0)
-  const [closeValue, setCloseValue] = useState(1)
-  // const [personName, setPersonName] = useState([])
-  const [isDelete, setIsDelete] = useState(false)
-  const [lead, setLead] = useState('')
-  const [storeData, SetStoreData] = useState([])
   const [order] = useState('asc')
   const [orderBy] = useState('calories')
 
@@ -129,6 +122,10 @@ export default function LeadList(props: any) {
   const [countries, setCountries] = useState([])
   const [industries, setIndustries] = useState([])
 
+  const [selectOpen, setSelectOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [recordsPerPage, setRecordsPerPage] = useState<number>(10);
+  const [totalPages, setTotalPages] = useState<number>(0);
 
   const [deleteLeadModal, setDeleteLeadModal] = useState(false)
   const [selectedId, setSelectedId] = useState('')
@@ -136,14 +133,9 @@ export default function LeadList(props: any) {
   useEffect(() => {
     getLeads()
   }, [])
-  const headers = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-    Authorization: localStorage.getItem('Token'),
-    org: localStorage.getItem('org')
-  }
+
   const getLeads = () => {
-    fetchData(`${LeadUrl}/`, 'GET', null as any, headers)
+    fetchData(`${LeadUrl}/`, 'GET', null as any, Header)
       .then((res) => {
         // console.log(res, 'leads')
         if (!res.error) {
@@ -176,37 +168,9 @@ export default function LeadList(props: any) {
   }
 
   const handleChangeTab = (e: SyntheticEvent, val: any) => {
-    setValue(val)
-  }
-  //   <Box
-  //   css={{
-  //     width: 200,
-  //     height: 200,
-  //     borderWidth: '3px',
-  //     borderColor: 'white',
-  //     '&:hover': { backgroundColor: '#c51162' },
-  //     '@media (min-width:0px)': { backgroundColor: '#3f51b5', borderStyle: 'dashed' },
-  //     '@media (min-width:600px)': {
-  //       backgroundColor: 'rgba(0, 0, 0, 0.87)',
-  //       borderStyle: 'solid',
-  //     },
-  //     '@media (min-width:960px)': { backgroundColor: '#fff', borderStyle: 'dotted' },
-  //   }}
-  // >
-  //   test case
-  // </Box>
-
-
-  // const Toolbar = emotionStyled('Toolbar')(({ css }) => css);
-  const handleChangePage = (event: any, newPage: any) => {
-    setPage(newPage)
+    setTab(val)
   }
 
-  const handleChangeRowsPerPage = (event: any) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-    setPage(0)
-    setValued(parseInt(event.target.value, 10))
-  }
   const onAddHandle = () => {
     navigate('/app/leads/add-leads', {
       state: {
@@ -216,11 +180,6 @@ export default function LeadList(props: any) {
       }
     })
   }
-  const onDelete = (lead: any) => {
-    setSelectedId(lead)
-    setDeleteLeadModal(!deleteLeadModal)
-  }
-
 
   const selectLeadList = (leadId: any) => {
     navigate(`/app/leads/lead-details`, { state: { leadId, detail: true, contacts, status, source, companies, tags, users, countries, industries } })
@@ -237,8 +196,9 @@ export default function LeadList(props: any) {
   }
   const modalDialog = 'Are You Sure You want to delete selected Lead?'
   const modalTitle = 'Delete Lead'
+
   const deleteItem = () => {
-    fetchData(`${LeadUrl}/${selectedId}/`, 'DELETE', null as any, headers)
+    fetchData(`${LeadUrl}/${selectedId}/`, 'DELETE', null as any, Header)
       .then((res: any) => {
         // console.log('delete:', res);
         if (!res.error) {
@@ -276,6 +236,7 @@ export default function LeadList(props: any) {
       return `${secondsDifference} ${secondsDifference === 1 ? 'second' : 'seconds'} ago`;
     }
   };
+  const recordsList = [[10, '10 Records per page'], [20, '20 Records per page'], [30, '30 Records per page'], [40, '40 Records per page'], [50, '50 Records per page']]
   const tag = ['account', 'leading', 'account', 'leading', 'account', 'leading', 'account', 'account', 'leading', 'account', 'leading', 'account', 'leading', 'leading', 'account', 'account', 'leading', 'account', 'leading', 'account', 'leading', 'account', 'leading', 'account', 'leading', 'account', 'leading']
   return (
     <Box sx={{
@@ -283,518 +244,73 @@ export default function LeadList(props: any) {
       // width: '1370px' 
     }}>
 
-      <CustomToolbar
-      // drawerWidth={props.drawer}
-      // sx={Css.leadsCss}
-      // sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', backgroundColor: '#1A3353',minHeight:'48px',height:'48px',maxHeight:'48px','.& MuiToolbar-root':{minHeight:'48px',height:'48px',maxHeight:'48px'} }}
-      >
-        <Tabs defaultValue={value} onChange={handleChangeTab} sx={{ mt: '26px' }}>
-          <CustomTab value="Open" label="Open"
+      <CustomToolbar>
+        <Tabs defaultValue={tab} onChange={handleChangeTab} sx={{ mt: '26px' }}>
+          <CustomTab value="open" label="Open"
             sx={{
-              backgroundColor: value === 'Open' ? '#F0F7FF' : '#223d60',
-              color: value === 'Open' ? '#3f51b5' : 'white',
+              backgroundColor: tab === 'open' ? '#F0F7FF' : '#284871',
+              color: tab === 'open' ? '#3f51b5' : 'white',
             }} />
-          <CustomTab value="Closed" label="Closed"
+          <CustomTab value="closed" label="Closed"
             sx={{
-              backgroundColor: value === 'Closed' ? '#F0F7FF' : '#223d60',
-              color: value === 'Closed' ? '#3f51b5' : 'white',
+              backgroundColor: tab === 'closed' ? '#F0F7FF' : '#284871',
+              color: tab === 'closed' ? '#3f51b5' : 'white',
               ml: '5px',
             }}
           />
-          {/* <div style={{
-            height: '30px',
-            width: '90%',
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
-            justifyItems: 'flex-end'
-          }}
-          >
-            <div className='paginationContainer'>
-              <TablePagination
-                style={{ display: 'flex', flexDirection: 'row' }}
-                rowsPerPageOptions={[10, 20, 30, 40, 50]}
-                component='div'
-                labelRowsPerPage='Records Per Page'
-                count={value === 0 ? leads.open_lead_count : leads.close_lead_count}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                size='small'
-                sx={{
-                  '.MuiTablePagination-displayedRows': {
-                    display: 'none'
-                  },
-                  '.MuiTablePagination-actions': {
-                    display: 'none'
-                  },
-                  '.MuiTablePagination-selectLabel': {
-                    marginTop: '4px',
-                    marginLeft: '-15px'
-                  },
-                  '.MuiTablePagination-select': {
-                    color: 'black',
-                    marginRight: '0px',
-                    marginLeft: '-12px',
-                    marginTop: '-6px'
-                  },
-                  '.MuiSelect-icon': {
-                    color: 'black',
-                    marginTop: '-5px'
-                  },
-                  backgroundColor: 'white',
-                  borderRadius: 1,
-                  height: '10%',
-                  overflow: 'hidden',
-                  p: 0,
-                  m: 0,
-                  width: '39%',
-                  pb: 5,
-                  color: 'black',
-                  mr: 1
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-              <Button
-                size='small'
-                sx={{
-                  backgroundColor: 'white',
-                  textTransform: 'lowercase',
-                  borderRadius: '7px',
-                  mr: 1,
-                  color: 'black',
-                  '&:hover': {
-                    backgroundColor: 'white'
-                  }
-                }}
-              >
-                <ChevronLeftIcon onClick={previous} sx={{ backgroundColor: 'whitesmoke', color: '#1A3353', mr: 1 }} />
-                <Typography sx={{ mt: 0, textTransform: 'lowercase', fontSize: '15px', color: '#1A3353', mr: 1 }}>
-                  {
-                    value === 0
-                      ? `${openOffset + 1} to ${leads.open_lead_count > 0 ? valued : 0}`
-                      : `${closeOffset + 1} to ${leads.close_lead_count > closeOffset + 10 ? closeOffset + 10 : 0}`
-                  }
-                </Typography>
-                <ChevronRightIcon onClick={next} sx={{ backgroundColor: 'whitesmoke', color: '#1A3353' }} />
-              </Button>
-              <div>
-                <Button
-                  variant='contained'
-                  startIcon={<AddCircleOutlinedIcon style={{ fill: 'white' }} />}
-                  onClick={onAddHandle}
-                  style={{ textTransform: 'capitalize', fontWeight: 'bold', height: '30px', mr: 2, color: 'white' }}
-                >
-                  Add Lead
-                </Button>
-              </div>
-            </div>
-          </div> */}
-          {/* <Tabs value={value} index={0}> */}
-          {/* <div style={{ padding: '10px', marginTop: '5px' }}>
-            {
-              leads.open && leads.open
-                ? stableSort(leads.open && leads.open, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index) => (
-                  <List
-                    key={index}
-                    sx={{
-                      bgcolor: 'background.paper',
-                      marginBottom: '-17px',
-                      paddingTop: '0px',
-                      boxShadow: 'none'
-                    }}
-                  >
-                    <div style={{ padding: '10px', marginTop: '1px' }}>
-                      <Card className={classes.card} style={{ boxShadow: 'none' }}>
-                        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                          <div style={{ color: '#1A3353', fontSize: '13px', fontWeight: 'bold', padding: '10px', cursor: 'pointer' }} onClick={() => leadHandle(item)}>
-                            {item.title}
-                          </div>
-                          <div
-                            onClick={() => toggleDelete(item)}
-                          >
-                            <DeleteOutlineIcon color='inherit' style={{ fill: 'inherit', cursor: 'pointer' }} />
-                          </div>
-                        </div>
-                        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                          <div style={{ width: '80%', display: 'flex', flexDirection: 'row', flexWrap: 'wrap', paddingLeft: '10px' }}>
-                            <div style={{ color: 'gray', fontSize: '12px', textTransform: 'capitalize', paddingBottom: '40px' }}>
-                              {`${(item.country !== null) ? item.country : ''} source-${item.source !== null ? item.source : ''} status-${(item.status !== null) ? item.status : ''} Jan 9, 2014 `}
-                            </div>
-                            {
-                              item.tags.map((tagData, index) => (
-                                <Label tags={tagData} key={index} />
-                              ))
-                            }
-                            {
-                              item.assigned_to.map((assignItem, index) => (
-                                assignItem.user_details.profile_pic
-                                  ? <Avatar alt='Remy Sharp' src={assignItem.user_details.profile_pic} />
-                                  : <Avatar alt='Remy Sharp' size='small' style={{ backgroundColor: deepOrange[500], color: 'white', textTransform: 'capitalize', marginTop: '-20px', marginLeft: '10px' }}>
-                                    {assignItem.user_details.first_name.charAt(0)}
-                                  </Avatar>
-                              ))
-                            }
-                          </div>
-                          <div style={{ color: 'gray', fontSize: '12px', width: '30%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}>
-                            created on {formatDate(item.created_on)} by   &nbsp;<span>
-                              {
-                                item.created_by.user_details.profile_pic !== null
-                                  ? <Avatar
-                                    alt='Remy Sharp' src={staticImg}
-                                    style={{
-                                      height: '20px',
-                                      width: '20px'
-                                    }}
-                                  />
-                                  : <Avatar
-                                    src='/broken-image.jpg'
-                                    style={{
-                                      height: '20px',
-                                      width: '20px',
-                                      marginTop: '-4px'
-                                    }}
-                                  />
-                              }
-                              &nbsp;
-                            </span> &nbsp;&nbsp;{item.created_by.user_details.first_name}
-                          </div>
-                        </div>
-                      </Card>
-                    </div>
-                  </List>
-                ))
-                : ''
-            }
-            {
-              isDelete
-                ? <AlertDelete
-                  lead={lead}
-                  isDelete={isDelete}
-                  onClose={onclose}
-                  onDelete={onDelete}
-                />
-                : ''
-            }
-          </div> */}
-          {/* </Tabs> */}
-          {/* <Tabs value={value} index={1}> */}
-          {/* <div style={{ padding: '10px', marginTop: '5px' }}>
-            {
-              leads.close
-                ? leads.close.map((item, i) => (
-                  <List
-                    key={i}
-                    sx={{
-                      bgcolor: 'background.paper',
-                      marginBottom: '-17px',
-                      paddingTop: '0px'
-                    }}
-                  >
-                    <div style={{ padding: '10px', marginTop: '1px' }}>
-                      <Card className={classes.card} sx={{ boxShadow: 'none' }}>
-                        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                          <div style={{ color: '#5B5C63 ', fontSize: '13px', fontWeight: 'bold', textTransform: 'capitalize', padding: '10px', cursor: 'pointer' }} onClick={() => leadHandle(item)}>
-                            {item.title}
-                          </div>
-                          <div onClick={() => toggleDelete(item)}>
-                            <DeleteOutlineIcon color='inherit' style={{ fill: 'inherit', cursor: 'pointer' }} />
-                          </div>
-                        </div>
-                        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                          <div style={{ width: '80%', display: 'flex', flexDirection: 'row', flexWrap: 'wrap', paddingLeft: '10px' }}>
-                            <div style={{ color: 'gray', fontSize: '12px', textTransform: 'capitalize', paddingBottom: '40px' }}>
-                              {`${(item.country !== null) ? item.country : ''} source-${item.source !== null ? item.source : ''} status-${(item.status !== null) ? item.status : ''} Jan 9, 2014 `}
-                            </div>
-                            {
-                              item.tags.map((tagData) => (
-                                <Label tags={tagData} />
-                              ))
-                            }
-                            <ListItemAvatar>
-                              <AvatarGroup max={item.assigned_to.length}>
-                                {
-                                  item.assigned_to.map((assignItem) => (
-                                    assignItem.user_details.profile_pic
-                                      ? <Avatar alt='Remy Sharp' src={assignItem.user_details.profile_pic} />
-                                      : <Avatar alt='Remy Sharp' size='small' style={{ backgroundColor: deepOrange[500], color: 'white', textTransform: 'capitalize', marginBottom: '70px', marginTop: '-20px', marginLeft: '3px' }}>
-                                        {assignItem.user_details.first_name.charAt(0)}
-                                      </Avatar>
-                                  ))
-                                }
-                              </AvatarGroup>
-                            </ListItemAvatar>
-                          </div>
-                          <div style={{ color: 'gray', fontSize: '12px', width: '30%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}>
-                            created on {formatDate(item.created_on)} by   &nbsp;<span>
-                              {
-                                item.created_by.user_details.profile_pic !== null
-                                  ? <Avatar
-                                    alt='Remy Sharp' src={staticImg}
-                                    style={{
-                                      height: '20px',
-                                      width: '20px'
-                                    }}
-                                  />
-                                  : <Avatar
-                                    src='/broken-image.jpg'
-                                    style={{
-                                      height: '20px',
-                                      width: '20px',
-                                      marginTop: '-4px'
-                                    }}
-                                  />
-                              }
-                              &nbsp;
-                            </span> &nbsp;&nbsp;{item.created_by.user_details.first_name}
-                          </div>
-                        </div>
-                      </Card>
-                    </div>
-                  </List>
-                ))
-                : ''
-            }
-            {
-              isDelete
-                ? <AlertDelete
-                  lead={lead} isDelete={isDelete}
-                  onClose={onclose}
-                  onDelete={onDelete}
-                />
-                : ''
-            }
-          </div> */}
-          {/* </Tabs> */}
         </Tabs>
-        {/* <div style={{ 
-                    height: '30px',
-                    width: '90%',
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'flex-end',
-                    justifyItems: 'flex-end'
-                }}
-                >
-                    <div className='paginationContainer'>
-              <TablePagination
-                style={{ display: 'flex', flexDirection: 'row' }}
-                rowsPerPageOptions={[10, 20, 30, 40, 50]}
-                component='div'
-                labelRowsPerPage='Records Per Page'
-                count={value === 0 ? leads.open_lead_count : leads.close_lead_count}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                size='small'
-                sx={{
-                  '.MuiTablePagination-displayedRows': {
-                    display: 'none'
-                  },
-                  '.MuiTablePagination-actions': {
-                    display: 'none'
-                  },
-                  '.MuiTablePagination-selectLabel': {
-                    marginTop: '4px',
-                    marginLeft: '-15px'
-                  },
-                  '.MuiTablePagination-select': {
-                    color: 'black',
-                    marginRight: '0px',
-                    marginLeft: '-12px',
-                    marginTop: '-6px'
-                  },
-                  '.MuiSelect-icon': {
-                    color: 'black',
-                    marginTop: '-5px'
-                  },
-                  backgroundColor: 'white',
-                  borderRadius: 1,
-                  height: '10%',
-                  overflow: 'hidden',
-                  p: 0,
-                  m: 0,
-                  width: '39%',
-                  pb: 5,
-                  color: 'black',
-                  mr: 1
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-              <Button
-                size='small'
-                sx={{
-                  backgroundColor: 'white',
-                  textTransform: 'lowercase',
-                  borderRadius: '7px',
-                  mr: 1,
-                  color: 'black',
-                  '&:hover': {
-                    backgroundColor: 'white'
-                  }
-                }}
-              >
-                <ChevronLeftIcon onClick={previous} sx={{ backgroundColor: 'whitesmoke', color: '#1A3353', mr: 1 }} />
-                <Typography sx={{ mt: 0, textTransform: 'lowercase', fontSize: '15px', color: '#1A3353', mr: 1 }}>
-                  {
-                    value === 0
-                      ? `${openOffset + 1} to ${leads.open_lead_count > 0 ? valued : 0}`
-                      : `${closeOffset + 1} to ${leads.close_lead_count > closeOffset + 10 ? closeOffset + 10 : 0}`
-                  }
-                </Typography>
-                <ChevronRightIcon onClick={next} sx={{ backgroundColor: 'whitesmoke', color: '#1A3353' }} />
-              </Button>
-              {/* <div>
-                <FormControl sx={{ mr: 1, width: 100, color: "#1A3353" }}>
-                  <Select
-                    className='select'
-                    multiple
-                    displayEmpty
-                    value={personName}
-                    style={{
-                    height: "32px",
-                    color: "#1A3353",
-                    fontSize: "13px",
-                    backgroundColor: "white",
-                    width: "90px",
-                    borderRadius: "6px"
-                    }}
-                    input={<OutlinedInput />}
-                    renderValue={(selected) => {
-                      if (selected.length === 0) {
-                        return <p>Sort By</p>;
-                      }
-                      return selected.join(', ');
-                    }}
-                    MenuProps={MenuProps}
-                    inputProps={{ 'aria-label': 'Without label' }}
-                  >
-                    <MenuItem disabled value="">
-                    </MenuItem>
-                    {
-                      names.map((name) => (
-                      <MenuItem
-                        key={name}
-                        value={name}
-                        style={getStyles(name, personName, theme)}>
-                        {name}
-                      </MenuItem>
-                      ))
-                    }
-                  </Select>
-                </FormControl>
-              </div> 
-              <div>
-                <Button
-                  variant='contained'
-                  startIcon={<AddCircleOutlinedIcon style={{ fill: 'white' }} />}
-                  onClick={onAddHandle}
-                  style={{ textTransform: 'capitalize', fontWeight: 'bold', height: '30px', mr: 2, color: 'white' }}
-                >
-                  Add Lead
-                </Button>
-              </div>
-            </div>
-                </div>
-                {/* <BsPlus/> */}
-        <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-          <Box
-            sx={{ mr: '-253px' }}
-          // sx={{ mr:'10px',display: 'flex',flexDirection: 'row',justifyContent: 'center',alignItems:'center',color: 'white'}}
-          >
-            {/* <CustomTablePagination */}
-            <TablePagination
-              style={{ display: 'flex', flexDirection: 'row' }}
-              rowsPerPageOptions={[10, 20, 30, 40, 50]}
-              component='div'
-              labelRowsPerPage='Records Per Page'
-              // count={value === 'Open' ? leads?.open_lead_count : leads?.close_lead_count}
-              count={10}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              size='small'
-              sx={{
-                '.MuiTablePagination-toolbar': {
-                  paddingRight: '220px',
-                  minHeight: '30px',
 
-                },
-                '.MuiTablePagination-displayedRows': {
-                  display: 'none'
-                },
-                '.MuiTablePagination-actions': {
-                  display: 'none'
-                },
-                '.MuiTablePagination-selectLabel': {
-                  marginTop: '4px',
-                  marginLeft: '-15px',
-                  mb: '8px'
-                },
-                '.MuiTablePagination-select': {
-                  color: 'black',
-                  marginRight: '0px',
-                  marginLeft: '-12px',
-                  marginTop: '-3px'
-                },
-                '.MuiSelect-icon': {
-                  color: 'black',
-                  marginTop: '-2px'
-                },
-                backgroundColor: 'white',
-                borderRadius: 1,
-                height: '10%',
-                overflow: 'hidden',
-                p: 0,
-                m: 0,
-                width: '39%',
-                pb: 5,
-                color: 'black',
-                mr: 1
-              }}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </Box>
-          <Button
-            size='small'
+        <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+          <Select
+            value={recordsPerPage}
+            onChange={(e: any) => setRecordsPerPage(e.target.value)}
+            open={selectOpen}
+            onOpen={() => setSelectOpen(true)}
+            onClose={() => setSelectOpen(false)}
+            className={`custom-select`}
+            onClick={() => setSelectOpen(!selectOpen)}
+            IconComponent={() => (
+              <div onClick={() => setSelectOpen(!selectOpen)} className="custom-select-icon">
+                {selectOpen ? <FiChevronUp style={{ marginTop: '12px' }} /> : <FiChevronDown style={{ marginTop: '12px' }} />}
+              </div>
+            )}
             sx={{
-              backgroundColor: 'white',
-              textTransform: 'lowercase',
-              borderRadius: '7px',
-              mr: 1,
-              color: 'black',
-              '&:hover': {
-                backgroundColor: 'white'
-              }
+              '& .MuiSelect-select': { overflow: 'visible !important' }
             }}
           >
-            <FiChevronLeft
-              //  onClick={previous}
-              style={{ backgroundColor: 'whitesmoke', color: '#1A3353', marginRight: 1 }} />
-            <Typography sx={{ mt: 0, textTransform: 'lowercase', fontSize: '15px', color: '#1A3353', mr: 1 }}>
-              1 to 0
-              {/* {
-                    value === 0
-                      ? `${openOffset + 1} to ${leads.open_lead_count > 0 ? valued : 0}`
-                      : `${closeOffset + 1} to ${leads.close_lead_count > closeOffset + 10 ? closeOffset + 10 : 0}`
-                  } */}
+            {recordsList?.length && recordsList.map((item: any, i: any) => (
+              <MenuItem key={i} value={item[0]}>
+                {item[1]}
+              </MenuItem>
+            ))}
+          </Select>
+          <Box sx={{ borderRadius: '7px', backgroundColor: 'white', height: '40px', minHeight: '40px', maxHeight: '40px', display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 1, p: '0px' }}>
+            <FabLeft>
+              <FiChevronLeft
+                //  onClick={previous}
+                style={{ height: '15px' }}
+              />
+            </FabLeft>
+            <Typography sx={{ mt: 0, textTransform: 'lowercase', fontSize: '15px', color: '#1A3353', textAlign: 'center' }}>
+              0 to 1
             </Typography>
-            <FiChevronRight
-              //  onClick={next}
-              style={{ backgroundColor: 'whitesmoke', color: '#1A3353' }} />
-          </Button>
+            <FabRight>
+              <FiChevronRight
+                style={{ height: '15px' }} />
+            </FabRight>
+          </Box>
           <Button
             variant='contained'
-            startIcon={<FiPlus color='#1976d2' style={{ width: '14px', height: '14px', backgroundColor: 'white', borderRadius: '10px', marginTop: '-1px' }} />}
+            startIcon={<FiPlus className='plus-icon' />}
             onClick={onAddHandle}
-            sx={{ textTransform: 'capitalize', fontWeight: 'bold', height: '30px', color: 'white', mr: '-13px' }}
+            className={'add-button'}
           >
             Add Lead
           </Button>
         </Stack>
-
       </CustomToolbar>
-      {value === 'Open' ?
+
+      {tab === 'open' ?
         <Box sx={{ p: '10px', mt: '5px' }}>
           {
             // leads.open && leads.open
@@ -870,7 +386,7 @@ export default function LeadList(props: any) {
                           ))
                         } */}
                       </div>
-                      <div style={{ color: 'gray', fontSize: '16px', width: '30%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+                      <div style={{ color: 'gray', fontSize: '16px', width: '33%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
                         {/* created on {formatDate(item.created_on)} by   &nbsp;<span> */}
                         created&nbsp; {FormateTime(item?.created_at)}&nbsp; by
                         <Avatar
@@ -949,7 +465,7 @@ export default function LeadList(props: any) {
                         </Box>
 
                       </div>
-                      <div style={{ color: 'gray', fontSize: '16px', width: '30%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+                      <div style={{ color: 'gray', fontSize: '16px', width: '33%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
                         created&nbsp; {FormateTime(item?.created_at)}&nbsp; by
                         <Avatar
                           alt={item?.first_name}

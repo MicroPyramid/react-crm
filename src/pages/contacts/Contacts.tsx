@@ -6,7 +6,7 @@ import { FiChevronRight } from "@react-icons/all-files/fi/FiChevronRight";
 import { getComparator, stableSort } from '../../components/Sorting';
 import { Spinner } from '../../components/Spinner';
 import { fetchData } from '../../components/FetchData';
-import { ContactUrl } from '../../services/ApiUrls';
+import { ContactUrl, Header } from '../../services/ApiUrls';
 import { AntSwitch, CustomTab, CustomToolbar, FabLeft, FabRight, StyledTableCell, StyledTableRow } from '../../styles/CssStyled';
 import { useNavigate } from 'react-router-dom';
 import { FaTrashAlt } from 'react-icons/fa';
@@ -162,17 +162,12 @@ export default function Contacts() {
         setPage(0)
         setValued(parseInt(event.target.value, 10))
     }
-    const headers = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: localStorage.getItem('Token'),
-        org: localStorage.getItem('org')
-    }
+
     const getContacts = () => {
         const offset = (currentPage - 1) * recordsPerPage;
         // ?offset=${offset}&limit=${recordsPerPage}
-        // fetchData(`${ContactUrl}?page=${currentPage}&limit=${recordsPerPage}/`, 'GET', null as any, headers)
-        fetchData(`${ContactUrl}/`, 'GET', null as any, headers)
+        // fetchData(`${ContactUrl}?page=${currentPage}&limit=${recordsPerPage}/`, 'GET', null as any, Header)
+        fetchData(`${ContactUrl}/`, 'GET', null as any, Header)
             .then((data) => {
                 if (!data.error) {
                     console.log(data.contact_obj_list, 'contact')
@@ -195,7 +190,7 @@ export default function Contacts() {
 
 
     //   const getContacts = () => {
-    //     fetchData(`${ContactUrl}/?offset=${value === 'Open' ? openOffset : closeOffset}`, 'GET', null, headers)
+    //     fetchData(`${ContactUrl}/?offset=${value === 'Open' ? openOffset : closeOffset}`, 'GET', null, Header)
     //       .then((data) => {
     //         if (!data.error) {
     //           if (initial) {
@@ -221,7 +216,7 @@ export default function Contacts() {
     }
 
     const DeleteItem = () => {
-        fetchData(`${ContactUrl}/${selectedId}/`, 'DELETE', null as any, headers)
+        fetchData(`${ContactUrl}/${selectedId}/`, 'DELETE', null as any, Header)
             .then((res: any) => {
                 console.log('delete:', res);
                 if (!res.error) {
@@ -312,7 +307,7 @@ export default function Contacts() {
     const modalDialog = 'Are You Sure you want to delete this contact?'
     const modalTitle = 'Delete Contact'
 
-    const recordsList = [10, 20, 30, 40, 50]
+    const recordsList = [[10, '10 Records per page'], [20, '20 Records per page'], [30, '30 Records per page'], [40, '40 Records per page'], [50, '50 Records per page']]
     // console.log(contactList, 'cccc')
 
     return (
@@ -337,45 +332,29 @@ export default function Contacts() {
                 </Tabs> */}
 
                 <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <Box sx={{ position: 'relative' }}>
-                        <Typography sx={{ position: 'absolute', top: '9px', left: '36px', fontSize: '15px', zIndex: 1 }}>Records Per Page</Typography>
-                        <Select
-                            value={recordsPerPage}
-                            onChange={(e: any) => setRecordsPerPage(e.target.value)}
-                            open={selectOpen}
-                            onOpen={() => setSelectOpen(true)}
-                            onClose={() => setSelectOpen(false)}
-                            className={`custom-select`}
-                            onClick={() => setSelectOpen(!selectOpen)}
-                            IconComponent={() => (
-                                <div onClick={() => setSelectOpen(!selectOpen)} className="custom-select-icon">
-                                    {selectOpen ? <FiChevronUp style={{ marginTop: '12px' }} /> : <FiChevronDown style={{ marginTop: '12px' }} />}
-                                </div>
-                            )}
-                            MenuProps={{
-                                anchorOrigin: {
-                                    vertical: 'bottom',
-                                    horizontal: 'right',
-                                },
-                                transformOrigin: {
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                },
-                                PaperProps: {
-                                    style: {
-                                        width: '40px',
-                                        minWidth: '40px'
-                                    },
-                                },
-                            }}
-                        >
-                            {recordsList?.length && recordsList.map((item: any) => (
-                                <MenuItem key={item} value={item} sx={{ ml: '-5px' }}>
-                                    {item}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </Box>
+                    <Select
+                        value={recordsPerPage}
+                        onChange={(e: any) => setRecordsPerPage(e.target.value)}
+                        open={selectOpen}
+                        onOpen={() => setSelectOpen(true)}
+                        onClose={() => setSelectOpen(false)}
+                        className={`custom-select`}
+                        onClick={() => setSelectOpen(!selectOpen)}
+                        IconComponent={() => (
+                            <div onClick={() => setSelectOpen(!selectOpen)} className="custom-select-icon">
+                                {selectOpen ? <FiChevronUp style={{ marginTop: '12px' }} /> : <FiChevronDown style={{ marginTop: '12px' }} />}
+                            </div>
+                        )}
+                        sx={{
+                            '& .MuiSelect-select': { overflow: 'visible !important' }
+                        }}
+                    >
+                        {recordsList?.length && recordsList.map((item: any, i: any) => (
+                            <MenuItem key={i} value={item[0]} >
+                                {item[1]}
+                            </MenuItem>
+                        ))}
+                    </Select>
                     <Box sx={{ borderRadius: '7px', backgroundColor: 'white', height: '40px', minHeight: '40px', maxHeight: '40px', display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 1, p: '0px' }}>
                         <FabLeft>
                             <FiChevronLeft
@@ -402,8 +381,8 @@ export default function Contacts() {
                 </Stack>
             </CustomToolbar>
             <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%' }}>
-                <Container sx={{ width: '101%', minWidth: '101%', m: '15px 0px 0px -30px' }}>
-                    <Paper sx={{ width: '100%', mb: 2, p: '0px 15px 0px 15px' }}>
+                <Box sx={{ width: '100%', minWidth: '100%', m: '15px 0px 0px 0px' }}>
+                    <Paper sx={{ width: 'cal(100%-15px)', mb: 2, p: '0px 15px 15px 15px' }}>
                         <TableContainer sx={{ width: '100%', mb: 2 }}>
                             <Table sx={{}} aria-label='customized table'>
                                 <EnhancedTableHead
@@ -432,13 +411,13 @@ export default function Contacts() {
                                             ? stableSort(contactList, getComparator(order, orderBy))
                                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => (
                                                     <StyledTableRow key={index}>
-                                                        <StyledTableCell align='left' style={{ textTransform: 'capitalize', cursor: 'pointer', color: '#3E79F7' }} onClick={() => contactHandle(item)}>{item.first_name + ' ' + item.last_name}</StyledTableCell>
-                                                        <StyledTableCell align='left'><p >{item.primary_email}</p></StyledTableCell>
-                                                        <StyledTableCell align='left'>{item.mobile_number ? item.mobile_number : '-'}</StyledTableCell>
+                                                        <StyledTableCell align='left' style={{ textTransform: 'capitalize', cursor: 'pointer', color: '#3E79F7',border:0 }} onClick={() => contactHandle(item)}>{item.first_name + ' ' + item.last_name}</StyledTableCell>
+                                                        <StyledTableCell align='left' sx={{border:0}}><p >{item.primary_email}</p></StyledTableCell>
+                                                        <StyledTableCell align='left' sx={{border:0}}>{item.mobile_number ? item.mobile_number : '-'}</StyledTableCell>
                                                         {/* <StyledTableCell align='left'>
                                                 <AntSwitch checked={item.do_not_call} inputProps={{ 'aria-label': 'ant design' }} />
                                             </StyledTableCell> */}
-                                                        <StyledTableCell align='left'><FaTrashAlt style={{ cursor: 'pointer' }} onClick={() => deleteRow(item.id)} /></StyledTableCell>
+                                                        <StyledTableCell align='left' sx={{border:0}}><FaTrashAlt style={{ cursor: 'pointer' }} onClick={() => deleteRow(item.id)} /></StyledTableCell>
                                                     </StyledTableRow>
                                                 ))
                                             : ''
@@ -448,7 +427,7 @@ export default function Contacts() {
                         </TableContainer>
                         {loading && <Spinner />}
                     </Paper>
-                </Container>
+                </Box>
             </Container>
             {
                 <DeleteModal

@@ -14,7 +14,7 @@ import { Fa500Px, FaAccusoft, FaAd, FaAddressCard, FaEnvelope, FaRegAddressCard,
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { AntSwitch } from '../../styles/CssStyled'
-import { ContactUrl } from '../../services/ApiUrls'
+import { ContactUrl, Header } from '../../services/ApiUrls'
 import { fetchData } from '../../components/FetchData'
 // import { Appbar } from '../../../../components/CustomAppBar'
 // import { useRouter } from 'next/navigation'
@@ -68,19 +68,12 @@ export default function ContactDetails() {
     const [addressDetails, setAddressDetails] = useState<response | null>(null)
     const [org, setOrg] = useState<response | null>(null)
 
-    const headers = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: localStorage.getItem('Token'),
-        org: localStorage.getItem('org')
-    }
-
     useEffect(() => {
         getContactDetail(state.contactId.id)
     }, [state.contactId.id])
 
     const getContactDetail = (id: any) => {
-        fetchData(`${ContactUrl}/${id}/`, 'GET', null as any, headers)
+        fetchData(`${ContactUrl}/${id}/`, 'GET', null as any, Header)
             .then((res) => {
                 console.log(res, 'res');
                 if (!res.error) {
@@ -93,7 +86,7 @@ export default function ContactDetails() {
 
     //   useEffect(() => {
     // navigate(-1)
-    //     fetchData(`${ContactUrl}/${state.contactId}/`, 'GET', null as any, headers)
+    //     fetchData(`${ContactUrl}/${state.contactId}/`, 'GET', null as any, Header)
     //       .then((data) => {
     //         if (!data.error) {
     // setData(Object.assign({}, data, { cases: data.cases }));
@@ -157,14 +150,14 @@ export default function ContactDetails() {
         <Box sx={{ mt: '60px' }}>
             <div>
                 <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} editHandle={editHandle} />
-                <Box sx={{ mt: '100px', p: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Box sx={{ mt: '110px', p: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Box sx={{ width: '65%' }}>
                         <Card sx={{ borderRadius: '7px' }}>
                             <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <div style={{ fontWeight: 'bold', fontSize: '16px', color: 'rgb(26, 51, 83)' }}>
+                                <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a3353f0' }}>
                                     Contact Information
                                 </div>
-                                <div style={{ color: 'gray', fontSize: '14px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <div style={{ color: 'gray', fontSize: '16px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginRight: '15px', textTransform: 'capitalize' }}>
                                         created on
                                         {formatDate(contactDetails?.created_on)}
@@ -184,10 +177,10 @@ export default function ContactDetails() {
                                     <div>Last update&nbsp;{contactDetails?.created_on_arrow}</div>
                                 </div>
                             </div>
-                            <div style={{ padding: '14px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Account Title</div>
-                                    <div style={{ fontSize: '14px', color: 'gray', display: 'flex', flexDirection: 'row', marginTop: '5%' }}>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Account Title</div>
+                                    <div style={{ fontSize: '16px', color: 'gray', display: 'flex', flexDirection: 'row', marginTop: '5%' }}>
                                         <div style={{ display: 'flex' }}>
                                             <AvatarGroup
                                                 total={2}
@@ -209,67 +202,67 @@ export default function ContactDetails() {
                             </div>
                             <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>First Name</div>
-                                    <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>First Name</div>
+                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                         {contactDetails?.first_name || '---'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Last Name</div>
-                                    <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Last Name</div>
+                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                         {contactDetails?.last_name || '---'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Organization Name</div>
-                                    <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Organization Name</div>
+                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                         {org?.name || '---'}
                                     </div>
                                 </div>
                             </div>
                             <div style={{ padding: '20px', marginTop: '15px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Email Address</div>
-                                    <div style={{ fontSize: '14px', color: '#1E90FF', marginTop: '5%' }}>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Email Address</div>
+                                    <div style={{ fontSize: '16px', color: '#1E90FF', marginTop: '5%' }}>
                                         <Link>
                                             {contactDetails?.primary_email || '---'}
-                                            <FaStar style={{ fontSize: '14px', fill: 'yellow' }} /><br />
+                                            <FaStar style={{ fontSize: '16px', fill: 'yellow' }} /><br />
                                             {contactDetails?.secondary_email}
                                         </Link>
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Mobile Number</div>
-                                    <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Mobile Number</div>
+                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                         {contactDetails?.mobile_number || '---'}
-                                        {<FaStar style={{ fontSize: '14px', fill: 'yellow' }} />}<br />
+                                        {<FaStar style={{ fontSize: '16px', fill: 'yellow' }} />}<br />
                                         {contactDetails?.secondary_number}
                                         987
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>website</div>
-                                    <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>website</div>
+                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                         {contactDetails?.website ? <Link>{contactDetails?.website}</Link> : '---'}
                                     </div>
                                 </div>
                             </div>
                             <div style={{ padding: '20px', marginTop: '15px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Department</div>
-                                    <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Department</div>
+                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                         {contactDetails?.department || '---'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Language</div>
-                                    <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Language</div>
+                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                         {contactDetails?.language || '---'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Do Not Call</div>
-                                    <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Do Not Call</div>
+                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                         <AntSwitch
                                             checked={contactDetails?.do_not_call}
                                             inputProps={{ 'aria-label': 'ant design' }} />
@@ -279,46 +272,46 @@ export default function ContactDetails() {
                             {/* Address details */}
                             <div style={{ marginTop: '15px' }}>
                                 <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <div style={{ fontWeight: 'bold', fontSize: '16px', color: 'rgb(26, 51, 83)' }}>
+                                    <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a3353f0' }}>
                                         Address Details
                                     </div>
                                 </div>
                                 <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Address Lane</div>
-                                        <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Address Lane</div>
+                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                             {addressDetails?.address_line || '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Street</div>
-                                        <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Street</div>
+                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                             {addressDetails?.street || '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>City</div>
-                                        <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>City</div>
+                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                             {addressDetails?.city || '---'}
                                         </div>
                                     </div>
                                 </div>
                                 <div style={{ padding: '20px', marginTop: '15px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Pincode</div>
-                                        <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Pincode</div>
+                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                             {addressDetails?.postcode || '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>State</div>
-                                        <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>State</div>
+                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                             {addressDetails?.state || '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Country</div>
-                                        <div style={{ fontSize: '14px', color: 'gray', marginTop: '5%' }}>
+                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Country</div>
+                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                             {contactDetails?.country || '---'}
                                         </div>
                                     </div>
@@ -327,11 +320,11 @@ export default function ContactDetails() {
                             {/* Description */}
                             <div style={{ marginTop: '15px' }}>
                                 <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <div style={{ fontWeight: 'bold', fontSize: '16px', color: 'rgb(26, 51, 83)' }}>
+                                    <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a3353f0' }}>
                                         Description
                                     </div>
                                 </div>
-                                <p style={{ fontSize: '14px', color: 'gray', padding: '20px' }}>
+                                <p style={{ fontSize: '16px', color: 'gray', padding: '20px' }}>
                                     {contactDetails?.description || '---'}
                                 </p>
                             </div>
@@ -340,23 +333,23 @@ export default function ContactDetails() {
                     <Box sx={{ width: '34%' }}>
                         <Card sx={{ borderRadius: '7px', p: '20px' }}>
                             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <div style={{ fontWeight: 'bold', fontSize: '16px', color: 'rgb(26, 51, 83)' }}>
+                                <div style={{ fontWeight: 600, fontSize: '16px', color: '#1a3353f0' }}>
                                     Social
                                 </div>
-                                <div style={{ color: '#3E79F7', fontSize: '16px', fontWeight: 'bold' }}>
+                                <div style={{ color: '#3E79F7', fontSize: '16px', fontWeight: 600 }}>
                                     {/* Add Social #1E90FF */}
                                     <Button
                                         type='submit'
                                         variant='text'
                                         size='small'
                                         startIcon={<FaEnvelope style={{ fill: '#3E79F7' }} />}
-                                        style={{ textTransform: 'capitalize', fontWeight: 'bold', fontSize: '14px' }}
+                                        style={{ textTransform: 'capitalize', fontWeight: 600, fontSize: '16px' }}
                                     >
                                         Add Socials
                                     </Button>
                                 </div>
                             </div>
-                            <div style={{ fontSize: '14px', marginTop: '15px' }}>
+                            <div style={{ fontSize: '16px', marginTop: '15px' }}>
                                 LinkedIn URL
                             </div>
                             <div style={{ paddingBottom: '10px', width: '80%', marginBottom: '10px' }}>
@@ -367,7 +360,7 @@ export default function ContactDetails() {
                                     sx={{ height: '40px', width: '100%', mt: 1 }}
                                 />
                             </div>
-                            <div style={{ fontSize: '14px' }}>
+                            <div style={{ fontSize: '16px' }}>
                                 Facebook URL
                             </div>
                             <div style={{ paddingBottom: '10px', width: '80%', marginBottom: '10px' }}>
@@ -378,7 +371,7 @@ export default function ContactDetails() {
                                     sx={{ height: '40px', width: '100%', mt: 1 }}
                                 />
                             </div>
-                            <div style={{ fontSize: '14px', marginTop: '15px' }}>
+                            <div style={{ fontSize: '16px', marginTop: '15px' }}>
                                 Twitter URL
                             </div>
                             <div style={{ paddingBottom: '10px', width: '80%', marginBottom: '10px' }}>

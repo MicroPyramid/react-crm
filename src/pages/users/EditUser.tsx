@@ -14,14 +14,19 @@ import {
     Input,
     Avatar,
     IconButton,
-    Stack
+    Stack,
+    Divider,
+    Select,
+    FormControl
 } from '@mui/material'
 import '../../styles/style.css'
-import { UserUrl } from '../../services/ApiUrls'
+import { Header, UserUrl } from '../../services/ApiUrls'
 import { fetchData } from '../../components/FetchData'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { FaArrowDown, FaTimes, FaUpload } from 'react-icons/fa'
 import { AntSwitch, RequiredTextField } from '../../styles/CssStyled'
+import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown'
+import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp'
 
 type FormErrors = {
     email?: string[];
@@ -34,10 +39,10 @@ type FormErrors = {
     state?: string[];
     pincode?: string[];
     country?: string[];
-    profile_pic?: string[];
-    has_sales_access?: string[];
-    has_marketing_access?: string[];
-    is_organization_admin?: string[];
+    // profile_pic?: string[];
+    // has_sales_access?: string[];
+    // has_marketing_access?: string[];
+    // is_organization_admin?: string[];
 };
 interface FormData {
     email: string,
@@ -50,10 +55,10 @@ interface FormData {
     state: string,
     pincode: string,
     country: string,
-    profile_pic: string | null,
-    has_sales_access: boolean,
-    has_marketing_access: boolean,
-    is_organization_admin: boolean
+    // profile_pic: string | null,
+    // has_sales_access: boolean,
+    // has_marketing_access: boolean,
+    // is_organization_admin: boolean
 
 
 }
@@ -66,6 +71,7 @@ export function EditUser() {
     const [errors, setErrors] = useState<FormErrors>({});
     const [profileErrors, setProfileErrors] = useState<FormErrors>({});
     const [userErrors, setUserErrors] = useState<FormErrors>({});
+    const [roleSelectOpen, setRoleSelectOpen] = useState(false)
     const [formData, setFormData] = useState<FormData>({
         email: '',
         role: 'ADMIN',
@@ -77,10 +83,10 @@ export function EditUser() {
         state: '',
         pincode: '',
         country: '',
-        profile_pic: null,
-        has_sales_access: false,
-        has_marketing_access: false,
-        is_organization_admin: false
+        // profile_pic: null,
+        // has_sales_access: false,
+        // has_marketing_access: false,
+        // is_organization_admin: false
 
     })
     useEffect(() => {
@@ -122,24 +128,18 @@ export function EditUser() {
         submitForm();
     }
 
-    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0] || null;
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                setFormData({ ...formData, profile_pic: reader.result as string });
-            };
-            reader.readAsDataURL(file);
-        }
-    };
+    // const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    //     const file = event.target.files?.[0] || null;
+    //     if (file) {
+    //         const reader = new FileReader();
+    //         reader.onload = () => {
+    //             setFormData({ ...formData, profile_pic: reader.result as string });
+    //         };
+    //         reader.readAsDataURL(file);
+    //     }
+    // };
 
 
-    const headers = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: localStorage.getItem('Token'),
-        org: localStorage.getItem('org')
-    }
     // const getEditDetail = (id: any) => {
     //     fetchData(`${UserUrl}/${id}/`, 'GET', null as any, headers)
     //         .then((res: any) => {
@@ -183,13 +183,13 @@ export function EditUser() {
             state: formData.state,
             pincode: formData.pincode,
             country: formData.country,
-            profile_pic: formData.profile_pic,
-            has_sales_access: formData.has_sales_access,
-            has_marketing_access: formData.has_marketing_access,
-            is_organization_admin: formData.is_organization_admin
+            // profile_pic: formData.profile_pic,
+            // has_sales_access: formData.has_sales_access,
+            // has_marketing_access: formData.has_marketing_access,
+            // is_organization_admin: formData.is_organization_admin
         }
 
-        fetchData(`${UserUrl}/${state?.id}/`, 'PUT', JSON.stringify(data), headers)
+        fetchData(`${UserUrl}/${state?.id}/`, 'PUT', JSON.stringify(data), Header)
             .then((res: any) => {
                 // console.log('editsubmit:', res);
                 if (!res.error) {
@@ -216,11 +216,11 @@ export function EditUser() {
             city: '',
             state: '',
             pincode: '',
-            country: '',
-            profile_pic: null,
-            has_sales_access: false,
-            has_marketing_access: false,
-            is_organization_admin: false
+            country: ''
+            // profile_pic: null,
+            // has_sales_access: false,
+            // has_marketing_access: false,
+            // is_organization_admin: false
         });
         setProfileErrors({})
         setUserErrors({})
@@ -241,20 +241,15 @@ export function EditUser() {
     return (
         <Box sx={{ mt: '60px' }}>
             <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} onCancel={onCancel} onSubmit={handleSubmit} />
-            <Box sx={{ mt: "100px" }}>
+            <Box sx={{ mt: "120px" }}>
                 <form onSubmit={handleSubmit}>
                     <div style={{ padding: '10px' }}>
                         <div className='leadContainer'>
                             <Accordion defaultExpanded style={{ width: '98%' }}>
-                                <AccordionSummary
-                                    expandIcon={<FaArrowDown />}
-                                >
-                                    <div className='typography'>
-                                        <Typography style={{ marginBottom: '15px', fontWeight: 'bold' }}>
-                                            User Information
-                                        </Typography>
-                                    </div>
+                                <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                                    <Typography className='accordion-header'>Account Information</Typography>
                                 </AccordionSummary>
+                                <Divider className='divider' />
                                 <AccordionDetails>
                                     <Box
                                         sx={{ width: '98%', color: '#1A3353', mb: 1 }}
@@ -278,26 +273,29 @@ export function EditUser() {
                                             </div>
                                             <div className='fieldSubContainer'>
                                                 <div className='fieldTitle'>Role</div>
-                                                <TextField
-                                                    name='role'
-                                                    select
-                                                    value={formData.role}
-                                                    className="custom-textfield"
-                                                    InputProps={{
-                                                        style: {
-                                                            height: '40px',
-                                                            maxHeight: '40px'
-                                                        }
-                                                    }}
-                                                    onChange={handleChange}
-                                                    sx={{ width: '70%' }}
-                                                >
-                                                    {['ADMIN', 'USER'].map((option) => (
-                                                        <MenuItem key={option} value={option}>
-                                                            {option}
-                                                        </MenuItem>
-                                                    ))}
-                                                </TextField>
+                                                <FormControl sx={{ width: '70%' }}>
+                                                    <Select
+                                                        name='role'
+                                                        value={formData.role}
+                                                        open={roleSelectOpen}
+                                                        onClick={() => setRoleSelectOpen(!roleSelectOpen)}
+                                                        IconComponent={() => (
+                                                            <div onClick={() => setRoleSelectOpen(!roleSelectOpen)} className="select-icon-background">
+                                                                {roleSelectOpen ? <FiChevronUp className='select-icon' /> : <FiChevronDown className='select-icon' />}
+                                                            </div>
+                                                        )}
+                                                        className={'select'}
+                                                        onChange={handleChange}
+                                                        error={!!errors?.role?.[0]}
+                                                    >
+                                                        {['ADMIN', 'USER'].map((option) => (
+                                                            <MenuItem key={option} value={option}>
+                                                                {option}
+                                                            </MenuItem>
+                                                        ))}
+                                                    </Select>
+                                                    {/* <FormHelperText>{errors?.[0] ? errors[0] : ''}</FormHelperText> */}
+                                                </FormControl>
                                             </div>
                                         </div>
                                         <div className='fieldContainer2'>
@@ -333,7 +331,7 @@ export function EditUser() {
                                                 </Tooltip>
                                             </div>
                                         </div>
-                                        <div className='fieldContainer2'>
+                                        {/* <div className='fieldContainer2'>
                                             <div className='fieldSubContainer'>
                                                 <div className='fieldTitle'>Profile picture</div>
                                                 <Stack sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -397,7 +395,7 @@ export function EditUser() {
                                                     onChange={handleChange}
                                                 />
                                             </div>
-                                        </div>
+                                        </div> */}
                                     </Box>
                                 </AccordionDetails>
                             </Accordion>
@@ -405,17 +403,10 @@ export function EditUser() {
                         {/* Email Information */}
                         {/* <div className='leadContainer'>
                             <Accordion style={{ width: '98%' }}>
-                                <AccordionSummary
-                                    expandIcon={<FaArrowDown />}
-                                    aria-controls='panel1a-content'
-                                    id='panel1a-header'
-                                >
-                                    <div
-                                        className='typography'
-                                    >
-                                        <Typography style={{ marginBottom: '15px', fontWeight: 'bold' }}>Email Information</Typography>
-                                    </div>
+                             <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                                    <Typography className='accordion-header'>Account Information</Typography>
                                 </AccordionSummary>
+                                <Divider className='divider' />
                                 <AccordionDetails>
                                     <Box
                                         sx={{ width: '98%', color: '#1A3353' }}
@@ -603,17 +594,10 @@ export function EditUser() {
                         {/* Address Details */}
                         <div className='leadContainer'>
                             <Accordion defaultExpanded style={{ width: '98%' }}>
-                                <AccordionSummary
-                                    expandIcon={<FaArrowDown />}
-                                >
-                                    <div className='typography'>
-                                        <Typography
-                                            style={{ marginBottom: '15px', fontWeight: 'bold' }}
-                                        >
-                                            Address Details
-                                        </Typography>
-                                    </div>
+                                <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                                    <Typography className='accordion-header'>Account Information</Typography>
                                 </AccordionSummary>
+                                <Divider className='divider' />
                                 <AccordionDetails>
                                     <Box
                                         sx={{ width: '98%', color: '#1A3353', mb: 1 }}
@@ -626,7 +610,7 @@ export function EditUser() {
                                                 <div className='fieldTitle'>Address Lane</div>
                                                 <TextField
                                                     required
-                                                    name='address'
+                                                    name='address_line'
                                                     value={formData.address_line}
                                                     onChange={handleChange}
                                                     style={{ width: '70%' }}

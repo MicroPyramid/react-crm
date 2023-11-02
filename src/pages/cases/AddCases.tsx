@@ -10,7 +10,8 @@ import {
     AccordionSummary,
     Typography,
     Box,
-    MenuItem
+    MenuItem,
+    Divider
 } from '@mui/material'
 import InputLabel from '@mui/material/InputLabel'
 import '../../styles/style.css'
@@ -19,6 +20,7 @@ import { fetchData } from '../../components/FetchData'
 import { useForm } from '../../components/UseForm'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { FaArrowDown } from 'react-icons/fa'
+import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown'
 
 // const textFieldStyled = makeStyles(() => ({
 //   root: {
@@ -126,22 +128,10 @@ export const AddCases = (props: any) => {
                     <div style={{ padding: '10px' }}>
                         <div className='leadContainer'>
                             <Accordion style={{ width: '98%' }}>
-                                <AccordionSummary
-                                    expandIcon={<FaArrowDown />}
-                                    aria-controls='panel1a-content'
-                                    id='panel1a-header'
-                                >
-                                    <div className='typography'>
-                                        <Typography style={{
-                                            marginBottom: '15px',
-                                            fontWeight: 'bold',
-                                            color: '#1A3353'
-                                        }}
-                                        >
-                                            Cases Information
-                                        </Typography>
-                                    </div>
+                            <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                                    <Typography className='accordion-header'>Account Information</Typography>
                                 </AccordionSummary>
+                                <Divider className='divider' />
                                 <AccordionDetails>
                                     <Box
                                         sx={{ width: '98%',mb:1 }}
@@ -403,22 +393,10 @@ export const AddCases = (props: any) => {
                         {/* Description details  */}
                         <div className='leadContainer'>
                             <Accordion style={{ width: '98%' }}>
-                                <AccordionSummary
-                                    expandIcon={<FaArrowDown />}
-                                    aria-controls='panel1a-content'
-                                    id='panel1a-header'
-                                >
-                                    <div className='typography'>
-                                        <Typography style={{
-                                            marginBottom: '15px',
-                                            fontWeight: 'bold',
-                                            color: '#1A3353'
-                                        }}
-                                        >
-                                            Description
-                                        </Typography>
-                                    </div>
+                            <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                                    <Typography className='accordion-header'>Account Information</Typography>
                                 </AccordionSummary>
+                                <Divider className='divider' />
                                 <AccordionDetails>
                                     <Box
                                         sx={{ width: '100%',mb:1 }}

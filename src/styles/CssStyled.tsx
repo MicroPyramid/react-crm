@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Button, css, Fab, ListItem, ListItemButton, ListItemText, Select, Switch, Tab, TableCell, tableCellClasses, TableRow, TextField, Toolbar } from "@mui/material";
+import { Button, css, Fab, IconButton, ListItem, ListItemButton, ListItemText, Select, Switch, Tab, TableCell, tableCellClasses, TableRow, TextField, Toolbar } from "@mui/material";
 // import css from "styled-jsx/css";
 
 export const GoogleButton = styled(Button)`
@@ -135,7 +135,17 @@ export const TextFieldStyled = styled.div`
 
 export const RequiredTextField = styled(TextField)`
   fieldset {
-    border-left: 2px solid red;
+    border-left: 3px solid red;
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+    padding-left: 12px;
+  }
+`;
+export const RequiredSelect = styled(Select)`
+  fieldset {
+    border-left: 3px solid red;
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
     padding-left: 12px;
   }
 `;
@@ -251,3 +261,19 @@ export const FabRight = styled(Fab)({
   marginLeft:'7px',
   boxShadow:`0px 1px 1px -1px rgba(0,0,0,0.2), 0px 0px 3px 0px rgba(0,0,0,0.14), 0px 1px 0px 0px rgba(0,0,0,0.12)`
 });
+export const CustomPopupIcon = styled(IconButton)`
+  cursor: pointer !important;
+  border-top-right-radius: 7px;
+  border-bottom-right-radius: 7px;
+  width: 40px;
+  height: 40px;
+  border-radius: 0;
+  background-color: #d3d3d34a;
+  .MuiTouchRipple-root, .Mui-focusVisible, .MuiRipple-root {
+    display: none;
+  }
+  &:hover {
+    border-radius: 0 !important;
+    background-color: whitesmoke;
+  }
+`;

@@ -108,11 +108,12 @@
 }
 
 .fieldTitle {
-    margin-right: 10px;
-    font-size: 13px;
+    margin-top: 5px;
+    margin-right: 15px;
+    font-size: 15px;
     width: 29%;
     text-align: right;
-    font-weight: bold;
+    font-weight: 500;
     color: "#1A3353";
 }
 
@@ -185,22 +186,50 @@ input[type=number] {
     background-color: white;
     border: none;
     border-radius: 7px !important;
-    width: 190px;
+    width: 198px;
     height: 40px;
     max-height: 40px;
     margin-right: 10px;
     text-align: left;
-  }
-  .custom-select-icon {
+}
+
+.custom-select-icon {
     height: 40px;
-    width: 21px;
+    width: 22px;
     background-color: whitesmoke;
     padding: 0px 4px 0px 4px;
     border-radius: 0px 7px 7px 0px;
     cursor: pointer;
-  }
-  /* button */
-  .add-button {
+}
+
+/*  */
+.select {
+    height: 40px;
+}
+
+.select-icon-background {
+    background-color: whitesmoke;
+    height: 40px;
+    width: 50px;
+    cursor: pointer;
+}
+
+.select-icon {
+    font-size: 20px;
+    margin: 10px 0px 0px 9px;
+}
+
+/* header-button */
+.header-button {
+    text-transform: capitalize !important;
+    font-weight: 500 !important;
+    font-size: 16px !important;
+    height: 40px;
+    color: white;
+    border-radius: 7px;
+}
+
+.add-button {
     text-transform: capitalize !important;
     font-weight: bold !important;
     font-size: 15px !important;
@@ -208,11 +237,41 @@ input[type=number] {
     color: white;
     margin-right: -13px;
     border-radius: 7px;
-  }
-  .plus-icon {
+}
+
+.plus-icon {
     color: #1976d2;
     width: 16px;
     height: 16px;
     background-color: white;
     border-radius: 10px;
-  }
+}
+
+/*  input*/
+.input-plus-icon {
+    height: 12px;
+    width: 12px;
+}
+
+/* accordion */
+.divider {
+    margin-left: 15px !important;
+    margin-right: 15px !important;
+    border-color: #0000001f !important;
+    border-bottom-width: 2px !important;
+    margin-bottom: 10px !important;
+    margin-top: -5px !important;
+}
+
+.accordion-header {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    color: #1A3353;
+}
+
+/* helpertext */
+.helperText {
+    color: #d32f2f !important;
+}
+
+/* date */

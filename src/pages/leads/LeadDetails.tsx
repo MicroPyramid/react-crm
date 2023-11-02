@@ -18,10 +18,10 @@ import {
     Typography,
     IconButton
 } from '@mui/material'
-import { Fa500Px, FaAccusoft, FaAd, FaAddressCard, FaEllipsisV, FaPlus, FaRegAddressCard } from 'react-icons/fa'
+import { Fa500Px, FaAccusoft, FaAd, FaAddressCard, FaEllipsisV, FaPlus, FaRegAddressCard, FaStar } from 'react-icons/fa'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { LeadUrl } from '../../services/ApiUrls'
+import { Header, LeadUrl } from '../../services/ApiUrls'
 import { fetchData } from '../../components/FetchData'
 import { Label } from '../../components/Label'
 import { AntSwitch, CustomSelectField, CustomSelectField1 } from '../../styles/CssStyled'
@@ -104,19 +104,13 @@ function LeadDetails(props: any) {
     const [commentList, setCommentList] = useState('Recent Last')
     const [note, setNote] = useState('')
 
-    const headers = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: localStorage.getItem('Token'),
-        org: localStorage.getItem('org')
-    }
     useEffect(() => {
         getLeadDetails(state.leadId)
     }, [state.leadId])
 
 
     const getLeadDetails = (id: any) => {
-        fetchData(`${LeadUrl}/${id}/`, 'GET', null as any, headers)
+        fetchData(`${LeadUrl}/${id}/`, 'GET', null as any, Header)
             .then((res) => {
                 if (!res.error) {
                     setLeadDetails(res?.lead_obj)
@@ -143,15 +137,10 @@ function LeadDetails(props: any) {
             })
     }
     const sendComment = () => {
-        const headers = {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: localStorage.getItem('Token'),
-            org: localStorage.getItem('org')
-        }
+
         const data = { comment: note }
 
-        fetchData(`${LeadUrl}/comment/${state.leadId}/`, 'PUT', JSON.stringify(data), headers)
+        fetchData(`${LeadUrl}/comment/${state.leadId}/`, 'PUT', JSON.stringify(data), Header)
             .then((res: any) => {
                 // console.log('Form data:', res);
                 if (!res.error) {
@@ -227,11 +216,11 @@ function LeadDetails(props: any) {
         <Box sx={{ mt: '60px' }}>
             <div>
                 <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} editHandle={editHandle} />
-                <Box sx={{ mt: '100px', p: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Box sx={{ mt: '110px', p: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Box sx={{ width: '65%' }}>
                         <Box sx={{ borderRadius: '10px', border: '1px solid #80808038', backgroundColor: 'white' }}>
-                            <div style={{ padding: '10px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <div style={{ fontWeight: 'bold', fontSize: '16px', color: 'rgb(26, 51, 83)' }}>
+                            <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a3353f0' }}>
                                     Lead Information
                                 </div>
                                 <div style={{ color: 'gray', fontSize: '16px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -251,7 +240,7 @@ function LeadDetails(props: any) {
                                 </div>
                             </div>
                             <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', marginTop: '10px' }}>
-                                <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>
+                                <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>
                                     {leadDetails?.title}
                                     {/* {console.log(users?.length && users.length,'lll')} */}
                                     <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 1 }}>
@@ -278,21 +267,21 @@ function LeadDetails(props: any) {
                                         />)) : ''}
                                 </Stack>
                             </div>
-                            <div style={{ padding: '13px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Expected close date</div>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Expected close date</div>
                                     <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                         {leadDetails?.close_date || '---'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Account Name</div>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Account Name</div>
                                     <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                         {leadDetails?.account_name}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Organization Name</div>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Organization Name</div>
                                     <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                         {leadDetails?.organization || '---'}
                                     </div>
@@ -300,7 +289,7 @@ function LeadDetails(props: any) {
                             </div>
                             <div style={{ padding: '20px', marginTop: '15px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Created from site</div>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Created from site</div>
                                     <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                         {/* {lead.pipeline ? lead.pipeline : '------'} */}
                                         {/* {leadDetails?.created_from_site} */}
@@ -308,13 +297,13 @@ function LeadDetails(props: any) {
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Probability</div>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Probability</div>
                                     <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                         {leadDetails?.probability || '---'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>website</div>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>website</div>
                                     <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                         {leadDetails?.website ? <Link>
                                             {leadDetails?.website}
@@ -323,49 +312,49 @@ function LeadDetails(props: any) {
                                     </div>
                                 </div>
                             </div>
-                            <div style={{ padding: '13px', marginTop: '15px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <div style={{ padding: '20px', marginTop: '15px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Industry</div>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Industry</div>
                                     <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                         {leadDetails?.industry || '---'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>SkypeID</div>
+                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>SkypeID</div>
                                     <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
-                                        <Link>
-                                            {leadDetails?.skype_ID || '---'}
-                                        </Link>
+                                        {leadDetails?.skype_ID ? <Link>
+                                            {leadDetails?.skype_ID}
+                                        </Link> : '---'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 'bold' }}>&nbsp;</div>
+                                    <div style={{ fontSize: '16px', fontWeight: 600 }}>&nbsp;</div>
                                     <div style={{ fontSize: '16px', color: 'gray' }}>&nbsp;</div>
                                 </div>
                             </div>
                             {/* </div> */}
                             {/* Contact details */}
-                            <div style={{ marginTop: '5%' }}>
-                                <div style={{ padding: '15px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <div style={{ fontWeight: 'bold', fontSize: '16px', color: 'rgb(26, 51, 83)' }}>
+                            <div style={{ marginTop: '2%' }}>
+                                <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a3353f0' }}>
                                         Contact Details
                                     </div>
                                 </div>
                                 <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: '10px' }}>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>First Name</div>
+                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>First Name</div>
                                         <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                             {leadDetails?.first_name || '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Last Name</div>
+                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Last Name</div>
                                         <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                             {leadDetails?.last_name || '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Job Title</div>
+                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Job Title</div>
                                         <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                             {leadDetails?.title || '---'}
                                         </div>
@@ -373,50 +362,50 @@ function LeadDetails(props: any) {
                                 </div>
                                 <div style={{ padding: '20px', marginTop: '15px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Email Address</div>
+                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Email Address</div>
                                         <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
-                                            <Link>
-                                                {leadDetails?.email || '---'}
-                                                <Fa500Px style={{ fontSize: '16px', fill: 'yellow' }} />
-                                            </Link>
+                                            {leadDetails?.email ? <Link>
+                                                {leadDetails?.email}
+                                                <FaStar style={{ fontSize: '16px', fill: 'yellow' }} />
+                                            </Link> : '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Mobile Number</div>
+                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Mobile Number</div>
                                         <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
-                                            {leadDetails?.phone || '---'}
-                                            <FaAd style={{ fontSize: '16px', fill: 'yellow' }} /><br />
+                                            {leadDetails?.phone ? `${leadDetails?.phone}
+                                                <FaStar style={{ fontSize: '16px', fill: 'yellow' }} /><br />` : '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 'bold' }} />
+                                        <div style={{ fontSize: '16px', fontWeight: 600 }} />
                                         <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             {/* Address details */}
-                            <div style={{ marginTop: '5%' }}>
-                                <div style={{ padding: '15px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <div style={{ fontWeight: 'bold', fontSize: '16px', color: 'rgb(26, 51, 83)' }}>
+                            <div style={{ marginTop: '2%' }}>
+                                <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a3353f0' }}>
                                         Address Details
                                     </div>
                                 </div>
-                                <div style={{ padding: '15px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: '10px' }}>
+                                <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: '10px' }}>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Address Lane</div>
+                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Address Lane</div>
                                         <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                             {leadDetails?.address_line || '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Street</div>
+                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Street</div>
                                         <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                             {leadDetails?.street || '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>City</div>
+                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>City</div>
                                         <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                             {leadDetails?.city || '---'}
                                         </div>
@@ -424,19 +413,19 @@ function LeadDetails(props: any) {
                                 </div>
                                 <div style={{ padding: '20px', marginTop: '15px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Pincode</div>
+                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Pincode</div>
                                         <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                             {leadDetails?.postcode || '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>State</div>
+                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>State</div>
                                         <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                             {leadDetails?.state || '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}>Country</div>
+                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Country</div>
                                         <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
                                             {leadDetails?.country || '---'}
                                         </div>
@@ -444,23 +433,23 @@ function LeadDetails(props: any) {
                                 </div>
                             </div>
                             {/* Description */}
-                            <div style={{ marginTop: '5%' }}>
-                                <div style={{ padding: '15px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <div style={{ fontWeight: 'bold', fontSize: '16px', color: 'rgb(26, 51, 83)' }}>
+                            <div style={{ marginTop: '3%' }}>
+                                <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a3353f0' }}>
                                         Description
                                     </div>
                                 </div>
-                                <p style={{ fontSize: '16px', color: 'gray', padding: '20px' }}>
+                                <p style={{ fontSize: '16px', color: 'gray', padding: '15px' }}>
                                     {leadDetails?.description || '---'}
                                 </p>
                             </div>
-                            <div style={{ marginTop: '5%' }}>
-                                <div style={{ padding: '15px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <div style={{ fontWeight: 'bold', fontSize: '16px', color: 'red' }}>
+                            <div style={{ marginTop: '2%' }}>
+                                <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <div style={{ fontWeight: 600, fontSize: '18px', color: 'red' }}>
                                         Lost Reason
                                     </div>
                                 </div>
-                                <p style={{ fontSize: '16px', color: 'gray', padding: '20px', marginTop: '5%' }}>
+                                <p style={{ fontSize: '16px', color: 'gray', padding: '15px', marginTop: '5%' }}>
                                     {/* {lead && lead.description} */}
                                     {/* fhj */}
                                 </p>
@@ -470,8 +459,8 @@ function LeadDetails(props: any) {
                     </Box>
                     <Box sx={{ width: '34%' }}>
                         <Box sx={{ borderRadius: '10px', border: '1px solid #80808038', backgroundColor: 'white' }}>
-                            <div style={{ padding: '10px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <div style={{ fontWeight: 'bold', fontSize: '16px', color: 'rgb(26, 51, 83)' }}>
+                            <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a3353f0' }}>
                                     Attachments
                                 </div>
                                 {/* <div style={{ color: "#3E79F7", fontSize: "16px", fontWeight: "bold" }}> */}
@@ -481,14 +470,14 @@ function LeadDetails(props: any) {
                                     variant='text'
                                     size='small'
                                     startIcon={<FaPlus style={{ fill: '#3E79F7', width: '12px' }} />}
-                                    style={{ textTransform: 'capitalize', fontWeight: 'bold', fontSize: '16px' }}
+                                    style={{ textTransform: 'capitalize', fontWeight: 600, fontSize: '16px' }}
                                 >
                                     Add Attachments
                                 </Button>
                                 {/* </div> */}
                             </div>
 
-                            <div style={{ padding: '10px', marginTop: '5%' }}>
+                            <div style={{ padding: '20px', marginTop: '5%' }}>
                                 {/* {lead && lead.lead_attachment} */}
                                 {attachments?.length ? attachments.map((pic: any, i: any) =>
                                     <Box key={i} sx={{ width: '100px', height: '100px', border: '0.5px solid gray', borderRadius: '5px' }}>
@@ -498,8 +487,8 @@ function LeadDetails(props: any) {
                             </div>
                         </Box>
                         <Box sx={{ borderRadius: '10px', mt: '15px', border: '1px solid #80808038', backgroundColor: 'white' }}>
-                            <div style={{ padding: '10px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <div style={{ fontWeight: 'bold', fontSize: '16px', color: 'rgb(26, 51, 83)' }}>
+                            <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <div style={{ fontWeight: 600, fontSize: '16px', color: '#1a3353f0' }}>
                                     Notes
                                 </div>
                                 <CustomSelectField1
@@ -599,7 +588,7 @@ function LeadDetails(props: any) {
                                     />
                                 </div>
                             </div> */}
-                            <div style={{ padding: '10px', marginBottom: '10px' }}>
+                            <div style={{ padding: '20px', marginBottom: '10px' }}>
                                 <TextField
                                     label='Add Note'
                                     id='fullWidth'

@@ -15,15 +15,19 @@ import {
   Autocomplete,
   FormHelperText,
   IconButton,
-  Tooltip
+  Tooltip,
+  Divider,
+  Select
 } from '@mui/material'
 import '../../styles/style.css'
-import { LeadUrl } from '../../services/ApiUrls'
+import { Header, LeadUrl } from '../../services/ApiUrls'
 import { fetchData } from '../../components/FetchData'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { FaArrowDown, FaFileUpload, FaPalette, FaPercent, FaPlus, FaTimes, FaUpload } from 'react-icons/fa'
 import { useForm } from '../../components/UseForm'
-import { CustomSelectField, RequiredTextField, StyledSelect } from '../../styles/CssStyled'
+import { CustomPopupIcon, CustomSelectField, RequiredTextField, StyledSelect } from '../../styles/CssStyled'
+import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown'
+import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp'
 
 // const useStyles = makeStyles({
 //   btnIcon: {
@@ -131,6 +135,10 @@ export function AddLeads() {
   const [selectedAssignTo, setSelectedAssignTo] = useState<any[]>([]);
   const [selectedTags, setSelectedTags] = useState<any[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<any[]>([]);
+  const [sourceSelectOpen, setSourceSelectOpen] = useState(false)
+  const [statusSelectOpen, setStatusSelectOpen] = useState(false)
+  const [countrySelectOpen, setCountrySelectOpen] = useState(false)
+  const [industrySelectOpen, setIndustrySelectOpen] = useState(false)
   const [errors, setErrors] = useState<FormErrors>({});
   const [formData, setFormData] = useState<FormData>({
     title: '',
@@ -248,13 +256,8 @@ export function AddLeads() {
       industry: formData.industry,
       skype_ID: formData.skype_ID
     }
-    const headers = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: localStorage.getItem('Token'),
-      org: localStorage.getItem('org')
-    }
-    fetchData(`${LeadUrl}/`, 'POST', JSON.stringify(data), headers)
+
+    fetchData(`${LeadUrl}/`, 'POST', JSON.stringify(data), Header)
       .then((res: any) => {
         // console.log('Form data:', res);
         if (!res.error) {
@@ -333,18 +336,15 @@ export function AddLeads() {
   return (
     <Box sx={{ mt: '60px' }}>
       <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} onCancel={onCancel} onSubmit={handleSubmit} />
-      <Box sx={{ mt: "100px" }}>
+      <Box sx={{ mt: "120px" }}>
         <form onSubmit={handleSubmit}>
           <div style={{ padding: '10px' }}>
             <div className='leadContainer'>
               <Accordion defaultExpanded style={{ width: '98%' }}>
-                <AccordionSummary
-                  expandIcon={<FaArrowDown />}
-                >
-                  <div className='typography'>
-                    <Typography style={{ marginBottom: '15px', fontWeight: 'bold', color: '#1A3353' }}>Leads Details</Typography>
-                  </div>
+                <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                  <Typography className='accordion-header'>Account Information</Typography>
                 </AccordionSummary>
+                <Divider className='divider' />
                 <AccordionDetails>
                   <Box
                     sx={{ width: '98%', color: '#1A3353', mb: 1 }}
@@ -400,55 +400,47 @@ export function AddLeads() {
                             multiple
                             value={selectedContacts}
                             limitTags={2}
-                            options={state?.contacts || []}
+                            options={state.contacts || []}
                             // options={state.contacts ? state.contacts.map((option: any) => option) : ['']}
-                            getOptionLabel={(option: any) => option?.first_name || ''}
+                            getOptionLabel={(option: any) => state.contacts ? option?.first_name : option}
                             // value={formData.contacts}
                             // onChange={handleChange}
                             onChange={(e: any, value: any) => handleChange2('contacts', value)}
                             // style={{ width: '80%' }}
                             size='small'
                             filterSelectedOptions
-                            renderTags={(value, getTagProps) =>
-                              value.map((option, index) => (
+                            renderTags={(value: any, getTagProps: any) =>
+                              value.map((option: any, index: any) => (
                                 <Chip
                                   deleteIcon={<FaTimes style={{ width: '9px' }} />}
                                   sx={{
                                     backgroundColor: 'rgba(0, 0, 0, 0.08)',
                                     height: '18px'
-
                                   }}
                                   variant='outlined'
-                                  label={option?.first_name}
+                                  label={state.contacts ? option?.first_name : option}
                                   {...getTagProps({ index })}
                                 />
                               ))
                             }
-                            popupIcon=<IconButton
-                              sx={{
-                                width: '45px', height: '40px',
-                                borderRadius: '0px',
-                                backgroundColor: '#d3d3d34a'
-                              }}><FaPlus style={{ width: '15px' }} /></IconButton>
-                            renderInput={(params) => (
+                            popupIcon={<CustomPopupIcon><FaPlus className='input-plus-icon' /></CustomPopupIcon>}
+                            renderInput={(params: any) => (
                               <TextField {...params}
                                 placeholder='Add Contacts'
                                 InputProps={{
                                   ...params.InputProps,
                                   sx: {
+                                    '& .MuiAutocomplete-popupIndicator': { '&:hover': { backgroundColor: 'white' } },
                                     '& .MuiAutocomplete-endAdornment': {
-                                      mt: '-9px',
-                                      mr: '-8px'
+                                      mt: '-8px',
+                                      mr: '-8px',
                                     }
                                   }
                                 }}
                               />
                             )}
                           />
-                          {state?.contacts?.length > 0 ? (
-                            <FormHelperText>{errors?.contacts?.[0] || ''}</FormHelperText>
-                          ) : null}
-                          {/* <FormHelperText>{errors?.contacts?.[0] || ''}</FormHelperText> */}
+                          <FormHelperText>{errors?.contacts?.[0] || ''}</FormHelperText>
                         </FormControl>
                       </div>
                     </div>
@@ -457,14 +449,11 @@ export function AddLeads() {
                         <div className='fieldTitle'>Assign To</div>
                         <FormControl error={!!errors?.assigned_to?.[0]} sx={{ width: '70%' }}>
                           <Autocomplete
-                            // ref={autocompleteRef}
                             multiple
                             value={selectedAssignTo}
-                            // name='contacts'
                             limitTags={2}
-                            options={state.users}
-                            // options={state.contacts ? state.contacts.map((option: any) => option) : ['']}
-                            getOptionLabel={(option: any) => option?.user__email}
+                            options={state.users || []}
+                            getOptionLabel={(option: any) => state.users ? option?.user__email : option}
                             onChange={(e: any, value: any) => handleChange2('assigned_to', value)}
                             size='small'
                             filterSelectedOptions
@@ -478,41 +467,64 @@ export function AddLeads() {
 
                                   }}
                                   variant='outlined'
-                                  label={option?.user__email}
+                                  label={state.users ? option?.user__email : option}
                                   {...getTagProps({ index })}
                                 />
                               ))
                             }
-                            popupIcon=<IconButton
-                              sx={{
-                                width: '45px', height: '40px',
-                                borderRadius: '0px',
-                                backgroundColor: '#d3d3d34a'
-                              }}><FaPlus style={{ width: '15px' }} /></IconButton>
+                            popupIcon={<CustomPopupIcon><FaPlus className='input-plus-icon' /></CustomPopupIcon>}
                             renderInput={(params) => (
                               <TextField {...params}
                                 placeholder='Add Users'
                                 InputProps={{
                                   ...params.InputProps,
                                   sx: {
+                                    '& .MuiAutocomplete-popupIndicator': { '&:hover': { backgroundColor: 'white' } },
                                     '& .MuiAutocomplete-endAdornment': {
-                                      mt: '-9px',
-                                      mr: '-8px'
+                                      mt: '-8px',
+                                      mr: '-8px',
                                     }
                                   }
                                 }}
                               />
                             )}
                           />
-                          {state?.assigned_to?.length > 0 ? (
-                            <FormHelperText>{errors?.assigned_to?.[0] || ''}</FormHelperText>
-                          ) : null}
-                          {/* <FormHelperText>{errors?.assigned_to?.[0] || ''}</FormHelperText> */}
+                          <FormHelperText>{errors?.assigned_to?.[0] || ''}</FormHelperText>
                         </FormControl>
                       </div>
                       <div className='fieldSubContainer'>
                         <div className='fieldTitle'>Industry</div>
-                        <CustomSelectField
+                        <FormControl sx={{ width: '70%' }}>
+                          <Select
+                            name='industry'
+                            value={formData.industry}
+                            open={industrySelectOpen}
+                            onClick={() => setIndustrySelectOpen(!industrySelectOpen)}
+                            IconComponent={() => (
+                              <div onClick={() => setIndustrySelectOpen(!industrySelectOpen)} className="select-icon-background">
+                                {industrySelectOpen ? <FiChevronUp className='select-icon' /> : <FiChevronDown className='select-icon' />}
+                              </div>
+                            )}
+                            className={'select'}
+                            onChange={handleChange}
+                            error={!!errors?.industry?.[0]}
+                            MenuProps={{
+                              PaperProps: {
+                                style: {
+                                  height: '200px'
+                                }
+                              }
+                            }}
+                          >
+                            {state?.industries?.length && state?.industries.map((option: any) => (
+                              <MenuItem key={option[0]} value={option[1]}>
+                                {option[1]}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                          <FormHelperText>{errors?.industry?.[0] ? errors?.industry[0] : ''}</FormHelperText>
+                        </FormControl>
+                        {/* <CustomSelectField
                           name='industry'
                           select
                           value={formData.industry}
@@ -532,65 +544,35 @@ export function AddLeads() {
                               {option[1]}
                             </MenuItem>
                           ))}
-                        </CustomSelectField>
-                        {/* <FormControl sx={{ width: '70%' }} error={!!errors?.industry?.[0]}>
-                          <Select
-                            // multiple
-                            value={formData.industry}
-                            onChange={handleChange}
-                            sx={{ height: '40px', maxHeight: '40px' }}
-                          >
-                            {state?.industries?.length && state?.industries.map((option: any) => (
-                              <MenuItem key={option[0]} value={option[1]}>
-                                {option[1]}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                          <FormHelperText>{errors?.industry?.[0] ? errors?.industry[0] : ''}</FormHelperText>
-                        </FormControl> */}
+                        </CustomSelectField> */}
                       </div>
                     </div>
                     <div className='fieldContainer2'>
                       <div className='fieldSubContainer'>
                         <div className='fieldTitle'>Status</div>
-                        <CustomSelectField
-                          name='status'
-                          select
-                          value={formData.status}
-                          InputProps={{
-                            style: {
-                              height: '40px',
-                              maxHeight: '40px'
-                            }
-                          }}
-                          SelectProps={{
-                            MenuProps: {
-                              anchorOrigin: {
-                                vertical: 'bottom',
-                                horizontal: 'left'
-                              },
-                              transformOrigin: {
-                                vertical: 'top',
-                                horizontal: 'left'
-                              },
-                              PaperProps: {
-                                style: {
-                                  maxHeight: '200px'
-                                }
-                              }
-                            }
-                          }}
-                          onChange={handleChange}
-                          sx={{ width: '70%' }}
-                          helperText={errors?.status?.[0] ? errors?.status[0] : ''}
-                          error={!!errors?.status?.[0]}
-                        >
-                          {state?.status?.length && state?.status.map((option: any) => (
-                            <MenuItem key={option[0]} value={option[0]}>
-                              {option[1]}
-                            </MenuItem>
-                          ))}
-                        </CustomSelectField>
+                        <FormControl sx={{ width: '70%' }}>
+                          <Select
+                            name='status'
+                            value={formData.status}
+                            open={statusSelectOpen}
+                            onClick={() => setStatusSelectOpen(!statusSelectOpen)}
+                            IconComponent={() => (
+                              <div onClick={() => setStatusSelectOpen(!statusSelectOpen)} className="select-icon-background">
+                                {statusSelectOpen ? <FiChevronUp className='select-icon' /> : <FiChevronDown className='select-icon' />}
+                              </div>
+                            )}
+                            className={'select'}
+                            onChange={handleChange}
+                            error={!!errors?.status?.[0]}
+                          >
+                            {state?.status?.length && state?.status.map((option: any) => (
+                              <MenuItem key={option[0]} value={option[1]}>
+                                {option[1]}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                          <FormHelperText>{errors?.status?.[0] ? errors?.status[0] : ''}</FormHelperText>
+                        </FormControl>
                       </div>
                       <div className='fieldSubContainer'>
                         <div className='fieldTitle'>SkypeID</div>
@@ -608,41 +590,41 @@ export function AddLeads() {
                     <div className='fieldContainer2'>
                       <div className='fieldSubContainer'>
                         <div className='fieldTitle'>Lead Source</div>
-                        <CustomSelectField
-                          name='source'
-                          select
-                          value={formData.source}
-                          InputProps={{
-                            style: {
-                              height: '40px',
-                              maxHeight: '40px'
-                            }
-                          }}
-                          onChange={handleChange}
-                          sx={{ width: '70%' }}
-                          helperText={errors?.source?.[0] ? errors?.source[0] : ''}
-                          error={!!errors?.source?.[0]}
-                        >
-                          {state?.source?.length && state?.source.map((option: any) => (
-                            <MenuItem key={option[0]} value={option[0]}>
-                              {option[1]}
-                            </MenuItem>
-                          ))}
-                        </CustomSelectField>
+                        <FormControl sx={{ width: '70%' }}>
+                          <Select
+                            name='source'
+                            value={formData.source}
+                            open={sourceSelectOpen}
+                            onClick={() => setSourceSelectOpen(!sourceSelectOpen)}
+                            IconComponent={() => (
+                              <div onClick={() => setSourceSelectOpen(!sourceSelectOpen)} className="select-icon-background">
+                                {sourceSelectOpen ? <FiChevronUp className='select-icon' /> : <FiChevronDown className='select-icon' />}
+                              </div>
+                            )}
+                            className={'select'}
+                            onChange={handleChange}
+                            error={!!errors?.source?.[0]}
+                          >
+                            {state?.source?.length && state?.source.map((option: any) => (
+                              <MenuItem key={option[0]} value={option[0]}>
+                                {option[1]}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                          <FormHelperText>{errors?.source?.[0] ? errors?.source[0] : ''}</FormHelperText>
+                        </FormControl>
                       </div>
                       <div className='fieldSubContainer'>
                         <div className='fieldTitle'>Lead Attachment</div>
                         <TextField
                           name='lead_attachment'
-                          // value={formData.lead_attachment}
-                          value={formData.file}
-                          // value={formData.lead_attachment !== null ? <Avatar src={formData.lead_attachment} /> : null}
+                          value={formData.lead_attachment}
                           InputProps={{
                             endAdornment: (
                               <InputAdornment position='end'>
                                 <IconButton disableFocusRipple
                                   disableTouchRipple
-                                  sx={{ width: '45px', height: '40px', backgroundColor: '#d3d3d34a', borderRadius: '0px', mr: '-12px' }}
+                                  sx={{ width: '40px', height: '40px', backgroundColor: 'whitesmoke', borderRadius: '0px', mr: '-13px', cursor: 'pointer' }}
                                 >
                                   <label htmlFor='icon-button-file'>
                                     <input
@@ -650,10 +632,13 @@ export function AddLeads() {
                                       accept='image/*'
                                       id='icon-button-file'
                                       type='file'
-                                      name='lead_attachment'
-                                      onChange={(e: any) => { handleChange(e); handleFileChange(e) }}
+                                      name='account_attachment'
+                                      onChange={(e: any) => {
+                                        //  handleChange(e); 
+                                        handleFileChange(e)
+                                      }}
                                     />
-                                    <FaFileUpload color='primary' />
+                                    <FaUpload color='primary' style={{ fontSize: '15px', cursor: 'pointer' }} />
                                   </label>
                                 </IconButton>
                               </InputAdornment>
@@ -688,7 +673,6 @@ export function AddLeads() {
                                   sx={{
                                     backgroundColor: 'rgba(0, 0, 0, 0.08)',
                                     height: '18px'
-
                                   }}
                                   variant='outlined'
                                   label={option}
@@ -696,33 +680,24 @@ export function AddLeads() {
                                 />
                               ))
                             }
-                            popupIcon={<IconButton
-                              disableFocusRipple
-                              disableTouchRipple
-                              sx={{
-                                width: '45px', height: '40px',
-                                borderRadius: '0px',
-                                backgroundColor: '#d3d3d34a'
-                              }}><FaPlus style={{ width: '15px' }} /></IconButton>}
+                            popupIcon={<CustomPopupIcon><FaPlus className='input-plus-icon' /></CustomPopupIcon>}
                             renderInput={(params) => (
                               <TextField {...params}
                                 placeholder='Add Tags'
                                 InputProps={{
                                   ...params.InputProps,
                                   sx: {
+                                    '& .MuiAutocomplete-popupIndicator': { '&:hover': { backgroundColor: 'white' } },
                                     '& .MuiAutocomplete-endAdornment': {
-                                      mt: '-9px',
-                                      mr: '-8px'
+                                      mt: '-8px',
+                                      mr: '-8px',
                                     }
                                   }
                                 }}
                               />
                             )}
                           />
-                          {state?.tags?.length > 0 ? (
-                            <FormHelperText>{errors?.tags?.[0] || ''}</FormHelperText>
-                          ) : null}
-                          {/* <FormHelperText>{errors?.tags?.[0] || ''}</FormHelperText> */}
+                          <FormHelperText>{errors?.tags?.[0] || ''}</FormHelperText>
                         </FormControl>
                       </div>
                       <div className='fieldSubContainer'>
@@ -803,13 +778,10 @@ export function AddLeads() {
             {/* contact details */}
             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginTop: '20px' }}>
               <Accordion defaultExpanded style={{ width: '98%' }}>
-                <AccordionSummary
-                  expandIcon={<FaArrowDown />}
-                >
-                  <div style={{ borderBottom: '1px solid lightgray', width: '100%' }}>
-                    <Typography style={{ marginBottom: '15px', fontWeight: 'bold', color: '#1A3353' }}>Contact Details</Typography>
-                  </div>
+                <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                  <Typography className='accordion-header'>Account Information</Typography>
                 </AccordionSummary>
+                <Divider className='divider' />
                 <AccordionDetails>
                   <Box
                     sx={{ width: '98%', color: '#1A3353', mb: 1 }}
@@ -895,13 +867,10 @@ export function AddLeads() {
             {/* address details */}
             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginTop: '20px' }}>
               <Accordion defaultExpanded style={{ width: '98%' }}>
-                <AccordionSummary
-                  expandIcon={<FaArrowDown />}
-                >
-                  <div style={{ borderBottom: '1px solid lightgray', width: '100%' }}>
-                    <Typography style={{ marginBottom: '15px', fontWeight: 'bold', color: '#1A3353' }}>Address</Typography>
-                  </div>
+                <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                  <Typography className='accordion-header'>Account Information</Typography>
                 </AccordionSummary>
+                <Divider className='divider' />
                 <AccordionDetails>
                   <Box
                     sx={{ width: '98%', color: '#1A3353', mb: 1 }}
@@ -978,45 +947,37 @@ export function AddLeads() {
                       </div>
                       <div className='fieldSubContainer'>
                         <div className='fieldTitle'>Country</div>
-                        <CustomSelectField
-                          name='country'
-                          select
-                          value={formData.country}
-                          InputProps={{
-                            style: {
-                              height: '40px',
-                              maxHeight: '40px'
-                            }
-                          }}
-                          SelectProps={{
-                            MenuProps: {
-                              anchorOrigin: {
-                                vertical: 'bottom',
-                                horizontal: 'left'
-                              },
-                              transformOrigin: {
-                                vertical: 'top',
-                                horizontal: 'left'
-                              },
-                              // getContentAnchorEl: null,
+                        <FormControl sx={{ width: '70%' }}>
+                          <Select
+                            name='country'
+                            value={formData.country}
+                            open={countrySelectOpen}
+                            onClick={() => setCountrySelectOpen(!countrySelectOpen)}
+                            IconComponent={() => (
+                              <div onClick={() => setCountrySelectOpen(!countrySelectOpen)} className="select-icon-background">
+                                {countrySelectOpen ? <FiChevronUp className='select-icon' /> : <FiChevronDown className='select-icon' />}
+                              </div>
+                            )}
+                            MenuProps={{
                               PaperProps: {
                                 style: {
-                                  maxHeight: '200px'
+                                  height: '200px'
                                 }
                               }
-                            }
-                          }}
-                          onChange={handleChange}
-                          sx={{ width: '70%' }}
-                          helperText={errors?.country?.[0] ? errors?.country[0] : ''}
-                          error={!!errors?.country?.[0]}
-                        >
-                          {state?.countries?.length && state?.countries.map((option: any) => (
-                            <MenuItem key={option[0]} value={option[0]}>
-                              {option[1]}
-                            </MenuItem>
-                          ))}
-                        </CustomSelectField>
+                            }}
+                            className={'select'}
+                            onChange={handleChange}
+                            error={!!errors?.country?.[0]}
+                          >
+                            {state?.countries?.length && state?.countries.map((option: any) => (
+                              <MenuItem key={option[0]} value={option[0]}>
+                                {option[1]}
+                              </MenuItem>
+                            ))}
+
+                          </Select>
+                          <FormHelperText>{errors?.country?.[0] ? errors?.country[0] : ''}</FormHelperText>
+                        </FormControl>
                         {/* <FormControl error={!!errors?.country?.[0]} sx={{ width: '70%' }}>
                           <Autocomplete
                             // ref={autocompleteRef}
@@ -1075,13 +1036,10 @@ export function AddLeads() {
             {/* Description details  */}
             <div className='leadContainer'>
               <Accordion defaultExpanded style={{ width: '98%' }}>
-                <AccordionSummary
-                  expandIcon={<FaArrowDown />}
-                >
-                  <div className='typography'>
-                    <Typography style={{ marginBottom: '15px', fontWeight: 'bold' }}>Description</Typography>
-                  </div>
+                <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                  <Typography className='accordion-header'>Account Information</Typography>
                 </AccordionSummary>
+                <Divider className='divider' />
                 <AccordionDetails>
                   <Box
                     sx={{ width: '100%', mb: 1 }}
