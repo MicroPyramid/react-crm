@@ -5,14 +5,15 @@ import { FiChevronLeft } from "@react-icons/all-files/fi/FiChevronLeft";
 import { FiChevronRight } from "@react-icons/all-files/fi/FiChevronRight";
 import { getComparator, stableSort } from '../../components/Sorting';
 import { Spinner } from '../../components/Spinner';
-import { fetchData } from '../../components/FetchData';
-import { ContactUrl, Header } from '../../services/ApiUrls';
+import { fetchData, Header } from '../../components/FetchData';
+import { ContactUrl } from '../../services/ApiUrls';
 import { AntSwitch, CustomTab, CustomToolbar, FabLeft, FabRight, StyledTableCell, StyledTableRow } from '../../styles/CssStyled';
 import { useNavigate } from 'react-router-dom';
 import { FaTrashAlt } from 'react-icons/fa';
 import { DeleteModal } from '../../components/DeleteModal';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
+import { EnhancedTableHead } from '../../components/EnchancedTableHead';
 // import { DialogModal } from './DeleteModal';
 
 interface HeadCell {
@@ -61,62 +62,6 @@ const headCells: readonly HeadCell[] = [
     }
 ]
 
-
-function EnhancedTableHead(props: any) {
-    const {
-        onSelectAllClick, order, orderBy,
-        numSelected, rowCount,
-        numSelectedId, isSelectedId,
-        onRequestSort
-    } = props
-
-    const createSortHandler =
-        (property: any) => (event: React.MouseEvent<unknown>) => {
-            onRequestSort(event, property);
-        };
-
-    return (
-        <TableHead >
-            <TableRow>
-                {
-                    headCells.map((headCell) => (
-                        headCell.label === 'Action' ?
-                            <TableCell
-                                sx={{ fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}
-                                key={headCell.id}
-                                align={headCell.numeric ? 'left' : 'left'}
-                                padding={headCell.disablePadding ? 'none' : 'normal'}>{headCell.label}</TableCell>
-                            : <TableCell
-                                sx={{ fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}
-                                key={headCell.id}
-                                align={headCell.numeric ? 'left' : 'left'}
-                                padding={headCell.disablePadding ? 'none' : 'normal'}
-                                sortDirection={orderBy === headCell.id ? order : false}
-                            >
-
-                                <TableSortLabel
-                                    active={orderBy === headCell.id}
-                                    direction={orderBy === headCell.id ? order : 'asc'}
-                                    onClick={createSortHandler(headCell.id)}
-                                >
-                                    {headCell.label}
-                                    {
-                                        orderBy === headCell.id
-                                            ? (
-                                                <Box component='span' sx={{ display: 'none' }}>
-                                                    {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                                                </Box>
-                                            )
-                                            : null
-                                    }
-                                </TableSortLabel>
-                            </TableCell>
-                    ))
-                }
-            </TableRow>
-        </TableHead>
-    )
-}
 export default function Contacts() {
     const navigate = useNavigate()
     const [value, setValue] = useState('Open');
@@ -288,12 +233,14 @@ export default function Contacts() {
     };
 
     const onAddHandle = () => {
-        navigate('/app/contacts/add-contacts', { state: { countries } })
+        if (!loading) {
+            navigate('/app/contacts/add-contacts', { state: { countries } })
+        }
         // navigate('/contacts/add-contacts?page=add-contacts')
     }
 
     const contactHandle = (contactId: any) => {
-        navigate(`/app/contacts/contact-details`, { state: { contactId, detail: true } })
+        navigate(`/app/contacts/contact-details`, { state: { contactId, detail: true, countries } })
     }
 
     const deleteRow = (deleteId: any) => {
@@ -380,11 +327,12 @@ export default function Contacts() {
                     </Button>
                 </Stack>
             </CustomToolbar>
+
             <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%' }}>
                 <Box sx={{ width: '100%', minWidth: '100%', m: '15px 0px 0px 0px' }}>
                     <Paper sx={{ width: 'cal(100%-15px)', mb: 2, p: '0px 15px 15px 15px' }}>
-                        <TableContainer sx={{ width: '100%', mb: 2 }}>
-                            <Table sx={{}} aria-label='customized table'>
+                        <TableContainer>
+                            <Table>
                                 <EnhancedTableHead
                                     numSelected={selected.length}
                                     order={order}
@@ -395,6 +343,7 @@ export default function Contacts() {
                                     // rowCount={tab === 0 ? usersData.active_users_count : usersData.inactive_users_count}
                                     numSelectedId={selectedId}
                                     isSelectedId={isSelectedId}
+                                    headCells={headCells}
                                 />
                                 {/* <TableHead>
                             <TableRow>
@@ -408,18 +357,26 @@ export default function Contacts() {
                                 <TableBody>
                                     {
                                         contactList?.length
+
                                             ? stableSort(contactList, getComparator(order, orderBy))
-                                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => (
-                                                    <StyledTableRow key={index}>
-                                                        <StyledTableCell align='left' style={{ textTransform: 'capitalize', cursor: 'pointer', color: '#3E79F7',border:0 }} onClick={() => contactHandle(item)}>{item.first_name + ' ' + item.last_name}</StyledTableCell>
-                                                        <StyledTableCell align='left' sx={{border:0}}><p >{item.primary_email}</p></StyledTableCell>
-                                                        <StyledTableCell align='left' sx={{border:0}}>{item.mobile_number ? item.mobile_number : '-'}</StyledTableCell>
-                                                        {/* <StyledTableCell align='left'>
+                                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => {
+                                                    return (
+                                                        <TableRow
+                                                            tabIndex={-1}
+                                                            key={index}
+                                                            sx={{ border: 0, '&:nth-of-type(even)': { backgroundColor: 'whitesmoke' }, color: 'rgb(26, 51, 83)', textTransform: 'capitalize' }}>
+                                                            <TableCell
+                                                                className='tableCell-link'
+                                                                onClick={() => contactHandle(item)}>{item.first_name + ' ' + item.last_name}</TableCell>
+                                                            <TableCell className='tableCell'>{item.primary_email}</TableCell>
+                                                            <TableCell className='tableCell'>{item.mobile_number ? item.mobile_number : '---'}</TableCell>
+                                                            {/* <StyledTableCell align='left'>
                                                 <AntSwitch checked={item.do_not_call} inputProps={{ 'aria-label': 'ant design' }} />
                                             </StyledTableCell> */}
-                                                        <StyledTableCell align='left' sx={{border:0}}><FaTrashAlt style={{ cursor: 'pointer' }} onClick={() => deleteRow(item.id)} /></StyledTableCell>
-                                                    </StyledTableRow>
-                                                ))
+                                                            <TableCell className='tableCell'><FaTrashAlt style={{ cursor: 'pointer' }} onClick={() => deleteRow(item.id)} /></TableCell>
+                                                        </TableRow>
+                                                    )
+                                                })
                                             : ''
                                     }
                                 </TableBody>

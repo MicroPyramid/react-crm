@@ -8,14 +8,15 @@ import { FiChevronUp } from "@react-icons/all-files/fi/FiChevronUp";
 import { CustomTab, CustomToolbar, FabLeft, FabRight } from '../../styles/CssStyled';
 import { getComparator, stableSort } from '../../components/Sorting';
 import { FaAd, FaEdit, FaTrashAlt } from 'react-icons/fa';
-import { fetchData } from '../../components/FetchData';
-import { AccountsUrl, Header } from '../../services/ApiUrls';
+import { fetchData, Header } from '../../components/FetchData';
+import { AccountsUrl } from '../../services/ApiUrls';
 import { useNavigate } from 'react-router-dom';
 import { DeleteModal } from '../../components/DeleteModal';
 import { Tags } from '../../components/Tags';
 import { Spinner } from '../../components/Spinner';
 import styled from '@emotion/styled';
 import '../../styles/style.css';
+import { EnhancedTableHead } from '../../components/EnchancedTableHead';
 
 interface HeadCell {
     disablePadding: boolean;
@@ -62,67 +63,67 @@ const headCells: readonly HeadCell[] = [
     }
 ]
 
-function EnhancedTableHead(props: any) {
-    const {
-        onSelectAllClick, order, orderBy,
-        numSelected, rowCount,
-        numSelectedId, isSelectedId,
-        onRequestSort
-    } = props
+// function EnhancedTableHead(props: any) {
+//     const {
+//         onSelectAllClick, order, orderBy,
+//         numSelected, rowCount,
+//         numSelectedId, isSelectedId,
+//         onRequestSort
+//     } = props
 
-    const createSortHandler =
-        (property: any) => (event: React.MouseEvent<unknown>) => {
-            onRequestSort(event, property);
-        };
+//     const createSortHandler =
+//         (property: any) => (event: React.MouseEvent<unknown>) => {
+//             onRequestSort(event, property);
+//         };
 
-    return (
-        <TableHead>
-            <TableRow>
-                {/* <TableCell padding='checkbox'>
-                    <Checkbox
-                        onChange={onSelectAllClick}
-                        checked={numSelected === rowCount}
-                        sx={{ color: 'inherit' }}
-                    />
-                </TableCell> */}
-                {
-                    headCells.map((headCell) => (
-                        headCell.label === 'Actions' || headCell.label === 'Tags' ?
-                            <TableCell
-                                sx={{ fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}
-                                key={headCell.id}
-                                align={headCell.numeric ? 'left' : 'left'}
-                                padding={headCell.disablePadding ? 'none' : 'normal'}>{headCell.label}</TableCell>
-                            : <TableCell
-                                sx={{ fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}
-                                key={headCell.id}
-                                align={headCell.numeric ? 'left' : 'left'}
-                                padding={headCell.disablePadding ? 'none' : 'normal'}
-                                sortDirection={orderBy === headCell.id ? order : false}
-                            >
-                                <TableSortLabel
-                                    active={orderBy === headCell.id}
-                                    direction={orderBy === headCell.id ? order : 'asc'}
-                                    onClick={createSortHandler(headCell.id)}
-                                >
-                                    {headCell.label}
-                                    {
-                                        orderBy === headCell.id
-                                            ? (
-                                                <Box component='span' sx={{ display: 'none' }}>
-                                                    {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                                                </Box>
-                                            )
-                                            : null
-                                    }
-                                </TableSortLabel>
-                            </TableCell>
-                    ))
-                }
-            </TableRow>
-        </TableHead>
-    )
-}
+//     return (
+//         <TableHead>
+//             <TableRow>
+//                 {/* <TableCell padding='checkbox'>
+//                     <Checkbox
+//                         onChange={onSelectAllClick}
+//                         checked={numSelected === rowCount}
+//                         sx={{ color: 'inherit' }}
+//                     />
+//                 </TableCell> */}
+//                 {
+//                     headCells.map((headCell) => (
+//                         headCell.label === 'Actions' || headCell.label === 'Tags' ?
+//                             <TableCell
+//                                 sx={{ fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}
+//                                 key={headCell.id}
+//                                 align={headCell.numeric ? 'left' : 'left'}
+//                                 padding={headCell.disablePadding ? 'none' : 'normal'}>{headCell.label}</TableCell>
+//                             : <TableCell
+//                                 sx={{ fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}
+//                                 key={headCell.id}
+//                                 align={headCell.numeric ? 'left' : 'left'}
+//                                 padding={headCell.disablePadding ? 'none' : 'normal'}
+//                                 sortDirection={orderBy === headCell.id ? order : false}
+//                             >
+//                                 <TableSortLabel
+//                                     active={orderBy === headCell.id}
+//                                     direction={orderBy === headCell.id ? order : 'asc'}
+//                                     onClick={createSortHandler(headCell.id)}
+//                                 >
+//                                     {headCell.label}
+//                                     {
+//                                         orderBy === headCell.id
+//                                             ? (
+//                                                 <Box component='span' sx={{ display: 'none' }}>
+//                                                     {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+//                                                 </Box>
+//                                             )
+//                                             : null
+//                                     }
+//                                 </TableSortLabel>
+//                             </TableCell>
+//                     ))
+//                 }
+//             </TableRow>
+//         </TableHead>
+//     )
+// }
 
 type Item = {
     id: string;
@@ -205,6 +206,7 @@ export default function Accounts() {
                         setLeads(res?.leads)
                         setTags(res?.tags)
                         setTeams(res?.teams)
+                        setLoading(false)
                     }
                 }
             })
@@ -212,7 +214,7 @@ export default function Accounts() {
     }
 
     const accountDetail = (accountId: any) => {
-        navigate(`/app/accounts/account-details`, { state: { accountId, detail: true ,contacts: contacts || [], status: status || [], tags: tags || [], users: users || [], countries: countries || [], teams: teams || [], leads: leads || []} })
+        navigate(`/app/accounts/account-details`, { state: { accountId, detail: true, contacts: contacts || [], status: status || [], tags: tags || [], users: users || [], countries: countries || [], teams: teams || [], leads: leads || [] } })
     }
 
     const next = () => {
@@ -273,19 +275,19 @@ export default function Accounts() {
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - 7) : 0
 
     const onAddAccount = () => {
-        navigate('/app/accounts/add-account', {
-            state: {
-                detail: false,
-                contacts: contacts || [], status: status || [], tags: tags || [], users: users || [], countries: countries || [], teams: teams || [], leads: leads || []
-            }
-        })
+        if (!loading) {
+            navigate('/app/accounts/add-account', {
+                state: {
+                    detail: false,
+                    contacts: contacts || [], status: status || [], tags: tags || [], users: users || [], countries: countries || [], teams: teams || [], leads: leads || []
+                }
+            })
+        }
     }
     const deleteRow = (id: any) => {
         setSelectedId(id)
         setDeleteRowModal(!deleteRowModal)
     }
-
-
 
     const EditItem = (accountId: any) => {
         getAccountDetail(accountId)
@@ -499,6 +501,7 @@ export default function Accounts() {
                                     rowCount={tab === 'open' ? openAccounts?.length : closedAccounts?.length}
                                     numSelectedId={selectedId}
                                     isSelectedId={isSelectedId}
+                                    headCells={headCells}
                                 />
                                 {tab === 'open' ?
                                     <TableBody>
@@ -529,39 +532,26 @@ export default function Accounts() {
                                                                     />
                                                                 </TableCell> */}
                                                                 <TableCell
-                                                                    align='left'
-                                                                    sx={{ cursor: 'pointer', color: '#3E79F7', textTransform: 'none', border: 0 }}
+                                                                    className='tableCell-link'
                                                                     onClick={() => accountDetail(item.id)}
                                                                 >
                                                                     {item?.name ? item?.name : '---'}
                                                                 </TableCell>
-                                                                <TableCell
-                                                                    align='left'
-                                                                    sx={{ border: 0, color: 'rgb(26, 51, 83)' }}
-                                                                >
+                                                                <TableCell className='tableCell'>
                                                                     {item?.website ? item?.website : '---'}
                                                                 </TableCell>
-                                                                <TableCell
-                                                                    align='left'
-                                                                    sx={{ border: 0, color: 'rgb(26, 51, 83)' }}
-                                                                >
+                                                                <TableCell className='tableCell'>
                                                                     <Stack style={{ display: 'flex', flexDirection: 'row', alignItems: "center" }}>
                                                                         <Avatar src={item?.lead?.created_by?.profile_pic} alt={item?.lead?.created_by?.email} /><Stack sx={{ ml: 1 }}>{item?.lead?.account_name ? item?.lead?.account_name : '---'}</Stack>
                                                                     </Stack>
                                                                 </TableCell>
-                                                                <TableCell
-                                                                    align='left'
-                                                                    sx={{ border: 0, color: 'rgb(26, 51, 83)' }}
-                                                                >
+                                                                <TableCell className='tableCell'>
                                                                     {item?.lead?.country ? item?.lead?.country : '---'}
                                                                 </TableCell>
-                                                                <TableCell
-                                                                    align='left'
-                                                                    sx={{ border: 0, color: 'rgb(26, 51, 83)' }}
-                                                                >
+                                                                <TableCell className='tableCell'>
                                                                     {item?.tags?.length ? item?.tags.map((tag: any, i: any) => <Stack sx={{ mr: 0.5 }}> Tags(tag)</Stack>) : '---'}
                                                                 </TableCell>
-                                                                <TableCell align='left' sx={{ border: 0 }}>
+                                                                <TableCell className='tableCell'>
                                                                     {/* <IconButton>
                                                                         <FaEdit
                                                                             onClick={() => EditItem(item?.id)}
@@ -577,7 +567,7 @@ export default function Accounts() {
                                                             </TableRow>
                                                         )
                                                     })
-                                                : <TableRow> <TableCell colSpan={6}><Spinner /></TableCell></TableRow>
+                                                : <TableRow> <TableCell colSpan={6} sx={{ border: 0 }}><Spinner /></TableCell></TableRow>
                                         }
                                         {
                                             // emptyRows > 0 && (
@@ -620,39 +610,26 @@ export default function Accounts() {
                                                                     />
                                                                 </TableCell> */}
                                                                 <TableCell
-                                                                    align='left'
-                                                                    sx={{ cursor: 'pointer', color: '#3E79F7', textTransform: 'none', border: 0 }}
+                                                                    className='tableCell-link'
                                                                     onClick={() => accountDetail(item.id)}
                                                                 >
                                                                     {item?.name ? item?.name : '---'}
                                                                 </TableCell>
-                                                                <TableCell
-                                                                    align='left'
-                                                                    sx={{ border: 0, color: 'rgb(26, 51, 83)' }}
-                                                                >
+                                                                <TableCell className='tableCell'>
                                                                     {item?.website ? item?.website : '---'}
                                                                 </TableCell>
-                                                                <TableCell
-                                                                    align='left'
-                                                                    sx={{ border: 0, color: 'rgb(26, 51, 83)' }}
-                                                                >
+                                                                <TableCell className='tableCell'>
                                                                     <Stack style={{ display: 'flex', flexDirection: 'row', alignItems: "center" }}>
                                                                         <Avatar src={item?.lead?.created_by?.profile_pic} alt={item?.lead?.created_by?.email} /><Stack sx={{ ml: 1 }}>{item?.lead?.account_name ? item?.lead?.account_name : '---'}</Stack>
                                                                     </Stack>
                                                                 </TableCell>
-                                                                <TableCell
-                                                                    align='left'
-                                                                    sx={{ border: 0, color: 'rgb(26, 51, 83)' }}
-                                                                >
+                                                                <TableCell className='tableCell'>
                                                                     {item?.lead?.country ? item?.lead?.country : '---'}
                                                                 </TableCell>
-                                                                <TableCell
-                                                                    align='left'
-                                                                    sx={{ border: 0, color: 'rgb(26, 51, 83)' }}
-                                                                >
+                                                                <TableCell className='tableCell'>
                                                                     {item?.tags?.length ? item?.tags.map((tag: any, i: any) => <Stack sx={{ mr: 0.5 }}> Tags(tag)</Stack>) : '---'}
                                                                 </TableCell>
-                                                                <TableCell align='left' sx={{ border: 0 }}>
+                                                                <TableCell className='tableCell'>
                                                                     {/* <IconButton>
                                                                         <FaEdit
                                                                             onClick={() => EditItem(item?.id)}
@@ -668,7 +645,7 @@ export default function Accounts() {
                                                             </TableRow>
                                                         )
                                                     })
-                                                : <TableRow> <TableCell colSpan={6}><Spinner /></TableCell></TableRow>
+                                                : <TableRow> <TableCell colSpan={6} sx={{ border: 0 }}><Spinner /></TableCell></TableRow>
                                         }
                                     </TableBody>
                                 }

@@ -21,8 +21,8 @@ import {
 import { Fa500Px, FaAccusoft, FaAd, FaAddressCard, FaEllipsisV, FaPlus, FaRegAddressCard, FaStar } from 'react-icons/fa'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { Header, LeadUrl } from '../../services/ApiUrls'
-import { fetchData } from '../../components/FetchData'
+import { LeadUrl } from '../../services/ApiUrls'
+import { fetchData, Header } from '../../components/FetchData'
 import { Label } from '../../components/Label'
 import { AntSwitch, CustomSelectField, CustomSelectField1 } from '../../styles/CssStyled'
 import FormateTime from '../../components/FormateTime'
@@ -240,7 +240,7 @@ function LeadDetails(props: any) {
                                 </div>
                             </div>
                             <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', marginTop: '10px' }}>
-                                <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>
+                                <div className='title2'>
                                     {leadDetails?.title}
                                     {/* {console.log(users?.length && users.length,'lll')} */}
                                     <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 1 }}>
@@ -269,42 +269,42 @@ function LeadDetails(props: any) {
                             </div>
                             <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Expected close date</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                    <div className='title2' >Expected close date</div>
+                                    <div className='title3'>
                                         {leadDetails?.close_date || '---'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Account Name</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                    <div className='title2'>Account Name</div>
+                                    <div className='title3'>
                                         {leadDetails?.account_name}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Organization Name</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                    <div className='title2'>Organization Name</div>
+                                    <div className='title3'>
                                         {leadDetails?.organization || '---'}
                                     </div>
                                 </div>
                             </div>
-                            <div style={{ padding: '20px', marginTop: '15px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <div className='detailList'>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Created from site</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                    <div className='title2'>Created from site</div>
+                                    <div className='title3'>
                                         {/* {lead.pipeline ? lead.pipeline : '------'} */}
                                         {/* {leadDetails?.created_from_site} */}
                                         <AntSwitch checked={leadDetails?.created_from_site} />
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Probability</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                    <div className='title2'>Probability</div>
+                                    <div className='title3'>
                                         {leadDetails?.probability || '---'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>website</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                    <div className='title2'>website</div>
+                                    <div className='title3'>
                                         {leadDetails?.website ? <Link>
                                             {leadDetails?.website}
                                         </Link> : '---'}
@@ -312,16 +312,16 @@ function LeadDetails(props: any) {
                                     </div>
                                 </div>
                             </div>
-                            <div style={{ padding: '20px', marginTop: '15px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <div className='detailList'>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Industry</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                    <div className='title2'>Industry</div>
+                                    <div className='title3'>
                                         {leadDetails?.industry || '---'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>SkypeID</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                    <div className='title2'>SkypeID</div>
+                                    <div className='title3'>
                                         {leadDetails?.skype_ID ? <Link>
                                             {leadDetails?.skype_ID}
                                         </Link> : '---'}
@@ -342,28 +342,28 @@ function LeadDetails(props: any) {
                                 </div>
                                 <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: '10px' }}>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>First Name</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                        <div className='title2'>First Name</div>
+                                        <div className='title3'>
                                             {leadDetails?.first_name || '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Last Name</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                        <div className='title2'>Last Name</div>
+                                        <div className='title3'>
                                             {leadDetails?.last_name || '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Job Title</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                        <div className='title2'>Job Title</div>
+                                        <div className='title3'>
                                             {leadDetails?.title || '---'}
                                         </div>
                                     </div>
                                 </div>
-                                <div style={{ padding: '20px', marginTop: '15px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <div className='detailList'>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Email Address</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                        <div className='title2'>Email Address</div>
+                                        <div className='title3'>
                                             {leadDetails?.email ? <Link>
                                                 {leadDetails?.email}
                                                 <FaStar style={{ fontSize: '16px', fill: 'yellow' }} />
@@ -371,15 +371,15 @@ function LeadDetails(props: any) {
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Mobile Number</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                        <div className='title2'>Mobile Number</div>
+                                        <div className='title3'>
                                             {leadDetails?.phone ? `${leadDetails?.phone}
                                                 <FaStar style={{ fontSize: '16px', fill: 'yellow' }} /><br />` : '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
                                         <div style={{ fontSize: '16px', fontWeight: 600 }} />
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                        <div className='title3'>
                                         </div>
                                     </div>
                                 </div>
@@ -393,40 +393,40 @@ function LeadDetails(props: any) {
                                 </div>
                                 <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: '10px' }}>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Address Lane</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                        <div className='title2'>Address Lane</div>
+                                        <div className='title3'>
                                             {leadDetails?.address_line || '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Street</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                        <div className='title2'>Street</div>
+                                        <div className='title3'>
                                             {leadDetails?.street || '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>City</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                        <div className='title2'>City</div>
+                                        <div className='title3'>
                                             {leadDetails?.city || '---'}
                                         </div>
                                     </div>
                                 </div>
-                                <div style={{ padding: '20px', marginTop: '15px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <div className='detailList'>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Pincode</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                        <div className='title2'>Pincode</div>
+                                        <div className='title3'>
                                             {leadDetails?.postcode || '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>State</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                        <div className='title2'>State</div>
+                                        <div className='title3'>
                                             {leadDetails?.state || '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Country</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                        <div className='title2'>Country</div>
+                                        <div className='title3'>
                                             {leadDetails?.country || '---'}
                                         </div>
                                     </div>

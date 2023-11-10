@@ -12,8 +12,8 @@ import {
     Chip
 } from '@mui/material'
 
-import { fetchData } from '../../components/FetchData'
-import { AccountsUrl, Header } from '../../services/ApiUrls'
+import { fetchData, Header } from '../../components/FetchData'
+import { AccountsUrl } from '../../services/ApiUrls'
 import { Tags } from '../../components/Tags'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { FaPlus, FaStar } from 'react-icons/fa'
@@ -227,8 +227,8 @@ export const AccountDetails = (props: any) => {
                                             // src={accountDetails?.created_by?.profile_pic}
                                             alt={accountDetails?.created_by?.email}
                                         />
-                                        &nbsp;
-                                        &nbsp;
+                                        &nbsp;&nbsp;
+                                        {accountDetails?.created_by?.email}
                                         {/* {accountDetails?.first_name}&nbsp;
                                         {accountDetails?.last_name} */}
                                     </div>
@@ -236,7 +236,7 @@ export const AccountDetails = (props: any) => {
                                 </div>
                             </div>
                             <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', marginTop: '10px' }}>
-                                <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>
+                                <div className='title2'>
                                     {accountDetails?.name}
                                     <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 1 }}>
                                         {/* {
@@ -263,41 +263,41 @@ export const AccountDetails = (props: any) => {
                             </div>
                             <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Website</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
-                                        {accountDetails?.website || '---'}
+                                    <div className='title2'>Website</div>
+                                    <div className='title3'>
+                                        {accountDetails?.website || '----'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Contact Name</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                    <div className='title2'>Contact Name</div>
+                                    <div className='title3'>
                                         {accountDetails?.contact_name}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Organization Name</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
-                                        {accountDetails?.org?.name || '---'}
+                                    <div className='title2'>Organization Name</div>
+                                    <div className='title3'>
+                                        {accountDetails?.org?.name || '----'}
                                     </div>
                                 </div>
                             </div>
                             <div style={{ padding: '20px', marginTop: '10px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Industry</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                    <div className='title2'>Industry</div>
+                                    <div className='title3'>
                                         {/* {lead.pipeline ? lead.pipeline : '------'} */}
-                                        {accountDetails?.industry || '---'}
+                                        {accountDetails?.industry || '----'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Leads</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
-                                        {accountDetails?.lead?.account_name || '---'}
+                                    <div className='title2'>Leads</div>
+                                    <div className='title3'>
+                                        {accountDetails?.lead?.account_name || '----'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Teams</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                    <div className='title2'>Teams</div>
+                                    <div className='title3'>
                                         {accountDetails?.teams?.length ? accountDetails?.teams.map((team: any) =>
                                             <Chip label={team} sx={{ height: '20px', borderRadius: '4px' }} />
                                         ) : '----'}
@@ -307,23 +307,23 @@ export const AccountDetails = (props: any) => {
                             </div>
                             <div style={{ padding: '20px', marginTop: '10px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Email Address</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                    <div className='title2'>Email Address</div>
+                                    <div className='title3'>
                                         {accountDetails?.email || '----'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Mobile Number</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                    <div className='title2'>Mobile Number</div>
+                                    <div className='title3'>
                                         {accountDetails?.phone || '----'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Skype Id</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                    <div className='title2'>Skype Id</div>
+                                    <div className='title3'>
                                         {accountDetails?.skype_ID ? <Link>
                                             {accountDetails?.skype_ID}
-                                        </Link> : '---'}
+                                        </Link> : '----'}
                                     </div>
                                 </div>
                             </div>
@@ -337,41 +337,41 @@ export const AccountDetails = (props: any) => {
                                 </div>
                                 <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: '10px' }}>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Address Lane</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
-                                            {accountDetails?.billing_address_line || '---'}
+                                        <div className='title2'>Address Lane</div>
+                                        <div className='title3'>
+                                            {accountDetails?.billing_address_line || '----'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Street</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
-                                            {accountDetails?.billing_street || '---'}
+                                        <div className='title2'>Street</div>
+                                        <div className='title3'>
+                                            {accountDetails?.billing_street || '----'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>City</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
-                                            {accountDetails?.billing_city || '---'}
+                                        <div className='title2'>City</div>
+                                        <div className='title3'>
+                                            {accountDetails?.billing_city || '----'}
                                         </div>
                                     </div>
                                 </div>
                                 <div style={{ padding: '20px', marginTop: '15px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Pincode</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
-                                            {accountDetails?.billing_postcode || '---'}
+                                        <div className='title2'>Pincode</div>
+                                        <div className='title3'>
+                                            {accountDetails?.billing_postcode || '----'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>State</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
-                                            {accountDetails?.billing_state || '---'}
+                                        <div className='title2'>State</div>
+                                        <div className='title3'>
+                                            {accountDetails?.billing_state || '----'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Country</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
-                                            {/* {accountDetails?.billing_country || '---'} */}
+                                        <div className='title2'>Country</div>
+                                        <div className='title3'>
+                                            {/* {accountDetails?.billing_country || '----'} */}
                                             {accountCountry(accountDetails?.billing_country || '----')}
                                         </div>
                                     </div>
@@ -385,7 +385,7 @@ export const AccountDetails = (props: any) => {
                                     </div>
                                 </div>
                                 <p style={{ fontSize: '16px', color: 'gray', padding: '20px' }}>
-                                    {accountDetails?.description || '---'}
+                                    {accountDetails?.description || '----'}
                                 </p>
                             </div>
 

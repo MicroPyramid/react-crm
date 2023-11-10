@@ -20,8 +20,8 @@ import {
     Select
 } from '@mui/material'
 import '../../styles/style.css'
-import { Header, LeadUrl, OpportunityUrl } from '../../services/ApiUrls'
-import { fetchData } from '../../components/FetchData'
+import { LeadUrl, OpportunityUrl } from '../../services/ApiUrls'
+import { fetchData, Header } from '../../components/FetchData'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { FaArrowDown, FaFileUpload, FaPalette, FaPercent, FaPlus, FaTimes, FaUpload } from 'react-icons/fa'
 import { useForm } from '../../components/UseForm'

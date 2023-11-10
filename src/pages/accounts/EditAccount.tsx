@@ -19,8 +19,8 @@ import {
     Divider
 } from '@mui/material'
 import '../../styles/style.css'
-import { AccountsUrl, Header } from '../../services/ApiUrls'
-import { fetchData } from '../../components/FetchData'
+import { AccountsUrl } from '../../services/ApiUrls'
+import { fetchData, Header } from '../../components/FetchData'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { FaFileUpload, FaPlus, FaTimes, FaUpload } from 'react-icons/fa'
 import { CustomPopupIcon, RequiredSelect, RequiredTextField } from '../../styles/CssStyled'
@@ -115,8 +115,10 @@ export function EditAccount() {
 
     useEffect(() => {
         setFormData(state?.value)
+        if (state?.value?.assign_to) {
+            setSelectedContacts(state?.value?.assign_to);
+        }
     }, [state?.id])
-
 
     useEffect(() => {
         if (reset) {
@@ -175,7 +177,7 @@ export function EditAccount() {
     //         reader.readAsDataURL(file);
     //     }
     // };
-    const handleFileChange = (event:any) => {
+    const handleFileChange = (event: any) => {
         const file = event.target.files?.[0] || null;
         if (file) {
             setFormData((prevData) => ({
@@ -183,7 +185,7 @@ export function EditAccount() {
                 account_attachment: file.name,
                 file: prevData.file,
             }));
-    
+
             const reader = new FileReader();
             reader.onload = () => {
                 setFormData((prevData) => ({
@@ -272,9 +274,9 @@ export function EditAccount() {
 
     const module = 'Accounts'
     const crntPage = 'Add Account'
-    const backBtn = state?.edit ? 'Back To Accounts' : 'Back To AccountDetails'
+    const backBtn = state?.edit ? 'Back to Accounts' : 'Back to AccountDetails'
 
-    // console.log(state, 'accountform')
+    console.log(state, 'accountform')
     return (
         <Box sx={{ mt: '60px' }}>
             <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} onCancel={onCancel} onSubmit={handleSubmit} />
@@ -386,11 +388,11 @@ export function EditAccount() {
                                                         onChange={handleChange}
                                                         error={!!errors?.contact_name?.[0]}
                                                     >
-                                                        {state?.contacts?.length && state?.contacts.map((option: any) => (
+                                                        {state?.contacts?.length ? state?.contacts.map((option: any) => (
                                                             <MenuItem key={option?.id} value={option?.first_name}>
                                                                 {option?.first_name}
                                                             </MenuItem>
-                                                        ))}
+                                                        )) : ''}
                                                     </RequiredSelect>
                                                     <FormHelperText className='helperText'>{errors?.contact_name?.[0] ? errors?.contact_name[0] : ''}</FormHelperText>
                                                 </FormControl>
@@ -414,11 +416,11 @@ export function EditAccount() {
                                                         onChange={handleChange}
                                                         error={!!errors?.lead?.[0]}
                                                     >
-                                                        {state?.leads?.length && state?.leads.map((option: any) => (
+                                                        {state?.leads?.length ? state?.leads.map((option: any) => (
                                                             <MenuItem key={option?.id} value={option?.id}>
                                                                 {option?.title}
                                                             </MenuItem>
-                                                        ))}
+                                                        )) : ''}
                                                     </Select>
                                                     <FormHelperText className='helperText'>{errors?.lead?.[0] || ''}</FormHelperText>
                                                 </FormControl>
@@ -431,7 +433,7 @@ export function EditAccount() {
                                                         value={selectedTeams}
                                                         multiple
                                                         limitTags={5}
-                                                        options={state.teams || []}
+                                                        options={state?.teams || []}
                                                         // options={state.contacts ? state.contacts.map((option: any) => option) : ['']}
                                                         getOptionLabel={(option: any) => option || []}
                                                         onChange={(e: any, value: any) => handleChange2('teams', value)}
@@ -441,11 +443,7 @@ export function EditAccount() {
                                                             value.map((option: any, index: any) => (
                                                                 <Chip
                                                                     deleteIcon={<FaTimes style={{ width: '9px' }} />}
-                                                                    sx={{
-                                                                        backgroundColor: 'rgba(0, 0, 0, 0.08)',
-                                                                        height: '18px'
-
-                                                                    }}
+                                                                    sx={{ backgroundColor: 'rgba(0, 0, 0, 0.08)', height: '18px' }}
                                                                     variant='outlined'
                                                                     label={option}
                                                                     {...getTagProps({ index })}
@@ -481,18 +479,19 @@ export function EditAccount() {
                                                         multiple
                                                         value={selectedAssignTo}
                                                         limitTags={2}
-                                                        options={state.users || []}
-                                                        getOptionLabel={(option: any) => state.users ? option?.user__email : option}
+                                                        options={state.users ? state.users.filter((option: any) => !selectedAssignTo.some((selectedOption) => selectedOption.id === option.id)) : []}
+                                                        getOptionLabel={(option: any) => state?.users ? option?.user__email : option}
                                                         onChange={(e: any, value: any) => handleChange2('assigned_to', value)}
                                                         size='small'
                                                         filterSelectedOptions
+                                                        filterOptions={(options) => options.filter(option => !selectedAssignTo.includes(option?.id))}
                                                         renderTags={(value, getTagProps) =>
                                                             value.map((option, index) => (
                                                                 <Chip
                                                                     deleteIcon={<FaTimes style={{ width: '9px' }} />}
                                                                     sx={{ backgroundColor: 'rgba(0, 0, 0, 0.08)', height: '18px' }}
                                                                     variant='outlined'
-                                                                    label={state.users ? option?.user__email : option}
+                                                                    label={state?.users ? option?.user__email : option}
                                                                     {...getTagProps({ index })}
                                                                 />
                                                             ))
@@ -521,7 +520,7 @@ export function EditAccount() {
                                                 <div className='fieldTitle'>account_attachment</div>
                                                 <TextField
                                                     name='account_attachment'
-                                                    value={formData.account_attachment||''}
+                                                    value={formData.account_attachment || ''}
                                                     InputProps={{
                                                         endAdornment: (
                                                             <InputAdornment position='end'>
@@ -562,8 +561,7 @@ export function EditAccount() {
                                                         value={selectedTags}
                                                         multiple
                                                         limitTags={5}
-                                                        options={state.tags || []}
-                                                        // options={state.contacts ? state.contacts.map((option: any) => option) : ['']}
+                                                        options={state?.tags || []}
                                                         getOptionLabel={(option: any) => option}
                                                         onChange={(e: any, value: any) => handleChange2('tags', value)}
                                                         size='small'
@@ -572,11 +570,7 @@ export function EditAccount() {
                                                             value.map((option, index) => (
                                                                 <Chip
                                                                     deleteIcon={<FaTimes style={{ width: '9px' }} />}
-                                                                    sx={{
-                                                                        backgroundColor: 'rgba(0, 0, 0, 0.08)',
-                                                                        height: '18px'
-
-                                                                    }}
+                                                                    sx={{ backgroundColor: 'rgba(0, 0, 0, 0.08)', height: '18px' }}
                                                                     variant='outlined'
                                                                     label={option}
                                                                     {...getTagProps({ index })}

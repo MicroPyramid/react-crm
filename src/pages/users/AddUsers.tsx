@@ -24,8 +24,8 @@ import {
 // import isEmail from 'validator/lib/isEmail'
 
 import '../../styles/style.css'
-import { Header, UsersUrl } from '../../services/ApiUrls'
-import { fetchData } from '../../components/FetchData'
+import { UsersUrl } from '../../services/ApiUrls'
+import { fetchData, Header } from '../../components/FetchData'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { FaArrowAltCircleDown, FaArrowDown, FaTimes, FaUpload } from 'react-icons/fa'
 import { AntSwitch, CustomSelectField, CustomSelectTextField, RequiredTextField } from '../../styles/CssStyled'
@@ -71,96 +71,11 @@ export function AddUsers() {
     const navigate = useNavigate()
 
     const [roleSelectOpen, setRoleSelectOpen] = useState(false)
+    const [countrySelectOpen, setCountrySelectOpen] = useState(false)
     const [error, setError] = useState(false)
-    // const [desc, setDesc] = useState('')
-
     const [msg, setMsg] = useState('')
     const [responceError, setResponceError] = useState(false)
 
-    // const [assign, setAssignTo] = useState('')
-    // const [source, setSource] = useState('')
-    // const [status, setStatus] = useState('')
-
-
-
-    // const handleChange = (target, key) => {
-    //   if (target.name === 'assign_to') {
-    //     const newKey = []
-    //     newKey.push((key.key).replace(/[^0-9]/g, '', '$'))
-    //     val.assigned_to = JSON.stringify(newKey)
-    //     setAssignTo(target.value)
-    //   } else if (target.name === 'status') {
-    //     val.status = target.value
-    //     setStatus(target.value)
-    //   } else if (target.name === 'source') {
-    //     val.source = target.value
-    //     setSource(target.value)
-    //   } else if (target.name === 'industry') {
-    //     val.industry = target.value
-    //   }
-    // }
-
-    // const tagsHandle = (event, value) => {
-    //   val.tags = JSON.stringify(value)
-    // }
-
-    // const HandleDesc = (nextValues) => {
-    //   val.description = nextValues
-    //   setDesc(nextValues)
-    // }
-
-    // const assignToHandle = (event, value) => {
-    //   const newKey = []
-    //   let stringVal = ''
-    //   value.map((item) => {
-    //     stringVal =
-    //       newKey.push(item.id.toString())
-    //   })
-    //   val.assigned_to = JSON.stringify(newKey)
-    // }
-
-    // const validatation = () => {
-    //     let flag = true
-    //     if (!(Object.prototype.hasOwnProperty.call(val, 'salutation')) || val.title === '') {
-    //         flag = false
-    //         setError('*required  field')
-    //         setMsg('salutation')
-    //     } else if (!(Object.prototype.hasOwnProperty.call(val, 'first_name')) || val.opportunity_amount === '') {
-    //         flag = false
-    //         setError('*required field')
-    //         setMsg('first_name')
-    //     } else if (!(Object.prototype.hasOwnProperty.call(val, 'last_name')) || val.first_name === '') {
-    //         setError('*required field')
-    //         setMsg('last_name')
-    //         flag = false
-    //     } else if (!(Object.prototype.hasOwnProperty.call(val, 'title')) || val.first_name === '') {
-    //         setError('*required field')
-    //         setMsg('title')
-    //         flag = false
-    //     } else if ((Object.prototype.hasOwnProperty.call(val, 'primary_email'))) {
-    //         const validEmail = isEmail(val.primary_email)
-    //         if (validEmail === false) {
-    //             setError('*email is not valid')
-    //             setMsg('primary_email')
-    //             flag = false
-    //         }
-    //     } else if ((Object.prototype.hasOwnProperty.call(val, 'secondary_email'))) {
-    //         const validEmail = isEmail(val.secondary_email)
-    //         if (validEmail === false) {
-    //             setError('*email is not valid')
-    //             setMsg('secondary_email')
-    //             flag = false
-    //         }
-    //     } else if (!(Object.prototype.hasOwnProperty.call(val, 'address_line')) || val.address_line === '') {
-    //         setError('*required address field')
-    //         setMsg('address_line')
-    //         flag = false
-    //     } else {
-    //         setError('')
-    //         setMsg('')
-    //     }
-    //     return flag
-    // }
 
     const handleChange = (e: any) => {
         const { name, value, files, type, checked } = e.target;
@@ -314,7 +229,7 @@ export function AddUsers() {
                         <div className='leadContainer'>
                             <Accordion defaultExpanded style={{ width: '98%' }}>
                                 <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
-                                    <Typography className='accordion-header'>Account Information</Typography>
+                                    <Typography className='accordion-header'>User Information</Typography>
                                 </AccordionSummary>
                                 <Divider className='divider' />
                                 <AccordionDetails>
@@ -383,7 +298,7 @@ export function AddUsers() {
                                                 </Tooltip>
                                             </div>
                                             <div className='fieldSubContainer'>
-                                                <div className='fieldTitle'>Alternate Phone Number</div>
+                                                <div className='fieldTitle'>Alternate Phone</div>
                                                 <Tooltip title="Number must starts with +91">
                                                     <RequiredTextField
                                                         required
@@ -506,202 +421,11 @@ export function AddUsers() {
                                 </AccordionDetails>
                             </Accordion>
                         </div>
-                        {/* Email Information */}
-                        {/* <div className='leadContainer'>
-                            <Accordion style={{ width: '98%' }}>
-                              <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
-                                    <Typography className='accordion-header'>Account Information</Typography>
-                                </AccordionSummary>
-                                <Divider className='divider' />
-                                <AccordionDetails>
-                                    <Box
-                                        sx={{ width: '98%', color: '#1A3353' }}
-                                        component='form'
-                                        noValidate
-                                        autoComplete='off'
-                                    >
-                                        <div className='fieldContainer'>
-                                            <div className='fieldSubContainer'>
-                                                <div className='fieldTitle'>First Name</div>
-                                                <TextField
-                                                    error={msg === 'address_line'}
-                                                    name='address_line'
-                                                    id='outlined-error-helper-text'
-                                                    // onChange={onChange}
-                                                    // InputProps={{
-                                                    //     classes: {
-                                                    //         root: textFieldClasses.root
-                                                    //     }
-                                                    // }}
-                                                    className="custom-textfield"
-                                                    style={{ width: '70%' }}
-                                                    required={!!(msg === 'address_line' || msg === 'required')}
-                                                    helperText={
-                                                        msg === 'address_line' || msg === 'required'
-                                                            ? error
-                                                            : ''
-                                                    }
-                                                />
-                                            </div>
-                                            <div className='fieldSubContainer'>
-                                                <div className='fieldTitle'>Last Name</div>
-                                                <TextField
-                                                    name='city'
-                                                    error={!!(msg === 'city' || msg === 'required')}
-                                                    id='outlined-error-helper-text'
-                                                    // onChange={onChange} style={{ width: '70%' }}
-                                                    // InputProps={{
-                                                    //     classes: {
-                                                    //         root: textFieldClasses.fieldHeight
-                                                    //     }
-                                                    // }}
-                                                    className="custom-textfield"
-                                                    helperText={
-                                                        (error && msg === 'city') || msg === 'required'
-                                                            ? error
-                                                            : ''
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className='fieldContainer2'>
-                                            <div className='fieldSubContainer'>
-                                                <div className='fieldTitle'>Title</div>
-                                                <TextField
-                                                    id='outlined-error-helper-text'
-                                                    error={!!(msg === 'street' || msg === 'required')}
-                                                    name='street'
-                                                    // onChange={onChange}
-                                                    // InputProps={{
-                                                    //     classes: {
-                                                    //         root: textFieldClasses.fieldHeight
-                                                    //     }
-                                                    // }}
-                                                    className="custom-textfield"
-                                                    style={{ width: '70%' }}
-                                                    helperText={
-                                                        (error && msg === 'street') || msg === 'required'
-                                                            ? error
-                                                            : ''
-                                                    }
-                                                />
-                                            </div>
-                                            <div className='fieldSubContainer'>
-                                                <div className='fieldTitle'>Primary Email</div>
-                                                <TextField
-                                                    name='state'
-                                                    error={!!(msg === 'state' || msg === 'required')}
-                                                    id='outlined-error-helper-text'
-                                                    // onChange={onChange} style={{ width: '70%' }}
-                                                    // InputProps={{
-                                                    //     classes: {
-                                                    //         root: textFieldClasses.fieldHeight
-                                                    //     }
-                                                    // }}
-                                                    className="custom-textfield"
-                                                    helperText={
-                                                        (error && msg === 'state') || msg === 'required'
-                                                            ? error
-                                                            : ''
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className='fieldContainer2'>
-                                            <div className='fieldSubContainer'>
-                                                <div className='fieldTitle'>Secondary Email</div>
-                                                <TextField
-                                                    id='outlined-error-helper-text'
-                                                    error={!!(msg === 'street' || msg === 'required')}
-                                                    name='street'
-                                                    // onChange={onChange} style={{ width: '70%' }}
-                                                    // InputProps={{
-                                                    //     classes: {
-                                                    //         root: textFieldClasses.fieldHeight
-                                                    //     }
-                                                    // }}
-                                                    className="custom-textfield"
-                                                    helperText={
-                                                        (error && msg === 'street') || msg === 'required'
-                                                            ? error
-                                                            : ''
-                                                    }
-                                                />
-                                            </div>
-                                            <div className='fieldSubContainer'>
-                                                <div className='fieldTitle'>Mobile Number</div>
-                                                <TextField
-                                                    name='state'
-                                                    error={!!(msg === 'state' || msg === 'required')}
-                                                    id='outlined-error-helper-text'
-                                                    // onChange={onChange}
-                                                    style={{ width: '70%' }}
-                                                    // InputProps={{
-                                                    //     classes: {
-                                                    //         root: textFieldClasses.fieldHeight
-                                                    //     }
-                                                    // }}
-                                                    className="custom-textfield"
-                                                    helperText={
-                                                        (error && msg === 'state') || msg === 'required'
-                                                            ? error
-                                                            : ''
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className='fieldContainer2'>
-                                            <div className='fieldSubContainer'>
-                                                <div className='fieldTitle'>Secondary Number</div>
-                                                <TextField
-                                                    id='outlined-error-helper-text'
-                                                    error={!!(msg === 'street' || msg === 'required')}
-                                                    name='street'
-                                                    // onChange={onChange}
-                                                    // InputProps={{
-                                                    //     classes: {
-                                                    //         root: textFieldClasses.fieldHeight
-                                                    //     }
-                                                    // }}
-                                                    className="custom-textfield"
-                                                    style={{ width: '70%' }}
-                                                    helperText={
-                                                        (error && msg === 'street') || msg === 'required'
-                                                            ? error
-                                                            : ''
-                                                    }
-                                                />
-                                            </div>
-                                            <div className='fieldSubContainer'>
-                                                <div className='fieldTitle'>Fax</div>
-                                                <TextField
-                                                    name='state'
-                                                    error={!!(msg === 'state' || msg === 'required')}
-                                                    id='outlined-error-helper-text'
-                                                    // onChange={onChange} style={{ width: '70%' }}
-                                                    // InputProps={{
-                                                    //     classes: {
-                                                    //         root: textFieldClasses.fieldHeight
-                                                    //     }
-                                                    // }}
-                                                    className="custom-textfield"
-                                                    helperText={
-                                                        (error && msg === 'state') || msg === 'required'
-                                                            ? error
-                                                            : ''
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                    </Box>
-                                </AccordionDetails>
-                            </Accordion>
-                        </div> */}
                         {/* Address Details */}
                         <div className='leadContainer'>
                             <Accordion defaultExpanded style={{ width: '98%' }}>
                                 <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
-                                    <Typography className='accordion-header'>Account Information</Typography>
+                                    <Typography className='accordion-header'>Address</Typography>
                                 </AccordionSummary>
                                 <Divider className='divider' />
                                 <AccordionDetails>
@@ -783,16 +507,29 @@ export function AddUsers() {
                                             </div>
                                             <div className='fieldSubContainer'>
                                                 <div className='fieldTitle'>Country</div>
-                                                <TextField
-                                                    required
-                                                    name='country'
-                                                    value={formData.country}
-                                                    onChange={handleChange}
-                                                    style={{ width: '70%' }}
-                                                    size='small'
-                                                    error={!!profileErrors?.country?.[0] || !!userErrors?.country?.[0]}
-                                                    helperText={profileErrors?.country?.[0] || userErrors?.country?.[0] || ''}
-                                                />
+                                                <FormControl sx={{ width: '70%' }}>
+                                                    <Select
+                                                        name='country'
+                                                        value={formData.country}
+                                                        open={countrySelectOpen}
+                                                        onClick={() => setCountrySelectOpen(!countrySelectOpen)}
+                                                        IconComponent={() => (
+                                                            <div onClick={() => setCountrySelectOpen(!countrySelectOpen)} className="select-icon-background">
+                                                                {countrySelectOpen ? <FiChevronUp className='select-icon' /> : <FiChevronDown className='select-icon' />}
+                                                            </div>
+                                                        )}
+                                                        className={'select'}
+                                                        onChange={handleChange}
+                                                        error={!!profileErrors?.country?.[0]}
+                                                    >
+                                                        {state?.countries?.length && state?.countries.map((option: any) => (
+                                                            <MenuItem key={option[0]} value={option[0]}>
+                                                                {option[1]}
+                                                            </MenuItem>
+                                                        ))}
+                                                    </Select>
+                                                    <FormHelperText>{profileErrors?.country?.[0] ? profileErrors?.country?.[0] : ''}</FormHelperText>
+                                                </FormControl>
                                             </div>
                                         </div>
                                     </Box>

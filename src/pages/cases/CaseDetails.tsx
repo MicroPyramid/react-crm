@@ -11,18 +11,15 @@ import {
     Button,
     Chip
 } from '@mui/material'
+
 import { fetchData, Header } from '../../components/FetchData'
-import { OpportunityUrl } from '../../services/ApiUrls'
+import { AccountsUrl, CasesUrl } from '../../services/ApiUrls'
 import { Tags } from '../../components/Tags'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { FaPlus, FaStar } from 'react-icons/fa'
 import FormateTime from '../../components/FormateTime'
 import { Label } from '../../components/Label'
 
-export const formatDate = (dateString: any) => {
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' }
-    return new Date(dateString).toLocaleDateString(undefined, options)
-}
 type response = {
     created_by: {
         email: string;
@@ -38,12 +35,6 @@ type response = {
     lead: { account_name: string };
     account_attachment: [];
     assigned_to: [];
-    billing_address_line: string;
-    billing_city: string;
-    billing_country: string;
-    billing_state: string;
-    billing_postcode: string;
-    billing_street: string;
     contact_name: string;
     name: string;
 
@@ -61,7 +52,6 @@ type response = {
     opportunity_amount: string;
     website: string;
     description: string;
-    contacts: string;
     status: string;
     source: string;
     address_line: string;
@@ -77,29 +67,27 @@ type response = {
     skype_ID: string;
     file: string;
 
+    case_type: string;
+    contacts: [];
+    closed_on: string;
+    priority: string;
+    account: {
+        name: string;
+    };
     close_date: string;
     organization: string;
     created_from_site: boolean;
     id: string;
     teams: [];
+    case_attachment: string;
     leads: string;
 
-    lead_source: string;
-    amount: string;
-    currency: string;
-    users: string;
-    stage: string;
-    closed_on: string;
-    opportunity_attachment: [];
-    account: { id: string; name: string };
-
-
 };
-export const OpportunityDetails = (props: any) => {
+export const CaseDetails = (props: any) => {
     const { state } = useLocation()
     const navigate = useNavigate()
 
-    const [opportunityDetails, setOpportunityDetails] = useState<response | null>(null)
+    const [caseDetails, setCaseDetails] = useState<response | null>(null)
     const [usersDetails, setUsersDetails] = useState<Array<{
         user_details: {
             email: string;
@@ -107,112 +95,89 @@ export const OpportunityDetails = (props: any) => {
             profile_pic: string;
         }
     }>>([]);
-    const [selectedCountry, setSelectedCountry] = useState([])
     const [attachments, setAttachments] = useState([])
     const [tags, setTags] = useState([])
     const [countries, setCountries] = useState<string[][]>([])
-    const [source, setSource] = useState([])
-    const [status, setStatus] = useState([])
-    const [industries, setIndustries] = useState([])
     const [contacts, setContacts] = useState([])
-    const [users, setUsers] = useState([])
     const [teams, setTeams] = useState([])
-    const [leads, setLeads] = useState([])
     const [comments, setComments] = useState([])
     const [commentList, setCommentList] = useState('Recent Last')
     const [note, setNote] = useState('')
+    const [usersMention, setUsersMention] = useState([])
 
     useEffect(() => {
-        getOpportunityDetails(state.opportunityId)
-    }, [state.opportunityId])
+        getCaseDetails(state.caseId)
+    }, [state.caseId])
 
-    const getOpportunityDetails = (id: any) => {
-        fetchData(`${OpportunityUrl}/${id}/`, 'GET', null as any, Header)
+    const getCaseDetails = (id: any) => {
+        fetchData(`${CasesUrl}/${id}/`, 'GET', null as any, Header)
             .then((res) => {
-                console.log(res, 'edd');
+                console.log(res, 'case');
                 if (!res.error) {
-                    setOpportunityDetails(res?.opportunity_obj)
-                    setUsers(res?.users)
-                    // setContacts(res?.contacts)
-                    // setIndustries(res?.industries)
-                    // setUsers(res?.users)
-                    // setStatus(res?.status)
-                    // setCountries(res?.countries)
-                    // setLeads(res?.leads)
-                    // setTags(res?.tags)
-                    // setTeams(res?.teams)
-                    // setAttachments(res?.attachments)
-                    // setTags(res?.tags)
-                    // setCountries(res?.countries)
-                    // setIndustries(res?.industries)
-                    // setStatus(res?.status)
-                    // setSource(res?.source)
-                    // setUsers(res?.users)
-                    // setContacts(res?.contacts)
-                    // setTeams(res?.teams)
-                    // setComments(res?.comments)
+                    setCaseDetails(res?.cases_obj)
+                    setContacts(res?.contacts)
+                    setAttachments(res?.attachments)
+                    setComments(res?.comments)
+                    setUsersMention(res?.users_mention)
                 }
             })
             .catch((err) => {
                 // console.error('Error:', err)
-                < Snackbar open={err} autoHideDuration={4000} onClose={() => navigate('/app/opportunities')} >
-                    <Alert onClose={() => navigate('/app/opportunities')} severity="error" sx={{ width: '100%' }}>
+                < Snackbar open={err} autoHideDuration={4000} onClose={() => navigate('/app/cases')} >
+                    <Alert onClose={() => navigate('/app/cases')} severity="error" sx={{ width: '100%' }}>
                         Failed to load!
                     </Alert>
                 </Snackbar >
             })
     }
-    const accountCountry = (country: string) => {
-        let countryName: string[] | undefined;
-        for (countryName of countries) {
-            if (Array.isArray(countryName) && countryName.includes(country)) {
-                const ele = countryName;
-                break;
-            }
-        }
-        return countryName?.[1]
-    }
+    // const accountCountry = (country: string) => {
+    //     let countryName: string[] | undefined;
+    //     for (countryName of countries) {
+    //         if (Array.isArray(countryName) && countryName.includes(country)) {
+    //             const ele = countryName;
+    //             break;
+    //         }
+    //     }
+    //     return countryName?.[1]
+    // }
     const editHandle = () => {
-        // navigate('/contacts/edit-contacts', { state: { value: contactDetails, address: newAddress } })
-        let country: string[] | undefined;
-        for (country of countries) {
-            if (Array.isArray(country) && country.includes(opportunityDetails?.country || '')) {
-                const firstElement = country[0];
-                break;
-            }
-        }
-        navigate('/app/opportunities/edit-opportunity', {
+        // let country: string[] | undefined;
+        // for (country of countries) {
+        //     if (Array.isArray(country) && country.includes(caseDetails?.country || '')) {
+        //         const firstElement = country[0];
+        //         break;
+        //     }
+        // }
+        navigate('/app/cases/edit-case', {
             state: {
                 value: {
-                    name: opportunityDetails?.name,
-                    account: opportunityDetails?.account?.id,
-                    amount: opportunityDetails?.amount,
-                    currency: opportunityDetails?.currency,
-                    stage: opportunityDetails?.stage,
-                    teams: opportunityDetails?.teams,
-                    lead_source: opportunityDetails?.lead_source,
-                    probability: opportunityDetails?.probability,
-                    description: opportunityDetails?.description,
-                    assigned_to: opportunityDetails?.assigned_to,
-                    contact_name: opportunityDetails?.contact_name,
-                    due_date: opportunityDetails?.closed_on,
-                    tags: opportunityDetails?.tags,
-                    opportunity_attachment: opportunityDetails?.opportunity_attachment,
-                }, id: state?.opportunityId,
-                contacts: state?.contacts || [], leadSource: state?.leadSource || [], currency: state?.currency || [], tags: state?.tags || [], account: state?.account || [], stage: state?.stage || [], users: state?.users || [], teams: state?.teams || [], countries: state?.countries || []
+                    name: caseDetails?.name,
+                    status: caseDetails?.status,
+                    priority: caseDetails?.priority,
+                    case_type: caseDetails?.case_type,
+                    closed_on: caseDetails?.closed_on,
+                    teams: caseDetails?.teams,
+                    assigned_to: caseDetails?.assigned_to,
+                    account: caseDetails?.account,
+                    case_attachment: caseDetails?.case_attachment,
+                    contacts: caseDetails?.contacts,
+                    description: caseDetails?.description,
+                    // file: caseDetails?.name
+                }, id: state?.caseId,
+                contacts: state?.contacts || [], priority: state?.priority || [], typeOfCases: state?.typeOfCases || [], account: state?.account || [], status: state?.status || []
             }
         }
         )
     }
 
     const backbtnHandle = () => {
-        navigate('/app/opportunities')
+        navigate('/app/cases')
     }
 
-    const module = 'Opportunities'
-    const crntPage = 'Opportunity Details'
-    const backBtn = 'Back To Opportunities'
-    console.log(state, 'oppdetail');
+    const module = 'Cases'
+    const crntPage = 'Case Details'
+    const backBtn = 'Back to Cases'
+    console.log(state);
 
     return (
         <Box sx={{ mt: '60px' }}>
@@ -223,34 +188,27 @@ export const OpportunityDetails = (props: any) => {
                         <Box sx={{ borderRadius: '10px', border: '1px solid #80808038', backgroundColor: 'white' }}>
                             <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a3353f0' }}>
-                                    Opportunity Information
+                                    Cases Information
                                 </div>
                                 <div style={{ color: 'gray', fontSize: '16px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginRight: '15px' }}>
                                         created &nbsp;
-                                        {FormateTime(opportunityDetails?.created_at)} &nbsp; by   &nbsp;
+                                        {FormateTime(caseDetails?.created_at)} &nbsp; by   &nbsp;
                                         <Avatar
-                                            src={opportunityDetails?.created_by?.profile_pic}
-                                            alt={opportunityDetails?.created_by?.email}
+                                            src={caseDetails?.created_by?.profile_pic}
+                                            alt={caseDetails?.created_by?.email}
                                         />
-                                        &nbsp;
-                                        &nbsp;
-                                        {opportunityDetails?.created_by?.email}
-                                        {/* {opportunityDetails?.first_name}&nbsp;
-                                        {opportunityDetails?.last_name} */}
+                                        &nbsp;&nbsp;
+                                        {caseDetails?.created_by?.email}
                                     </div>
 
                                 </div>
                             </div>
                             <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', marginTop: '10px' }}>
                                 <div className='title2'>
-                                    {opportunityDetails?.name}
+                                    {caseDetails?.name}
                                     <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 1 }}>
-                                        {/* {
-                                            lead.assigned_to && lead.assigned_to.map((assignItem) => (
-                                                assignItem.user_details.profile_pic
-                                                    ? */}
-                                        {users?.length ? users.map((val: any, i: any) =>
+                                        {/* {usersDetails?.length ? usersDetails.map((val: any, i: any) =>
                                             <Avatar
                                                 key={i}
                                                 alt={val?.user_details?.email}
@@ -258,11 +216,11 @@ export const OpportunityDetails = (props: any) => {
                                                 sx={{ mr: 1 }}
                                             />
                                         ) : ''
-                                        }
+                                        } */}
                                     </Stack>
                                 </div>
                                 <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                    {opportunityDetails?.tags?.length ? opportunityDetails?.tags.map((tagData: any) => (
+                                    {caseDetails?.tags?.length ? caseDetails?.tags.map((tagData: any) => (
                                         <Label
                                             tags={tagData}
                                         />)) : ''}
@@ -272,40 +230,40 @@ export const OpportunityDetails = (props: any) => {
                                 <div style={{ width: '32%' }}>
                                     <div className='title2'>Name</div>
                                     <div className='title3'>
-                                        {opportunityDetails?.name || '----'}
+                                        {caseDetails?.name || '---'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div className='title2'>Lead Source</div>
+                                    <div className='title2'>Status</div>
                                     <div className='title3'>
-                                        {opportunityDetails?.lead_source || '----'}
+                                        {caseDetails?.status}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
                                     <div className='title2'>Account</div>
                                     <div className='title3'>
-                                        {opportunityDetails?.account?.name || '----'}
+                                        {caseDetails?.account?.name || '---'}
                                     </div>
                                 </div>
                             </div>
                             <div style={{ padding: '20px', marginTop: '10px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div className='title2'>Probability</div>
+                                    <div className='title2'>Priority</div>
                                     <div className='title3'>
-                                        {/* {lead.pipeline ? lead.pipeline : '------'} */}
-                                        {opportunityDetails?.probability || '----'}
+                                        {caseDetails?.priority || '---'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div className='title2'>Amount</div>
+                                    <div className='title2'>Assigned Users</div>
                                     <div className='title3'>
-                                        {opportunityDetails?.amount || '----'}
+                                        {caseDetails?.assigned_to?.length ? caseDetails?.assigned_to.map((val: any) => val) : '----'}
+                                        {/* {caseDetails?.assigned_to || '---'} */}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
                                     <div className='title2'>Team</div>
                                     <div className='title3'>
-                                        {opportunityDetails?.teams?.length ? opportunityDetails?.teams.map((team: any) =>
+                                        {caseDetails?.teams?.length ? caseDetails?.teams.map((team: any) =>
                                             <Chip label={team} sx={{ height: '20px', borderRadius: '4px' }} />
                                         ) : '----'}
 
@@ -314,45 +272,37 @@ export const OpportunityDetails = (props: any) => {
                             </div>
                             <div style={{ padding: '20px', marginTop: '10px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div className='title2'>Currency</div>
+                                    <div className='title2'>Type of Case</div>
                                     <div className='title3'>
-                                        {opportunityDetails?.currency || '----'}
+                                        {caseDetails?.case_type || '----'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
                                     <div className='title2'>Users</div>
                                     <div className='title3'>
-                                        {opportunityDetails?.users || '----'}
+                                        {usersMention?.length ? usersMention.map((val: any) => <div style={{ display: 'flex', flexDirection: 'column' }}> {val.user__email}</div>) : '----'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
                                     <div className='title2'>Contacts</div>
                                     <div className='title3'>
-                                        {opportunityDetails?.contact_name || '----'}
+                                        {caseDetails?.contacts?.length ? caseDetails?.contacts.map((val: any) => <div>
+                                            <div>{val.mobile_number}</div>
+                                            <div>{val.secondary_number}</div>
+                                        </div>) : '----'}
                                     </div>
                                 </div>
                             </div>
                             <div style={{ padding: '20px', marginTop: '10px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div className='title2'>Stage</div>
-                                    <div className='title3'>
-                                        {opportunityDetails?.stage || '----'}
-                                    </div>
-                                </div>
-                                <div style={{ width: '32%' }}>
-                                    <div className='title2'>Assigned Users</div>
-                                    <div className='title3'>
-                                        {opportunityDetails?.assigned_to || '----'}
-                                    </div>
-                                </div>
-                                <div style={{ width: '32%' }}>
                                     <div className='title2'>Closed Date</div>
                                     <div className='title3'>
-                                        {opportunityDetails?.closed_on || '----'}
+                                        {caseDetails?.closed_on || '----'}
                                     </div>
                                 </div>
                             </div>
                             {/* </div> */}
+                            {/* Address details */}
                             {/* Description */}
                             <div style={{ marginTop: '2%' }}>
                                 <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -361,7 +311,7 @@ export const OpportunityDetails = (props: any) => {
                                     </div>
                                 </div>
                                 <p style={{ fontSize: '16px', color: 'gray', padding: '20px' }}>
-                                    {opportunityDetails?.description || '----'}
+                                    {caseDetails?.description || '---'}
                                 </p>
                             </div>
 
@@ -373,6 +323,8 @@ export const OpportunityDetails = (props: any) => {
                                 <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a3353f0' }}>
                                     Attachments
                                 </div>
+                                {/* <div style={{ color: "#3E79F7", fontSize: "16px", fontWeight: "bold" }}> */}
+                                {/* Add Social #1E90FF */}
                                 <Button
                                     type='submit'
                                     variant='text'
@@ -382,10 +334,12 @@ export const OpportunityDetails = (props: any) => {
                                 >
                                     Add Attachments
                                 </Button>
+                                {/* </div> */}
                             </div>
 
-                            <div style={{ padding: '10px 10px 10px 15px', marginTop: '5%' }}>
-                                {opportunityDetails?.opportunity_attachment?.length ? opportunityDetails?.opportunity_attachment.map((pic: any, i: any) =>
+                            <div style={{ padding: '10px 10px 10px 10px', marginTop: '5%' }}>
+                                {/* {caseDetails?.account_attachment?.length ? caseDetails?.account_attachment.map((pic: any, i: any) => */}
+                                {attachments?.length ? attachments.map((pic: any, i: any) =>
                                     <Box key={i} sx={{ width: '100px', height: '100px', border: '0.5px solid gray', borderRadius: '5px' }}>
                                         <img src={pic} alt={pic} />
                                     </Box>

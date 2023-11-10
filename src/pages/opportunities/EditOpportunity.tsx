@@ -19,8 +19,8 @@ import {
     Divider
 } from '@mui/material'
 import '../../styles/style.css'
-import { AccountsUrl, Header, OpportunityUrl } from '../../services/ApiUrls'
-import { fetchData } from '../../components/FetchData'
+import { AccountsUrl, OpportunityUrl } from '../../services/ApiUrls'
+import { fetchData, Header } from '../../components/FetchData'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { FaFileUpload, FaPlus, FaTimes, FaUpload } from 'react-icons/fa'
 import { CustomPopupIcon, RequiredSelect, RequiredTextField } from '../../styles/CssStyled'
