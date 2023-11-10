@@ -5,14 +5,15 @@ import { FiChevronLeft } from "@react-icons/all-files/fi/FiChevronLeft";
 import { FiChevronRight } from "@react-icons/all-files/fi/FiChevronRight";
 import { getComparator, stableSort } from '../../components/Sorting';
 import { Spinner } from '../../components/Spinner';
-import { fetchData } from '../../components/FetchData';
-import { CompaniesUrl, CompanyUrl, ContactUrl, Header } from '../../services/ApiUrls';
+import { fetchData, Header } from '../../components/FetchData';
+import { CompaniesUrl, CompanyUrl, ContactUrl } from '../../services/ApiUrls';
 import { AntSwitch, CustomTab, CustomToolbar, FabLeft, FabRight, StyledTableCell, StyledTableRow } from '../../styles/CssStyled';
 import { useNavigate } from 'react-router-dom';
 import { FaTrashAlt } from 'react-icons/fa';
 import { DeleteModal } from '../../components/DeleteModal';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
+import { EnhancedTableHead } from '../../components/EnchancedTableHead';
 // import { DeleteModal } from './DeleteModal';
 
 interface HeadCell {
@@ -43,61 +44,6 @@ const headCells: readonly HeadCell[] = [
     }
 ]
 
-
-function EnhancedTableHead(props: any) {
-    const {
-        onSelectAllClick, order, orderBy,
-        numSelected, rowCount,
-        numSelectedId, isSelectedId,
-        onRequestSort
-    } = props
-
-    const createSortHandler =
-        (property: any) => (event: React.MouseEvent<unknown>) => {
-            onRequestSort(event, property);
-        };
-
-    return (
-        <TableHead sx={{ width: '100%' }}>
-            <TableRow sx={{ width: '100%' }}>
-                {
-                    headCells.map((headCell) => (
-                        headCell.label === 'Action' || headCell.label === '' ? <TableCell
-                            sx={{ fontWeight: 'bold', color: 'rgb(26, 51, 83)', width: headCell.label === '' ? '5%' : '30%' }}
-                            key={headCell.id}
-                            align={headCell.numeric ? 'left' : 'left'}
-                            padding={headCell.disablePadding ? 'none' : 'normal'}>{headCell.label}</TableCell> :
-                            <TableCell
-                                sx={{ fontWeight: 'bold', color: 'rgb(26, 51, 83)', width: '65%' }}
-                                key={headCell.id}
-                                align={headCell.numeric ? 'left' : 'left'}
-                                padding={headCell.disablePadding ? 'none' : 'normal'}
-                                sortDirection={orderBy === headCell.id ? order : false}
-                            >
-
-                                <TableSortLabel
-                                    active={orderBy === headCell.id}
-                                    direction={orderBy === headCell.id ? order : 'asc'}
-                                    onClick={createSortHandler(headCell.id)}
-                                >
-                                    {headCell.label}
-                                    {
-                                        orderBy === headCell.id
-                                            ? (
-                                                <Box component='span' sx={{ display: 'none' }}>
-                                                    {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                                                </Box>
-                                            )
-                                            : null
-                                    }
-                                </TableSortLabel>
-                            </TableCell>
-                    ))
-                }
-            </TableRow>
-        </TableHead>
-    )
-}
 export default function Company() {
     const navigate = useNavigate()
     const [loading, setLoading] = useState(true);
@@ -203,7 +149,9 @@ export default function Company() {
     };
 
     const addCompany = () => {
-        navigate('/app/companies/add-company')
+        if (!loading) {
+            navigate('/app/companies/add-company')
+        }
     }
 
     const companyDetail = (companyId: any) => {
@@ -291,6 +239,7 @@ export default function Company() {
                                     // rowCount={tab === 0 ? usersData.active_users_count : usersData.inactive_users_count}
                                     numSelectedId={selectedId}
                                     isSelectedId={isSelectedId}
+                                    headCells={headCells}
                                 />
                                 {/* <TableHead>
                             <TableRow>
@@ -306,20 +255,23 @@ export default function Company() {
                                         companyList?.length
                                             ? stableSort(companyList, getComparator(order, orderBy))
                                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => (
-                                                    <StyledTableRow key={index}>
-                                                        <StyledTableCell align='left' sx={{border:0}}><p >{index + 1}</p></StyledTableCell>
-                                                        <StyledTableCell align='left' style={{ textTransform: 'capitalize', cursor: 'pointer', color: '#3E79F7',border:0 }} onClick={() => companyDetail(item)}>{item.name}</StyledTableCell>
-                                                        <StyledTableCell align='left' sx={{border:0}}><FaTrashAlt style={{ cursor: 'pointer' }}
+                                                    <TableRow
+                                                        tabIndex={-1}
+                                                        key={index}
+                                                        sx={{ border: 0, '&:nth-of-type(even)': { backgroundColor: 'whitesmoke' }, color: 'rgb(26, 51, 83)', textTransform: 'capitalize' }}>
+                                                        <TableCell align='left' sx={{ border: 0, color: 'rgb(26, 51, 83)' }}>{index + 1}</TableCell>
+                                                        <TableCell align='left' sx={{ cursor: 'pointer', color: '#3E79F7', textTransform: 'none', border: 0 }} onClick={() => companyDetail(item)}>{item.name}</TableCell>
+                                                        <TableCell align='left' sx={{ border: 0, color: 'rgb(26, 51, 83)' }}><FaTrashAlt style={{ cursor: 'pointer' }}
                                                             onClick={() => deleteRow(item.id)}
-                                                        /></StyledTableCell>
-                                                    </StyledTableRow>
+                                                        /></TableCell>
+                                                    </TableRow>
                                                 ))
-                                            : ''
+                                            : <TableRow> <TableCell colSpan={6} sx={{ border: 0 }}><Spinner /></TableCell></TableRow>
                                     }
                                 </TableBody>
                             </Table>
                         </TableContainer>
-                        {loading && <Spinner />}
+
                     </Paper>
                 </Box>
             </Container>

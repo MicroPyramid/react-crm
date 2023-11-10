@@ -28,9 +28,3 @@ export const UserUrl = 'user'
 // PROFILE
 export const ProfileUrl = 'profile'
 // 
-export const Header = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-    Authorization: localStorage.getItem('Token'),
-    org: localStorage.getItem('org')
-}

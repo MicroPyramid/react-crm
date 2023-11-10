@@ -14,8 +14,8 @@ import { Fa500Px, FaAccusoft, FaAd, FaAddressCard, FaEnvelope, FaRegAddressCard,
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { AntSwitch } from '../../styles/CssStyled'
-import { ContactUrl, Header, UserUrl } from '../../services/ApiUrls'
-import { fetchData } from '../../components/FetchData'
+import { ContactUrl, UserUrl } from '../../services/ApiUrls'
+import { fetchData, Header } from '../../components/FetchData'
 
 type response = {
     user_details: {
@@ -156,7 +156,7 @@ export default function UserDetails() {
                             </div>
                             {/* <div style={{ padding: '14px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Account Title</div>
+                                    <div className='title2'>Account Title</div>
                                     <div style={{ fontSize: '16px', color: 'gray', display: 'flex', flexDirection: 'row', marginTop: '5%' }}>
                                         <div style={{ display: 'flex' }}>
                                             <AvatarGroup
@@ -179,20 +179,20 @@ export default function UserDetails() {
                             </div> */}
                             <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Email Name</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                    <div className='title2'>Email Name</div>
+                                    <div className='title3'>
                                         {userDetails?.user_details?.email || '---'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Is Active</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                    <div className='title2'>Is Active</div>
+                                    <div className='title3'>
                                         <AntSwitch checked={userDetails?.user_details?.is_active} />
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Profile pic</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                    <div className='title2'>Profile pic</div>
+                                    <div className='title3'>
                                         <Avatar alt={'sdf'}>
                                             {userDetails?.user_details?.profile_pic}
                                         </Avatar>
@@ -202,20 +202,20 @@ export default function UserDetails() {
                             </div>
                             <div style={{ padding: '20px', marginTop: '15px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Role</div>
+                                    <div className='title2'>Role</div>
                                     <div style={{ fontSize: '16px', color: '#1E90FF', marginTop: '5%' }}>
                                         {userDetails?.role || '---'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Mobile Number</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                    <div className='title2'>Mobile Number</div>
+                                    <div className='title3'>
                                         {userDetails?.phone || '---'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Marketing Access</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                    <div className='title2'>Marketing Access</div>
+                                    <div className='title3'>
                                         <AntSwitch checked={userDetails?.has_marketing_access} />
                                     </div>
                                 </div>
@@ -225,20 +225,20 @@ export default function UserDetails() {
                                 // , justifyContent: 'space-between' 
                             }}>
                                 <div style={{ width: '34%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Sales Access</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                    <div className='title2'>Sales Access</div>
+                                    <div className='title3'>
                                         <AntSwitch checked={userDetails?.has_sales_access} />
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Date of joining</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                    <div className='title2'>Date of joining</div>
+                                    <div className='title3'>
                                         {userDetails?.date_of_joining || '---'}
                                     </div>
                                 </div>
                                 {/* <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Do Not Call</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                    <div className='title2'>Do Not Call</div>
+                                    <div className='title3'>
                                         <AntSwitch
                                             checked={contactDetails?.do_not_call}
                                             inputProps={{ 'aria-label': 'ant design' }} />
@@ -254,40 +254,40 @@ export default function UserDetails() {
                                 </div>
                                 <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Address Lane</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                        <div className='title2'>Address Lane</div>
+                                        <div className='title3'>
                                             {userDetails?.address?.address_line || '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Street</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                        <div className='title2'>Street</div>
+                                        <div className='title3'>
                                             {userDetails?.address?.street || '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>City</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                        <div className='title2'>City</div>
+                                        <div className='title3'>
                                             {userDetails?.address?.city || '---'}
                                         </div>
                                     </div>
                                 </div>
                                 <div style={{ padding: '20px', marginTop: '15px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Pincode</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                        <div className='title2'>Pincode</div>
+                                        <div className='title3'>
                                             {userDetails?.address?.postcode || '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>State</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                        <div className='title2'>State</div>
+                                        <div className='title3'>
                                             {userDetails?.address?.state || '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Country</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                        <div className='title2'>Country</div>
+                                        <div className='title3'>
                                             {userDetails?.address?.country || '---'}
                                         </div>
                                     </div>

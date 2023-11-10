@@ -14,8 +14,8 @@ import { Fa500Px, FaAccusoft, FaAd, FaAddressCard, FaEnvelope, FaRegAddressCard,
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { AntSwitch } from '../../styles/CssStyled'
-import { ContactUrl, Header } from '../../services/ApiUrls'
-import { fetchData } from '../../components/FetchData'
+import { ContactUrl } from '../../services/ApiUrls'
+import { fetchData, Header } from '../../components/FetchData'
 // import { Appbar } from '../../../../components/CustomAppBar'
 // import { useRouter } from 'next/navigation'
 // import { ContactUrl } from '../../../../components/ApiUrls'
@@ -136,7 +136,7 @@ export default function ContactDetails() {
                     linked_in_url: contactDetails?.linked_in_url,
                     facebook_url: contactDetails?.facebook_url,
                     twitter_username: contactDetails?.twitter_username
-                }, id: state?.contactId?.id
+                }, id: state?.contactId?.id, countries: state?.countries
             }
         })
     }
@@ -179,90 +179,84 @@ export default function ContactDetails() {
                             </div>
                             <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Account Title</div>
+                                    <div className='title2'>Account Title</div>
                                     <div style={{ fontSize: '16px', color: 'gray', display: 'flex', flexDirection: 'row', marginTop: '5%' }}>
                                         <div style={{ display: 'flex' }}>
-                                            <AvatarGroup
+                                            {/* <AvatarGroup
                                                 total={2}
                                                 max={3}
                                             >
-                                                {/* {con.map((con) => */}
-                                                {/* <Tooltip title={con.user.username}> */}
-                                                <Avatar
-                                                    alt={'sdf'}
-                                                >
-                                                    d
-                                                </Avatar>
-                                                {/* </Tooltip> */}
-                                                {/* )} */}
-                                            </AvatarGroup>
+                                                <Tooltip title={con.user.username}>
+                                                    <Avatar alt={'sdf'}>
+                                                    </Avatar>
+                                                </Tooltip>
+                                            </AvatarGroup> */}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>First Name</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
-                                        {contactDetails?.first_name || '---'}
+                                    <div className='title2'>First Name</div>
+                                    <div className='title3'>
+                                        {contactDetails?.first_name || '----'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Last Name</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
-                                        {contactDetails?.last_name || '---'}
+                                    <div className='title2'>Last Name</div>
+                                    <div className='title3'>
+                                        {contactDetails?.last_name || '----'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Organization Name</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
-                                        {org?.name || '---'}
+                                    <div className='title2'>Organization Name</div>
+                                    <div className='title3'>
+                                        {org?.name || '----'}
                                     </div>
                                 </div>
                             </div>
                             <div style={{ padding: '20px', marginTop: '15px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Email Address</div>
+                                    <div className='title2'>Email Address</div>
                                     <div style={{ fontSize: '16px', color: '#1E90FF', marginTop: '5%' }}>
-                                        <Link>
-                                            {contactDetails?.primary_email || '---'}
-                                            <FaStar style={{ fontSize: '16px', fill: 'yellow' }} /><br />
-                                            {contactDetails?.secondary_email}
-                                        </Link>
+                                        <div>
+                                            {contactDetails?.primary_email ? <div><Link>{contactDetails?.primary_email}</Link><FaStar style={{ fontSize: '16px', fill: 'yellow' }} /></div> : '----'}<br />
+                                            {contactDetails?.secondary_email ? <Link>{contactDetails?.secondary_email}</Link> : ''}
+                                        </div>
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Mobile Number</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
-                                        {contactDetails?.mobile_number || '---'}
-                                        {<FaStar style={{ fontSize: '16px', fill: 'yellow' }} />}<br />
-                                        {contactDetails?.secondary_number}
-                                        987
+                                    <div className='title2'>Mobile Number</div>
+                                    <div className='title3'>
+                                        <div>
+                                            {contactDetails?.mobile_number ? <div>{contactDetails?.mobile_number}{<FaStar style={{ fontSize: '16px', fill: 'yellow' }} />}</div> : '----'}<br />
+                                            {contactDetails?.secondary_number ? contactDetails?.secondary_number : ''}
+                                        </div>
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>website</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
-                                        {contactDetails?.website ? <Link>{contactDetails?.website}</Link> : '---'}
+                                    <div className='title2'>website</div>
+                                    <div className='title3'>
+                                        {contactDetails?.website ? <Link>{contactDetails?.website}</Link> : '----'}
                                     </div>
                                 </div>
                             </div>
                             <div style={{ padding: '20px', marginTop: '15px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Department</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
-                                        {contactDetails?.department || '---'}
+                                    <div className='title2'>Department</div>
+                                    <div className='title3'>
+                                        {contactDetails?.department || '----'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Language</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
-                                        {contactDetails?.language || '---'}
+                                    <div className='title2'>Language</div>
+                                    <div className='title3'>
+                                        {contactDetails?.language || '----'}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Do Not Call</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                    <div className='title2'>Do Not Call</div>
+                                    <div className='title3'>
                                         <AntSwitch
                                             checked={contactDetails?.do_not_call}
                                             inputProps={{ 'aria-label': 'ant design' }} />
@@ -278,41 +272,41 @@ export default function ContactDetails() {
                                 </div>
                                 <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Address Lane</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
-                                            {addressDetails?.address_line || '---'}
+                                        <div className='title2'>Address Lane</div>
+                                        <div className='title3'>
+                                            {addressDetails?.address_line || '----'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Street</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
-                                            {addressDetails?.street || '---'}
+                                        <div className='title2'>Street</div>
+                                        <div className='title3'>
+                                            {addressDetails?.street || '----'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>City</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
-                                            {addressDetails?.city || '---'}
+                                        <div className='title2'>City</div>
+                                        <div className='title3'>
+                                            {addressDetails?.city || '----'}
                                         </div>
                                     </div>
                                 </div>
                                 <div style={{ padding: '20px', marginTop: '15px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Pincode</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
-                                            {addressDetails?.postcode || '---'}
+                                        <div className='title2'>Pincode</div>
+                                        <div className='title3'>
+                                            {addressDetails?.postcode || '----'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>State</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
-                                            {addressDetails?.state || '---'}
+                                        <div className='title2'>State</div>
+                                        <div className='title3'>
+                                            {addressDetails?.state || '----'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Country</div>
-                                        <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
-                                            {contactDetails?.country || '---'}
+                                        <div className='title2'>Country</div>
+                                        <div className='title3'>
+                                            {contactDetails?.country || '----'}
                                         </div>
                                     </div>
                                 </div>
@@ -325,7 +319,7 @@ export default function ContactDetails() {
                                     </div>
                                 </div>
                                 <p style={{ fontSize: '16px', color: 'gray', padding: '20px' }}>
-                                    {contactDetails?.description || '---'}
+                                    {contactDetails?.description || '----'}
                                 </p>
                             </div>
                         </Card>
@@ -356,7 +350,7 @@ export default function ContactDetails() {
                                 <TextField
                                     variant='outlined'
                                     size='small'
-                                    value={contactDetails?.linked_in_url || '---'}
+                                    value={contactDetails?.linked_in_url || '----'}
                                     sx={{ height: '40px', width: '100%', mt: 1 }}
                                 />
                             </div>
@@ -367,7 +361,7 @@ export default function ContactDetails() {
                                 <TextField
                                     variant='outlined'
                                     size='small'
-                                    value={contactDetails?.facebook_url || '---'}
+                                    value={contactDetails?.facebook_url || '----'}
                                     sx={{ height: '40px', width: '100%', mt: 1 }}
                                 />
                             </div>
@@ -378,14 +372,14 @@ export default function ContactDetails() {
                                 <TextField
                                     variant='outlined'
                                     size='small'
-                                    value={contactDetails?.twitter_username || '---'}
+                                    value={contactDetails?.twitter_username || '----'}
                                     sx={{ height: '40px', width: '100%', mt: 1 }}
                                 />
                             </div>
                         </Card>
                     </Box>
                 </Box>
-            </div>
-        </Box>
+            </div >
+        </Box >
     )
 }

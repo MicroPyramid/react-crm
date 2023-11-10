@@ -7,8 +7,8 @@ import {
     DialogContent,
     DialogContentText
 } from '@mui/material'
-import { fetchData } from '../../components/FetchData'
-import { Header, UserUrl } from '../../services/ApiUrls'
+import { fetchData, Header } from '../../components/FetchData'
+import { UserUrl } from '../../services/ApiUrls'
 
 export const DialogModal = (props: any) => {
     const { onClose, open, modalDialog, modalTitle, id } = props

@@ -7,12 +7,12 @@ import { FiChevronLeft } from "@react-icons/all-files/fi/FiChevronLeft";
 import { FiChevronRight } from "@react-icons/all-files/fi/FiChevronRight";
 import { CustomTab, CustomToolbar, FabLeft, FabRight } from '../../styles/CssStyled';
 import { useNavigate } from 'react-router-dom';
-import { fetchData } from '../../components/FetchData';
+import { fetchData, Header } from '../../components/FetchData';
 import { getComparator, stableSort } from '../../components/Sorting';
 import { Label } from '../../components/Label';
 import { FaTrashAlt } from 'react-icons/fa';
 import { DialogModal } from './DeleteModal';
-import { Header, LeadUrl } from '../../services/ApiUrls';
+import { LeadUrl } from '../../services/ApiUrls';
 import { DeleteModal } from '../../components/DeleteModal';
 import FormateTime from '../../components/FormateTime';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
@@ -139,30 +139,30 @@ export default function LeadList(props: any) {
       .then((res) => {
         // console.log(res, 'leads')
         if (!res.error) {
-          if (initial) {
-            setOpenLeads(res?.open_leads?.open_leads)
-            setOpenLeadsCount(res?.open_leads?.leads_count)
-            setClosedLeads(res?.close_leads?.close_leads)
-            setClosedLeads(res?.close_leads?.leads_count)
-            setContacts(res?.contacts)
-            setStatus(res?.status)
-            setSource(res?.source)
-            setCompanies(res?.companies)
-            setTags(res?.tags)
-            setUsers(res?.users)
-            setCountries(res?.countries)
-            setIndustries(res?.industries)
-            // setLeadsList();
-            //   setLoading(false)
-            // setInitial(false)
-          }
-          // else {
-          //     // setContactList(Object.assign([], contacts, [data.contact_obj_list]))
-          //     setContactList(prevContactList => prevContactList.concat(data.contact_obj_list));
-          //     // setContactList(...contactList,data.contact_obj_list)
-          //     setLoading(false)
-          // }
+          // if (initial) {
+          setOpenLeads(res?.open_leads?.open_leads)
+          setOpenLeadsCount(res?.open_leads?.leads_count)
+          setClosedLeads(res?.close_leads?.close_leads)
+          setClosedLeads(res?.close_leads?.leads_count)
+          setContacts(res?.contacts)
+          setStatus(res?.status)
+          setSource(res?.source)
+          setCompanies(res?.companies)
+          setTags(res?.tags)
+          setUsers(res?.users)
+          setCountries(res?.countries)
+          setIndustries(res?.industries)
+          setLoading(false)
+          // setLeadsList();
+          // setInitial(false)
         }
+        // else {
+        //     // setContactList(Object.assign([], contacts, [data.contact_obj_list]))
+        //     setContactList(prevContactList => prevContactList.concat(data.contact_obj_list));
+        //     // setContactList(...contactList,data.contact_obj_list)
+        //     setLoading(false)
+        // }
+        // }
       })
 
   }
@@ -172,17 +172,19 @@ export default function LeadList(props: any) {
   }
 
   const onAddHandle = () => {
-    navigate('/app/leads/add-leads', {
-      state: {
-        detail: false,
-        contacts, status, source, companies, tags, users, countries, industries
-        // status: leads.status, source: leads.source, industry: leads.industries, users: leads.users, tags: leads.tags, contacts: leads.contacts 
-      }
-    })
+    if (!loading) {
+      navigate('/app/leads/add-leads', {
+        state: {
+          detail: false,
+          contacts: contacts || [], status: status || [], source: source || [], companies: companies || [], tags: tags || [], users: users || [], countries: countries || [], industries: industries || []
+          // status: leads.status, source: leads.source, industry: leads.industries, users: leads.users, tags: leads.tags, contacts: leads.contacts 
+        }
+      })
+    }
   }
 
   const selectLeadList = (leadId: any) => {
-    navigate(`/app/leads/lead-details`, { state: { leadId, detail: true, contacts, status, source, companies, tags, users, countries, industries } })
+    navigate(`/app/leads/lead-details`, { state: { leadId, detail: true, contacts: contacts || [], status: status || [], source: source || [], companies: companies || [], tags: tags || [], users: users || [], countries: countries || [], industries: industries || [] } })
     // navigate('/app/leads/lead-details', { state: { leadId: leadItem.id, edit: storeData, value } })
   }
   const deleteLead = (deleteId: any) => {
@@ -315,17 +317,12 @@ export default function LeadList(props: any) {
           {
             // leads.open && leads.open
             //   ? stableSort(leads.open && leads.open, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index) => (
-            stableSort(openLeads, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => (
+            // stableSort(openLeads, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => (
+            openLeads?.length ? openLeads.map((item: any, index: any) => (
               <Box key={index}>
-                <Box sx={{ p: '10px' }}>
-                  <Box sx={{
-                    borderRadius: '5px',
-                    border: '1px solid lightgray',
-                    bgcolor: 'white',
-                    p: '5px',
-                    minHeight: '70px'
-                  }}>
-                    <Stack sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', p: '10px' }}>
+                <Box className='lead-box'>
+                  <Box className='lead-box1'>
+                    <Stack className='lead-row1'>
                       <div style={{ color: '#1A3353', fontSize: '1rem', fontWeight: '500', cursor: 'pointer' }} onClick={() => selectLeadList(item?.id)}>
                         {item?.title}
                       </div>
@@ -333,8 +330,8 @@ export default function LeadList(props: any) {
                         <FaTrashAlt style={{ cursor: 'pointer', color: 'gray' }} />
                       </div>
                     </Stack>
-                    <Stack sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', p: '0px 10px 0px 10px' }}>
-                      <div style={{ width: '80%', display: 'flex', flexDirection: 'row', alignItems: 'baseline' }}>
+                    <Stack className='lead-row2'>
+                      <div className='lead-row2-col1'>
                         <div style={{ color: 'gray', fontSize: '16px', textTransform: 'capitalize' }}>
                           {item?.country || ''} - source <span style={{ color: '#1a3353', fontWeight: 500 }}>{item?.source || '--'}</span> - status <span style={{ color: '#1a3353', fontWeight: 500 }}>{item?.status || '--'}</span>
                         </div>
@@ -386,7 +383,7 @@ export default function LeadList(props: any) {
                           ))
                         } */}
                       </div>
-                      <div style={{ color: 'gray', fontSize: '16px', width: '33%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+                      <div className='lead-row2-col2'>
                         {/* created on {formatDate(item.created_on)} by   &nbsp;<span> */}
                         created&nbsp; {FormateTime(item?.created_at)}&nbsp; by
                         <Avatar
@@ -403,24 +400,17 @@ export default function LeadList(props: any) {
                   </Box>
                 </Box>
               </Box>
-            ))
+            )) : <Spinner />
           }
         </Box>
         : <Box sx={{ p: '10px', mt: '5px' }}>
           {
-            stableSort(closedLeads?.length || [], getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => (
-              <Box
-                key={index}
-              >
-                <Box sx={{ p: '10px' }}>
-                  <Box sx={{
-                    borderRadius: '5px',
-                    border: '1px solid lightgray',
-                    bgcolor: 'white',
-                    p: '5px',
-                    minHeight: '70px'
-                  }}>
-                    <Stack sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', p: '10px' }}>
+            // stableSort(closedLeads?.length || [], getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => (
+            closedLeads?.length ? closedLeads.map((item: any, index: any) => (
+              <Box key={index}>
+                <Box className='lead-box'>
+                  <Box className='lead-box1'>
+                    <Stack className='lead-row1'>
                       <div style={{ color: '#1A3353', fontSize: '1rem', fontWeight: '500', cursor: 'pointer' }} onClick={() => selectLeadList(item?.id)}>
                         {item?.title}
                       </div>
@@ -428,8 +418,8 @@ export default function LeadList(props: any) {
                         <FaTrashAlt style={{ cursor: 'pointer', color: 'gray' }} />
                       </div>
                     </Stack>
-                    <Stack sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', p: '0px 10px 0px 10px' }}>
-                      <div style={{ width: '80%', display: 'flex', flexDirection: 'row', alignItems: 'baseline' }}>
+                    <Stack className='lead-row2'>
+                      <div className='lead-row2-col1'>
                         <div style={{ color: 'gray', fontSize: '16px', textTransform: 'capitalize' }}>
                           {item?.country || ''} - source <span style={{ color: '#1a3353', fontWeight: 500 }}>{item?.source || '--'}</span> - status <span style={{ color: '#1a3353', fontWeight: 500 }}>{item?.status || '--'}</span>
                         </div>
@@ -465,7 +455,7 @@ export default function LeadList(props: any) {
                         </Box>
 
                       </div>
-                      <div style={{ color: 'gray', fontSize: '16px', width: '33%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+                      <div className='lead-row2-col2'>
                         created&nbsp; {FormateTime(item?.created_at)}&nbsp; by
                         <Avatar
                           alt={item?.first_name}
@@ -477,7 +467,7 @@ export default function LeadList(props: any) {
                   </Box>
                 </Box>
               </Box>
-            ))
+            )) : <Spinner />
           }
         </Box>}
       {/* {loading &&

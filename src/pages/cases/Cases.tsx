@@ -1,48 +1,105 @@
-import React, { SyntheticEvent, useState } from 'react'
-import { Box, Button, Card, Stack, Tab, Table, TableBody, TableContainer, TableHead, TablePagination, TableRow, Tabs, Toolbar, Typography, Paper, MenuItem, Select } from '@mui/material'
-import { FaBeer } from "@react-icons/all-files/fa/FaBeer";
+import { Avatar, AvatarGroup, Box, Button, Card, List, Stack, Tab, TablePagination, Tabs, Toolbar, Typography, Link, Select, MenuItem, TableContainer, Table, TableSortLabel, TableCell, TableRow, TableHead, Paper, TableBody, IconButton, Container } from '@mui/material'
+import React, { SyntheticEvent, useEffect, useState } from 'react'
+import { Spinner } from '../../components/Spinner';
 import { FiPlus } from "@react-icons/all-files/fi/FiPlus";
-// import { FiChevronLeft } from "@react-icons/all-files/fi/FiChevronLeft";
-// import { FiChevronRight } from "@react-icons/all-files/fi/FiChevronRight";
-// import { fetchData } from '../../components/FetchData';
-// import { CasesUrl } from '../../components/ApiUrls';
-// import { CustomTab, CustomToolbar, StyledTableCell, StyledTableRow } from '../../../../react-crm-2.0/src/styles/CssStyled';
+import { FiChevronLeft } from "@react-icons/all-files/fi/FiChevronLeft";
+import { FiChevronRight } from "@react-icons/all-files/fi/FiChevronRight";
+import { CustomTab, CustomToolbar, FabLeft, FabRight, StyledTableCell, StyledTableRow } from '../../styles/CssStyled';
+import { useNavigate } from 'react-router-dom';
+import { fetchData, Header } from '../../components/FetchData';
 import { getComparator, stableSort } from '../../components/Sorting';
-import { Priority } from './Priority';
-import { Fa500Px, FaEdit } from 'react-icons/fa';
-import { fetchData } from '../../components/FetchData';
+import { Label } from '../../components/Label';
+import { FaTrashAlt } from 'react-icons/fa';
+// import { DeleteModal } from './DeleteModal';
 import { CasesUrl } from '../../services/ApiUrls';
-import { CustomTab, CustomToolbar, FabLeft, FabRight, StyledTableCell } from '../../styles/CssStyled';
-import { FiChevronLeft } from '@react-icons/all-files/fi/FiChevronLeft';
-import { FiChevronRight } from '@react-icons/all-files/fi/FiChevronRight';
-import { DialogModal } from '../../components/DialogModal';
+import { DeleteModal } from '../../components/DeleteModal';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
-// import { DeleteModal } from '../../components/DeleteModal';
+import { Priority } from '../../components/Priority';
+import { EnhancedTableHead } from '../../components/EnchancedTableHead';
 
 
+interface HeadCell {
+  disablePadding: boolean;
+  id: any;
+  label: string;
+  numeric: boolean;
+}
+const headCells: readonly HeadCell[] = [
+  // {
+  //   id: '',
+  //   numeric: false,
+  //   disablePadding: false,
+  //   label: ''
+  // },
+  {
+    id: 'name',
+    numeric: false,
+    disablePadding: false,
+    label: 'Name'
+  },
+  {
+    id: 'account',
+    numeric: false,
+    disablePadding: false,
+    label: 'Account'
+  },
+  {
+    id: 'status',
+    numeric: false,
+    disablePadding: false,
+    label: 'Status'
+  },
+  {
+    id: 'priority',
+    numeric: false,
+    disablePadding: false,
+    label: 'Priority'
+  },
+  {
+    id: 'created_on',
+    numeric: false,
+    disablePadding: false,
+    label: 'Created On'
+  },
+  {
+    id: '',
+    numeric: true,
+    disablePadding: false,
+    label: 'Action'
+  }
+]
 
-export default function Cases() {
-  const [value, setValue] = useState('Open');
+type Item = {
+  id: string;
+};
+
+export default function Cases(props: any) {
+  const navigate = useNavigate()
+  const [tab, setTab] = useState('Active');
   const [loading, setLoading] = useState(true);
 
-  const [casesData, setCasesData] = useState([])
-  const [initial, setInitial] = useState(true)
-  const [values, setValues] = useState(10)
-  const [openOffset, setOpenOffset] = useState(0)
-  const [closeOffset, setCloseOffset] = useState(0)
-  const [openValue] = useState(0)
-  const [isDelete, setIsDelete] = useState(false)
-  const [contact, setContact] = useState('')
-  const [loader, setLoader] = useState(true)
-  const [closeValue, setCloseValue] = useState(0)
-  const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
-  const [order] = useState('asc')
-  const [orderBy] = useState('calories')
-  const [casesId, setCasesId] = useState('')
+  const [page, setPage] = useState(0)
+
+  const [cases, setCases] = useState([])
+  const [openCases, setOpenCases] = useState([])
+  const [openCasesCount, setOpenCasesCount] = useState(0)
+  const [closedCases, setClosedCases] = useState([])
+  const [closedCasesCount, setClosedCasesCount] = useState(0)
+  const [contacts, setContacts] = useState([])
+  const [priority, setPriority] = useState([])
+  const [status, setStatus] = useState([])
+  const [typeOfCases, setTypeOfCases] = useState([])
+  const [account, setAccount] = useState([])
+
+  const [deleteRowModal, setDeleteRowModal] = useState(false)
 
   const [selectOpen, setSelectOpen] = useState(false);
+
+  const [order, setOrder] = useState('asc')
+  const [orderBy, setOrderBy] = useState('name')
+
   const [selected, setSelected] = useState<string[]>([]);
   const [selectedId, setSelectedId] = useState<string[]>([]);
   const [isSelectedId, setIsSelectedId] = useState<boolean[]>([]);
@@ -50,338 +107,337 @@ export default function Cases() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [recordsPerPage, setRecordsPerPage] = useState<number>(10);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const handleChangeTab = (e: SyntheticEvent, val: any) => {
-    setValue(val)
-  }
-  const handleChangePage = (event: any, newPage: any) => {
-    setPage(newPage)
-  }
 
-  const handleChangeRowsPerPage = (event: any) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-    setPage(0)
-    setValues(parseInt(event.target.value, 10))
-  }
-  const headers = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-    Authorization: `jwt ${localStorage.getItem('Token')}`,
-    org: localStorage.getItem('org')
-  }
+
+  useEffect(() => {
+    getCases()
+  }, [])
 
   const getCases = () => {
-    fetchData(`${CasesUrl}/?offset=${value === 'Open' ? openOffset : closeOffset}`, 'GET', null as any, headers)
-      .then((data: any) => {
-        if (!data.error) {
-          if (initial) {
-            // Object.assign({}, data, { cases: data.cases })
-            setCasesData(Object.assign({}, casesData,
-              {
-                cases: data.cases,
-                cases_count: data.cases_count,
-                priority: data.priority,
-                status: data.status,
-                type_of_case: data.type_of_case,
-                ids: data.cases[0].name
-              }))
-            setOpenOffset(initial ? 0 : openOffset)
-            setCloseOffset(initial ? 0 : closeOffset)
-            setInitial(false)
-            setLoader(false)
-          } else {
-            if (value === 'Open') {
-              //   setCasesData({
-              //     cases: data.cases,
-              //     cases_count: data.cases_count
-              //   })
-              setOpenOffset(initial ? 0 : openOffset)
-              setLoader(false)
-            }
-            if (value === 'Close' || initial) {
-              //   setCasesData({
-              //     cases: data.cases,
-              //     cases_count: data.cases_count
-              //   })
-              setCloseOffset(initial ? 0 : closeOffset)
-              setLoader(false)
-            }
-          }
+    fetchData(`${CasesUrl}/`, 'GET', null as any, Header)
+      .then((res) => {
+        console.log(res, 'cases')
+        if (!res.error) {
+          setCases(res?.cases)
+          // setOpenCases(res?.open_leads?.open_leads)
+          // setOpenCasesCount(res?.open_leads?.leads_count)
+          // setClosedCases(res?.close_leads?.close_leads)
+          // setClosedCasesCount(res?.close_leads?.leads_count)
+          setStatus(res?.status)
+          setPriority(res?.priority)
+          setTypeOfCases(res?.type_of_case)
+          setContacts(res?.contacts_list)
+          setAccount(res?.accounts_list)
+          setLoading(false)
         }
       })
-      .catch(() => {
-      })
+
   }
 
-  //   useEffect(() => {
-  //     getCases()
-  //   }, [closeOffset, openOffset])
+  const handleChangeTab = (e: SyntheticEvent, val: any) => {
+    setTab(val)
+  }
 
-  const onDelete = (id: any) => {
-    fetchData(`${CasesUrl}/${id}/`, 'delete', null as any, headers)
-      .then((data) => {
-        if (!data.error) {
+  const onAddCases = () => {
+    if (!loading) {
+      navigate('/app/cases/add-case', {
+        state: {
+          detail: false,
+          contacts: contacts || [], priority: priority || [], typeOfCases: typeOfCases || [], account: account || [], status: status || []
+        }
+      })
+    }
+  }
+  const handleRequestSort = (event: any, property: any) => {
+    const isAsc = orderBy === property && order === 'asc'
+    setOrder(isAsc ? 'desc' : 'asc')
+    setOrderBy(property)
+  }
+
+  type SelectedItem = string[];
+
+  const isSelected = (name: string, selected: SelectedItem): boolean => {
+    return selected.indexOf(name) !== -1;
+  };
+
+
+  const caseDetail = (caseId: any) => {
+    navigate(`/app/cases/case-details`, {
+      state: {
+        caseId, detail: true,
+        contacts: contacts || [], priority: priority || [], typeOfCases: typeOfCases || [], account: account || [], status: status || []
+      }
+    })
+  }
+
+  const deleteRow = (id: any) => {
+    setSelectedId(id)
+    setDeleteRowModal(!deleteRowModal)
+  }
+  const deleteRowModalClose = () => {
+    setDeleteRowModal(false)
+    setSelectedId([])
+  }
+
+  const deleteItem = () => {
+    fetchData(`${CasesUrl}/${selectedId}/`, 'DELETE', null as any, Header)
+      .then((res: any) => {
+        console.log('delete:', res);
+        if (!res.error) {
+          deleteRowModalClose()
           getCases()
-          setIsDelete(false)
         }
       })
       .catch(() => {
       })
   }
 
-  //   const next = () => {
-  //     if (value === 'Open' && casesData.cases_count > 0) {
-  //       setOpenOffset(values)
-  //       setValues(values + rowsPerPage)
+  // const handleSelectAllClick = () => {
+  //   if (tab === 'open') {
+  //     if (selected.length === openCases.length) {
+  //       setSelected([]);
+  //       setSelectedId([]);
+  //       setIsSelectedId([]);
+  //     } else {
+  //       const newSelectedIds = openCases.map((cases) => cases?.id);
+  //       setSelected(newSelectedIds);
+  //       setSelectedId(newSelectedIds);
+  //       setIsSelectedId(newSelectedIds.map(() => true));
+  //     }
+  //   } else {
+  //     if (selected.length === closedCases.length) {
+  //       setSelected([]);
+  //       setSelectedId([]);
+  //       setIsSelectedId([]);
+  //     } else {
+  //       const newSelectedIds = closedCases.map((cases) => cases?.id);
+  //       setSelected(newSelectedIds);
+  //       setSelectedId(newSelectedIds);
+  //       setIsSelectedId(newSelectedIds.map(() => true));
   //     }
   //   }
 
-  const previous = () => {
-    if (value === 'Open' && openOffset > 0) {
-      setOpenOffset(openOffset - rowsPerPage)
-      setValues(values - rowsPerPage)
-    } else if (value === 'Close' && closeOffset > 0) {
-      setCloseOffset(closeOffset - 10)
-      setCloseValue(openValue - 10)
+  // };
+
+  const handleRowSelect = (casesId: string) => {
+    const selectedIndex = selected.indexOf(casesId);
+    let newSelected: string[] = [...selected];
+    let newSelectedIds: string[] = [...selectedId];
+    let newIsSelectedId: boolean[] = [...isSelectedId];
+
+    if (selectedIndex === -1) {
+      newSelected.push(casesId);
+      newSelectedIds.push(casesId);
+      newIsSelectedId.push(true);
+    } else {
+      newSelected.splice(selectedIndex, 1);
+      newSelectedIds.splice(selectedIndex, 1);
+      newIsSelectedId.splice(selectedIndex, 1);
     }
-  }
 
-  const onAddHandle = () => {
-    // navigate('/cases/add-cases', {
-    //   state: {
-    //     priority: casesData.priority,
-    //     type_of_case: casesData.type_of_case,
-    //     status: casesData.status
-    //   }
-    // })
-  }
+    setSelected(newSelected);
+    setSelectedId(newSelectedIds);
+    setIsSelectedId(newIsSelectedId);
+  };
+  const modalDialog = 'Are You Sure You want to delete selected Cases?'
+  const modalTitle = 'Delete Cases'
 
-  const deleteItemBox = (deleteId: any) => {
-    setCasesId(deleteId)
-    setIsDelete(!isDelete)
-  }
-
-  const onclose = () => {
-    setIsDelete(!isDelete)
-  }
-
-  const casesHandle = (cases: any) => {
-    // navigate('/cases/case-details', {
-    //   state:
-    //   {
-    //     casesId: cases.id
-    //   }
-    // })
-  }
-
-  const EditBtnHandle = (opportunities: any) => {
-    // navigate('/cases/edit-case', {
-    //   state: {
-    //     priority: casesData.priority,
-    //     status: casesData.status,
-    //     type_of_case: casesData.type_of_case,
-    //     opportunities,
-    //     opportunitiesId: opportunities.id
-    //   }
-    // })
-  }
-  const recordsList = [10, 20, 30, 40, 50]
+  const recordsList = [[10, '10 Records per page'], [20, '20 Records per page'], [30, '30 Records per page'], [40, '40 Records per page'], [50, '50 Records per page']]
+  const tag = ['account', 'leading', 'account', 'leading', 'account', 'leading', 'account', 'account', 'leading', 'account', 'leading', 'account', 'leading', 'leading', 'account', 'account', 'leading', 'account', 'leading', 'account', 'leading', 'account', 'leading', 'account', 'leading', 'account', 'leading']
   return (
     <Box sx={{ mt: '60px' }}>
-      <CustomToolbar>
-        <Tabs defaultValue={value} onChange={handleChangeTab} sx={{ mt: '26px' }}>
-          <CustomTab value="Open" label="Open"
+      <CustomToolbar sx={{ flexDirection: 'row-reverse' }}>
+        {/* <Tabs defaultValue={tab} onChange={handleChangeTab} sx={{ mt: '26px' }}>
+          <CustomTab value="open" label="Open"
             sx={{
-              backgroundColor: value === 'Open' ? '#F0F7FF' : '#223d60',
-              color: value === 'Open' ? '#3f51b5' : 'white',
-            }}></CustomTab>
-          <CustomTab value="Closed" label="Closed"
+              backgroundColor: tab === 'open' ? '#F0F7FF' : '#284871',
+              color: tab === 'open' ? '#3f51b5' : 'white',
+            }} />
+          <CustomTab value="closed" label="Closed"
             sx={{
-              backgroundColor: value === 'Closed' ? '#F0F7FF' : '#223d60',
-              color: value === 'Closed' ? '#3f51b5' : 'white',
+              backgroundColor: tab === 'closed' ? '#F0F7FF' : '#284871',
+              color: tab === 'closed' ? '#3f51b5' : 'white',
               ml: '5px',
             }}
-          ></CustomTab>
-        </Tabs>
+          />
+        </Tabs> */}
 
         <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <Box sx={{ position: 'relative' }}>
-                        <Typography sx={{ position: 'absolute', top: '9px', left: '36px', fontSize: '15px', zIndex: 1 }}>Records Per Page</Typography>
-                        <Select
-                            value={recordsPerPage}
-                            onChange={(e: any) => setRecordsPerPage(e.target.value)}
-                            open={selectOpen}
-                            onOpen={() => setSelectOpen(true)}
-                            onClose={() => setSelectOpen(false)}
-                            className={`custom-select`}
-                            onClick={() => setSelectOpen(!selectOpen)}
-                            IconComponent={() => (
-                                <div onClick={() => setSelectOpen(!selectOpen)} className="custom-select-icon">
-                                    {selectOpen ? <FiChevronUp style={{ marginTop: '12px' }} /> : <FiChevronDown style={{ marginTop: '12px' }} />}
-                                </div>
+          <Select
+            value={recordsPerPage}
+            onChange={(e: any) => setRecordsPerPage(e.target.value)}
+            open={selectOpen}
+            onOpen={() => setSelectOpen(true)}
+            onClose={() => setSelectOpen(false)}
+            className={`custom-select`}
+            onClick={() => setSelectOpen(!selectOpen)}
+            IconComponent={() => (
+              <div onClick={() => setSelectOpen(!selectOpen)} className="custom-select-icon">
+                {selectOpen ? <FiChevronUp style={{ marginTop: '12px' }} /> : <FiChevronDown style={{ marginTop: '12px' }} />}
+              </div>
+            )}
+            sx={{
+              '& .MuiSelect-select': { overflow: 'visible !important' }
+            }}
+          >
+            {recordsList?.length && recordsList.map((item: any, i: any) => (
+              <MenuItem key={i} value={item[0]}>
+                {item[1]}
+              </MenuItem>
+            ))}
+          </Select>
+          <Box sx={{ borderRadius: '7px', backgroundColor: 'white', height: '40px', minHeight: '40px', maxHeight: '40px', display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 1, p: '0px' }}>
+            <FabLeft>
+              <FiChevronLeft
+                //  onClick={previous}
+                style={{ height: '15px' }}
+              />
+            </FabLeft>
+            <Typography sx={{ mt: 0, textTransform: 'lowercase', fontSize: '15px', color: '#1A3353', textAlign: 'center' }}>
+              0 to 1
+            </Typography>
+            <FabRight>
+              <FiChevronRight
+                style={{ height: '15px' }} />
+            </FabRight>
+          </Box>
+          <Button
+            variant='contained'
+            startIcon={<FiPlus className='plus-icon' />}
+            onClick={onAddCases}
+            className={'add-button'}
+          >
+            Add Cases
+          </Button>
+        </Stack>
+      </CustomToolbar>
+      <Container sx={{ width: '100%', maxWidth: '100%', minWidth: '100%' }}>
+        <Box sx={{ width: '100%', minWidth: '100%', m: '15px 0px 0px 0px' }}>
+          <Paper sx={{ width: 'cal(100%-15px)', mb: 2, p: '0px 15px 15px 15px' }}>
+            {/* <Toolbar sx={{ pl: { sm: 2 }, pr: { xs: 1, sm: 1 } }}>
+                            <Tooltip title='Delete'>
+                                <Button
+                                    variant='outlined'
+                                    onClick={() => !!(selectedId?.length !== 0) && handleDelete(selectedId)}
+                                    startIcon={<FaTrashAlt color='red' style={{ width: '12px' }} />}
+                                    size='small'
+                                    color='error'
+                                    sx={{ fontWeight: 'bold', textTransform: 'capitalize', color: 'red', borderColor: 'darkgrey' }}
+                                >
+                                    Delete
+                                </Button>
+                            </Tooltip>
+                            {selected.length > 0 ? (
+                                <Typography sx={{ flex: '1 1 100%', margin: '5px' }} color='inherit' variant='subtitle1' component='div'>
+                                    {selected.length} selected
+                                </Typography>
+                            ) : (
+                                ''
                             )}
-                            MenuProps={{
-                                anchorOrigin: {
-                                    vertical: 'bottom',
-                                    horizontal: 'right',
-                                },
-                                transformOrigin: {
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                },
-                                PaperProps: {
-                                    style: {
-                                        width: '40px',
-                                        minWidth: '40px'
-                                    },
-                                },
+                        </Toolbar> */}
+            <TableContainer>
+              <Table>
+                <EnhancedTableHead
+                  numSelected={selected.length}
+                  order={order}
+                  orderBy={orderBy}
+                  // onSelectAllClick={handleSelectAllClick}
+                  onRequestSort={handleRequestSort}
+                  // rowCount={tab === 'open' ? openCases?.length : closedCases?.length}
+                  rowCount={cases?.length}
+                  numSelectedId={selectedId}
+                  isSelectedId={isSelectedId}
+                  headCells={headCells}
+                />
+                <TableBody>
+                  {
+                    cases?.length > 0
+                      ? stableSort(cases, getComparator(order, orderBy))
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => {
+                          const labelId = `enhanced-table-checkbox-${index}`
+                          const rowIndex = selectedId.indexOf(item.id);
+                          return (
+                            <TableRow
+                              tabIndex={-1}
+                              key={index}
+                              sx={{ border: 0, '&:nth-of-type(even)': { backgroundColor: 'whitesmoke' }, color: 'rgb(26, 51, 83)', textTransform: 'capitalize' }}
+                            >
+                              {/* <TableCell
+                                                                    padding='checkbox'
+                                                                    sx={{ border: 0, color: 'inherit' }}
+                                                                    align='left'
+                                                                >
+                                                                    <Checkbox
+                                                                        checked={isSelectedId[rowIndex] || false}
+                                                                        onChange={() => handleRowSelect(item.id)}
+                                                                        inputProps={{
+                                                                            'aria-labelledby': labelId,
+                                                                        }}
+                                                                        sx={{ border: 0, color: 'inherit' }}
+                                                                    />
+                                                                </TableCell> */}
+                              <TableCell
+                                className='tableCell-link'
+                                onClick={() => caseDetail(item.id)}
+                              >
+                                {item?.name ? item?.name : '---'}
+                              </TableCell>
+                              <TableCell className='tableCell'>
+                                {item?.account ? item?.account?.name : '---'}
+                              </TableCell>
+                              <TableCell className='tableCell'>
+                                {item?.status ? item?.status : '---'}
+                              </TableCell>
+                              <TableCell className='tableCell'>
+                                {item?.priority ? <Priority priorityData={item?.priority} /> : '---'}
+                              </TableCell>
+                              <TableCell className='tableCell'>
+                                {item?.created_on_arrow ? item?.created_on_arrow : '---'}
+                              </TableCell>
+                              <TableCell className='tableCell'>
+                                {/* <IconButton>
+                                                                        <FaEdit
+                                                                            onClick={() => EditItem(item?.id)}
+                                                                            style={{ fill: '#1A3353', cursor: 'pointer', width: '18px' }}
+                                                                        />
+                                                                    </IconButton> */}
+                                <IconButton>
+                                  <FaTrashAlt
+                                    onClick={() => deleteRow(item?.id)}
+                                    style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }} />
+                                </IconButton>
+                              </TableCell>
+                            </TableRow>
+                          )
+                        })
+                      : <TableRow> <TableCell colSpan={8} sx={{ border: 0 }}><Spinner /></TableCell></TableRow>
+                  }
+                  {/* {
+                    emptyRows > 0 && (
+                        <TableRow
+                            style={{
+                                height: (dense ? 33 : 53) * emptyRows
                             }}
                         >
-                            {recordsList?.length && recordsList.map((item: any) => (
-                                <MenuItem key={item} value={item} sx={{ ml: '-5px' }}>
-                                    {item}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </Box>
-                    <Box sx={{ borderRadius: '7px', backgroundColor: 'white', height: '40px', minHeight: '40px', maxHeight: '40px', display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 1, p: '0px' }}>
-                        <FabLeft>
-                            <FiChevronLeft
-                                //  onClick={previous}
-                                style={{ height: '15px' }}
-                            />
-                        </FabLeft>
-                        <Typography sx={{ mt: 0, textTransform: 'lowercase', fontSize: '15px', color: '#1A3353', textAlign: 'center' }}>
-                            0 to 1
-                        </Typography>
-                        <FabRight>
-                            <FiChevronRight
-                                style={{ height: '15px' }} />
-                        </FabRight>
-                    </Box>
-                    <Button
-                        variant='contained'
-                        startIcon={<FiPlus className='plus-icon' />}
-                        // onClick={onAddAccount}
-                        className={'add-button'}
-                    >
-                        Add Cases
-                    </Button>
-                </Stack>
-      </CustomToolbar>
-      
-      <Box sx={{ padding: '10px', marginTop: '5px' }}>
-        <TableContainer component={Paper}>
-          <Table aria-label='customized table'>
-            <TableHead>
-              <TableRow style={{ color: '#1A3353' }}>
-                <StyledTableCell style={{
-                  fontWeight: 'bold',
-                  fontSize: '13p',
-                  color: '#1A3353'
-                }}
-                >
-                  Name
-                </StyledTableCell>
-                <StyledTableCell style={{
-                  fontWeight: 'bold',
-                  fontSize: '13p',
-                  color: '#1A3353'
-                }}
-                >
-                  Account
-                </StyledTableCell>
-                <StyledTableCell style={{
-                  fontWeight: 'bold',
-                  fontSize: '13p',
-                  color: '#1A3353'
-                }}
-                >
-                  Status
-                </StyledTableCell>
-                <StyledTableCell style={{
-                  fontWeight: 'bold',
-                  fontSize: '13p',
-                  color: '#1A3353'
-                }}
-                >
-                  Priority
-                </StyledTableCell>
-                <StyledTableCell style={{
-                  fontWeight: 'bold',
-                  fontSize: '13p',
-                  color: '#1A3353'
-                }}
-                >
-                  Created On
-                </StyledTableCell>
-                <StyledTableCell style={{
-                  fontWeight: 'bold',
-                  fontSize: '13p',
-                  color: '#1A3353'
-                }}
-                >
-                  Action
-                </StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {/* {
-                    casesData.cases &&
-                      casesData.cases
-                      ? stableSort(casesData.cases &&
-                        casesData.cases, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index) => (
-                          <StyledTableRow key={index}>
-                            <StyledTableCell align='left' style={{ textTransform: 'capitalize', cursor: 'pointer' }} onClick={() => casesHandle(item)}>
-                              {
-                                item.name ? item.name : '--'
-                              }
-                            </StyledTableCell>
-                            <StyledTableCell align='left' style={{ textTransform: 'capitalize', color: '#1A3353' }}>--
-                              {
-                        item && item.account.name ? item.account.name: "--"
-                        }
-                            </StyledTableCell>
-                            <StyledTableCell align='left' style={{ textTransform: 'capitalize', color: '#1A3353' }}>
-                              {
-                                item.status ? item.status : '--'
-                              }
-                            </StyledTableCell>
-                            <StyledTableCell align='left' style={{ textTransform: 'capitalize', color: '#1A3353' }}>
-                              {
-                                item.priority ? <Priority priorityData={item.priority} /> : '--'
-                              }
-                            </StyledTableCell>
-                            <StyledTableCell align='left' style={{ color: '#1A3353' }}> {item.created_on_arrow}</StyledTableCell>
-                            <StyledTableCell align='left'>
-                              <div style={{ display: 'flex', flexDirection: 'row', cursor: 'pointer' }}>
-                                <div onClick={() => EditBtnHandle(item)}>
-                                    <EditIcon style={{ fill: '#1A3353', cursor: 'pointer' }} />
-                                    <FaEdit style={{ fill: '#1A3353', cursor: 'pointer' }} />
-                                    </div>
-                                <div onClick={() => deleteItemBox(item)}>
-                                    <DeleteOutlineIcon style={{ fill: '#1A3353', cursor: 'pointer' }} />
-                                    <Fa500Px style={{ fill: '#1A3353', cursor: 'pointer' }} />
-                                    </div>
-                              </div>
-                            </StyledTableCell>
-                          </StyledTableRow>
-                      ))
-                      : null
-                  } */}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        {
-          isDelete
-            ? <DialogModal
-              // <DeleteModal
-              casesId={casesId} isDelete={isDelete}
-              onClose={onclose}
-              onDelete={onDelete}
-            />
-            : ''
-        }
-      </Box>
+                            <TableCell colSpan={6} />
+                        </TableRow>
+                    )
+                  }
+ */}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Paper>
+        </Box>
+      </Container>
+      <DeleteModal
+        onClose={deleteRowModalClose}
+        open={deleteRowModal}
+        id={selectedId}
+        modalDialog={modalDialog}
+        modalTitle={modalTitle}
+        DeleteItem={deleteItem}
+      />
     </Box>
   )
 }

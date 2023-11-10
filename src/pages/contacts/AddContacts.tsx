@@ -9,16 +9,20 @@ import {
   Box,
   MenuItem,
   Tooltip,
-  Divider
+  Divider,
+  FormControl,
+  Select,
+  FormHelperText
 } from '@mui/material'
 import { FaArrowDown } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ContactUrl, Header } from '../../services/ApiUrls';
+import { ContactUrl } from '../../services/ApiUrls';
 import { CustomAppBar } from '../../components/CustomAppBar';
-import { fetchData } from '../../components/FetchData';
+import { fetchData, Header } from '../../components/FetchData';
 import { AntSwitch, CustomSelectField, RequiredTextField } from '../../styles/CssStyled';
 import '../../styles/style.css'
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
+import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 
 // interface FormErrors {
 //   [key: string]: string;
@@ -85,6 +89,7 @@ function AddContacts() {
     twitter_username: ''
   })
   const [errors, setErrors] = useState<FormErrors>({});
+  const [countrySelectOpen, setCountrySelectOpen] = useState(false)
 
   const [validationErrors, setValidationErrors] = useState({
     first_name: '',
@@ -327,10 +332,10 @@ function AddContacts() {
     }
     fetchData(`${ContactUrl}/`, 'POST', JSON.stringify(data), Header)
       .then((res: any) => {
-        console.log('Form data:', res);
+        // console.log('Form data:', res);
         if (!res.error) {
           // setResponceError(data.error)
-          // navigate('/contacts')
+          navigate('/app/contacts')
           resetForm()
         }
         if (res.error) {
@@ -393,14 +398,13 @@ function AddContacts() {
                 defaultExpanded
               >
                 <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
-                  <Typography className='accordion-header'>Account Information</Typography>
+                  <Typography className='accordion-header'>Contact Information</Typography>
                 </AccordionSummary>
                 <Divider className='divider' />
                 <AccordionDetails>
                   <Box
                     sx={{ width: '98%', color: '#1A3353', mb: 1 }}
                     component='form'
-                    // noValidate
                     autoComplete='off'
                   >
                     <div className='fieldContainer'>
@@ -411,17 +415,10 @@ function AddContacts() {
                           className="custom-textfield"
                           value={formData.salutation}
                           onChange={handleChange}
-                          // value={val.salutation || ''}
-                          // InputProps={{
-                          //   classes: {
-                          //     root: textFieldClasses.root
-                          //   }
-                          // }}
                           style={{ width: '70%' }}
                           size='small'
-                          helperText={errors?.salutation?.[0] ? errors?.salutation[0] : ''}
                           error={!!errors?.salutation?.[0]}
-
+                          helperText={errors?.salutation?.[0] ? errors?.salutation[0] : ''}
                         />
                       </div>
                       <div className='fieldSubContainer'>
@@ -430,18 +427,11 @@ function AddContacts() {
                           name='first_name'
                           value={formData.first_name}
                           onChange={handleChange}
-                          // InputProps={{ style: { borderLeft: '2px red solid' } }}
-                          // sx={{ borderLeft: '2px red solid' ,paddingLeft: '12px' }}
-                          // InputProps={{
-                          //   classes: {
-                          //     root: textFieldClasses.root
-                          //   }
-                          // }}
                           style={{ width: '70%' }}
                           size='small'
                           required
-                          error={!!errors.first_name || !!errors?.first_name?.[0]}
-                          helperText={errors.first_name || errors?.first_name?.[0] || ''}
+                          error={!!errors?.first_name?.[0]}
+                          helperText={errors?.first_name?.[0] ? errors?.first_name[0] : ''}
                         />
                       </div>
                     </div>
@@ -450,18 +440,13 @@ function AddContacts() {
                         <div className='fieldTitle'>Last Name</div>
                         <RequiredTextField
                           name='last_name'
-                          // InputProps={{
-                          //   classes: {
-                          //     root: textFieldClasses.root
-                          //   }
-                          // }}
                           value={formData.last_name}
                           onChange={handleChange}
                           style={{ width: '70%' }}
                           size='small'
                           required
-                          error={!!errors.last_name || !!errors?.last_name?.[0]}
-                          helperText={errors.last_name || errors?.last_name?.[0] || ''}
+                          error={!!errors?.last_name?.[0]}
+                          helperText={errors?.last_name?.[0] ? errors?.last_name[0] : ''}
                         />
                       </div>
                       <div className='fieldSubContainer'>
@@ -473,13 +458,8 @@ function AddContacts() {
                           style={{ width: '70%' }}
                           size='small'
                           required
-                          // InputProps={{
-                          //   classes: {
-                          //     root: textFieldClasses.fieldHeight
-                          //   }
-                          // }}
-                          error={!!errors.organization || !!errors?.organization?.[0]}
-                          helperText={errors.organization || errors?.organization?.[0] || ''}
+                          error={!!errors?.organization?.[0]}
+                          helperText={errors?.organization?.[0] ? errors?.organization[0] : ''}
                         />
                       </div>
                     </div>
@@ -490,16 +470,11 @@ function AddContacts() {
                           name='primary_email'
                           value={formData.primary_email}
                           onChange={handleChange}
-                          // InputProps={{
-                          //   classes: {
-                          //     root: textFieldClasses.fieldHeight
-                          //   }
-                          // }}
                           required
                           style={{ width: '70%' }}
                           size='small'
-                          error={!!errors.primary_email || !!errors?.primary_email?.[0]}
-                          helperText={errors.primary_email || errors?.primary_email?.[0] || ''}
+                          error={!!errors?.primary_email?.[0]}
+                          helperText={errors?.primary_email?.[0] ? errors?.primary_email[0] : ''}
                         />
                       </div>
                       <div className='fieldSubContainer'>
@@ -508,15 +483,10 @@ function AddContacts() {
                           name='secondary_email'
                           value={formData.secondary_email}
                           onChange={handleChange}
-                          // InputProps={{
-                          //   classes: {
-                          //     root: textFieldClasses.fieldHeight
-                          //   }
-                          // }}
                           style={{ width: '70%' }}
                           size='small'
-                          error={!!errors.secondary_email || !!errors?.secondary_email?.[0]}
-                          helperText={errors.secondary_email || errors?.secondary_email?.[0] || ''}
+                          error={!!errors?.secondary_email?.[0]}
+                          helperText={errors?.secondary_email?.[0] ? errors?.secondary_email[0] : ''}
                         />
                       </div>
 
@@ -529,35 +499,24 @@ function AddContacts() {
                           id='outlined-error-helper-text'
                           value={formData.department}
                           onChange={handleChange}
-                          // InputProps={{
-                          //   classes: {
-                          //     root: textFieldClasses.fieldHeight
-                          //   }
-                          // }}
                           required
                           style={{ width: '70%' }}
                           size='small'
-                          error={!!errors.department || !!errors?.department?.[0]}
-                          helperText={errors.department || errors?.department?.[0] || ''}
+                          error={!!errors?.department?.[0]}
+                          helperText={errors?.department?.[0] ? errors?.department[0] : ''}
                         />
                       </div>
                       <div className='fieldSubContainer'>
                         <div className='fieldTitle'>Title</div>
                         <TextField
-                          // error={!!(msg === 'title' || msg === 'required')}
-                          error={error && !!errors?.title?.[0]}
                           name='title'
                           value={formData.title}
                           onChange={handleChange}
-                          // InputProps={{
-                          //   classes: {
-                          //     root: textFieldClasses.root
-                          //   }
-                          // }}
                           required
                           style={{ width: '70%' }}
                           size='small'
-                          helperText={error && errors?.title?.[0] ? errors?.title[0] : ''}
+                          error={!!errors?.title?.[0]}
+                          helperText={errors?.title?.[0] ? errors?.title[0] : ''}
                         />
                       </div>
                     </div>
@@ -567,19 +526,13 @@ function AddContacts() {
                         <Tooltip title="Number must starts with +91">
                           <RequiredTextField
                             name='mobile_number'
-                            id='outlined-error-helper-text'
                             value={formData.mobile_number}
                             onChange={handleChange}
-                            // InputProps={{
-                            //   classes: {
-                            //     root: textFieldClasses.fieldHeight
-                            //   }
-                            // }}
                             required
                             style={{ width: '70%' }}
                             size='small'
-                            error={!!errors.mobile_number || !!errors?.mobile_number?.[0]}
-                            helperText={errors.mobile_number || errors?.mobile_number?.[0] || ''}
+                            error={!!errors?.mobile_number?.[0]}
+                            helperText={errors?.mobile_number?.[0] ? errors?.mobile_number[0] : ''}
                           />
                         </Tooltip>
                       </div>
@@ -591,15 +544,10 @@ function AddContacts() {
                             name='secondary_number'
                             value={formData.secondary_number}
                             onChange={handleChange}
-                            // InputProps={{
-                            //   classes: {
-                            //     root: textFieldClasses.fieldHeight
-                            //   }
-                            // }}
                             style={{ width: '70%' }}
                             size='small'
-                            error={!!errors.secondary_number || !!errors?.secondary_number?.[0]}
-                            helperText={errors.secondary_number || errors?.secondary_number?.[0] || ''}
+                            error={!!errors?.secondary_number?.[0]}
+                            helperText={errors?.secondary_number?.[0] ? errors?.secondary_number[0] : ''}
                           />
                         </Tooltip>
                       </div>
@@ -612,26 +560,19 @@ function AddContacts() {
                           name='language'
                           value={formData.language}
                           onChange={handleChange}
-                          // InputProps={{
-                          //   classes: {
-                          //     root: textFieldClasses.fieldHeight
-                          //   }
-                          // }}
                           style={{ width: '70%' }}
                           size='small'
-                          error={!!errors.language || !!errors?.language?.[0]}
-                          helperText={errors.language || errors?.language?.[0] || ''}
+                          error={!!errors?.language?.[0]}
+                          helperText={errors?.language?.[0] ? errors?.language[0] : ''}
                         />
                       </div>
                       <div className='fieldSubContainer'>
                         <div className='fieldTitle'>Do Not Call</div>
                         <AntSwitch
-                          // inputProps={{ 'aria-label': 'ant design' }}
                           name='do_not_call'
                           checked={formData.do_not_call}
-                          // value={formData.do_not_call}
                           onChange={handleChange}
-                        // onChange={(e: any) => handleChange(e.target)}
+                          sx={{ mt: '1%' }}
                         />
                       </div>
                     </div>
@@ -645,7 +586,7 @@ function AddContacts() {
                 defaultExpanded
               >
                 <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
-                  <Typography className='accordion-header'>Account Information</Typography>
+                  <Typography className='accordion-header'>Address</Typography>
                 </AccordionSummary>
                 <Divider className='divider' />
                 <AccordionDetails>
@@ -663,58 +604,45 @@ function AddContacts() {
                           name='address'
                           value={formData.address}
                           onChange={handleChange}
-                          // InputProps={{
-                          //   classes: {
-                          //     root: textFieldClasses.root
-                          //   }
-                          // }}
                           style={{ width: '70%' }}
                           size='small'
-                          error={!!errors.address || !!errors?.address?.[0]}
-                          helperText={errors.address || errors?.address?.[0] || ''}
+                          error={!!errors?.address?.[0]}
+                          helperText={errors?.address?.[0] ? errors?.address[0] : ''}
                         />
                       </div>
                       <div className='fieldSubContainer'>
                         <div className='fieldTitle'>Country</div>
-                        <CustomSelectField
-                          name='country'
-                          select
-                          value={formData.country}
-                          InputProps={{
-                            style: {
-                              height: '40px',
-                              maxHeight: '40px'
-                            }
-                          }}
-                          SelectProps={{
-                            MenuProps: {
-                              anchorOrigin: {
-                                vertical: 'bottom',
-                                horizontal: 'left'
-                              },
-                              transformOrigin: {
-                                vertical: 'top',
-                                horizontal: 'left'
-                              },
-                              // getContentAnchorEl: null,
+                        <FormControl sx={{ width: '70%' }}>
+                          <Select
+                            name='country'
+                            value={formData.country}
+                            open={countrySelectOpen}
+                            onClick={() => setCountrySelectOpen(!countrySelectOpen)}
+                            IconComponent={() => (
+                              <div onClick={() => setCountrySelectOpen(!countrySelectOpen)} className="select-icon-background">
+                                {countrySelectOpen ? <FiChevronUp className='select-icon' /> : <FiChevronDown className='select-icon' />}
+                              </div>
+                            )}
+                            MenuProps={{
                               PaperProps: {
                                 style: {
-                                  maxHeight: '200px'
+                                  height: '200px'
                                 }
                               }
-                            }
-                          }}
-                          onChange={handleChange}
-                          sx={{ width: '70%' }}
-                          helperText={errors?.country?.[0] ? errors?.country[0] : ''}
-                          error={!!errors?.country?.[0]}
-                        >
-                          {state?.countries?.length && state?.countries.map((option: any) => (
-                            <MenuItem key={option[0]} value={option[0]}>
-                              {option[1]}
-                            </MenuItem>
-                          ))}
-                        </CustomSelectField>
+                            }}
+                            className={'select'}
+                            onChange={handleChange}
+                            error={!!errors?.country?.[0]}
+                          >
+                            {state?.countries?.length && state?.countries.map((option: any) => (
+                              <MenuItem key={option[0]} value={option[0]}>
+                                {option[1]}
+                              </MenuItem>
+                            ))}
+
+                          </Select>
+                          <FormHelperText>{errors?.country?.[0] ? errors?.country[0] : ''}</FormHelperText>
+                        </FormControl>
                         {/* <TextField
                           name='country'
                           // error={error && !!errors?.country?.[0]}
@@ -742,7 +670,7 @@ function AddContacts() {
                 defaultExpanded
                 style={{ width: '98%' }}>
                 <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
-                  <Typography className='accordion-header'>Account Information</Typography>
+                  <Typography className='accordion-header'>Description</Typography>
                 </AccordionSummary>
                 <Divider className='divider' />
                 <AccordionDetails>
@@ -795,15 +723,10 @@ function AddContacts() {
                           name='linked_in_url'
                           value={formData.linked_in_url}
                           onChange={handleChange}
-                          // InputProps={{
-                          //   classes: {
-                          //     root: textFieldClasses.fieldHeight
-                          //   }
-                          // }}
                           style={{ width: '70%' }}
                           size='small'
-                          error={!!errors && !!errors?.linked_in_url?.[0]}
-                          helperText={errors?.linked_in_url || errors?.linked_in_url?.[0] || ''}
+                          error={!!errors?.linked_in_url?.[0]}
+                          helperText={errors?.linked_in_url?.[0] ? errors?.linked_in_url[0] : ''}
                         />
                       </div>
                       <div style={{ width: '40%', display: 'flex', flexDirection: 'row' }}>
@@ -813,14 +736,9 @@ function AddContacts() {
                           value={formData.facebook_url}
                           onChange={handleChange}
                           style={{ width: '70%' }}
-                          // InputProps={{
-                          //   classes: {
-                          //     root: textFieldClasses.fieldHeight
-                          //   }
-                          // }}
                           size='small'
-                          error={!!errors && !!errors?.facebook_url?.[0]}
-                          helperText={errors?.facebook_url || errors?.facebook_url?.[0] || ''}
+                          error={!!errors?.facebook_url?.[0]}
+                          helperText={errors?.facebook_url?.[0] ? errors?.facebook_url[0] : ''}
                         />
                       </div>
                     </div>
@@ -836,14 +754,9 @@ function AddContacts() {
                           value={formData.twitter_username}
                           onChange={handleChange}
                           style={{ width: '70%' }}
-                          // InputProps={{
-                          //   classes: {
-                          //     root: textFieldClasses.fieldHeight
-                          //   }
-                          // }}
                           size='small'
-                          error={!!errors.twitter_username || !!errors?.twitter_username?.[0]}
-                          helperText={errors.twitter_username || errors?.twitter_username?.[0] || ''}
+                          error={!!errors?.twitter_username?.[0]}
+                          helperText={errors?.twitter_username?.[0] ? errors?.twitter_username[0] : ''}
                         />
                       </div>
                     </div>

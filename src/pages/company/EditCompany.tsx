@@ -11,9 +11,9 @@ import {
 import React, { useEffect, useState } from 'react'
 import { FaArrowDown } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { CompanyUrl, Header } from '../../services/ApiUrls';
+import { CompanyUrl } from '../../services/ApiUrls';
 import { CustomAppBar } from '../../components/CustomAppBar';
-import { fetchData } from '../../components/FetchData';
+import { fetchData, Header } from '../../components/FetchData';
 import '../../styles/style.css'
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 

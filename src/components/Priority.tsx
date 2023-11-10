@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
-export const Priority = (props:any) => {
-  const [tagsColor, setTagsColor] = useState('purple')
+export const Priority = (props: any) => {
+  const [tagColor, setTagColor] = useState('purple')
 
   useEffect(() => {
     colorTag()
@@ -9,19 +9,19 @@ export const Priority = (props:any) => {
 
   const colorTag = () => {
     if (props.priorityData === 'Normal') {
-      setTagsColor('green')
+      setTagColor('green')
     } else if (props.priorityData === 'High') {
-      setTagsColor('orange')
+      setTagColor('orange')
     } else if (props.priorityData === 'Low') {
-      setTagsColor('blue')
+      setTagColor('blue')
     } else if (props.priorityData === 'Urgent') {
-      setTagsColor('red')
+      setTagColor('red')
     }
   }
 
   return (
     <div style={{
-      color: tagsColor,
+      color: tagColor,
       textTransform: 'capitalize'
     }}
     >

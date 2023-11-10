@@ -20,8 +20,8 @@ import {
   Select
 } from '@mui/material'
 import '../../styles/style.css'
-import { Header, LeadUrl } from '../../services/ApiUrls'
-import { fetchData } from '../../components/FetchData'
+import { LeadUrl } from '../../services/ApiUrls'
+import { fetchData, Header } from '../../components/FetchData'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { FaArrowDown, FaFileUpload, FaPalette, FaPercent, FaPlus, FaTimes, FaUpload } from 'react-icons/fa'
 import { useForm } from '../../components/UseForm'
@@ -400,9 +400,9 @@ export function AddLeads() {
                             multiple
                             value={selectedContacts}
                             limitTags={2}
-                            options={state.contacts || []}
+                            options={state?.contacts || []}
                             // options={state.contacts ? state.contacts.map((option: any) => option) : ['']}
-                            getOptionLabel={(option: any) => state.contacts ? option?.first_name : option}
+                            getOptionLabel={(option: any) => state?.contacts ? option?.first_name : option}
                             // value={formData.contacts}
                             // onChange={handleChange}
                             onChange={(e: any, value: any) => handleChange2('contacts', value)}
@@ -418,7 +418,7 @@ export function AddLeads() {
                                     height: '18px'
                                   }}
                                   variant='outlined'
-                                  label={state.contacts ? option?.first_name : option}
+                                  label={state?.contacts ? option?.first_name : option}
                                   {...getTagProps({ index })}
                                 />
                               ))
@@ -452,8 +452,8 @@ export function AddLeads() {
                             multiple
                             value={selectedAssignTo}
                             limitTags={2}
-                            options={state.users || []}
-                            getOptionLabel={(option: any) => state.users ? option?.user__email : option}
+                            options={state?.users || []}
+                            getOptionLabel={(option: any) => state?.users ? option?.user__email : option}
                             onChange={(e: any, value: any) => handleChange2('assigned_to', value)}
                             size='small'
                             filterSelectedOptions
@@ -467,7 +467,7 @@ export function AddLeads() {
 
                                   }}
                                   variant='outlined'
-                                  label={state.users ? option?.user__email : option}
+                                  label={state?.users ? option?.user__email : option}
                                   {...getTagProps({ index })}
                                 />
                               ))
@@ -516,11 +516,11 @@ export function AddLeads() {
                               }
                             }}
                           >
-                            {state?.industries?.length && state?.industries.map((option: any) => (
+                            {state?.industries?.length ? state?.industries.map((option: any) => (
                               <MenuItem key={option[0]} value={option[1]}>
                                 {option[1]}
                               </MenuItem>
-                            ))}
+                            )) : ''}
                           </Select>
                           <FormHelperText>{errors?.industry?.[0] ? errors?.industry[0] : ''}</FormHelperText>
                         </FormControl>
@@ -565,11 +565,11 @@ export function AddLeads() {
                             onChange={handleChange}
                             error={!!errors?.status?.[0]}
                           >
-                            {state?.status?.length && state?.status.map((option: any) => (
+                            {state?.status?.length ? state?.status.map((option: any) => (
                               <MenuItem key={option[0]} value={option[1]}>
                                 {option[1]}
                               </MenuItem>
-                            ))}
+                            )) : ''}
                           </Select>
                           <FormHelperText>{errors?.status?.[0] ? errors?.status[0] : ''}</FormHelperText>
                         </FormControl>
@@ -605,11 +605,11 @@ export function AddLeads() {
                             onChange={handleChange}
                             error={!!errors?.source?.[0]}
                           >
-                            {state?.source?.length && state?.source.map((option: any) => (
+                            {state?.source?.length ? state?.source.map((option: any) => (
                               <MenuItem key={option[0]} value={option[0]}>
                                 {option[1]}
                               </MenuItem>
-                            ))}
+                            )) : ''}
                           </Select>
                           <FormHelperText>{errors?.source?.[0] ? errors?.source[0] : ''}</FormHelperText>
                         </FormControl>
@@ -660,7 +660,7 @@ export function AddLeads() {
                             value={selectedTags}
                             multiple
                             limitTags={5}
-                            options={state.tags || []}
+                            options={state?.tags || []}
                             // options={state.contacts ? state.contacts.map((option: any) => option) : ['']}
                             getOptionLabel={(option: any) => option}
                             onChange={(e: any, value: any) => handleChange2('tags', value)}
@@ -670,10 +670,7 @@ export function AddLeads() {
                               value.map((option, index) => (
                                 <Chip
                                   deleteIcon={<FaTimes style={{ width: '9px' }} />}
-                                  sx={{
-                                    backgroundColor: 'rgba(0, 0, 0, 0.08)',
-                                    height: '18px'
-                                  }}
+                                  sx={{ backgroundColor: 'rgba(0, 0, 0, 0.08)', height: '18px' }}
                                   variant='outlined'
                                   label={option}
                                   {...getTagProps({ index })}
@@ -969,11 +966,11 @@ export function AddLeads() {
                             onChange={handleChange}
                             error={!!errors?.country?.[0]}
                           >
-                            {state?.countries?.length && state?.countries.map((option: any) => (
+                            {state?.countries?.length ? state?.countries.map((option: any) => (
                               <MenuItem key={option[0]} value={option[0]}>
                                 {option[1]}
                               </MenuItem>
-                            ))}
+                            )) : ''}
 
                           </Select>
                           <FormHelperText>{errors?.country?.[0] ? errors?.country[0] : ''}</FormHelperText>

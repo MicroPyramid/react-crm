@@ -6,8 +6,8 @@ import {
 } from '@mui/material'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { CompanyUrl, ContactUrl, Header } from '../../services/ApiUrls'
-import { fetchData } from '../../components/FetchData'
+import { CompanyUrl, ContactUrl } from '../../services/ApiUrls'
+import { fetchData, Header } from '../../components/FetchData'
 
 type response = {
     name: string;
@@ -62,8 +62,8 @@ export default function CompanyDetails() {
                             </div>
                             <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a3353f0' }}>Name</div>
-                                    <div style={{ fontSize: '16px', color: 'gray', marginTop: '5%' }}>
+                                    <div className='title2'>Name</div>
+                                    <div className='title3'>
                                         {companyDetails?.name || '---'}
                                     </div>
                                 </div>

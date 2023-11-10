@@ -1,439 +1,3 @@
-
-// import React, { SyntheticEvent, useEffect, useState } from 'react'
-// import { Box, Button, Card, Stack, Tab, Table, TableBody, TableContainer, TableHead, TablePagination, TableRow, Tabs, Toolbar, Typography, Paper } from '@mui/material'
-
-// // import { Spinner } from '../../../components/Spinner';
-// // import { FaBeer } from "@react-icons/all-files/fa/FaBeer";
-// import { FiPlus } from "@react-icons/all-files/fi/FiPlus";
-// import { FiChevronLeft } from "@react-icons/all-files/fi/FiChevronLeft";
-// import { FiChevronRight } from "@react-icons/all-files/fi/FiChevronRight";
-
-// import { CustomTab, CustomToolbar, StyledTableCell } from '../../styles/CssStyled';
-// import { fetchData } from '../../components/FetchData';
-// import { OpportunityUrl } from '../../services/ApiUrls';
-// import { DialogModal } from '../../components/DialogModal';
-// // import { DeleteModal } from '../../components/DeleteModal';
-// // import { AntSwitch, CustomTab, CustomToolbar, StyledTableCell, StyledTableRow } from '../../../styles/CssStyled';
-// // import { fetchData } from '../../../components/FetchData';
-// // import { ContactUrl, OpportunityUrl } from '../../../components/ApiUrls';
-// // import { getComparator, stableSort } from '../../../components/Sorting';
-// // import { DeleteModal } from '../../../components/DeleteModal';
-
-
-// export default function Opportunities() {
-//   // const [opportunity, setOpportunity] = useState([])
-//   const [value, setValue] = useState('Open')
-//   const [initial, setInitial] = useState(true)
-//   const [openOffset, setOpenOffset] = useState(0)
-//   const [openValue] = useState(1)
-//   const [closeOffset, setCloseOffset] = useState(0)
-//   const [closeValue, setCloseValue] = useState(1)
-//   const [opportunityId, setOpportunityId] = useState('')
-//   const [isDelete, setIsDelete] = useState(false)
-//   const [page, setPage] = useState(0)
-//   const [values, setValues] = useState(10)
-//   const [rowsPerPage, setRowsPerPage] = useState(10)
-//   const [loader, setLoader] = useState(true)
-//   const [order] = useState('asc')
-//   const [orderBy] = useState('calories')
-
-
-//   const handleChangeTab = (e: SyntheticEvent, val: any) => {
-//     setValue(val)
-//   }
-//   const handleChangePage = (event: any, newPage: any) => {
-//     setPage(newPage)
-//   }
-
-//   const handleChangeRowsPerPage = (event: any) => {
-//     setRowsPerPage(parseInt(event.target.value, 10))
-//     setPage(0)
-//     setValues(parseInt(event.target.value, 10))
-//   }
-
-
-//   const headers = {
-//     Accept: 'application/json',
-//     'Content-Type': 'application/json',
-//     Authorization: `jwt ${localStorage.getItem('Token')}`,
-//     org: localStorage.getItem('org')
-//   }
-
-//   const getOpportunity = () => {
-//     fetchData(`${OpportunityUrl}/?offset=${value === 'Open' ? openOffset : closeOffset}`, 'GET', null as any, headers)
-//       .then((data: any) => {
-//         if (!data.error) {
-//           if (initial) {
-//             //   setOpportunity(...opportunity, {
-//             //     opportunityObj: data.opportunities,
-//             //     offset: data.opportunities.offset,
-//             //     opportunities_count: data.opportunities_count,
-//             //     opportunitiesId: data.opportunities.id,
-//             //     accounts_list: data.accounts_list,
-//             //     contacts_list: data.contacts_list,
-//             //     currency: data.currency,
-//             //     lead_source: data.lead_source,
-//             //     stage: data.stage,
-//             //     tags: data.tags,
-//             //     accountId: data.accounts_list.id,
-//             //     accountName: data.opportunities.length > 0 &&
-//             //       data.opportunities && data.opportunities.account
-//             //       ? data.opportunities.account.name
-//             //       : ''
-//             //   })
-//             setOpenOffset(initial ? 0 : openOffset)
-//             setCloseOffset(initial ? 0 : closeOffset)
-//             setInitial(false)
-//             setLoader(false)
-//           } else {
-//             if (value === 'Open') {
-//               // setOpportunity({
-//               //   opportunityObj: data.opportunities,
-//               //   opportunities_count: data.opportunities_count,
-//               //   opportunitiesId: data.opportunities.id,
-//               //   accounts_list: data.accounts_list,
-//               //   contacts_list: data.contacts_list,
-//               //   currency: data.currency,
-//               //   lead_source: data.lead_source,
-//               //   stage: data.stage,
-//               //   tags: data.tags
-//               // })
-//               setOpenOffset(initial ? 0 : openOffset)
-//               setLoader(false)
-//             }
-//             if (value === 'Close' || initial) {
-//               // setOpportunity({
-//               //   opportunityObj: data.opportunities,
-//               //   opportunities_count: data.opportunities_count,
-//               //   opportunitiesId: data.opportunities.id,
-//               //   close_opportunities_count: data.offset,
-//               //   accounts_list: data.accounts_list,
-//               //   contacts_list: data.contacts_list,
-//               //   currency: data.currency,
-//               //   lead_source: data.lead_source,
-//               //   stage: data.stage,
-//               //   tags: data.tags,
-//               //   accountId: data.accounts_list.id,
-//               //   accountName: data.opportunities.account.name
-//               // })
-//               setCloseOffset(initial ? 0 : closeOffset)
-//               setLoader(false)
-//             }
-//           }
-//         }
-//       })
-//       .catch(() => {
-//       })
-//   }
-
-//   // useEffect(() => {
-//   //   getOpportunity()
-//   // }, [closeOffset, openOffset])
-
-//   // const handleRequestSort = (event, property) => {
-//   //   const isAsc = orderBy === property && order === 'asc'
-//   //   setOrder(isAsc ? 'desc' : 'asc')
-//   //   setOrderBy(property)
-//   // }
-
-//   const onDelete = (id: any) => {
-//     fetchData(`${OpportunityUrl}/${id}/`, 'delete', null as any, headers)
-//       .then((data) => {
-//         if (!data.error) {
-//           getOpportunity()
-//           setIsDelete(false)
-//         }
-//       })
-//       .catch(() => {
-//       })
-//   }
-
-//   // const next = () => {
-//   //   if (value === 'Open' && opportunity?.opportunities_count > 0) {
-//   //     setOpenOffset(values)
-//   //     setValues(values + rowsPerPage)
-//   //   } else if (value === 'Close' && opportunity?.close_opportunities_count > closeOffset + 10) {
-//   //     setCloseOffset(closeOffset + 10)
-//   //     setCloseValue(closeValue + 10)
-//   //   }
-//   // }
-
-//   const previous = () => {
-//     if (value === 'Open' && openOffset > 0) {
-//       setOpenOffset(openOffset - rowsPerPage)
-//       setValues(values - rowsPerPage)
-//     } else if (value === 'Close' && closeOffset > 0) {
-//       setCloseOffset(closeOffset - 10)
-//       setCloseValue(openValue - 10)
-//     }
-//   }
-
-//   const onAddOpportunity = () => {
-//     //   navigate('/opportunities/add-opportunities', {
-//     //     state: {
-//     //       stage: opportunity.stage,
-//     //       lead_source: opportunity.lead_source,
-//     //       currency: opportunity.currency,
-//     //       contacts_list: opportunity.contacts_list,
-//     //       tags: opportunity.tags,
-//     //       accounts_list: opportunity.accounts_list,
-//     //       accountId: opportunity.accountId
-//     //     }
-//     //   })
-//   }
-
-//   const deleteItemBox = (deleteId: any) => {
-//     setOpportunityId(deleteId)
-//     setIsDelete(!isDelete)
-//   }
-
-//   const onclose = () => {
-//     setIsDelete(!isDelete)
-//   }
-
-//   const opportunitiesHandle = (opportunities: any) => {
-//     //   navigate('/opportunities/opportunities-details', {
-//     //     state:
-//     //     {
-//     //       opportunitiesDetails: opportunities.id,
-//     //       stage: opportunity.stage,
-//     //       lead_source: opportunity.lead_source,
-//     //       currency: opportunity.currency,
-//     //       contacts_list: opportunity.contacts_list,
-//     //       tags: opportunity.tags,
-//     //       accounts_list: opportunity.accounts_list
-//     //     }
-//     //   })
-//   }
-
-//   const EditBtnHandle = (opportunities: any) => {
-//     //   navigate('/opportunities/opportunities-edit', {
-//     //     state: {
-//     //       opportunities,
-//     //       opportunitiesId: opportunities.id,
-//     //       stage: opportunity.stage,
-//     //       lead_source: opportunity.lead_source,
-//     //       currency: opportunity.currency,
-//     //       contacts_list: opportunity.contacts_list,
-//     //       tags: opportunity.tags,
-//     //       accounts_list: opportunity.accounts_list,
-//     //       accountName: opportunity.accountName
-//     //     }
-//     //   })
-//   }
-//   return (
-//     <Box sx={{
-//       mt: '60px'
-//       // , width: '1376px'
-//     }}>
-//       <CustomToolbar>
-//         <Tabs defaultValue={value} onChange={handleChangeTab} sx={{ mt: '27px' }}>
-//           <CustomTab value="Open" label="Open"
-//             sx={{
-//               backgroundColor: value === 'Open' ? '#F0F7FF' : '#223d60',
-//               color: value === 'Open' ? '#3f51b5' : 'white',
-//             }}></CustomTab>
-//           <CustomTab value="Closed" label="Closed"
-//             sx={{
-//               backgroundColor: value === 'Closed' ? '#F0F7FF' : '#223d60',
-//               color: value === 'Closed' ? '#3f51b5' : 'white',
-//               ml: '5px',
-//             }}
-//           ></CustomTab>
-//         </Tabs>
-
-//         <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-//           <Box
-//             sx={{ mr: '-253px' }}
-//           // sx={{ mr:'10px',display: 'flex',flexDirection: 'row',justifyContent: 'center',alignItems:'center',color: 'white'}}
-//           >
-//             {/* <CustomTablePagination */}
-//             <TablePagination
-//               style={{ display: 'flex', flexDirection: 'row' }}
-//               rowsPerPageOptions={[10, 20, 30, 40, 50]}
-//               component='div'
-//               labelRowsPerPage='Records Per Page'
-//               // count={value === 'Open' ? opportunity?.opportunities_count : '5'}
-//               count={5}
-//               rowsPerPage={rowsPerPage}
-//               page={page}
-//               size='small'
-//               sx={{
-//                 '.MuiTablePagination-toolbar': {
-//                   paddingRight: '220px',
-//                   // paddingLeft: '18px',
-//                   minHeight: '30px',
-
-//                 },
-//                 '.MuiTablePagination-displayedRows': {
-//                   display: 'none'
-//                 },
-//                 '.MuiTablePagination-actions': {
-//                   display: 'none'
-//                 },
-//                 '.MuiTablePagination-selectLabel': {
-//                   marginTop: '4px',
-//                   marginLeft: '-15px',
-//                   mb: '8px'
-//                 },
-//                 '.MuiTablePagination-select': {
-//                   color: 'black',
-//                   marginRight: '0px',
-//                   marginLeft: '-12px',
-//                   marginTop: '-3px'
-//                 },
-//                 '.MuiSelect-icon': {
-//                   color: 'black',
-//                   marginTop: '-2px'
-//                 },
-//                 backgroundColor: 'white',
-//                 borderRadius: 1,
-//                 height: '10%',
-//                 overflow: 'hidden',
-//                 p: 0,
-//                 m: 0,
-//                 width: '39%',
-//                 pb: 5,
-//                 color: 'black',
-//                 mr: 1
-//               }}
-//               onPageChange={handleChangePage}
-//               onRowsPerPageChange={handleChangeRowsPerPage}
-//             />
-//           </Box>
-//           <Button
-//             size='small'
-//             sx={{
-//               backgroundColor: 'white',
-//               textTransform: 'lowercase',
-//               borderRadius: '7px',
-//               mr: 1,
-//               color: 'black',
-//               '&:hover': {
-//                 backgroundColor: 'white'
-//               }
-//             }}
-//           >
-//             <FiChevronLeft
-//               //  onClick={previous}
-//               style={{ backgroundColor: 'whitesmoke', color: '#1A3353', marginRight: 1 }} />
-//             <Typography sx={{ mt: 0, textTransform: 'lowercase', fontSize: '15px', color: '#1A3353', mr: 1 }}>
-//               1 to 0
-//               {/* {
-//           value === 0
-//             ? `${openOffset + 1} to ${leads.open_lead_count > 0 ? valued : 0}`
-//             : `${closeOffset + 1} to ${leads.close_lead_count > closeOffset + 10 ? closeOffset + 10 : 0}`
-//         } */}
-//             </Typography>
-//             <FiChevronRight
-//               //  onClick={next}
-//               style={{ backgroundColor: 'whitesmoke', color: '#1A3353' }} />
-//           </Button>
-//           <Button
-//             variant='contained'
-//             startIcon={<FiPlus color='#1976d2' style={{ width: '14px', height: '14px', backgroundColor: 'white', borderRadius: '10px', marginTop: '-1px' }} />}
-//             //   onClick={onAddOpportunity}
-//             sx={{ textTransform: 'capitalize', fontWeight: 'bold', height: '30px', color: 'white', mr: '-13px' }}
-//           >
-//             Add Opportunity
-//           </Button>
-//         </Stack>
-//       </CustomToolbar>
-//       <Box sx={{ padding: '10px', marginTop: '5px' }}>
-//         <TableContainer component={Paper}>
-//           <Table aria-label='customized table'>
-//             <TableHead>
-//               <TableRow style={{ color: '#1A3353' }}>
-//                 <StyledTableCell style={{ fontWeight: 'bold', fontSize: '13p', color: '#1A3353' }}>Name</StyledTableCell>
-//                 <StyledTableCell style={{ fontWeight: 'bold', fontSize: '13p', color: '#1A3353' }}>Account</StyledTableCell>
-//                 <StyledTableCell style={{ fontWeight: 'bold', fontSize: '13p', color: '#1A3353' }}>Assigned To</StyledTableCell>
-//                 <StyledTableCell style={{ fontWeight: 'bold', fontSize: '13p', color: '#1A3353' }}>Stage</StyledTableCell>
-//                 <StyledTableCell style={{ fontWeight: 'bold', fontSize: '13p', color: '#1A3353' }}>Created On</StyledTableCell>
-//                 <StyledTableCell style={{ fontWeight: 'bold', fontSize: '13p', color: '#1A3353' }}>Tags</StyledTableCell>
-//                 <StyledTableCell style={{ fontWeight: 'bold', fontSize: '13p', color: '#1A3353' }}>Lead Source</StyledTableCell>
-//                 <StyledTableCell style={{ fontWeight: 'bold', fontSize: '13p', color: '#1A3353' }}>Action</StyledTableCell>
-//               </TableRow>
-//             </TableHead>
-//             <TableBody>
-//               {/* {
-//                     opportunity.opportunityObj && opportunity.opportunityObj
-//                       ? stableSort(opportunity.opportunityObj && opportunity.opportunityObj, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index) => (
-//                         <StyledTableRow key={index}>
-//                           <StyledTableCell align='left' onClick={() => opportunitiesHandle(item)} style={{ color: '#1A3353', cursor: 'pointer' }}>{item.name}</StyledTableCell>
-//                           <StyledTableCell align='left'>
-//                             {
-//                             item.account ? item.account.name : '--'
-//                           }
-//                           </StyledTableCell>
-//                           <StyledTableCell align='left'>
-//                             <Avatar
-//                               src='/broken-image.jpg'
-//                               style={{
-//                                 height: '30px',
-//                                 width: '30px'
-//                               }}
-//                             />
-//                           </StyledTableCell>
-//                           <StyledTableCell
-//                             align='left'
-//                             style={{ textTransform: 'lowercase', color: '#1A3353' }}
-//                           >
-//                             {item.stage}
-//                           </StyledTableCell>
-//                           <StyledTableCell
-//                             align='left'
-//                             style={{ color: '#1A3353' }}
-//                           >
-//                             {item.created_on_arrow}
-//                           </StyledTableCell>
-//                           <StyledTableCell align='left'>
-//                             <div style={{ display: 'flex' }}>
-//                               {
-//                               item.tags
-//                                 ? item.tags.map((tagData) => (
-//                                   <Tags tags={tagData} />
-//                                 ))
-//                                 : '--'
-//                             }
-//                             </div>
-//                           </StyledTableCell>
-//                           <StyledTableCell
-//                             align='left'
-//                             style={{ textTransform: 'lowercase', color: '#1A3353' }}
-//                           >
-//                             {item.lead_source}
-//                           </StyledTableCell>
-//                           <StyledTableCell align='left'>
-//                             <div style={{ display: 'flex', flexDirection: 'row' }}>
-//                               <div onClick={() => EditBtnHandle(item)}>
-//                                 <EditIcon style={{ fill: '#1A3353', cursor: 'pointer' }} />
-//                               </div>
-//                               <div onClick={() => deleteItemBox(item)}>
-//                                 <DeleteOutlineIcon style={{ fill: '#1A3353', cursor: 'pointer' }} />
-//                               </div>
-//                             </div>
-//                           </StyledTableCell>
-//                         </StyledTableRow>
-//                       ))
-//                       : null
-//                   } */}
-//             </TableBody>
-//           </Table>
-//         </TableContainer>
-//         {
-//           isDelete
-//             ? <DialogModal
-//               // <DeleteModal
-//               opportunityId={opportunityId} isDelete={isDelete}
-//               onClose={onclose}
-//               onDelete={onDelete}
-//             />
-//             : ''
-//         }
-//       </Box>
-//     </Box>
-//   )
-// }
 import { Avatar, AvatarGroup, Box, Button, Card, List, Stack, Tab, TablePagination, Tabs, Toolbar, Typography, Link, Select, MenuItem, TableContainer, Table, TableSortLabel, TableCell, TableRow, TableHead, Paper, TableBody, IconButton, Container } from '@mui/material'
 import React, { SyntheticEvent, useEffect, useState } from 'react'
 import { Spinner } from '../../components/Spinner';
@@ -442,16 +6,16 @@ import { FiChevronLeft } from "@react-icons/all-files/fi/FiChevronLeft";
 import { FiChevronRight } from "@react-icons/all-files/fi/FiChevronRight";
 import { CustomTab, CustomToolbar, FabLeft, FabRight, StyledTableCell, StyledTableRow } from '../../styles/CssStyled';
 import { useNavigate } from 'react-router-dom';
-import { fetchData } from '../../components/FetchData';
+import { fetchData, Header } from '../../components/FetchData';
 import { getComparator, stableSort } from '../../components/Sorting';
 import { Label } from '../../components/Label';
-
 import { FaTrashAlt } from 'react-icons/fa';
 // import { DeleteModal } from './DeleteModal';
-import { Header, OpportunityUrl } from '../../services/ApiUrls';
+import { OpportunityUrl } from '../../services/ApiUrls';
 import { DeleteModal } from '../../components/DeleteModal';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
+import { EnhancedTableHead } from '../../components/EnchancedTableHead';
 
 
 interface HeadCell {
@@ -516,68 +80,6 @@ const headCells: readonly HeadCell[] = [
     label: 'Action'
   }
 ]
-
-function EnhancedTableHead(props: any) {
-  const {
-    onSelectAllClick, order, orderBy,
-    numSelected, rowCount,
-    numSelectedId, isSelectedId,
-    onRequestSort
-  } = props
-
-  const createSortHandler =
-    (property: any) => (event: React.MouseEvent<unknown>) => {
-      onRequestSort(event, property);
-    };
-
-  return (
-    <TableHead>
-      <TableRow>
-        {/* <TableCell padding='checkbox'>
-                  <Checkbox
-                      onChange={onSelectAllClick}
-                      checked={numSelected === rowCount}
-                      sx={{ color: 'inherit' }}
-                  />
-              </TableCell> */}
-        {
-          headCells.map((headCell) => (
-            headCell.label === 'Actions' || headCell.label === 'Tags' ?
-              <TableCell
-                sx={{ fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}
-                key={headCell.id}
-                align={headCell.numeric ? 'left' : 'left'}
-                padding={headCell.disablePadding ? 'none' : 'normal'}>{headCell.label}</TableCell>
-              : <TableCell
-                sx={{ fontWeight: 'bold', color: 'rgb(26, 51, 83)' }}
-                key={headCell.id}
-                align={headCell.numeric ? 'left' : 'left'}
-                padding={headCell.disablePadding ? 'none' : 'normal'}
-                sortDirection={orderBy === headCell.id ? order : false}
-              >
-                <TableSortLabel
-                  active={orderBy === headCell.id}
-                  direction={orderBy === headCell.id ? order : 'asc'}
-                  onClick={createSortHandler(headCell.id)}
-                >
-                  {headCell.label}
-                  {
-                    orderBy === headCell.id
-                      ? (
-                        <Box component='span' sx={{ display: 'none' }}>
-                          {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                        </Box>
-                      )
-                      : null
-                  }
-                </TableSortLabel>
-              </TableCell>
-          ))
-        }
-      </TableRow>
-    </TableHead>
-  )
-}
 
 type Item = {
   id: string;
@@ -645,6 +147,7 @@ export default function Opportunities(props: any) {
           setTeams(res?.teams)
           setUsers(res?.users)
           setCountries(res?.countries)
+          setLoading(false)
         }
       })
 
@@ -655,12 +158,14 @@ export default function Opportunities(props: any) {
   }
 
   const onAddOpportunity = () => {
-    navigate('/app/opportunities/add-opportunity', {
-      state: {
-        detail: false,
-        contacts: contacts || [], leadSource: leadSource || [], currency: currency || [], tags: tags || [], account: account || [], stage: stage || [], users: users || [], teams: teams || [], countries: countries || []
-      }
-    })
+    if (!loading) {
+      navigate('/app/opportunities/add-opportunity', {
+        state: {
+          detail: false,
+          contacts: contacts || [], leadSource: leadSource || [], currency: currency || [], tags: tags || [], account: account || [], stage: stage || [], users: users || [], teams: teams || [], countries: countries || []
+        }
+      })
+    }
   }
   const handleRequestSort = (event: any, property: any) => {
     const isAsc = orderBy === property && order === 'asc'
@@ -861,6 +366,7 @@ export default function Opportunities(props: any) {
                   rowCount={opportunities?.length}
                   numSelectedId={selectedId}
                   isSelectedId={isSelectedId}
+                  headCells={headCells}
                 />
                 <TableBody>
                   {
@@ -890,53 +396,33 @@ export default function Opportunities(props: any) {
                                                                     />
                                                                 </TableCell> */}
                               <TableCell
-                                align='left'
-                                sx={{ cursor: 'pointer', color: '#3E79F7', textTransform: 'none', border: 0 }}
+                                className='tableCell-link'
                                 onClick={() => opportunityDetail(item.id)}
                               >
                                 {item?.name ? item?.name : '---'}
                               </TableCell>
-                              <TableCell
-                                align='left'
-                                sx={{ border: 0, color: 'rgb(26, 51, 83)' }}
-                              >
+                              <TableCell className='tableCell'>
                                 {item?.account ? item?.account?.name : '---'}
                               </TableCell>
-                              <TableCell
-                                align='left'
-                                sx={{ border: 0, color: 'rgb(26, 51, 83)' }}
-                              >
+                              <TableCell className='tableCell'>
                                 {item?.assigned_to ? <Avatar src={item?.assigned_to} alt={item?.assigned_to} /> : '----'}
                                 {/* <Stack style={{ display: 'flex', flexDirection: 'row', alignItems: "center" }}>
                                   <Avatar src={item?.lead?.created_by?.profile_pic} alt={item?.lead?.created_by?.email} /><Stack sx={{ ml: 1 }}>{item?.lead?.account_name ? item?.lead?.account_name : '---'}</Stack>
                                 </Stack> */}
                               </TableCell>
-                              <TableCell
-                                align='left'
-                                sx={{ border: 0, color: 'rgb(26, 51, 83)' }}
-                              >
+                              <TableCell className='tableCell'>
                                 {item?.stage ? item?.stage : '---'}
                               </TableCell>
-                              <TableCell
-                                align='left'
-                                sx={{ border: 0, color: 'rgb(26, 51, 83)' }}
-                              >
+                              <TableCell className='tableCell'>
                                 {item?.created_on_arrow ? item?.created_on_arrow : '---'}
                               </TableCell>
-                              <TableCell
-                                align='left'
-                                sx={{ border: 0, color: 'rgb(26, 51, 83)' }}
-                              >
+                              <TableCell className='tableCell'>
                                 {item?.tags?.length ? item?.tags.map((tag: any, i: any) => <Stack sx={{ mr: 0.5 }}> <Label tags={tag} /></Stack>) : '---'}
                               </TableCell>
-                              <TableCell
-                                align='left'
-                                sx={{ border: 0, color: 'rgb(26, 51, 83)' }}
-                              >
+                              <TableCell className='tableCell'>
                                 {item?.lead_source ? item?.lead_source : '---'}
                               </TableCell>
-
-                              <TableCell align='left' sx={{ border: 0 }}>
+                              <TableCell className='tableCell'>
                                 {/* <IconButton>
                                                                         <FaEdit
                                                                             onClick={() => EditItem(item?.id)}

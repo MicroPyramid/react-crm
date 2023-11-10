@@ -19,7 +19,7 @@ import { AccountDetails } from '../pages/accounts/AccountDetails';
 import { AddUsers } from '../pages/users/AddUsers';
 import { AddOpportunity } from '../pages/opportunities/AddOpportunity';
 import { OpportunityDetails } from '../pages/opportunities/OpportunityDetails';
-import { AddCases } from '../pages/cases/AddCases';
+import { AddCase } from '../pages/cases/AddCase';
 import { css } from '@emotion/css';
 import { StyledListItemButton, StyledListItemText } from '../styles/CssStyled';
 // import MyContext, { MyContextData } from '../context/Context';
@@ -38,6 +38,8 @@ import { EditLead } from '../pages/leads/EditLead';
 import UserDetails from '../pages/users/UserDetails';
 import { EditAccount } from '../pages/accounts/EditAccount';
 import { EditOpportunity } from '../pages/opportunities/EditOpportunity';
+import { CaseDetails } from '../pages/cases/CaseDetails';
+import { EditCase } from '../pages/cases/EditCase';
 
 
 // declare global {
@@ -89,6 +91,8 @@ export default function Sidebar(props: any) {
             setScreen('companies')
         } else if (location.pathname.split('/')[2] === 'users') {
             setScreen('users')
+        } else if (location.pathname.split('/')[2] === 'cases') {
+            setScreen('cases')
         }
     }
 
@@ -115,7 +119,7 @@ export default function Sidebar(props: any) {
             })
     }
 
-    const navList = ['leads', 'contacts', 'opportunities', 'accounts', 'companies', 'users']
+    const navList = ['leads', 'contacts', 'opportunities', 'accounts', 'companies', 'users', 'cases']
     const navIcons = (text: any, screen: any): React.ReactNode => {
         switch (text) {
             case 'leads':
@@ -132,8 +136,8 @@ export default function Sidebar(props: any) {
             //     return screen === 'analytics' ? <FaChartLine fill='#3e79f7' /> : <FaChartLine />
             case 'users':
                 return screen === 'users' ? <FaUserFriends fill='#3e79f7' /> : <FaUserFriends />
-            // case 'cases':
-            //     return screen === 'cases' ? <FaBriefcase fill='#3e79f7' /> : <FaBriefcase />
+            case 'cases':
+                return screen === 'cases' ? <FaBriefcase fill='#3e79f7' /> : <FaBriefcase />
             default: return <FaDiceD6 fill='#3e79f7' />
         }
     }
@@ -174,7 +178,7 @@ export default function Sidebar(props: any) {
                             <IconButton sx={{ ml: '-10px' }} onClick={() => setDrawerWidth(drawerWidth === 60 ? 200 : 60)}>
                                 <FaBars style={{ height: '20px' }} />
                             </IconButton>
-                            <Typography sx={{ fontWeight: 'bold', color: 'black', ml: '20px', textTransform: 'capitalize',fontSize:'20px',mt:'5px' }}>
+                            <Typography sx={{ fontWeight: 'bold', color: 'black', ml: '20px', textTransform: 'capitalize', fontSize: '20px', mt: '5px' }}>
                                 {screen}
                                 {/* Bottle-CRM */}
                             </Typography>
@@ -309,38 +313,14 @@ export default function Sidebar(props: any) {
                             <Route path='/app/opportunities/opportunity-details' element={<OpportunityDetails />} />
                             <Route path='/app/opportunities/edit-opportunity' element={<EditOpportunity />} />
                             <Route path='/app/cases' element={<Cases />} />
-                            <Route path='/app/add-cases' element={<AddCases />} />
+                            <Route path='/app/cases/add-case' element={<AddCase />} />
+                            <Route path='/app/cases/edit-case' element={<EditCase />} />
+                            <Route path='/app/cases/case-details' element={<CaseDetails />} />
                         </Routes>
                         {/* <Route path='/cases/add-cases' element={<AddCases />} />
                             <Route path='/cases/cases-details' element={<CasesDetails />} />
                             <Route path='/analytics' element={<Analytics />} /> */}
 
-                        {/* 
-
-            <Route path='/accounts' element={<Account />} />
-            <Route path='/analytics' element={<Analytics />} />
-            <Route path='/users' element={<Users />} />
-            <Route path='/leads/add-leads' element={<AddLeads />} />
-            <Route path='/leads/lead-details' element={<LeadDetails />} />
-            <Route path='/leads/edit-leads' element={<EditLead />} />
-            <Route path='/contacts/add-contacts' element={<AddContact />} />
-            <Route path='/contacts/contact-details' element={<ContactDetails />} />
-            <Route path='/contacts/edit-contacts' element={<EditContact />} />
-            <Route path='/opportunities/add-opportunities' element={<AddOpportunity />} />
-            <Route path='/opportunities/opportunities-details' element={<OpportunityDetails />} />
-            <Route path='/opportunities/edit-opportunities' element={<EditOpportunities />} />
-            <Route path='/opportunities/opportunities-edit' element={<EditOpportunityId />} />
-            <Route path='/accounts/account-details' element={<AccountDetails />} />
-            <Route path='/accounts/add-accounts' element={<AddAccount />} />
-            <Route path='/accounts/account-edit' element={<EditAccounts />} />
-            <Route path='/accounts/edit-accounts' element={<EditAccount />} />
-            <Route path='/cases' element={<Cases />} />
-            <Route path='/cases/case-details' element={<CasesDetails />} />
-            <Route path='/cases/add-cases' element={<AddCases />} />
-            <Route path='/cases/edit-cases' element={<EditCases />} />
-            <Route path='/cases/edit-case' element={<EditCase />} />
-            <Route path='/users/add-users' element={<AddUsers />} />
-            <Route path='/users/edit-users' element={<EditUser />} /> */}
 
                     </Box>
                 </MyContext.Provider>
