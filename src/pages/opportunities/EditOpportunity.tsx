@@ -16,16 +16,19 @@ import {
     FormHelperText,
     IconButton,
     Select,
-    Divider
+    Divider,
+    Button
 } from '@mui/material'
-import '../../styles/style.css'
+import { useQuill } from 'react-quilljs';
+import 'quill/dist/quill.snow.css';
 import { AccountsUrl, OpportunityUrl } from '../../services/ApiUrls'
 import { fetchData, Header } from '../../components/FetchData'
 import { CustomAppBar } from '../../components/CustomAppBar'
-import { FaFileUpload, FaPlus, FaTimes, FaUpload } from 'react-icons/fa'
+import { FaCheckCircle, FaFileUpload, FaPlus, FaTimes, FaTimesCircle, FaUpload } from 'react-icons/fa'
 import { CustomPopupIcon, RequiredSelect, RequiredTextField } from '../../styles/CssStyled'
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown'
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp'
+import '../../styles/style.css'
 
 type FormErrors = {
     name?: string[],
@@ -67,6 +70,9 @@ interface FormData {
 export function EditOpportunity() {
     const navigate = useNavigate()
     const { state } = useLocation()
+    const { quill, quillRef } = useQuill();
+    const initialContentRef = useRef<string | null>(null);
+
     const autocompleteRef = useRef<any>(null);
     const [error, setError] = useState(false)
     const [reset, setReset] = useState(false)
@@ -109,11 +115,23 @@ export function EditOpportunity() {
     useEffect(() => {
         if (reset) {
             setFormData(state?.value)
+            if (quill && initialContentRef.current !== null) {
+                quill.clipboard.dangerouslyPasteHTML(initialContentRef.current);
+              }
         }
         return () => {
             setReset(false)
         }
-    }, [reset])
+    }, [reset, quill, state?.value])
+
+    useEffect(() => {
+        if (quill && initialContentRef.current === null) {
+          // Save the initial state (HTML content) of the Quill editor only if not already saved
+          initialContentRef.current = formData.description;
+          quill.clipboard.dangerouslyPasteHTML(formData.description);
+        }
+      }, [quill, formData.description]);
+
 
     const backbtnHandle = () => {
         if (state?.edit) {
@@ -152,7 +170,7 @@ export function EditOpportunity() {
             setFormData({ ...formData, [name]: value });
         }
     };
-    const handleFileChange = (event:any) => {
+    const handleFileChange = (event: any) => {
         const file = event.target.files?.[0] || null;
         if (file) {
             setFormData((prevData) => ({
@@ -160,7 +178,7 @@ export function EditOpportunity() {
                 opportunity_attachment: file.name,
                 file: prevData.file,
             }));
-    
+
             const reader = new FileReader();
             reader.onload = () => {
                 setFormData((prevData) => ({
@@ -171,6 +189,12 @@ export function EditOpportunity() {
             reader.readAsDataURL(file);
         }
     };
+    const emptyDescription = () => {
+        setFormData({ ...formData, description: '' })
+        if (quill) {
+          quill.clipboard.dangerouslyPasteHTML('');
+        }
+      };
     const handleSubmit = (e: any) => {
         e.preventDefault();
         submitForm();
@@ -709,20 +733,33 @@ export function EditOpportunity() {
                                         autoComplete='off'
                                     >
                                         <div className='DescriptionDetail'>
-                                            <div className='descriptionSubContainer'>
-                                                <div className='descriptionTitle'>Description</div>
-                                                <TextareaAutosize
-                                                    name='description'
-                                                    minRows={8}
-                                                    value={formData.description}
-                                                    onChange={handleChange}
-                                                    style={{ width: '80%', padding: '5px' }}
-                                                    placeholder='Add Description'
-                                                // error={!!errors?.description?.[0]}
-                                                // helperText={error && errors?.description?.[0] ? errors?.description[0] : ''}
-                                                />
+                                            <div className='descriptionTitle'>Description</div>
+                                            <div style={{ width: '100%', marginBottom: '3%' }}>
+                                                <div ref={quillRef} />
                                             </div>
                                         </div>
+                                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', mt: 1.5 }}>
+                                            <Button
+                                                className='header-button'
+                                                onClick={emptyDescription}
+                                                size='small'
+                                                variant='contained'
+                                                startIcon={<FaTimesCircle style={{ fill: 'white', width: '16px', marginLeft: '2px' }} />}
+                                                sx={{ backgroundColor: '#2b5075', ':hover': { backgroundColor: '#1e3750' } }}
+                                            >
+                                                Cancel
+                                            </Button>
+                                            <Button
+                                                className='header-button'
+                                                onClick={() => setFormData({ ...formData, description: quillRef.current.firstChild.innerHTML })}
+                                                variant='contained'
+                                                size='small'
+                                                startIcon={<FaCheckCircle style={{ fill: 'white', width: '16px', marginLeft: '2px' }} />}
+                                                sx={{ ml: 1 }}
+                                            >
+                                                Save
+                                            </Button>
+                                        </Box>
                                     </Box>
                                 </AccordionDetails>
                             </Accordion>

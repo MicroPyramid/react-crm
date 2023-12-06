@@ -1,27 +1,29 @@
 import React from 'react'
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   AppBar,
   Breadcrumbs,
   Link,
   Button
 } from '@mui/material'
-import { FaArrowLeft, FaCheckCircle, FaCross, FaEdit, FaPlusCircle, FaTimesCircle } from 'react-icons/fa'
-import { useLocation, useNavigate } from 'react-router-dom';
 import { useMyContext } from '../context/Context';
+import { FaCheckCircle, FaEdit, FaTimesCircle } from 'react-icons/fa'
 import { FiChevronLeft } from '@react-icons/all-files/fi/FiChevronLeft';
+
 export function CustomAppBar(props: any) {
   const location = useLocation();
   const sharedData = useMyContext();
   const navigate = useNavigate()
-
   const { backbtnHandle, editHandle, module, crntPage, backBtn, onCancel, onSubmit } = props
+
   const Module = module.toLowerCase()
+  
   return (
     <AppBar sx={{
       backgroundColor: '#1A3353', height: '50px', justifyContent: 'center', marginTop: '-3px', boxShadow: 'none',
       //  position: 'fixed', 
       top: '64px',
-      left: sharedData === 200 ? '200px' : '60px',
+      left: sharedData.drawerWidth === 200 ? '200px' : '60px',
       width: '-webkit-fill-available'
     }}
       position='fixed'

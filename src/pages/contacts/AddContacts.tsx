@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   TextField,
-  TextareaAutosize,
   AccordionDetails,
   Accordion,
   AccordionSummary,
@@ -12,17 +12,19 @@ import {
   Divider,
   FormControl,
   Select,
-  FormHelperText
+  FormHelperText,
+  Button
 } from '@mui/material'
-import { FaArrowDown } from 'react-icons/fa';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useQuill } from 'react-quilljs';
+import 'quill/dist/quill.snow.css';
 import { ContactUrl } from '../../services/ApiUrls';
 import { CustomAppBar } from '../../components/CustomAppBar';
 import { fetchData, Header } from '../../components/FetchData';
-import { AntSwitch, CustomSelectField, RequiredTextField } from '../../styles/CssStyled';
-import '../../styles/style.css'
+import { AntSwitch, RequiredTextField } from '../../styles/CssStyled';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
+import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import '../../styles/style.css'
 
 // interface FormErrors {
 //   [key: string]: string;
@@ -41,7 +43,11 @@ type FormErrors = {
   country?: string[];
   language?: string[];
   do_not_call?: string[];
-  address?: string[];
+  address_line?: string[];
+  street?: string[];
+  city?: string[];
+  state?: string[];
+  postcode?: string[];
   description?: string[];
   linked_in_url?: string[];
   facebook_url?: string[];
@@ -55,6 +61,8 @@ type FormErrors = {
 function AddContacts() {
   const navigate = useNavigate()
   const { state } = useLocation()
+  const { quill, quillRef } = useQuill();
+  const initialContentRef = useRef(null);
   // const currentPage = new URLSearchParams(location.search).get('page')
 
   // useEffect(() => {
@@ -77,7 +85,7 @@ function AddContacts() {
     language: '',
     do_not_call: false,
     department: '',
-    address: '',
+    address_line: '',
     street: '',
     city: '',
     state: '',
@@ -98,157 +106,31 @@ function AddContacts() {
     mobile_number: '',
     secondary_number: ''
   });
-  // organization: '',
-  //   title: '',
-  //   language: '',
-  //   department: '',
-  //   twitter_username: ''
-  const [imgData, setImgData] = useState([])
-  const [logot, setLogot] = useState(false)
-  const [logo, setLogo] = useState([])
-  const [checked, setChecked] = useState(false)
-  // const [firstNameMsg, setFirstNameMsg] = useState('')
-  // const [lastNameMsg, setLastNameMsg] = useState('')
-  // const [emailMsg, setEmailMsg] = useState('')
-  // const [secondMailMsg, setSecondEmailMsg] = useState('')
-  // const [phoneNumberMsg, setSecondEmailMsg] = useState('')
-  // const [personName, setPersonName] = useState([])
-  // const classes = useStyles()
-  // const navigate = useNavigate()
-  // const { state } = useLocation()
-  // const textFieldClasses = textFieldStyled()
-  // const theme = useTheme()
 
-  // const handleChange = (target: any, key: any) => {
-  //   if (target.name === 'assign_to') {
-  //     const newKey = []
-  //     newKey.push((key.key).replace(/[^0-9]/g, '', '$'))
-  //     val.assigned_to = JSON.stringify(newKey)
-  //     setAssignTo(target.value)
-  //   } else if (target.name === 'status') {
-  //     val.status = target.value
-  //     setStatus(target.value)
-  //   } else if (target.name === 'source') {
-  //     val.source = target.value
-  //     setSource(target.value)
-  //   } else if (target.name === 'industry') {
-  //     val.industry = target.value
-  //   } else if (target.name === 'do_not_call') {
-  //     setChecked(target.checked)
-  //     val.do_not_call = !checked
-  //   }
-  // }
+  useEffect(() => {
+    if (quill) {
+      // Save the initial state (HTML content) of the Quill editor
+      initialContentRef.current = quillRef.current.firstChild.innerHTML;
+    }
+  }, [quill]);
 
-  // const tagsHandle = (event: any, value: any) => {
-  //   val.tags = JSON.stringify(value)
-  // }
+  // useEffect(() => {
+  //   if (quill) {
+  //     // quill.on('text-change', (delta: any, oldDelta: any, source: any) => {
+  //     quill.on('text-change', () => {
+  //       setFormData({ ...formData, description: quillRef.current.firstChild.innerHTML });
+  //       // console.log('Text change!');
+  //       // console.log(quill.getText()); // Get text only
+  //       // console.log(quill.getContents()); // Get delta contents
+  //       // console.log(quill.root.innerHTML); // Get innerHTML using quill
+  //       // console.log(quillRef.current.firstChild.innerHTML); // Get innerHTML using quillRef
+  //     });
+  //   }
+  // }, [quill]);
 
-  // const contactHandle = (event, value) => {
-  //   val.contacts = JSON.stringify(value)  
-  // }
-
-  // const changeHandler = (event: any) => {
-  //   if (event.target.files[0]) {
-  //     setLogo(event.target.files[0])
-  //     const reader = new FileReader()
-  //     reader.addEventListener('load', () => {
-  //       // setImgData(reader?.result)
-  //       setLogot(true)
-  //     })
-  //     val.lead_attachment = event.target.files[0]
-  //   }
-  // }
-
-  // const assignToHandle = (event:any, value:any) => {
-  //   const newKey = []
-  //   const stringVal = ''
-  //   value.map((item:any) => {
-  //     return stringVal === newKey.push(item.id.toString())
-  //   })
-  //   val.assigned_to = JSON.stringify(newKey)
-  // }
-  // const validatation = () => {
-  //   let flag = true
-  //   if (!(Object.prototype.hasOwnProperty.call(val, 'salutation')) || val.title === '') {
-  //     flag = false
-  //     setError('*required  field')
-  //     setMsg('salutation')
-  //   } else if (!(Object.prototype.hasOwnProperty.call(val, 'first_name')) || val.opportunity_amount === '') {
-  //     flag = false
-  //     setError('*required field')
-  //     setMsg('first_name')
-  //   } else if (!(Object.prototype.hasOwnProperty.call(val, 'last_name')) || val.first_name === '') {
-  //     setError('*required field')
-  //     setMsg('last_name')
-  //     flag = false
-  //   } else if (!(Object.prototype.hasOwnProperty.call(val, 'title')) || val.first_name === '') {
-  //     setError('*required field')
-  //     setMsg('title')
-  //     flag = false
-  //   } else if ((Object.prototype.hasOwnProperty.call(val, 'primary_email'))) {
-  //     const validEmail = isEmail(val.primary_email)
-  //     if (validEmail === false) {
-  //       setError('*email is not valid')
-  //       setMsg('primary_email')
-  //       flag = false
-  //     }
-  //   } else if ((Object.prototype.hasOwnProperty.call(val, 'secondary_email'))) {
-  //     const validEmail = isEmail(val.secondary_email)
-  //     if (validEmail === false) {
-  //       setError('*email is not valid')
-  //       setMsg('secondary_email')
-  //       flag = false
-  //     }
-  //   } else if (!(Object.prototype.hasOwnProperty.call(val, 'address_line')) || val.address_line === '') {
-  //     setError('*required address field')
-  //     setMsg('address_line')
-  //     flag = false
-  //   } else {
-  //     setError('')
-  //     setMsg('')
-  //   }
-  //   return flag
-  // }
-  // const validation = () => {
-  //   // let errors: Record<string, string> = {};
-  //   let errors = { ...errorMsg };
-  //   if (!(Object.prototype.hasOwnProperty.call(val as any, 'first_name')) || val.first_name === '') {
-  //     setError(true)
-  //     errors.first_name = 'is required'
-  //   }
-  //   if (!(Object.prototype.hasOwnProperty.call(val as any, 'last_name')) || val.last_name === '') {
-  //     setError(true)
-  //     errors.last_name = 'is required'
-  //   }
-  //   if (!(Object.prototype.hasOwnProperty.call(val as any, 'primary_email')) || val.primary_email === '') {
-  //     setError(true)
-  //     errors.primary_email = 'is required'
-  //   }
-  //   if (!(Object.prototype.hasOwnProperty.call(val as any, 'mobile_number')) || val.mobile_number === '') {
-  //     setError(true)
-  //     errors.mobile_number = 'is required'
-  //   }
-  //   console.log(errors, 'val')
-  //   // if(errors){
-  //   //   return setErrorMsg({})  
-  //   // }
-  //   return setErrorMsg(errors)
-  // }
-  // const validate = (values:any) => {
-  //   let errors = {};
-
-  //   // Add your validation logic here
-  //   // Example: Check if the 'salutation' field is empty
-  //   if (!values.salutation) {
-  //     errors.salutation = 'Salutation is required';
-  //   }
-
-  //   // Add more validation rules for other fields
-
-  //   return errors;
-  // };
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
   const handleChange = (e: any) => {
-    const { name, value, files, type, checked } = e.target;
+    const { name, value, type, checked } = e.target;
     // if (name === 'file') {
     //   setFormData({ ...formData, file: files[0] });
     // }
@@ -264,40 +146,25 @@ function AddContacts() {
     // setFormData({ ...formData, [name]: newValue });
   };
 
+
+  const resetQuillToInitialState = () => {
+    // Reset the Quill editor to its initial state
+    setFormData({ ...formData, description: '' })
+    if (quill && initialContentRef.current !== null) {
+      quill.clipboard.dangerouslyPasteHTML(initialContentRef.current);
+    }
+  };
+
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    submitForm();
-    // let checkErrors: Record<string, string> = {};
-    // if (!formData.first_name) {
-    //   checkErrors = { ...checkErrors, first_name: 'First name is required' };
-    // }
-    // if (!formData.last_name) {
-    //   checkErrors = { ...checkErrors, last_name: 'Last name is required' };
-    // }
-
-    // if (!formData.primary_email) {
-    //   checkErrors = { ...checkErrors, primary_email: 'Email is required' };
-    // } else if (!isValidEmail(formData.primary_email)) {
-    //   checkErrors = { ...checkErrors, primary_email: 'Invalid email format' };
-    // }
-
-    // if (!formData.mobile_number) {
-    //   checkErrors = { ...checkErrors, mobile_number: 'Phone number is required' };
-    // } else if (!isValidPhoneNumber(formData.mobile_number)) {
-    //   checkErrors = { ...checkErrors, mobile_number: 'Invalid format, please start with +91' };
-    // }
-    // if (!formData.secondary_number) {
-    //   checkErrors = { ...checkErrors, secondary_number: 'Phone number is required' };
-    // } else if (!isValidPhoneNumber(formData.secondary_number)) {
-    //   checkErrors = { ...checkErrors, secondary_number: 'Invalid format, please start with +91' };
-    // }
-    // if (Object.keys(checkErrors).length === 0) {
-
-    //   submitForm();
+    // if (quill) {
+    //   if (quillRef.current.firstChild.innerHTML !== "" && quillRef.current.firstChild.innerHTML === formData.description) {
+    //     submitForm();
+    //   } else
+    //     onDescriptionChange(quillRef.current.firstChild.innerHTML)
     // } else {
-    //   setValidationErrors(checkErrors as any);
+    submitForm();
     // }
-
   };
 
   const isValidEmail = (email: any) => {
@@ -309,7 +176,7 @@ function AddContacts() {
   };
 
   const submitForm = () => {
-    // console.log('Form data:', data);
+    console.log(formData.description, 'des')
     const data = {
       salutation: formData.salutation,
       first_name: formData.first_name,
@@ -324,7 +191,10 @@ function AddContacts() {
       country: formData.country,
       language: formData.language,
       do_not_call: formData.do_not_call,
-      address: formData.address,
+      address_line: formData.address_line,
+      street: formData.street,
+      city: formData.city,
+      state: formData.state,
       description: formData.description,
       linked_in_url: formData.linked_in_url,
       facebook_url: formData.facebook_url,
@@ -362,7 +232,7 @@ function AddContacts() {
       language: '',
       do_not_call: false,
       department: '',
-      address: '',
+      address_line: '',
       street: '',
       city: '',
       state: '',
@@ -385,13 +255,14 @@ function AddContacts() {
   const onCancel = () => {
     resetForm()
   }
+
   // console.log(errors, 'err')
   return (
     <Box sx={{ mt: '60px' }}>
       <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} onCancel={onCancel} onSubmit={handleSubmit} />
       <Box sx={{ mt: "120px" }}>
         <form onSubmit={handleSubmit}>
-          {/* lead details */}
+          {/* contact details */}
           <div style={{ padding: '10px' }}>
             <div className='leadContainer'>
               <Accordion style={{ width: '98%' }}
@@ -568,10 +439,19 @@ function AddContacts() {
                       </div>
                       <div className='fieldSubContainer'>
                         <div className='fieldTitle'>Do Not Call</div>
+                        {/* <FormControlLabel
+                          control={<AntSwitch
+                            name='do_not_call'
+                            checked={formData.do_not_call}
+                            onChange={handleChange}
+                            sx={{ mt: '1%' }}
+                          />}
+                        /> */}
                         <AntSwitch
                           name='do_not_call'
                           checked={formData.do_not_call}
-                          onChange={handleChange}
+                          // onChange={handleChange}
+                          onChange={(e: any) => { setFormData((prevData) => ({ ...prevData, do_not_call: e.target.checked })) }}
                           sx={{ mt: '1%' }}
                         />
                       </div>
@@ -593,21 +473,75 @@ function AddContacts() {
                   <Box
                     sx={{ width: '98%', color: '#1A3353', mb: 1 }}
                     component='form'
-                  // noValidate
-                  // autoComplete='off'
                   >
                     <div className='fieldContainer'>
                       <div className='fieldSubContainer'>
-                        <div className='fieldTitle'>Address Lane</div>
-                        <TextField
+                        <div className='fieldTitle'>Billing Address</div>
+                        <RequiredTextField
                           required
-                          name='address'
-                          value={formData.address}
+                          name='address_line'
+                          value={formData.address_line}
                           onChange={handleChange}
                           style={{ width: '70%' }}
                           size='small'
-                          error={!!errors?.address?.[0]}
-                          helperText={errors?.address?.[0] ? errors?.address[0] : ''}
+                          error={!!errors?.address_line?.[0]}
+                          helperText={errors?.address_line?.[0] ? errors?.address_line[0] : ''}
+                        />
+                      </div>
+                      <div className='fieldSubContainer'>
+                        <div className='fieldTitle'>Street</div>
+                        <TextField
+                          name='street'
+                          value={formData.street}
+                          onChange={handleChange}
+                          style={{ width: '70%' }}
+                          size='small'
+                          required
+                          error={!!errors?.street?.[0]}
+                          helperText={errors?.street?.[0] ? errors?.street[0] : ''}
+                        />
+                      </div>
+                    </div>
+                    <div className='fieldContainer2'>
+                      <div className='fieldSubContainer'>
+                        <div className='fieldTitle'>City</div>
+                        <TextField
+                          name='city'
+                          value={formData.city}
+                          onChange={handleChange}
+                          style={{ width: '70%' }}
+                          size='small'
+                          required
+                          error={!!errors?.city?.[0]}
+                          helperText={errors?.city?.[0] ? errors?.city[0] : ''}
+                        />
+                      </div>
+                      <div className='fieldSubContainer'>
+                        <div className='fieldTitle'>State</div>
+                        <TextField
+                          name='state'
+                          value={formData.state}
+                          onChange={handleChange}
+                          style={{ width: '70%' }}
+                          size='small'
+                          required
+                          error={!!errors?.state?.[0]}
+                          helperText={errors?.state?.[0] ? errors?.state[0] : ''}
+                        />
+                      </div>
+                    </div>
+                    <div className='fieldContainer2'>
+                      <div className='fieldSubContainer'>
+                        <div className='fieldTitle'>Postcode</div>
+                        <TextField
+                          name='postcode'
+                          value={formData.postcode}
+                          onChange={handleChange}
+                          style={{ width: '70%' }}
+                          size='small'
+                          required
+                          error={!!errors?.postcode?.[0]}
+                          helperText={errors?.postcode?.[0] ? errors?.postcode[0] : ''}
                         />
                       </div>
                       <div className='fieldSubContainer'>
@@ -681,9 +615,8 @@ function AddContacts() {
                     autoComplete='off'
                   >
                     <div className='DescriptionDetail'>
-                      <div className='descriptionSubContainer'>
-                        <div className='descriptionTitle'>Description</div>
-                        <TextareaAutosize
+                      <div className='descriptionTitle'>Description</div>
+                      {/* <TextareaAutosize
                           aria-label='minimum height'
                           name='description'
                           minRows={8}
@@ -692,10 +625,34 @@ function AddContacts() {
                           style={{ width: '80%', padding: '5px' }}
                           placeholder='Add Description'
                         // error={error && !!errors?.description?.[0]}
-                        // helperText={error && errors?.description?.[0] ? errors?.description[0] : ''}
-                        />
+                        // helperText={error && errors?.description?.[0] ? errors?.d   escription[0] : ''}
+                        /> */}
+                      <div style={{ width: '100%', marginBottom: '3%' }}>
+                        <div ref={quillRef} />
                       </div>
                     </div>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', mt: 1.5 }}>
+                      <Button
+                        className='header-button'
+                        onClick={resetQuillToInitialState}
+                        size='small'
+                        variant='contained'
+                        startIcon={<FaTimesCircle style={{ fill: 'white', width: '16px', marginLeft: '2px' }} />}
+                        sx={{ backgroundColor: '#2b5075', ':hover': { backgroundColor: '#1e3750' } }}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        className='header-button'
+                        onClick={() => setFormData({ ...formData, description: quillRef.current.firstChild.innerHTML })}
+                        variant='contained'
+                        size='small'
+                        startIcon={<FaCheckCircle style={{ fill: 'white', width: '16px', marginLeft: '2px' }} />}
+                        sx={{ ml: 1 }}
+                      >
+                        Save
+                      </Button>
+                    </Box>
                   </Box>
                 </AccordionDetails>
               </Accordion>

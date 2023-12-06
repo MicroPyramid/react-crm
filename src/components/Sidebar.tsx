@@ -1,46 +1,44 @@
 
 import React, { useState, useEffect } from 'react';
-import { AppBar, Avatar, Box, CssBaseline, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Popover, Toolbar, Tooltip, Typography } from '@mui/material';
+import { AppBar, Avatar, Box, Drawer, IconButton, List, ListItem, ListItemIcon, Popover, Toolbar, Tooltip, Typography } from '@mui/material';
 import { FaAddressBook, FaBars, FaBriefcase, FaBuilding, FaChartLine, FaCog, FaDiceD6, FaHandshake, FaIndustry, FaSignOutAlt, FaTachometerAlt, FaUserFriends, FaUsers } from "react-icons/fa";
-import LeadList from '../pages/leads/Leads';
-import { Navigate, redirect, Route, Router, Routes, useLocation, useNavigate } from 'react-router-dom';
-import AddContacts from '../pages/contacts/AddContacts';
-import LeadDetails from '../pages/leads/LeadDetails';
-import Contacts from '../pages/contacts/Contacts';
-import ContactDetails from '../pages/contacts/ContactDetails';
-import Users from '../pages/users/Users';
-import Opportunities from '../pages/opportunities/Opportunities';
-import Cases from '../pages/cases/Cases';
-import logo from '../assets/images/auth/img_logo.png';
-import { AddLeads } from '../pages/leads/AddLeads';
-import Accounts from '../pages/accounts/Accounts';
-import { AddAccount } from '../pages/accounts/AddAccount';
-import { AccountDetails } from '../pages/accounts/AccountDetails';
-import { AddUsers } from '../pages/users/AddUsers';
-import { AddOpportunity } from '../pages/opportunities/AddOpportunity';
-import { OpportunityDetails } from '../pages/opportunities/OpportunityDetails';
-import { AddCase } from '../pages/cases/AddCase';
-import { css } from '@emotion/css';
-import { StyledListItemButton, StyledListItemText } from '../styles/CssStyled';
-// import MyContext, { MyContextData } from '../context/Context';
-import MyContext from '../context/Context';
-import { Home } from '../pages/home/Home';
-import EditContact from '../pages/contacts/EditContacts';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { fetchData } from './FetchData';
 import { ProfileUrl } from '../services/ApiUrls';
+import { Header1 } from './FetchData';
 import OrganizationModal from '../pages/organization/OrganizationModal';
-import { EditUser } from '../pages/users/EditUser';
 import Company from '../pages/company/Company';
 import AddCompany from '../pages/company/AddCompany';
 import CompanyDetails from '../pages/company/CompanyDetails';
 import EditCompany from '../pages/company/EditCompany';
+import Leads from '../pages/leads/Leads';
+import AddContacts from '../pages/contacts/AddContacts';
 import { EditLead } from '../pages/leads/EditLead';
-import UserDetails from '../pages/users/UserDetails';
+import LeadDetails from '../pages/leads/LeadDetails';
+import Contacts from '../pages/contacts/Contacts';
+import EditContact from '../pages/contacts/EditContacts';
+import ContactDetails from '../pages/contacts/ContactDetails';
+import Users from '../pages/users/Users';
+import Opportunities from '../pages/opportunities/Opportunities';
+import Cases from '../pages/cases/Cases';
+import { AddLeads } from '../pages/leads/AddLeads';
+import Accounts from '../pages/accounts/Accounts';
+import { AddAccount } from '../pages/accounts/AddAccount';
 import { EditAccount } from '../pages/accounts/EditAccount';
+import { AccountDetails } from '../pages/accounts/AccountDetails';
+import { AddUsers } from '../pages/users/AddUsers';
+import { EditUser } from '../pages/users/EditUser';
+import UserDetails from '../pages/users/UserDetails';
+import { AddOpportunity } from '../pages/opportunities/AddOpportunity';
 import { EditOpportunity } from '../pages/opportunities/EditOpportunity';
-import { CaseDetails } from '../pages/cases/CaseDetails';
+import { OpportunityDetails } from '../pages/opportunities/OpportunityDetails';
+import { AddCase } from '../pages/cases/AddCase';
 import { EditCase } from '../pages/cases/EditCase';
-
+import { CaseDetails } from '../pages/cases/CaseDetails';
+import logo from '../assets/images/auth/img_logo.png';
+import { StyledListItemButton, StyledListItemText } from '../styles/CssStyled';
+// import MyContext, { MyContextData } from '../context/Context';
+import MyContext from '../context/Context';
 
 // declare global {
 //     interface Window {
@@ -52,8 +50,6 @@ export default function Sidebar(props: any) {
     const navigate = useNavigate()
     const location = useLocation()
     const [screen, setScreen] = useState('contacts')
-    const [module, setModule] = useState([])
-    // const [login, setLogin] = useState(true)
     const [drawerWidth, setDrawerWidth] = useState(200)
     const [headerWidth, setHeaderWidth] = useState(drawerWidth)
     const [userDetail, setUserDetail] = useState('')
@@ -63,6 +59,7 @@ export default function Sidebar(props: any) {
     useEffect(() => {
         toggleScreen()
     }, [navigate])
+
     // useEffect(() => {
     // navigate('/leads')
     // if (localStorage.getItem('Token') && localStorage.getItem('org')) {
@@ -79,10 +76,10 @@ export default function Sidebar(props: any) {
     // }, [])
     const toggleScreen = () => {
         // console.log(location.pathname.split('/'), 'll')
-        if (location.pathname.split('/')[1] === '' || location.pathname.split('/')[1] === undefined || location.pathname.split('/')[2] === 'contacts') {
-            setScreen('contacts')
-        } else if (location.pathname.split('/')[2] === 'leads') {
+        if (location.pathname.split('/')[1] === '' || location.pathname.split('/')[1] === undefined || location.pathname.split('/')[2] === 'leads') {
             setScreen('leads')
+        } else if (location.pathname.split('/')[2] === 'contacts') {
+            setScreen('contacts')
         } else if (location.pathname.split('/')[2] === 'opportunities') {
             setScreen('opportunities')
         } else if (location.pathname.split('/')[2] === 'accounts') {
@@ -96,18 +93,12 @@ export default function Sidebar(props: any) {
         }
     }
 
-    useEffect(() => {
-        userProfile()
-    }, [])
-
-    const headers = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: localStorage.getItem('Token')
-    }
+    // useEffect(() => {
+    //     userProfile()
+    // }, [])
 
     const userProfile = () => {
-        fetchData(`${ProfileUrl}/`, 'GET', null as any, headers)
+        fetchData(`${ProfileUrl}/`, 'GET', null as any, Header1)
             .then((res: any) => {
                 // console.log(res, 'user')
                 if (res?.user_obj) {
@@ -146,6 +137,7 @@ export default function Sidebar(props: any) {
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        userProfile();
         setAnchorEl(event.currentTarget);
     };
 
@@ -156,6 +148,7 @@ export default function Sidebar(props: any) {
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
     // console.log(screen, 'sidebar');
+    const context = { drawerWidth: drawerWidth, screen: screen }
     return (
         <>
             <Box>
@@ -168,7 +161,7 @@ export default function Sidebar(props: any) {
                         flexDirection: 'row',
                         justifyContent: 'space-between',
                         // boxShadow: 'none',
-                        // borderBottom: `0.5px solid gray`
+                        // borderBottom: `0.5px solid #0000001f`
                         boxShadow: '1px'
                     }}
                 >
@@ -180,7 +173,6 @@ export default function Sidebar(props: any) {
                             </IconButton>
                             <Typography sx={{ fontWeight: 'bold', color: 'black', ml: '20px', textTransform: 'capitalize', fontSize: '20px', mt: '5px' }}>
                                 {screen}
-                                {/* Bottle-CRM */}
                             </Typography>
                         </Toolbar>
                     </Box>
@@ -193,11 +185,8 @@ export default function Sidebar(props: any) {
                         {/* <IconButton onClick={userProfile} sx={{ mr: 2 }}><FaCog /></IconButton> */}
                         <IconButton onClick={handleClick} sx={{ mr: 3 }}>
                             <Avatar
-                                src='hj'
-                                sx={{
-                                    height: '27px',
-                                    width: '27px'
-                                }}
+                                // src='hj'
+                                sx={{ height: '27px', width: '27px' }}
                             />
                         </IconButton>
                         <Popover
@@ -271,14 +260,12 @@ export default function Sidebar(props: any) {
                     </Box>
 
                 </Drawer>
-                <MyContext.Provider value={drawerWidth}>
+                <MyContext.Provider value={context}>
 
                     {/* <Box sx={{ width: drawerWidth === 60 ? '1380px' : '1240px', ml: drawerWidth === 60 ? '60px' : '200px', overflowX: 'hidden' }}> */}
                     <Box sx={{ width: 'auto', ml: drawerWidth === 60 ? '60px' : '200px', overflowX: 'hidden' }}>
                         {/* {location.pathname.split('/')[1] === '' && <Contacts />}
                 {location.pathname.split('/')[1] === 'contacts' && <Contacts />}
-                {location.pathname.split('/')[2] === 'add-contacts' && <AddContacts />}
-                {location.pathname.split('/')[1] === 'leads' && <LeadList />}
                 {location.pathname.split('/')[2] === 'add-leads' && <AddLeads />} */}
                         {/* {location.pathname === 'leads' && <LeadList />}
                         {screen === 'contacts' && <Contacts />} */}
@@ -286,9 +273,9 @@ export default function Sidebar(props: any) {
                             <Route index element={<Navigate to="/contacts" replace />} />
                             </Routes> */}
                         <Routes>
-                            <Route index element={<Contacts />} />
+                            <Route index element={<Leads />} />
                             {/* <Route path='/' element={<Contacts />} /> */}
-                            <Route path='/app/leads' element={<LeadList />} />
+                            <Route path='/app/leads' element={<Leads />} />
                             <Route path='/app/leads/add-leads' element={<AddLeads />} />
                             <Route path='/app/leads/edit-lead' element={<EditLead />} />
                             <Route path='/app/leads/lead-details' element={<LeadDetails />} />
@@ -317,11 +304,6 @@ export default function Sidebar(props: any) {
                             <Route path='/app/cases/edit-case' element={<EditCase />} />
                             <Route path='/app/cases/case-details' element={<CaseDetails />} />
                         </Routes>
-                        {/* <Route path='/cases/add-cases' element={<AddCases />} />
-                            <Route path='/cases/cases-details' element={<CasesDetails />} />
-                            <Route path='/analytics' element={<Analytics />} /> */}
-
-
                     </Box>
                 </MyContext.Provider>
                 <OrganizationModal

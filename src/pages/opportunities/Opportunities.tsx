@@ -126,31 +126,38 @@ export default function Opportunities(props: any) {
 
   useEffect(() => {
     getOpportunities()
-  }, [])
+  }, [currentPage, recordsPerPage]);
 
-  const getOpportunities = () => {
-    fetchData(`${OpportunityUrl}/`, 'GET', null as any, Header)
-      .then((res) => {
-        console.log(res, 'Opportunity')
-        if (!res.error) {
-          setOpportunities(res?.opportunities)
-          // setOpenOpportunities(res?.open_leads?.open_leads)
-          // setOpenOpportunitiesCount(res?.open_leads?.leads_count)
-          // setClosedOpportunities(res?.close_leads?.close_leads)
-          // setClosedOpportunitiesCount(res?.close_leads?.leads_count)
-          setContacts(res?.contacts_list)
-          setAccount(res?.accounts_list)
-          setCurrency(res?.currency)
-          setLeadSource(res?.lead_source)
-          setStage(res?.stage)
-          setTags(res?.tags)
-          setTeams(res?.teams)
-          setUsers(res?.users)
-          setCountries(res?.countries)
-          setLoading(false)
-        }
-      })
-
+  const getOpportunities = async () => {
+    try {
+      const offset = (currentPage - 1) * recordsPerPage;
+      await fetchData(`${OpportunityUrl}/?offset=${offset}&limit=${recordsPerPage}`, 'GET', null as any, Header)
+        // fetchData(`${OpportunityUrl}/`, 'GET', null as any, Header)
+        .then((res) => {
+          // console.log(res, 'Opportunity')
+          if (!res.error) {
+            setOpportunities(res?.opportunities)
+            // setOpenOpportunities(res?.open_leads?.open_leads)
+            // setOpenOpportunitiesCount(res?.open_leads?.leads_count)
+            // setClosedOpportunities(res?.close_leads?.close_leads)
+            // setClosedOpportunitiesCount(res?.close_leads?.leads_count)
+            setTotalPages(Math.ceil(res?.opportunities_count / recordsPerPage));
+            setContacts(res?.contacts_list)
+            setAccount(res?.accounts_list)
+            setCurrency(res?.currency)
+            setLeadSource(res?.lead_source)
+            setStage(res?.stage)
+            setTags(res?.tags)
+            setTeams(res?.teams)
+            setUsers(res?.users)
+            setCountries(res?.countries)
+            setLoading(false)
+          }
+        })
+    }
+    catch (error) {
+      console.error('Error fetching data:', error);
+    }
   }
 
   const handleChangeTab = (e: SyntheticEvent, val: any) => {
@@ -210,7 +217,21 @@ export default function Opportunities(props: any) {
       .catch(() => {
       })
   }
+  const handlePreviousPage = () => {
+    setLoading(true)
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
 
+  const handleNextPage = () => {
+    setLoading(true)
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+  };
+
+  const handleRecordsPerPage = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setLoading(true)
+    setRecordsPerPage(parseInt(event.target.value));
+    setCurrentPage(1);
+  };
   // const handleSelectAllClick = () => {
   //   if (tab === 'open') {
   //     if (selected.length === openOpportunities.length) {
@@ -284,7 +305,7 @@ export default function Opportunities(props: any) {
         <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
           <Select
             value={recordsPerPage}
-            onChange={(e: any) => setRecordsPerPage(e.target.value)}
+            onChange={(e: any) => handleRecordsPerPage(e)}
             open={selectOpen}
             onOpen={() => setSelectOpen(true)}
             onClose={() => setSelectOpen(false)}
@@ -306,18 +327,15 @@ export default function Opportunities(props: any) {
             ))}
           </Select>
           <Box sx={{ borderRadius: '7px', backgroundColor: 'white', height: '40px', minHeight: '40px', maxHeight: '40px', display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 1, p: '0px' }}>
-            <FabLeft>
-              <FiChevronLeft
-                //  onClick={previous}
-                style={{ height: '15px' }}
-              />
+            <FabLeft onClick={handlePreviousPage} disabled={currentPage === 1}>
+              <FiChevronLeft style={{ height: '15px' }} />
             </FabLeft>
             <Typography sx={{ mt: 0, textTransform: 'lowercase', fontSize: '15px', color: '#1A3353', textAlign: 'center' }}>
-              0 to 1
+              {currentPage} to {totalPages}
+              {/* {renderPageNumbers()} */}
             </Typography>
-            <FabRight>
-              <FiChevronRight
-                style={{ height: '15px' }} />
+            <FabRight onClick={handleNextPage} disabled={currentPage === totalPages}>
+              <FiChevronRight style={{ height: '15px' }} />
             </FabRight>
           </Box>
           <Button
@@ -371,17 +389,17 @@ export default function Opportunities(props: any) {
                 <TableBody>
                   {
                     opportunities?.length > 0
-                      ? stableSort(opportunities, getComparator(order, orderBy))
-                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => {
-                          const labelId = `enhanced-table-checkbox-${index}`
-                          const rowIndex = selectedId.indexOf(item.id);
-                          return (
-                            <TableRow
-                              tabIndex={-1}
-                              key={index}
-                              sx={{ border: 0, '&:nth-of-type(even)': { backgroundColor: 'whitesmoke' }, color: 'rgb(26, 51, 83)', textTransform: 'capitalize' }}
-                            >
-                              {/* <TableCell
+                      ? stableSort(opportunities, getComparator(order, orderBy)).map((item: any, index: any) => {
+                        // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => {
+                        const labelId = `enhanced-table-checkbox-${index}`
+                        const rowIndex = selectedId.indexOf(item.id);
+                        return (
+                          <TableRow
+                            tabIndex={-1}
+                            key={index}
+                            sx={{ border: 0, '&:nth-of-type(even)': { backgroundColor: 'whitesmoke' }, color: 'rgb(26, 51, 83)', textTransform: 'capitalize' }}
+                          >
+                            {/* <TableCell
                                                                     padding='checkbox'
                                                                     sx={{ border: 0, color: 'inherit' }}
                                                                     align='left'
@@ -395,49 +413,49 @@ export default function Opportunities(props: any) {
                                                                         sx={{ border: 0, color: 'inherit' }}
                                                                     />
                                                                 </TableCell> */}
-                              <TableCell
-                                className='tableCell-link'
-                                onClick={() => opportunityDetail(item.id)}
-                              >
-                                {item?.name ? item?.name : '---'}
-                              </TableCell>
-                              <TableCell className='tableCell'>
-                                {item?.account ? item?.account?.name : '---'}
-                              </TableCell>
-                              <TableCell className='tableCell'>
-                                {item?.assigned_to ? <Avatar src={item?.assigned_to} alt={item?.assigned_to} /> : '----'}
-                                {/* <Stack style={{ display: 'flex', flexDirection: 'row', alignItems: "center" }}>
+                            <TableCell
+                              className='tableCell-link'
+                              onClick={() => opportunityDetail(item.id)}
+                            >
+                              {item?.name ? item?.name : '---'}
+                            </TableCell>
+                            <TableCell className='tableCell'>
+                              {item?.account ? item?.account?.name : '---'}
+                            </TableCell>
+                            <TableCell className='tableCell'>
+                              {item?.assigned_to ? <Avatar src={item?.assigned_to} alt={item?.assigned_to} /> : '----'}
+                              {/* <Stack style={{ display: 'flex', flexDirection: 'row', alignItems: "center" }}>
                                   <Avatar src={item?.lead?.created_by?.profile_pic} alt={item?.lead?.created_by?.email} /><Stack sx={{ ml: 1 }}>{item?.lead?.account_name ? item?.lead?.account_name : '---'}</Stack>
                                 </Stack> */}
-                              </TableCell>
-                              <TableCell className='tableCell'>
-                                {item?.stage ? item?.stage : '---'}
-                              </TableCell>
-                              <TableCell className='tableCell'>
-                                {item?.created_on_arrow ? item?.created_on_arrow : '---'}
-                              </TableCell>
-                              <TableCell className='tableCell'>
-                                {item?.tags?.length ? item?.tags.map((tag: any, i: any) => <Stack sx={{ mr: 0.5 }}> <Label tags={tag} /></Stack>) : '---'}
-                              </TableCell>
-                              <TableCell className='tableCell'>
-                                {item?.lead_source ? item?.lead_source : '---'}
-                              </TableCell>
-                              <TableCell className='tableCell'>
-                                {/* <IconButton>
+                            </TableCell>
+                            <TableCell className='tableCell'>
+                              {item?.stage ? item?.stage : '---'}
+                            </TableCell>
+                            <TableCell className='tableCell'>
+                              {item?.created_on_arrow ? item?.created_on_arrow : '---'}
+                            </TableCell>
+                            <TableCell className='tableCell'>
+                              {item?.tags?.length ? item?.tags.map((tag: any, i: any) => <Stack sx={{ mr: 0.5 }}> <Label tags={tag} /></Stack>) : '---'}
+                            </TableCell>
+                            <TableCell className='tableCell'>
+                              {item?.lead_source ? item?.lead_source : '---'}
+                            </TableCell>
+                            <TableCell className='tableCell'>
+                              {/* <IconButton>
                                                                         <FaEdit
                                                                             onClick={() => EditItem(item?.id)}
                                                                             style={{ fill: '#1A3353', cursor: 'pointer', width: '18px' }}
                                                                         />
                                                                     </IconButton> */}
-                                <IconButton>
-                                  <FaTrashAlt
-                                    onClick={() => deleteRow(item?.id)}
-                                    style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }} />
-                                </IconButton>
-                              </TableCell>
-                            </TableRow>
-                          )
-                        })
+                              <IconButton>
+                                <FaTrashAlt
+                                  onClick={() => deleteRow(item?.id)}
+                                  style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }} />
+                              </IconButton>
+                            </TableCell>
+                          </TableRow>
+                        )
+                      })
                       : <TableRow> <TableCell colSpan={8} sx={{ border: 0 }}><Spinner /></TableCell></TableRow>
                   }
                   {/* {

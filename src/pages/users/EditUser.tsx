@@ -20,7 +20,6 @@ import {
     FormControl,
     FormHelperText
 } from '@mui/material'
-import '../../styles/style.css'
 import { UserUrl } from '../../services/ApiUrls'
 import { fetchData, Header } from '../../components/FetchData'
 import { CustomAppBar } from '../../components/CustomAppBar'
@@ -28,6 +27,7 @@ import { FaArrowDown, FaTimes, FaUpload } from 'react-icons/fa'
 import { AntSwitch, RequiredTextField } from '../../styles/CssStyled'
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown'
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp'
+import '../../styles/style.css'
 
 type FormErrors = {
     email?: string[];

@@ -1,4 +1,4 @@
-import { Box, Button, Card, Stack, Tab, Table, TableBody, TableContainer, TableHead, TablePagination, TableRow, Tabs, Toolbar, Typography, Paper, Select, MenuItem, MenuProps, FormControl, InputLabel, InputBase, styled, TableCell, TableSortLabel, Container } from '@mui/material'
+import { Box, Button, Card, Stack, Tab, Table, TableBody, TableContainer, TableHead, TablePagination, TableRow, Tabs, Toolbar, Typography, Paper, Select, MenuItem, MenuProps, FormControl, InputLabel, InputBase, styled, TableCell, TableSortLabel, Container, Skeleton } from '@mui/material'
 import React, { SyntheticEvent, useEffect, useState } from 'react'
 import { FiPlus } from "@react-icons/all-files/fi/FiPlus";
 import { FiChevronLeft } from "@react-icons/all-files/fi/FiChevronLeft";
@@ -14,7 +14,7 @@ import { DeleteModal } from '../../components/DeleteModal';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { EnhancedTableHead } from '../../components/EnchancedTableHead';
-// import { DialogModal } from './DeleteModal';
+import { useMyContext } from '../../context/Context';
 
 interface HeadCell {
     disablePadding: boolean;
@@ -64,13 +64,10 @@ const headCells: readonly HeadCell[] = [
 
 export default function Contacts() {
     const navigate = useNavigate()
+    // const context = useMyContext();
+
     const [value, setValue] = useState('Open');
     const [loading, setLoading] = useState(true);
-    const [contacts, setContacts] = useState([])
-    const [initial, setInitial] = useState(true)
-    const [valued, setValued] = useState(10)
-    const [isDelete, setIsDelete] = useState(false)
-    const [contact, setContact] = useState('')
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
     const [contactList, setContactList] = useState([])
@@ -84,76 +81,65 @@ export default function Contacts() {
     const [order, setOrder] = useState('asc')
     const [orderBy, setOrderBy] = useState('first_name')
 
-
     const [selectOpen, setSelectOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [recordsPerPage, setRecordsPerPage] = useState<number>(10);
     const [totalPages, setTotalPages] = useState<number>(0);
 
+    // useEffect(() => {
+    //     getContacts()
+    // }, [localStorage.getItem('org')])
 
     useEffect(() => {
-        getContacts()
-    }, [localStorage.getItem('org')])
+        getContacts();
+    }, [currentPage, recordsPerPage]);
 
     // const handleChangeTab = (e: SyntheticEvent, val: any) => {
     //     setValue(val)
     // }
-    const handleChangePage = (event: any, newPage: any) => {
-        setPage(newPage)
-    }
 
-    const handleChangeRowsPerPage = (event: any) => {
-        setRowsPerPage(parseInt(event.target.value, 10))
-        setPage(0)
-        setValued(parseInt(event.target.value, 10))
-    }
-
-    const getContacts = () => {
-        const offset = (currentPage - 1) * recordsPerPage;
-        // ?offset=${offset}&limit=${recordsPerPage}
-        // fetchData(`${ContactUrl}?page=${currentPage}&limit=${recordsPerPage}/`, 'GET', null as any, Header)
-        fetchData(`${ContactUrl}/`, 'GET', null as any, Header)
-            .then((data) => {
-                if (!data.error) {
-                    console.log(data.contact_obj_list, 'contact')
-                    if (initial) {
+    // const fetch2 = () => {
+    //     const headers = new Headers({
+    //         'Accept': 'application/json',
+    //         'Content-Type': 'application/json',
+    //         'Authorization': localStorage.getItem('Token') || '',
+    //         'org': localStorage.getItem('org') || '',
+    //     });
+    //     // fetch(`https://8000-little-dawn-70215372.eu-ws3.runcode.io/api/${ContactUrl}/`, { method: 'GET', headers: headers })
+    //     fetch(`https://8000-little-dawn-70215372.eu-ws3.runcode.io/api/${ContactUrl}/?offset=0&limit=20`, { method: 'GET', headers: headers })
+    //         .then((response) => response.json())
+    //         .then((data) => { console.log(data, 'data') })
+    // }
+    const getContacts = async () => {
+        try {
+            const offset = (currentPage - 1) * recordsPerPage;
+            await fetchData(`${ContactUrl}/?offset=${offset}&limit=${recordsPerPage}`, 'GET', null as any, Header)
+                // fetchData(`${ContactUrl}/`, 'GET', null as any, Header)
+                .then((data) => {
+                    if (!data.error) {
+                        // console.log(data.contact_obj_list, 'contact')
+                        // if (initial) {
                         setContactList(data.contact_obj_list);
                         setCountries(data?.countries)
+                        // setTotalPages(data?.contacts_count)
+                        setTotalPages(Math.ceil(data?.contacts_count / recordsPerPage));
                         setLoading(false)
                         // setTotalPages(Math.ceil(result.total / recordsPerPage));
                         // setInitial(false)
-                    } else {
+                        // } else {
                         // setContactList(Object.assign([], contacts, [data.contact_obj_list]))
-                        setContactList(prevContactList => prevContactList.concat(data.contact_obj_list));
+                        // setContactList(prevContactList => prevContactList.concat(data.contact_obj_list));
                         // setContactList(...contactList,data.contact_obj_list)
-                        setLoading(false)
+                        // setLoading(false)
+                        // }
                     }
-                }
-            })
+                })
+        }
+        catch (error) {
+            console.error('Error fetching data:', error);
+        }
     }
 
-
-
-    //   const getContacts = () => {
-    //     fetchData(`${ContactUrl}/?offset=${value === 'Open' ? openOffset : closeOffset}`, 'GET', null, Header)
-    //       .then((data) => {
-    //         if (!data.error) {
-    //           if (initial) {
-    //             setContacts(...contacts, {
-    //               contactObj: data.contact_obj_list,
-    //               contacts_count: data.contacts_count
-    //             })
-    //             setLoader(false)
-    //             setInitial(false)
-    //           } else {
-    //             setContacts({
-    //               contactObj: data?.contact_obj_list,
-    //               contacts_count: data.contacts_count
-    //             })
-    //           }
-    //         }
-    //       })
-    //   }
     const handleRequestSort = (event: any, property: any) => {
         const isAsc = orderBy === property && order === 'asc'
         setOrder(isAsc ? 'desc' : 'asc')
@@ -163,7 +149,7 @@ export default function Contacts() {
     const DeleteItem = () => {
         fetchData(`${ContactUrl}/${selectedId}/`, 'DELETE', null as any, Header)
             .then((res: any) => {
-                console.log('delete:', res);
+                // console.log('delete:', res);
                 if (!res.error) {
                     deleteRowModalClose()
                     getContacts()
@@ -173,66 +159,50 @@ export default function Contacts() {
             })
     }
 
-    //   const next = () => {
-    //     if (value === 0 && contacts.contacts_count > 0) {
-    //       setOpenOffset(valued)
-    //       setValued(valued + rowsPerPage)
-    //     } else if (value === 1 && contacts.close_opportunities_count > closeOffset + 10) {
-    //       setCloseOffset(closeOffset + 10)
-    //       setCloseValue(closeValue + 10)
-    //     }
-    //   }
-
-    //   const previous = () => {
-    //     if (value === 0 && openOffset > 0) {
-    //       setOpenOffset(openOffset - rowsPerPage)
-    //       setValued(valued - rowsPerPage)
-    //     } else if (value === 1 && closeOffset > 0) {
-    //       setCloseOffset(closeOffset - 10)
-    //       setCloseValue(openValue - 10)
-    //     }
-    //   }
-    // const history = useHistory();
     const handlePreviousPage = () => {
+        setLoading(true)
         setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
     };
 
     const handleNextPage = () => {
+        setLoading(true)
         setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
     };
 
-    const handleRecordsPerPageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const handleRecordsPerPage = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setLoading(true)
         setRecordsPerPage(parseInt(event.target.value));
         setCurrentPage(1);
     };
-    const renderPageNumbers = () => {
-        const pageNumbers = [];
-        if (totalPages <= 1) return null;
-        for (let i = 1; i <= totalPages; i++) {
-            if (
-                i === 1 ||
-                i === totalPages ||
-                (i >= currentPage - 1 && i <= currentPage + 1) ||
-                (i <= 2 && currentPage <= 4) ||
-                (i >= totalPages - 1 && currentPage >= totalPages - 3)
-            ) {
-                pageNumbers.push(
-                    <button
-                        key={i}
-                        onClick={() => setCurrentPage(i)}
-                        className={i === currentPage ? 'active' : ''}
-                    >
-                        {i}
-                    </button>
-                );
-            } else if ((i === 3 && currentPage > 4) || (i === totalPages - 2 && currentPage < totalPages - 3)) {
-                pageNumbers.push(<span key={-i}>...</span>);
-            }
-        }
-        return pageNumbers;
-    };
+    // const renderPageNumbers = () => {
+    //     const pageNumbers = [];
+    //     if (totalPages <= 1) return null;
+    //     for (let i = 1; i <= totalPages; i++) {
+    //         if (
+    //             i === 1 ||
+    //             i === totalPages ||
+    //             (i >= currentPage - 1 && i <= currentPage + 1) ||
+    //             (i <= 2 && currentPage <= 4) ||
+    //             (i >= totalPages - 1 && currentPage >= totalPages - 3)
+    //         ) {
+    //             pageNumbers.push(
+    //                 <button
+    //                     key={i}
+    //                     onClick={() => setCurrentPage(i)}
+    //                     className={i === currentPage ? 'active' : ''}
+    //                 >
+    //                     {i}
+    //                 </button>
+    //             );
+    //         } else if ((i === 3 && currentPage > 4) || (i === totalPages - 2 && currentPage < totalPages - 3)) {
+    //             // Add ellipsis if necessary
+    //             pageNumbers.push(<span key={-i}>...</span>);
+    //         }
+    //     }
+    //     return pageNumbers;
+    // };
 
-    const onAddHandle = () => {
+    const onAddContact = () => {
         if (!loading) {
             navigate('/app/contacts/add-contacts', { state: { countries } })
         }
@@ -256,7 +226,7 @@ export default function Contacts() {
 
     const recordsList = [[10, '10 Records per page'], [20, '20 Records per page'], [30, '30 Records per page'], [40, '40 Records per page'], [50, '50 Records per page']]
     // console.log(contactList, 'cccc')
-
+    // console.log(context, 'cc');
     return (
         <Box sx={{
             mt: '60px'
@@ -277,11 +247,11 @@ export default function Contacts() {
                         }}
                     ></CustomTab>
                 </Tabs> */}
-
                 <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                     <Select
                         value={recordsPerPage}
-                        onChange={(e: any) => setRecordsPerPage(e.target.value)}
+                        // onChange={(e: any) => setRecordsPerPage(e.target.value)}
+                        onChange={(e: any) => handleRecordsPerPage(e)}
                         open={selectOpen}
                         onOpen={() => setSelectOpen(true)}
                         onClose={() => setSelectOpen(false)}
@@ -292,9 +262,7 @@ export default function Contacts() {
                                 {selectOpen ? <FiChevronUp style={{ marginTop: '12px' }} /> : <FiChevronDown style={{ marginTop: '12px' }} />}
                             </div>
                         )}
-                        sx={{
-                            '& .MuiSelect-select': { overflow: 'visible !important' }
-                        }}
+                        sx={{ '& .MuiSelect-select': { overflow: 'visible !important' } }}
                     >
                         {recordsList?.length && recordsList.map((item: any, i: any) => (
                             <MenuItem key={i} value={item[0]} >
@@ -303,24 +271,21 @@ export default function Contacts() {
                         ))}
                     </Select>
                     <Box sx={{ borderRadius: '7px', backgroundColor: 'white', height: '40px', minHeight: '40px', maxHeight: '40px', display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 1, p: '0px' }}>
-                        <FabLeft>
-                            <FiChevronLeft
-                                //  onClick={previous}
-                                style={{ height: '15px' }}
-                            />
+                        <FabLeft onClick={handlePreviousPage} disabled={currentPage === 1}>
+                            <FiChevronLeft style={{ height: '15px' }} />
                         </FabLeft>
                         <Typography sx={{ mt: 0, textTransform: 'lowercase', fontSize: '15px', color: '#1A3353', textAlign: 'center' }}>
-                            0 to 1
+                            {currentPage} to {totalPages}
+                            {/* {renderPageNumbers()} */}
                         </Typography>
-                        <FabRight>
-                            <FiChevronRight
-                                style={{ height: '15px' }} />
+                        <FabRight onClick={handleNextPage} disabled={currentPage === totalPages}>
+                            <FiChevronRight style={{ height: '15px' }} />
                         </FabRight>
                     </Box>
                     <Button
                         variant='contained'
                         startIcon={<FiPlus className='plus-icon' />}
-                        onClick={onAddHandle}
+                        onClick={onAddContact}
                         className={'add-button'}
                     >
                         Add Contact
@@ -359,7 +324,8 @@ export default function Contacts() {
                                         contactList?.length
 
                                             ? stableSort(contactList, getComparator(order, orderBy))
-                                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => {
+                                                // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => {
+                                                .map((item: any, index: any) => {
                                                     return (
                                                         <TableRow
                                                             tabIndex={-1}
@@ -382,7 +348,12 @@ export default function Contacts() {
                                 </TableBody>
                             </Table>
                         </TableContainer>
-                        {loading && <Spinner />}
+                        {loading &&
+                            // <Skeleton variant="rectangular" 
+                            // width={210} height={118} 
+                            // />
+                            <Spinner />
+                        }
                     </Paper>
                 </Box>
             </Container>

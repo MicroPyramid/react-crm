@@ -1,31 +1,16 @@
 
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { styled } from '@mui/material/styles'
-// import { makeStyles } from '@mui/styles'
-import {
-  Avatar,
-  // Divider,
-  IconButton,
-  Typography,
-  CssBaseline,
-  Toolbar,
-  AppBar,
-  Tooltip,
-  Box
-  // Button
-} from '@mui/material'
-import { CustomAppBar } from '../../components/CustomAppBar'
+import { Box } from '@mui/material'
 import Sidebar from '../../components/Sidebar'
 import Organization from '../organization/Organization'
-// const drawerWidth = 240
-
 
 export const Home = (props: any) => {
+  const navigate = useNavigate()
+
   const [open, setOpen] = useState(true)
   const [org, setOrg] = useState(false)
 
-  const navigate = useNavigate()
   // const [localStorageChange, setLocalStorageChange] = useState(false);
 
   // useEffect(() => {
@@ -58,8 +43,6 @@ export const Home = (props: any) => {
   //     navigate('/organization')
   //   }
   // }, [navigate]);
-
-
   return (
     <Box sx={{}}>
       {org ?

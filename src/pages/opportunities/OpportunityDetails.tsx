@@ -360,9 +360,9 @@ export const OpportunityDetails = (props: any) => {
                                         Description
                                     </div>
                                 </div>
-                                <p style={{ fontSize: '16px', color: 'gray', padding: '20px' }}>
-                                    {opportunityDetails?.description || '----'}
-                                </p>
+                                <Box sx={{ p: '15px' }}>
+                                    {opportunityDetails?.description ? <div dangerouslySetInnerHTML={{ __html: opportunityDetails?.description }} /> : '---'}
+                                </Box>
                             </div>
 
                         </Box>

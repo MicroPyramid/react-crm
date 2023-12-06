@@ -16,16 +16,19 @@ import {
     FormHelperText,
     IconButton,
     Select,
-    Divider
+    Divider,
+    Button
 } from '@mui/material'
-import '../../styles/style.css'
-import { AccountsUrl, CasesUrl } from '../../services/ApiUrls'
+import { useQuill } from 'react-quilljs';
+import 'quill/dist/quill.snow.css';
+import { CasesUrl } from '../../services/ApiUrls'
 import { fetchData, Header } from '../../components/FetchData'
 import { CustomAppBar } from '../../components/CustomAppBar'
-import { FaFileUpload, FaPlus, FaTimes, FaUpload } from 'react-icons/fa'
-import { CustomPopupIcon, RequiredSelect, RequiredTextField } from '../../styles/CssStyled'
+import { FaCheckCircle, FaPlus, FaTimes, FaTimesCircle, FaUpload } from 'react-icons/fa'
+import { CustomPopupIcon, RequiredTextField } from '../../styles/CssStyled'
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown'
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp'
+import '../../styles/style.css'
 
 type FormErrors = {
     name?: string[],
@@ -60,6 +63,9 @@ interface FormData {
 export function EditCase() {
     const navigate = useNavigate()
     const { state } = useLocation()
+    const { quill, quillRef } = useQuill();
+    const initialContentRef = useRef<string | null>(null);
+
     const autocompleteRef = useRef<any>(null);
     const [error, setError] = useState(false)
     const [reset, setReset] = useState(false)
@@ -101,11 +107,22 @@ export function EditCase() {
     useEffect(() => {
         if (reset) {
             setFormData(state?.value)
+            if (quill && initialContentRef.current !== null) {
+                quill.clipboard.dangerouslyPasteHTML(initialContentRef.current);
+            }
         }
         return () => {
             setReset(false)
         }
-    }, [reset])
+    }, [reset, quill, state?.value])
+
+    useEffect(() => {
+        if (quill && initialContentRef.current === null) {
+            // Save the initial state (HTML content) of the Quill editor only if not already saved
+            initialContentRef.current = formData.description;
+            quill.clipboard.dangerouslyPasteHTML(formData.description);
+        }
+    }, [quill, formData.description]);
 
     const backbtnHandle = () => {
         if (state?.edit) {
@@ -144,23 +161,13 @@ export function EditCase() {
             setFormData({ ...formData, [name]: value });
         }
     };
-    // const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    //     const file = event.target.files?.[0] || null;
-    //     if (file) {
-    //         setFormData({ ...formData, account_attachment: file?.name })
-    //         const reader = new FileReader();
-    //         reader.onload = () => {
-    //             setFormData({ ...formData, file: reader.result as string });
-    //         };
-    //         reader.readAsDataURL(file);
-    //     }
-    // };
+
     const handleFileChange = (event: any) => {
         const file = event.target.files?.[0] || null;
         if (file) {
             setFormData((prevData) => ({
                 ...prevData,
-                account_attachment: file.name,
+                case_attachment: file.name,
                 file: prevData.file,
             }));
 
@@ -174,6 +181,14 @@ export function EditCase() {
             reader.readAsDataURL(file);
         }
     };
+
+    const emptyDescription = () => {
+        setFormData({ ...formData, description: '' })
+        if (quill) {
+            quill.clipboard.dangerouslyPasteHTML('');
+        }
+    };
+
     const handleSubmit = (e: any) => {
         e.preventDefault();
         submitForm();
@@ -208,41 +223,20 @@ export function EditCase() {
             .catch(() => {
             })
     };
-    // const resetForm = () => {
-    //     setFormData({
-    //         name: '',
-    //         status: 'New',
-    //         priority: 'Normal',
-    //         case_type: '',
-    //         closed_on: '',
-    //         teams: [],
-    //         assigned_to: [],
-    //         account: '',
-    //         case_attachment: '',
-    //         contacts: [],
-    //         description: '',
-    //         file: null
-    //     });
-    //     setErrors({})
-    //     setSelectedContacts([]);
-    //     setSelectedAssignTo([])
-    //     setSelectedTags([])
-    //     setSelectedTeams([])
-    // }
+
     const onCancel = () => {
         // resetForm()
         setReset(true)
         if (state?.value?.contacts) {
-            setSelectedContacts(state.value.contacts);
+            setSelectedContacts(state?.value?.contacts);
         }
     }
-
 
     const module = 'Cases'
     const crntPage = 'Add Case'
     const backBtn = state?.edit ? 'Back to Cases' : 'Back to CaseDetails'
 
-    // console.log(state, 'caseedit')
+    console.log(state, 'caseedit')
     return (
         <Box sx={{ mt: '60px' }}>
             <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} onCancel={onCancel} onSubmit={handleSubmit} />
@@ -279,8 +273,8 @@ export function EditCase() {
                                                         limitTags={2}
                                                         // options={state.contacts || []}
                                                         // getOptionLabel={(option: any) => state.contacts ? option?.first_name : option}
-                                                        options={state.contacts ? state.contacts.filter((option: any) => !selectedContacts.some((selectedOption) => selectedOption.id === option.id)) : []}
-                                                        getOptionLabel={(option: any) => state.contacts ? option?.first_name : option}
+                                                        options={state?.contacts?.length ? state?.contacts.filter((option: any) => !selectedContacts.some((selectedOption) => selectedOption.id === option.id)) : []}
+                                                        getOptionLabel={(option: any) => state?.contacts?.length ? option?.first_name : option}
                                                         onChange={(e: any, value: any) => handleChange2('contacts', value)}
                                                         size='small'
                                                         filterSelectedOptions
@@ -290,7 +284,7 @@ export function EditCase() {
                                                                     deleteIcon={<FaTimes style={{ width: '9px' }} />}
                                                                     sx={{ backgroundColor: 'rgba(0, 0, 0, 0.08)', height: '18px' }}
                                                                     variant='outlined'
-                                                                    label={state.contacts ? option?.first_name : option}
+                                                                    label={state?.contacts?.length ? option?.first_name : option}
                                                                     {...getTagProps({ index })}
                                                                 />
                                                             ))
@@ -335,11 +329,11 @@ export function EditCase() {
                                                         onChange={handleChange}
                                                         error={!!errors?.status?.[0]}
                                                     >
-                                                        {state?.status?.length && state?.status.map((option: any) => (
+                                                        {state?.status?.length ? state?.status.map((option: any) => (
                                                             <MenuItem key={option[0]} value={option[0]}>
                                                                 {option[1]}
                                                             </MenuItem>
-                                                        ))}
+                                                        )) : ''}
                                                     </Select>
                                                     <FormHelperText>{errors?.status?.[0] ? errors?.status[0] : ''}</FormHelperText>
                                                 </FormControl>
@@ -351,7 +345,7 @@ export function EditCase() {
                                                         value={selectedTeams}
                                                         multiple
                                                         limitTags={5}
-                                                        options={state.teams || []}
+                                                        options={state?.teams?.length || []}
                                                         getOptionLabel={(option: any) => option}
                                                         onChange={(e: any, value: any) => handleChange2('teams', value)}
                                                         size='small'
@@ -406,11 +400,11 @@ export function EditCase() {
                                                         onChange={handleChange}
                                                         error={!!errors?.priority?.[0]}
                                                     >
-                                                        {state?.priority?.length && state?.priority.map((option: any) => (
+                                                        {state?.priority?.length ? state?.priority.map((option: any) => (
                                                             <MenuItem key={option[0]} value={option[0]}>
                                                                 {option[1]}
                                                             </MenuItem>
-                                                        ))}
+                                                        )) : ''}
                                                     </Select>
                                                     <FormHelperText>{errors?.priority?.[0] ? errors?.priority[0] : ''}</FormHelperText>
                                                 </FormControl>
@@ -422,8 +416,8 @@ export function EditCase() {
                                                         multiple
                                                         value={selectedAssignTo}
                                                         limitTags={2}
-                                                        options={state.users || []}
-                                                        getOptionLabel={(option: any) => state.users ? option?.user__email : option}
+                                                        options={state?.users?.length || []}
+                                                        getOptionLabel={(option: any) => state?.users?.length ? option?.user__email : option}
                                                         onChange={(e: any, value: any) => handleChange2('assigned_to', value)}
                                                         size='small'
                                                         filterSelectedOptions
@@ -433,7 +427,7 @@ export function EditCase() {
                                                                     deleteIcon={<FaTimes style={{ width: '9px' }} />}
                                                                     sx={{ backgroundColor: 'rgba(0, 0, 0, 0.08)', height: '18px' }}
                                                                     variant='outlined'
-                                                                    label={state.users ? option?.user__email : option}
+                                                                    label={state?.users?.length ? option?.user__email : option}
                                                                     {...getTagProps({ index })}
                                                                 />
                                                             ))
@@ -477,11 +471,11 @@ export function EditCase() {
                                                         onChange={handleChange}
                                                         error={!!errors?.case_type?.[0]}
                                                     >
-                                                        {state?.typeOfCases?.length && state?.typeOfCases.map((option: any) => (
+                                                        {state?.typeOfCases?.length ? state?.typeOfCases.map((option: any) => (
                                                             <MenuItem key={option[0]} value={option[0]}>
                                                                 {option[1]}
                                                             </MenuItem>
-                                                        ))}
+                                                        )) : ''}
                                                     </Select>
                                                     <FormHelperText>{errors?.case_type?.[0] ? errors?.case_type[0] : ''}</FormHelperText>
                                                 </FormControl>
@@ -503,11 +497,11 @@ export function EditCase() {
                                                         onChange={handleChange}
                                                         error={!!errors?.account?.[0]}
                                                     >
-                                                        {state?.account?.length && state?.account.map((option: any) => (
+                                                        {state?.account?.length ? state?.account.map((option: any) => (
                                                             <MenuItem key={option.id} value={option.id}>
                                                                 {option.name}
                                                             </MenuItem>
-                                                        ))}
+                                                        )) : ''}
                                                     </Select>
                                                     <FormHelperText>{errors?.account?.[0] ? errors?.account[0] : ''}</FormHelperText>
                                                 </FormControl>
@@ -591,20 +585,33 @@ export function EditCase() {
                                     autoComplete='off'
                                 >
                                     <div className='DescriptionDetail'>
-                                        <div className='descriptionSubContainer'>
-                                            <div className='descriptionTitle'>Description</div>
-                                            <TextareaAutosize
-                                                name='description'
-                                                minRows={8}
-                                                value={formData.description}
-                                                onChange={handleChange}
-                                                style={{ width: '80%', padding: '5px' }}
-                                                placeholder='Add Description'
-                                            // error={!!errors?.description?.[0]}
-                                            // helperText={error && errors?.description?.[0] ? errors?.description[0] : ''}
-                                            />
+                                        <div className='descriptionTitle'>Description</div>
+                                        <div style={{ width: '100%', marginBottom: '3%' }}>
+                                            <div ref={quillRef} />
                                         </div>
                                     </div>
+                                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', mt: 1.5 }}>
+                                        <Button
+                                            className='header-button'
+                                            onClick={emptyDescription}
+                                            size='small'
+                                            variant='contained'
+                                            startIcon={<FaTimesCircle style={{ fill: 'white', width: '16px', marginLeft: '2px' }} />}
+                                            sx={{ backgroundColor: '#2b5075', ':hover': { backgroundColor: '#1e3750' } }}
+                                        >
+                                            Cancel
+                                        </Button>
+                                        <Button
+                                            className='header-button'
+                                            onClick={() => setFormData({ ...formData, description: quillRef.current.firstChild.innerHTML })}
+                                            variant='contained'
+                                            size='small'
+                                            startIcon={<FaCheckCircle style={{ fill: 'white', width: '16px', marginLeft: '2px' }} />}
+                                            sx={{ ml: 1 }}
+                                        >
+                                            Save
+                                        </Button>
+                                    </Box>
                                 </Box>
                             </AccordionDetails>
                         </Accordion>

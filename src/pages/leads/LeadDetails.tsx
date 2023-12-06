@@ -56,7 +56,7 @@ type response = {
     lead_attachment: string;
     opportunity_amount: string;
     website: string;
-    description: string;
+    description: string | '';
     teams: string;
     assigned_to: string;
     contacts: string;
@@ -439,9 +439,11 @@ function LeadDetails(props: any) {
                                         Description
                                     </div>
                                 </div>
-                                <p style={{ fontSize: '16px', color: 'gray', padding: '15px' }}>
-                                    {leadDetails?.description || '---'}
-                                </p>
+                                {/* <p style={{ fontSize: '16px', color: 'gray', padding: '15px' }}> */}
+                                <Box sx={{ p: '15px' }}>
+                                    {leadDetails?.description ? <div dangerouslySetInnerHTML={{ __html: leadDetails?.description }} /> : '---'}
+                                </Box>
+                                {/* </p> */}
                             </div>
                             <div style={{ marginTop: '2%' }}>
                                 <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>

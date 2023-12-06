@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Container} from '@mui/material'
+import { Box, Container } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import OrganizationModal from './OrganizationModal';
-import '../../styles/company.css'
+import '../../styles/style.css'
 
 interface Item {
     org: {
@@ -16,7 +16,6 @@ export default function Organization() {
 
     const [organizationModal, setOrganizationModal] = useState(false)
 
-
     useEffect(() => {
         if (!localStorage.getItem('Token')) {
             navigate('/login')
@@ -26,17 +25,14 @@ export default function Organization() {
     }, [])
 
     const handleClose = (event: any, reason: any) => {
-        if (reason && reason == "backdropClick"){
+        if (reason && reason == "backdropClick") {
             return;
-        }        
+        }
     }
-
 
     return (
         <Box>
             <Container sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                {/* <Typography variant='h5'>Organization</Typography> */}
-                {/* {loading && <Spinner />} */}
                 <OrganizationModal
                     open={organizationModal}
                     handleClose={handleClose}

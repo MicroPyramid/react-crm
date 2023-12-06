@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useRef, useState } from 'react'
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import {
   TextField,
@@ -17,13 +17,16 @@ import {
   IconButton,
   Tooltip,
   Divider,
-  Select
+  Select,
+  Button
 } from '@mui/material'
+import { useQuill } from 'react-quilljs';
+import 'quill/dist/quill.snow.css';
 import '../../styles/style.css'
 import { LeadUrl } from '../../services/ApiUrls'
 import { fetchData, Header } from '../../components/FetchData'
 import { CustomAppBar } from '../../components/CustomAppBar'
-import { FaArrowDown, FaFileUpload, FaPalette, FaPercent, FaPlus, FaTimes, FaUpload } from 'react-icons/fa'
+import { FaArrowDown, FaCheckCircle, FaFileUpload, FaPalette, FaPercent, FaPlus, FaTimes, FaTimesCircle, FaUpload } from 'react-icons/fa'
 import { useForm } from '../../components/UseForm'
 import { CustomPopupIcon, CustomSelectField, RequiredTextField, StyledSelect } from '../../styles/CssStyled'
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown'
@@ -129,6 +132,9 @@ interface FormData {
 export function AddLeads() {
   const navigate = useNavigate()
   const { state } = useLocation()
+  const { quill, quillRef } = useQuill();
+  const initialContentRef = useRef(null);
+
   const autocompleteRef = useRef<any>(null);
   const [error, setError] = useState(false)
   const [selectedContacts, setSelectedContacts] = useState<any[]>([]);
@@ -170,17 +176,12 @@ export function AddLeads() {
     file: null
   })
 
-  // const changeHandler = (event: any) => {
-  //   if (event.target.files[0]) {
-  //     // setLogo(event.target.files[0])
-  //     const reader = new FileReader()
-  //     reader.addEventListener('load', () => {
-  //       // setImgData(reader.result)
-  //       // setLogot(true)
-  //     })
-  //     val.lead_attachment = event.target.files[0]
-  //   }
-  // }
+  useEffect(() => {
+    if (quill) {
+      // Save the initial state (HTML content) of the Quill editor
+      initialContentRef.current = quillRef.current.firstChild.innerHTML;
+    }
+  }, [quill]);
 
   const handleChange2 = (title: any, val: any) => {
     // const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -203,6 +204,7 @@ export function AddLeads() {
       setFormData({ ...formData, [title]: val })
     }
   }
+
   const handleChange = (e: any) => {
     // const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     // console.log('e.target',e)
@@ -218,9 +220,27 @@ export function AddLeads() {
       setFormData({ ...formData, [name]: value });
     }
   };
-  const backbtnHandle = () => {
-    navigate('/app/leads')
-  }
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] || null;
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        // setFormData({ ...formData, lead_attachment: reader.result as string });
+        setFormData({ ...formData, file: reader.result as string });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const resetQuillToInitialState = () => {
+    // Reset the Quill editor to its initial state
+    setFormData({ ...formData, description: '' })
+    if (quill && initialContentRef.current !== null) {
+      quill.clipboard.dangerouslyPasteHTML(initialContentRef.current);
+    }
+  };
+
   const handleSubmit = (e: any) => {
     e.preventDefault();
     submitForm();
@@ -272,6 +292,7 @@ export function AddLeads() {
       .catch(() => {
       })
   };
+
   const resetForm = () => {
     setFormData({
       title: '',
@@ -316,21 +337,13 @@ export function AddLeads() {
     resetForm()
   }
 
+  const backbtnHandle = () => {
+    navigate('/app/leads')
+  }
+
   const module = 'Leads'
   const crntPage = 'Add Leads'
   const backBtn = 'Back To Leads'
-
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0] || null;
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        // setFormData({ ...formData, lead_attachment: reader.result as string });
-        setFormData({ ...formData, file: reader.result as string });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   // console.log(state, 'leadsform')
   return (
@@ -1045,20 +1058,33 @@ export function AddLeads() {
                     autoComplete='off'
                   >
                     <div className='DescriptionDetail'>
-                      <div className='descriptionSubContainer'>
-                        <div className='descriptionTitle'>Description</div>
-                        <TextareaAutosize
-                          name='description'
-                          minRows={8}
-                          value={formData.description}
-                          onChange={handleChange}
-                          style={{ width: '80%', padding: '5px' }}
-                          placeholder='Add Description'
-                        // error={!!errors?.description?.[0]}
-                        // helperText={error && errors?.description?.[0] ? errors?.description[0] : ''}
-                        />
+                      <div className='descriptionTitle'>Description</div>
+                      <div style={{ width: '100%', marginBottom: '3%' }}>
+                        <div ref={quillRef} />
                       </div>
                     </div>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', mt: 1.5 }}>
+                      <Button
+                        className='header-button'
+                        onClick={resetQuillToInitialState}
+                        size='small'
+                        variant='contained'
+                        startIcon={<FaTimesCircle style={{ fill: 'white', width: '16px', marginLeft: '2px' }} />}
+                        sx={{ backgroundColor: '#2b5075', ':hover': { backgroundColor: '#1e3750' } }}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        className='header-button'
+                        onClick={() => setFormData({ ...formData, description: quillRef.current.firstChild.innerHTML })}
+                        variant='contained'
+                        size='small'
+                        startIcon={<FaCheckCircle style={{ fill: 'white', width: '16px', marginLeft: '2px' }} />}
+                        sx={{ ml: 1 }}
+                      >
+                        Save
+                      </Button>
+                    </Box>
                   </Box>
                 </AccordionDetails>
               </Accordion>
