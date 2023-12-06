@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { Avatar, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, Modal, Stack, TextField, Typography } from "@mui/material";
-import { FaCross, FaPlus, FaTimes } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { Box, Dialog, Divider, IconButton, List, ListItem, Stack, TextField, Typography } from "@mui/material";
+import { FaPlus, FaTimes } from "react-icons/fa";
 import { fetchData } from "../../components/FetchData";
 import { OrgUrl } from "../../services/ApiUrls";
-import { useNavigate } from "react-router-dom";
-import { StyledListItem, StyledListItemButton, StyledListItemText } from "../../styles/CssStyled";
-import { Spinner } from "../../components/Spinner";
+import { StyledListItemButton, StyledListItemText } from "../../styles/CssStyled";
 
 interface Item {
     org: {
@@ -23,13 +22,13 @@ export default function OrganizationModal(props: any) {
     const [error, setError] = useState('')
 
     const buttonRef = useRef<HTMLButtonElement>(null);
-    
+
     useEffect(() => {
         getOrganization()
         setError('')
         setNewOrganization('')
     }, [])
-    
+
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -58,7 +57,7 @@ export default function OrganizationModal(props: any) {
         const organizationName = { name: newOrganization }
         fetchData(`${OrgUrl}/`, 'POST', JSON.stringify(organizationName), headers)
             .then(res => {
-                console.log(res)
+                // console.log(res)
                 if (res?.error) {
                     setError(res?.errors?.name[0])
                 } else if (res.status === 201) {
@@ -81,7 +80,10 @@ export default function OrganizationModal(props: any) {
         localStorage.setItem('org', id)
         // navigate('/')
         onHandleClose()
-        navigate('/app/contacts')
+        if (localStorage.getItem('org')) {
+            // navigate('/app/leads')
+            navigate('/')
+        }
         // } 
     }
 
@@ -93,9 +95,9 @@ export default function OrganizationModal(props: any) {
             <Dialog
                 open={open}
                 onClose={onHandleClose}
-                // BackdropProps={{
-                //     onClick: handleBackdropClick,
-                //   }}
+            // BackdropProps={{
+            //     onClick: handleBackdropClick,
+            //   }}
             >
                 <Box sx={{ width: '400px' }}>
                     {localStorage.getItem('org') ?
@@ -120,7 +122,9 @@ export default function OrganizationModal(props: any) {
                                 {organization?.length > 0 &&
                                     organization.map((item, i) => (
                                         <ListItem >
-                                            <StyledListItemButton onClick={() => selectedOrganization(item?.org?.id)}>
+                                            <StyledListItemButton
+                                                selected={item?.org?.id === localStorage?.getItem('org')}
+                                                onClick={() => selectedOrganization(item?.org?.id)}>
                                                 <StyledListItemText>
                                                     {item?.org?.name}
                                                 </StyledListItemText>

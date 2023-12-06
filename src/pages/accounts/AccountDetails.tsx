@@ -384,9 +384,9 @@ export const AccountDetails = (props: any) => {
                                         Description
                                     </div>
                                 </div>
-                                <p style={{ fontSize: '16px', color: 'gray', padding: '20px' }}>
-                                    {accountDetails?.description || '----'}
-                                </p>
+                                <Box sx={{ p: '15px' }}>
+                                    {accountDetails?.description ? <div dangerouslySetInnerHTML={{ __html: accountDetails?.description }} /> : '---'}
+                                </Box>
                             </div>
 
                         </Box>

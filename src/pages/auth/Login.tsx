@@ -1,25 +1,14 @@
-import { Box, Button, CssBaseline, Grid, Link, Stack, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
-// import { AuthUrl, OrgUrl, SERVER } from '../../components/ApiUrls'
-// import { GoogleLogin } from '@react-oauth/google';
-import { GoogleLogin } from '@react-oauth/google';
-// import AuthComponent from '../../components/AuthSignIn'
-// import GoogleLogin from '../../components/GoogleLogin'
-// import GoogleLoginButto from '../../components/GoogleLogin2'
-//  import Google from '../../components/GoogleLogin1'
-import imgLogo from '../../assets/images/auth/img_logo.png'
-import imgBG from '../../assets/images/auth/img_BG.jpg'
-import imgLogin from '../../assets/images/auth/img_login.png'
-import '../../styles/auth.css'
-import { googleLogout } from '@react-oauth/google';
+import { Grid, Stack, Typography } from '@mui/material'
 import { useGoogleLogin } from '@react-oauth/google';
-// import { fetchData } from '../../components/FetchData';
 import { useNavigate } from 'react-router-dom';
 import imgGoogle from '../../assets/images/auth/google.svg'
+import imgLogo from '../../assets/images/auth/img_logo.png'
+import imgLogin from '../../assets/images/auth/img_login.png'
 import { GoogleButton } from '../../styles/CssStyled';
 import { fetchData } from '../../components/FetchData';
 import { AuthUrl } from '../../services/ApiUrls';
-// import { GoogleButton } from '../../../../react-crm-2.0/src/styles/CssStyled';
+import '../../styles/style.css'
 
 declare global {
     interface Window {
@@ -28,35 +17,17 @@ declare global {
     }
 }
 
-
 export default function Login() {
     const navigate = useNavigate()
     const [token, setToken] = useState(false)
 
-    const headers = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: localStorage.getItem('Token'),
-        //   org: localStorage.getItem('org')
-    }
     useEffect(() => {
         if (localStorage.getItem('Token')) {
             // navigate('/organization')
             navigate('/app')
         }
     }, [token])
-    // useEffect(() => {
-    //     const token = localStorage.getItem('Token');
-    //     if (token) {
-    //       navigate('/organization');
-    //     }
-    //   }, [navigate]);
-    // const headers = {
-    //     Accept: 'application/json',
-    //     'Content-Type': 'application/json',
-    //     //   Authorization: `jwt ${localStorage.getItem('Token')}`,
-    //     //   org: localStorage.getItem('org')
-    // }
+
     const login = useGoogleLogin({
         onSuccess: tokenResponse => {
             const apiToken = { token: tokenResponse.access_token }
@@ -68,7 +39,6 @@ export default function Login() {
             }
             fetchData(`${AuthUrl}/`, 'POST', JSON.stringify(apiToken), head)
                 .then((res: any) => {
-                    // console.log(res.access_token, 'access_token')
                     localStorage.setItem('Token', `Bearer ${res.access_token}`)
                     setToken(true)
                 })
@@ -82,17 +52,9 @@ export default function Login() {
         <div>
             <Stack
                 direction={{ xs: 'column', sm: 'row' }}
-                // spacing={{ xs: 2, sm: 2, md: 4 }}
-                // container xs={12}
-                //  direction='row' 
                 justifyContent='center'
                 alignItems='center'
-                sx={{
-                    height: '100%',
-                    width: '100%',
-                    // overflow: 'hidden',
-                    position: 'fixed'
-                }}
+                sx={{ height: '100%', width: '100%', position: 'fixed' }}
             >
                 <Grid
                     container
@@ -159,10 +121,7 @@ export default function Login() {
                     sx={{ height: '100%', overflow: 'hidden', justifyItems: 'center' }}
                 >
                     <Grid item >
-                        <Stack sx={{
-                            alignItems: 'center',
-                            //  mt: '-600px' 
-                        }}>
+                        <Stack sx={{ alignItems: 'center' }}>
                             <h3>Welcome to BottleCRM</h3>
                             <p> Free and OpenSource CRM from small medium business.</p>
                             <img

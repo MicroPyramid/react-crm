@@ -3,7 +3,7 @@ import { Box, Button, Card, Container, Link, List, ListItem, ListItemButton, Sta
 import { useNavigate } from 'react-router-dom'
 import { fetchData } from '../../components/FetchData';
 import { OrgUrl } from '../../services/ApiUrls';
-import '../../styles/company.css'
+// import '../../styles/company.css'
 import { Spinner } from '../../components/Spinner';
 import { StyledListItemButton, StyledListItemText } from '../../styles/CssStyled';
 

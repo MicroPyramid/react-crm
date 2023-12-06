@@ -10,7 +10,6 @@ import { fetchData, Header } from '../../components/FetchData';
 import { getComparator, stableSort } from '../../components/Sorting';
 import { Label } from '../../components/Label';
 import { FaTrashAlt } from 'react-icons/fa';
-// import { DeleteModal } from './DeleteModal';
 import { CasesUrl } from '../../services/ApiUrls';
 import { DeleteModal } from '../../components/DeleteModal';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
@@ -111,26 +110,34 @@ export default function Cases(props: any) {
 
   useEffect(() => {
     getCases()
-  }, [])
+  }, [currentPage, recordsPerPage]);
 
-  const getCases = () => {
-    fetchData(`${CasesUrl}/`, 'GET', null as any, Header)
-      .then((res) => {
-        console.log(res, 'cases')
-        if (!res.error) {
-          setCases(res?.cases)
-          // setOpenCases(res?.open_leads?.open_leads)
-          // setOpenCasesCount(res?.open_leads?.leads_count)
-          // setClosedCases(res?.close_leads?.close_leads)
-          // setClosedCasesCount(res?.close_leads?.leads_count)
-          setStatus(res?.status)
-          setPriority(res?.priority)
-          setTypeOfCases(res?.type_of_case)
-          setContacts(res?.contacts_list)
-          setAccount(res?.accounts_list)
-          setLoading(false)
-        }
-      })
+  const getCases = async () => {
+    try {
+      const offset = (currentPage - 1) * recordsPerPage;
+      await fetchData(`${CasesUrl}/?offset=${offset}&limit=${recordsPerPage}`, 'GET', null as any, Header)
+        // fetchData(`${CasesUrl}/`, 'GET', null as any, Header)
+        .then((res) => {
+          // console.log(res, 'cases')
+          if (!res.error) {
+            setCases(res?.cases)
+            setTotalPages(Math.ceil(res?.cases_count / recordsPerPage));
+            // setOpenCases(res?.open_leads?.open_leads)
+            // setOpenCasesCount(res?.open_leads?.leads_count)
+            // setClosedCases(res?.close_leads?.close_leads)
+            // setClosedCasesCount(res?.close_leads?.leads_count)
+            setStatus(res?.status)
+            setPriority(res?.priority)
+            setTypeOfCases(res?.type_of_case)
+            setContacts(res?.contacts_list)
+            setAccount(res?.accounts_list)
+            setLoading(false)
+          }
+        })
+    }
+    catch (error) {
+      console.error('Error fetching data:', error);
+    }
 
   }
 
@@ -162,6 +169,8 @@ export default function Cases(props: any) {
 
 
   const caseDetail = (caseId: any) => {
+    // console.log(contacts,priority,typeOfCases,account,'list');
+    
     navigate(`/app/cases/case-details`, {
       state: {
         caseId, detail: true,
@@ -191,7 +200,21 @@ export default function Cases(props: any) {
       .catch(() => {
       })
   }
+  const handlePreviousPage = () => {
+    setLoading(true)
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
 
+  const handleNextPage = () => {
+    setLoading(true)
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+  };
+
+  const handleRecordsPerPage = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setLoading(true)
+    setRecordsPerPage(parseInt(event.target.value));
+    setCurrentPage(1);
+  };
   // const handleSelectAllClick = () => {
   //   if (tab === 'open') {
   //     if (selected.length === openCases.length) {
@@ -265,7 +288,7 @@ export default function Cases(props: any) {
         <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
           <Select
             value={recordsPerPage}
-            onChange={(e: any) => setRecordsPerPage(e.target.value)}
+            onChange={(e: any) => handleRecordsPerPage(e)}
             open={selectOpen}
             onOpen={() => setSelectOpen(true)}
             onClose={() => setSelectOpen(false)}
@@ -287,18 +310,15 @@ export default function Cases(props: any) {
             ))}
           </Select>
           <Box sx={{ borderRadius: '7px', backgroundColor: 'white', height: '40px', minHeight: '40px', maxHeight: '40px', display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 1, p: '0px' }}>
-            <FabLeft>
-              <FiChevronLeft
-                //  onClick={previous}
-                style={{ height: '15px' }}
-              />
+            <FabLeft onClick={handlePreviousPage} disabled={currentPage === 1}>
+              <FiChevronLeft style={{ height: '15px' }} />
             </FabLeft>
             <Typography sx={{ mt: 0, textTransform: 'lowercase', fontSize: '15px', color: '#1A3353', textAlign: 'center' }}>
-              0 to 1
+              {currentPage} to {totalPages}
+              {/* {renderPageNumbers()} */}
             </Typography>
-            <FabRight>
-              <FiChevronRight
-                style={{ height: '15px' }} />
+            <FabRight onClick={handleNextPage} disabled={currentPage === totalPages}>
+              <FiChevronRight style={{ height: '15px' }} />
             </FabRight>
           </Box>
           <Button
@@ -352,17 +372,17 @@ export default function Cases(props: any) {
                 <TableBody>
                   {
                     cases?.length > 0
-                      ? stableSort(cases, getComparator(order, orderBy))
-                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => {
-                          const labelId = `enhanced-table-checkbox-${index}`
-                          const rowIndex = selectedId.indexOf(item.id);
-                          return (
-                            <TableRow
-                              tabIndex={-1}
-                              key={index}
-                              sx={{ border: 0, '&:nth-of-type(even)': { backgroundColor: 'whitesmoke' }, color: 'rgb(26, 51, 83)', textTransform: 'capitalize' }}
-                            >
-                              {/* <TableCell
+                      ? stableSort(cases, getComparator(order, orderBy)).map((item: any, index: any) => {
+                        // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => {
+                        const labelId = `enhanced-table-checkbox-${index}`
+                        const rowIndex = selectedId.indexOf(item.id);
+                        return (
+                          <TableRow
+                            tabIndex={-1}
+                            key={index}
+                            sx={{ border: 0, '&:nth-of-type(even)': { backgroundColor: 'whitesmoke' }, color: 'rgb(26, 51, 83)', textTransform: 'capitalize' }}
+                          >
+                            {/* <TableCell
                                                                     padding='checkbox'
                                                                     sx={{ border: 0, color: 'inherit' }}
                                                                     align='left'
@@ -376,40 +396,40 @@ export default function Cases(props: any) {
                                                                         sx={{ border: 0, color: 'inherit' }}
                                                                     />
                                                                 </TableCell> */}
-                              <TableCell
-                                className='tableCell-link'
-                                onClick={() => caseDetail(item.id)}
-                              >
-                                {item?.name ? item?.name : '---'}
-                              </TableCell>
-                              <TableCell className='tableCell'>
-                                {item?.account ? item?.account?.name : '---'}
-                              </TableCell>
-                              <TableCell className='tableCell'>
-                                {item?.status ? item?.status : '---'}
-                              </TableCell>
-                              <TableCell className='tableCell'>
-                                {item?.priority ? <Priority priorityData={item?.priority} /> : '---'}
-                              </TableCell>
-                              <TableCell className='tableCell'>
-                                {item?.created_on_arrow ? item?.created_on_arrow : '---'}
-                              </TableCell>
-                              <TableCell className='tableCell'>
-                                {/* <IconButton>
+                            <TableCell
+                              className='tableCell-link'
+                              onClick={() => caseDetail(item.id)}
+                            >
+                              {item?.name ? item?.name : '---'}
+                            </TableCell>
+                            <TableCell className='tableCell'>
+                              {item?.account ? item?.account?.name : '---'}
+                            </TableCell>
+                            <TableCell className='tableCell'>
+                              {item?.status ? item?.status : '---'}
+                            </TableCell>
+                            <TableCell className='tableCell'>
+                              {item?.priority ? <Priority priorityData={item?.priority} /> : '---'}
+                            </TableCell>
+                            <TableCell className='tableCell'>
+                              {item?.created_on_arrow ? item?.created_on_arrow : '---'}
+                            </TableCell>
+                            <TableCell className='tableCell'>
+                              {/* <IconButton>
                                                                         <FaEdit
                                                                             onClick={() => EditItem(item?.id)}
                                                                             style={{ fill: '#1A3353', cursor: 'pointer', width: '18px' }}
                                                                         />
                                                                     </IconButton> */}
-                                <IconButton>
-                                  <FaTrashAlt
-                                    onClick={() => deleteRow(item?.id)}
-                                    style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }} />
-                                </IconButton>
-                              </TableCell>
-                            </TableRow>
-                          )
-                        })
+                              <IconButton>
+                                <FaTrashAlt
+                                  onClick={() => deleteRow(item?.id)}
+                                  style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }} />
+                              </IconButton>
+                            </TableCell>
+                          </TableRow>
+                        )
+                      })
                       : <TableRow> <TableCell colSpan={8} sx={{ border: 0 }}><Spinner /></TableCell></TableRow>
                   }
                   {/* {

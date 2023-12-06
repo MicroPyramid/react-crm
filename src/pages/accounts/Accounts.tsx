@@ -173,31 +173,39 @@ export default function Accounts() {
     const [selectedId, setSelectedId] = useState<string[]>([]);
     const [isSelectedId, setIsSelectedId] = useState<boolean[]>([]);
 
-    const [currentPage, setCurrentPage] = useState<number>(1);
-    const [recordsPerPage, setRecordsPerPage] = useState<number>(10);
-    const [totalPages, setTotalPages] = useState<number>(0);
+    const [openCurrentPage, setOpenCurrentPage] = useState<number>(1);
+    const [openRecordsPerPage, setOpenRecordsPerPage] = useState<number>(10);
+    const [openTotalPages, setOpenTotalPages] = useState<number>(0);
+    const [openLoading, setOpenLoading] = useState(true);
 
+
+    const [closedCurrentPage, setClosedCurrentPage] = useState<number>(1);
+    const [closedRecordsPerPage, setClosedRecordsPerPage] = useState<number>(10);
+    const [closedTotalPages, setClosedTotalPages] = useState<number>(0);
+    const [closedLoading, setClosedLoading] = useState(true);
 
     useEffect(() => {
         getAccounts()
-    }, [])
+    }, [openCurrentPage, openRecordsPerPage, closedCurrentPage, closedRecordsPerPage]);
 
     const handleChangeTab = (e: SyntheticEvent, val: any) => {
         setTab(val)
     }
 
-    const getAccounts = () => {
-        fetchData(`${AccountsUrl}/?offset=${tab === "open" ? openOffset : closeOffset}`, 'GET', null as any, Header)
-            .then((res: any) => {
-                if (!res.error) {
-                    console.log(res, 'accounts')
-                    if (initial) {
+    const getAccounts = async () => {
+        try {
+            const openOffset = (openCurrentPage - 1) * openRecordsPerPage;
+            const closeOffset = (closedCurrentPage - 1) * closedRecordsPerPage;
+            await fetchData(`${AccountsUrl}/?offset=${tab === "open" ? openOffset : closeOffset}&limit=${tab === "open" ? openRecordsPerPage : closedRecordsPerPage}`, 'GET', null as any, Header)
+                .then((res: any) => {
+                    if (!res.error) {
+                        // console.log(res, 'accounts')
                         setOpenAccounts(res?.active_accounts?.open_accounts)
                         // setOpenAccountsCount(res?.active_accounts?.active_users_count)
-                        setOpenAccountsOffset(res?.active_accounts?.offset)
+                        // setOpenAccountsOffset(res?.active_accounts?.offset)
                         setClosedAccounts(res?.closed_accounts?.close_accounts)
                         // setClosedAccountsCount(res?.closed_accounts?.close_accounts_count)
-                        setClosedAccountsOffset(res?.closed_accounts?.offset)
+                        // setClosedAccountsOffset(res?.closed_accounts?.offset)
                         setContacts(res?.contacts)
                         setIndustries(res?.industries)
                         setUsers(res?.users)
@@ -208,37 +216,48 @@ export default function Accounts() {
                         setTeams(res?.teams)
                         setLoading(false)
                     }
-                }
-            })
-            .catch((error: any) => console.error('error', error))
+                })
+        }
+        catch (error) {
+            console.error('Error fetching data:', error);
+        }
+
     }
 
     const accountDetail = (accountId: any) => {
         navigate(`/app/accounts/account-details`, { state: { accountId, detail: true, contacts: contacts || [], status: status || [], tags: tags || [], users: users || [], countries: countries || [], teams: teams || [], leads: leads || [] } })
     }
+    const handleRecordsPerPage = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        if (tab == 'open') {
+            setOpenLoading(true)
+            setOpenRecordsPerPage(parseInt(event.target.value));
+            setOpenCurrentPage(1);
+        } else {
+            setClosedLoading(true)
+            setClosedRecordsPerPage(parseInt(event.target.value));
+            setClosedCurrentPage(1);
+        }
 
-    const next = () => {
-        // if (tab === 0 &&
-        //   accountData.accountLength > 0) {
-        //   setOpenOffset(values)
-        //   setValues(values + rowsPerPage)
-        // } else if (tab === 1 &&
-        //   accountData.closed_accounts_length > closeOffset + 10) {
-        //   setCloseOffset(closeOffset + 10)
-        //   setCloseValue(closeValue + 10)
-        // }
-    }
+    };
+    const handlePreviousPage = () => {
+        if (tab == 'open') {
+            setOpenLoading(true)
+            setOpenCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+        } else {
+            setClosedLoading(true)
+            setClosedCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+        }
+    };
 
-    const previous = () => {
-        // if (tab === 0 && openOffset > 0) {
-        //   setOpenOffset(openOffset - rowsPerPage)
-        //   setValues(values - rowsPerPage)
-        // } else if (tab === 1 && closeOffset > 0) {
-        //   setCloseOffset(closeOffset - 10)
-        //   setCloseValue(openValue - 10)
-        // }
-    }
-
+    const handleNextPage = () => {
+        if (tab == 'open') {
+            setOpenLoading(true)
+            setOpenCurrentPage((prevPage) => Math.min(prevPage + 1, openTotalPages));
+        } else {
+            setClosedLoading(true)
+            setClosedCurrentPage((prevPage) => Math.min(prevPage + 1, closedTotalPages));
+        }
+    };
     const handleRequestSort = (event: any, property: any) => {
         const isAsc = orderBy === property && order === 'asc'
         setOrder(isAsc ? 'desc' : 'asc')
@@ -419,8 +438,8 @@ export default function Accounts() {
 
                 <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                     <Select
-                        value={recordsPerPage}
-                        onChange={(e: any) => setRecordsPerPage(e.target.value)}
+                        value={tab === 'open' ? openRecordsPerPage : closedRecordsPerPage}
+                        onChange={(e: any) => handleRecordsPerPage(e)}
                         open={selectOpen}
                         onOpen={() => setSelectOpen(true)}
                         onClose={() => setSelectOpen(false)}
@@ -442,18 +461,15 @@ export default function Accounts() {
                         ))}
                     </Select>
                     <Box sx={{ borderRadius: '7px', backgroundColor: 'white', height: '40px', minHeight: '40px', maxHeight: '40px', display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 1, p: '0px' }}>
-                        <FabLeft>
-                            <FiChevronLeft
-                                //  onClick={previous}
-                                style={{ height: '15px' }}
-                            />
+                        <FabLeft onClick={handlePreviousPage} disabled={tab === 'open' ? openCurrentPage === 1 : closedCurrentPage === 1}>
+                            <FiChevronLeft style={{ height: '15px' }} />
                         </FabLeft>
                         <Typography sx={{ mt: 0, textTransform: 'lowercase', fontSize: '15px', color: '#1A3353', textAlign: 'center' }}>
-                            0 to 1
+                            {tab === 'open' ? `${openCurrentPage} to ${openTotalPages}` : `${closedCurrentPage} to ${closedTotalPages}`}
+
                         </Typography>
-                        <FabRight>
-                            <FiChevronRight
-                                style={{ height: '15px' }} />
+                        <FabRight onClick={handleNextPage} disabled={tab === 'open' ? (openCurrentPage === openTotalPages) : (closedCurrentPage === closedTotalPages)}>
+                            <FiChevronRight style={{ height: '15px' }} />
                         </FabRight>
                     </Box>
                     <Button
@@ -508,7 +524,8 @@ export default function Accounts() {
                                         {
                                             openAccounts?.length > 0
                                                 ? stableSort(openAccounts, getComparator(order, orderBy))
-                                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => {
+                                                    // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => {
+                                                    .map((item: any, index: any) => {
                                                         const labelId = `enhanced-table-checkbox-${index}`
                                                         const rowIndex = selectedId.indexOf(item.id);
                                                         return (
@@ -585,17 +602,17 @@ export default function Accounts() {
                                     <TableBody>
                                         {
                                             closedAccounts?.length > 0
-                                                ? stableSort(closedAccounts, getComparator(order, orderBy))
-                                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => {
-                                                        const labelId = `enhanced-table-checkbox-${index}`
-                                                        const rowIndex = selectedId.indexOf(item.id);
-                                                        return (
-                                                            <TableRow
-                                                                tabIndex={-1}
-                                                                key={index}
-                                                                sx={{ border: 0, '&:nth-of-type(even)': { backgroundColor: 'whitesmoke' }, color: 'rgb(26, 51, 83)', textTransform: 'capitalize' }}
-                                                            >
-                                                                {/* <TableCell
+                                                ? stableSort(closedAccounts, getComparator(order, orderBy)).map((item: any, index: any) => {
+                                                    // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => {
+                                                    const labelId = `enhanced-table-checkbox-${index}`
+                                                    const rowIndex = selectedId.indexOf(item.id);
+                                                    return (
+                                                        <TableRow
+                                                            tabIndex={-1}
+                                                            key={index}
+                                                            sx={{ border: 0, '&:nth-of-type(even)': { backgroundColor: 'whitesmoke' }, color: 'rgb(26, 51, 83)', textTransform: 'capitalize' }}
+                                                        >
+                                                            {/* <TableCell
                                                                     padding='checkbox'
                                                                     sx={{ border: 0, color: 'inherit' }}
                                                                     align='left'
@@ -609,42 +626,42 @@ export default function Accounts() {
                                                                         sx={{ border: 0, color: 'inherit' }}
                                                                     />
                                                                 </TableCell> */}
-                                                                <TableCell
-                                                                    className='tableCell-link'
-                                                                    onClick={() => accountDetail(item.id)}
-                                                                >
-                                                                    {item?.name ? item?.name : '---'}
-                                                                </TableCell>
-                                                                <TableCell className='tableCell'>
-                                                                    {item?.website ? item?.website : '---'}
-                                                                </TableCell>
-                                                                <TableCell className='tableCell'>
-                                                                    <Stack style={{ display: 'flex', flexDirection: 'row', alignItems: "center" }}>
-                                                                        <Avatar src={item?.lead?.created_by?.profile_pic} alt={item?.lead?.created_by?.email} /><Stack sx={{ ml: 1 }}>{item?.lead?.account_name ? item?.lead?.account_name : '---'}</Stack>
-                                                                    </Stack>
-                                                                </TableCell>
-                                                                <TableCell className='tableCell'>
-                                                                    {item?.lead?.country ? item?.lead?.country : '---'}
-                                                                </TableCell>
-                                                                <TableCell className='tableCell'>
-                                                                    {item?.tags?.length ? item?.tags.map((tag: any, i: any) => <Stack sx={{ mr: 0.5 }}> Tags(tag)</Stack>) : '---'}
-                                                                </TableCell>
-                                                                <TableCell className='tableCell'>
-                                                                    {/* <IconButton>
+                                                            <TableCell
+                                                                className='tableCell-link'
+                                                                onClick={() => accountDetail(item.id)}
+                                                            >
+                                                                {item?.name ? item?.name : '---'}
+                                                            </TableCell>
+                                                            <TableCell className='tableCell'>
+                                                                {item?.website ? item?.website : '---'}
+                                                            </TableCell>
+                                                            <TableCell className='tableCell'>
+                                                                <Stack style={{ display: 'flex', flexDirection: 'row', alignItems: "center" }}>
+                                                                    <Avatar src={item?.lead?.created_by?.profile_pic} alt={item?.lead?.created_by?.email} /><Stack sx={{ ml: 1 }}>{item?.lead?.account_name ? item?.lead?.account_name : '---'}</Stack>
+                                                                </Stack>
+                                                            </TableCell>
+                                                            <TableCell className='tableCell'>
+                                                                {item?.lead?.country ? item?.lead?.country : '---'}
+                                                            </TableCell>
+                                                            <TableCell className='tableCell'>
+                                                                {item?.tags?.length ? item?.tags.map((tag: any, i: any) => <Stack sx={{ mr: 0.5 }}> Tags(tag)</Stack>) : '---'}
+                                                            </TableCell>
+                                                            <TableCell className='tableCell'>
+                                                                {/* <IconButton>
                                                                         <FaEdit
                                                                             onClick={() => EditItem(item?.id)}
                                                                             style={{ fill: '#1A3353', cursor: 'pointer', width: '18px' }}
                                                                         />
                                                                     </IconButton> */}
-                                                                    <IconButton>
-                                                                        <FaTrashAlt
-                                                                            onClick={() => deleteRow(item?.id)}
-                                                                            style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }} />
-                                                                    </IconButton>
-                                                                </TableCell>
-                                                            </TableRow>
-                                                        )
-                                                    })
+                                                                <IconButton>
+                                                                    <FaTrashAlt
+                                                                        onClick={() => deleteRow(item?.id)}
+                                                                        style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }} />
+                                                                </IconButton>
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    )
+                                                })
                                                 : <TableRow> <TableCell colSpan={6} sx={{ border: 0 }}><Spinner /></TableCell></TableRow>
                                         }
                                     </TableBody>

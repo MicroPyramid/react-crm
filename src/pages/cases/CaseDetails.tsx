@@ -106,13 +106,13 @@ export const CaseDetails = (props: any) => {
     const [usersMention, setUsersMention] = useState([])
 
     useEffect(() => {
-        getCaseDetails(state.caseId)
-    }, [state.caseId])
+        getCaseDetails(state?.caseId)
+    }, [state?.caseId])
 
     const getCaseDetails = (id: any) => {
         fetchData(`${CasesUrl}/${id}/`, 'GET', null as any, Header)
             .then((res) => {
-                console.log(res, 'case');
+                // console.log(res, 'case');
                 if (!res.error) {
                     setCaseDetails(res?.cases_obj)
                     setContacts(res?.contacts)
@@ -177,7 +177,7 @@ export const CaseDetails = (props: any) => {
     const module = 'Cases'
     const crntPage = 'Case Details'
     const backBtn = 'Back to Cases'
-    console.log(state);
+    console.log(state,'detail');
 
     return (
         <Box sx={{ mt: '60px' }}>
@@ -310,9 +310,9 @@ export const CaseDetails = (props: any) => {
                                         Description
                                     </div>
                                 </div>
-                                <p style={{ fontSize: '16px', color: 'gray', padding: '20px' }}>
-                                    {caseDetails?.description || '---'}
-                                </p>
+                                <Box sx={{ p: '15px' }}>
+                                    {caseDetails?.description ? <div dangerouslySetInnerHTML={{ __html: caseDetails?.description }} /> : '---'}
+                                </Box>
                             </div>
 
                         </Box>

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useRef, useState } from 'react'
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import {
     TextField,
@@ -17,21 +17,22 @@ import {
     IconButton,
     Tooltip,
     Divider,
-    Select
+    Select,
+    Button
 } from '@mui/material'
-import '../../styles/style.css'
-import { LeadUrl, OpportunityUrl } from '../../services/ApiUrls'
+import { useQuill } from 'react-quilljs';
+import 'quill/dist/quill.snow.css';
+import { OpportunityUrl } from '../../services/ApiUrls'
 import { fetchData, Header } from '../../components/FetchData'
 import { CustomAppBar } from '../../components/CustomAppBar'
-import { FaArrowDown, FaFileUpload, FaPalette, FaPercent, FaPlus, FaTimes, FaUpload } from 'react-icons/fa'
-import { useForm } from '../../components/UseForm'
-import { CustomPopupIcon, CustomSelectField, RequiredSelect, RequiredTextField, StyledSelect } from '../../styles/CssStyled'
+import { FaCheckCircle, FaPlus, FaTimes, FaTimesCircle, FaUpload } from 'react-icons/fa'
+import { CustomPopupIcon, RequiredSelect, RequiredTextField } from '../../styles/CssStyled'
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown'
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp'
+import '../../styles/style.css'
 
 
 type FormErrors = {
-
     name?: string[],
     account?: string[],
     amount?: string[],
@@ -48,9 +49,8 @@ type FormErrors = {
     tags?: string[],
     opportunity_attachment?: string[],
     file?: string[]
-
-
 };
+
 interface FormData {
 
     name: string,
@@ -74,6 +74,9 @@ interface FormData {
 export function AddOpportunity() {
     const navigate = useNavigate()
     const { state } = useLocation()
+    const { quill, quillRef } = useQuill();
+    const initialContentRef = useRef(null);
+
     const autocompleteRef = useRef<any>(null);
     const [error, setError] = useState(false)
     const [selectedContacts, setSelectedContacts] = useState<any[]>([]);
@@ -86,7 +89,7 @@ export function AddOpportunity() {
     const [stageSelectOpen, setStageSelectOpen] = useState(false)
     const [contactSelectOpen, setContactSelectOpen] = useState(false)
     const [accountSelectOpen, setAccountSelectOpen] = useState(false)
-    
+
     const [errors, setErrors] = useState<FormErrors>({});
     const [formData, setFormData] = useState<FormData>({
         name: '',
@@ -99,13 +102,20 @@ export function AddOpportunity() {
         probability: 1,
         description: '',
         assigned_to: [],
-        contact_name:'',
+        contact_name: '',
         contacts: [],
         due_date: '',
         tags: [],
         opportunity_attachment: null,
         file: null
     })
+
+    useEffect(() => {
+        if (quill) {
+            // Save the initial state (HTML content) of the Quill editor
+            initialContentRef.current = quillRef.current.firstChild.innerHTML;
+        }
+    }, [quill]);
 
     const handleChange2 = (title: any, val: any) => {
         if (title === 'contacts') {
@@ -157,9 +167,15 @@ export function AddOpportunity() {
         }
     };
 
-    const backbtnHandle = () => {
-        navigate('/app/opportunities')
-    }
+    const resetQuillToInitialState = () => {
+        // Reset the Quill editor to its initial state
+        setFormData({ ...formData, description: '' })
+        if (quill && initialContentRef.current !== null) {
+            quill.clipboard.dangerouslyPasteHTML(initialContentRef.current);
+        }
+    };
+
+
     const handleSubmit = (e: any) => {
         e.preventDefault();
         submitForm();
@@ -212,7 +228,7 @@ export function AddOpportunity() {
             probability: 1,
             description: '',
             assigned_to: [],
-            contact_name:'',
+            contact_name: '',
             contacts: [],
             due_date: '',
             tags: [],
@@ -227,6 +243,9 @@ export function AddOpportunity() {
     }
     const onCancel = () => {
         resetForm()
+    }
+    const backbtnHandle = () => {
+        navigate('/app/opportunities')
     }
 
     const module = 'Opportunities'
@@ -653,20 +672,33 @@ export function AddOpportunity() {
                                         autoComplete='off'
                                     >
                                         <div className='DescriptionDetail'>
-                                            <div className='descriptionSubContainer'>
-                                                <div className='descriptionTitle'>Description</div>
-                                                <TextareaAutosize
-                                                    name='description'
-                                                    minRows={8}
-                                                    value={formData.description}
-                                                    onChange={handleChange}
-                                                    style={{ width: '80%', padding: '5px' }}
-                                                    placeholder='Add Description'
-                                                // error={!!errors?.description?.[0]}
-                                                // helperText={error && errors?.description?.[0] ? errors?.description[0] : ''}
-                                                />
+                                            <div className='descriptionTitle'>Description</div>
+                                            <div style={{ width: '100%', marginBottom: '3%' }}>
+                                                <div ref={quillRef} />
                                             </div>
                                         </div>
+                                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', mt: 1.5 }}>
+                                            <Button
+                                                className='header-button'
+                                                onClick={resetQuillToInitialState}
+                                                size='small'
+                                                variant='contained'
+                                                startIcon={<FaTimesCircle style={{ fill: 'white', width: '16px', marginLeft: '2px' }} />}
+                                                sx={{ backgroundColor: '#2b5075', ':hover': { backgroundColor: '#1e3750' } }}
+                                            >
+                                                Cancel
+                                            </Button>
+                                            <Button
+                                                className='header-button'
+                                                onClick={() => setFormData({ ...formData, description: quillRef.current.firstChild.innerHTML })}
+                                                variant='contained'
+                                                size='small'
+                                                startIcon={<FaCheckCircle style={{ fill: 'white', width: '16px', marginLeft: '2px' }} />}
+                                                sx={{ ml: 1 }}
+                                            >
+                                                Save
+                                            </Button>
+                                        </Box>
                                     </Box>
                                 </AccordionDetails>
                             </Accordion>

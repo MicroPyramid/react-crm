@@ -1,55 +1,31 @@
+import React, { useEffect, useRef, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   TextField,
   FormControl,
-  InputLabel,
   Select,
-  TextareaAutosize,
   AccordionDetails,
   Accordion,
   AccordionSummary,
   Typography,
   Box,
   MenuItem,
-  InputAdornment,
-  Chip,
-  Autocomplete,
   Tooltip,
   Divider,
-  FormHelperText
+  FormHelperText,
+  Button
 } from '@mui/material'
-
-import React, { useEffect, useState } from 'react'
-import { FaArrowDown, FaPlus, FaTimes } from 'react-icons/fa';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useQuill } from 'react-quilljs';
+import 'quill/dist/quill.snow.css';
 import { ContactUrl } from '../../services/ApiUrls';
 import { CustomAppBar } from '../../components/CustomAppBar';
 import { fetchData, Header } from '../../components/FetchData';
-// import { ContactUrl } from '../../components/ApiUrls';
-// import { CustomAppBar } from '../../components/CustomAppBar';
-// import { fetchData } from '../../components/FetchData';
-import { useForm } from '../../components/UseForm';
 import { AntSwitch, CustomSelectField, RequiredTextField } from '../../styles/CssStyled';
-// import { AntSwitch } from '../../../../react-crm-2.0/src/styles/CssStyled';
-// import { ContactUrl, LeadUrl } from '../../../../components/ApiUrls';
-// import { Appbar } from '../../../../components/CustomAppBar'
-// import { fetchData } from '../../../../components/FetchData';
-// import { useForm } from '../../../../components/UseForm';
-// import { AntSwitch } from '../../../../styles/CssStyled';
-import '../../styles/style.css'
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
+import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import '../../styles/style.css'
 
-const ITEM_HEIGHT = 48
-const ITEM_PADDING_TOP = 8
-
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 310
-    }
-  }
-}
 // interface FormErrors {
 //   [key: string]: string;
 // }
@@ -67,7 +43,11 @@ type FormErrors = {
   country?: string[];
   language?: string[];
   do_not_call?: string[];
-  address?: string[];
+  address_line?: string[];
+  street?: string[];
+  city?: string[];
+  state?: string[];
+  postcode?: string[];
   description?: string[];
   linked_in_url?: string[];
   facebook_url?: string[];
@@ -82,6 +62,10 @@ function EditContact() {
   const navigate = useNavigate()
   const location = useLocation();
   const { state } = location;
+  const { quill, quillRef } = useQuill();
+  // const initialContentRef = useRef(null);
+  const initialContentRef = useRef<string | null>(null);
+
   const [reset, setReset] = useState(false)
   const [error, setError] = useState(false)
   const [formData, setFormData] = useState({
@@ -98,7 +82,7 @@ function EditContact() {
     language: '',
     do_not_call: false,
     department: '',
-    address: '',
+    address_line: '',
     street: '',
     city: '',
     state: '',
@@ -112,6 +96,7 @@ function EditContact() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [countrySelectOpen, setCountrySelectOpen] = useState(false)
 
+
   useEffect(() => {
     setFormData(state?.value)
   }, [state?.id])
@@ -119,11 +104,22 @@ function EditContact() {
   useEffect(() => {
     if (reset) {
       setFormData(state?.value)
+      if (quill && initialContentRef.current !== null) {
+        quill.clipboard.dangerouslyPasteHTML(initialContentRef.current);
+      }
     }
     return () => {
       setReset(false)
     }
-  }, [reset])
+  }, [reset, quill, state?.value])
+
+  useEffect(() => {
+    if (quill && initialContentRef.current === null) {
+      // Save the initial state (HTML content) of the Quill editor only if not already saved
+      initialContentRef.current = formData.description;
+      quill.clipboard.dangerouslyPasteHTML(formData.description);
+    }
+  }, [quill, formData.description]);
 
   const handleChange = (e: any) => {
     const { name, value, files, type, checked } = e.target;
@@ -132,6 +128,20 @@ function EditContact() {
     }
     else {
       setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  // const emptyDescription = () => {
+  //   // Reset the Quill editor to its initial state
+  //   setFormData({ ...formData, description: '' })
+  //   if (quill && initialContentRef.current !== null) {
+  //     quill.clipboard.dangerouslyPasteHTML(initialContentRef.current);
+  //   }
+  // };
+  const emptyDescription = () => {
+    setFormData({ ...formData, description: '' })
+    if (quill) {
+      quill.clipboard.dangerouslyPasteHTML('');
     }
   };
 
@@ -164,7 +174,10 @@ function EditContact() {
       country: formData.country,
       language: formData.language,
       do_not_call: formData.do_not_call,
-      address: formData.address,
+      address_line: formData.address_line,
+      street: formData.street,
+      city: formData.city,
+      state: formData.state,
       description: formData.description,
       linked_in_url: formData.linked_in_url,
       facebook_url: formData.facebook_url,
@@ -188,35 +201,6 @@ function EditContact() {
       .catch(() => {
       })
   };
-
-  const resetForm = () => {
-    setFormData({
-      salutation: '',
-      first_name: '',
-      last_name: '',
-      primary_email: '',
-      secondary_email: '',
-      mobile_number: '',
-      secondary_number: '',
-      date_of_birth: '',
-      organization: '',
-      title: '',
-      language: '',
-      do_not_call: false,
-      department: '',
-      address: '',
-      street: '',
-      city: '',
-      state: '',
-      country: '',
-      postcode: '',
-      description: '',
-      linked_in_url: '',
-      facebook_url: '',
-      twitter_username: ''
-    });
-    setErrors({});
-  }
 
   const backbtnHandle = () => {
     navigate('/app/contacts/contact-details', { state: { contactId: { id: state?.id }, detail: true } })
@@ -440,16 +424,72 @@ function EditContact() {
                   >
                     <div className='fieldContainer'>
                       <div className='fieldSubContainer'>
-                        <div className='fieldTitle'>Address Lane</div>
-                        <TextField
+                        <div className='fieldTitle'>Billing Address</div>
+                        <RequiredTextField
                           required
-                          name='address'
-                          value={formData.address}
+                          name='address_line'
+                          value={formData.address_line}
                           onChange={handleChange}
                           style={{ width: '70%' }}
                           size='small'
-                          error={!!errors?.address?.[0]}
-                          helperText={errors?.address?.[0] ? errors?.address[0] : ''}
+                          error={!!errors?.address_line?.[0]}
+                          helperText={errors?.address_line?.[0] ? errors?.address_line[0] : ''}
+                        />
+                      </div>
+                      <div className='fieldSubContainer'>
+                        <div className='fieldTitle'>Street</div>
+                        <TextField
+                          name='street'
+                          value={formData.street}
+                          onChange={handleChange}
+                          style={{ width: '70%' }}
+                          size='small'
+                          required
+                          error={!!errors?.street?.[0]}
+                          helperText={errors?.street?.[0] ? errors?.street[0] : ''}
+                        />
+                      </div>
+                    </div>
+                    <div className='fieldContainer2'>
+                      <div className='fieldSubContainer'>
+                        <div className='fieldTitle'>City</div>
+                        <TextField
+                          name='city'
+                          value={formData.city}
+                          onChange={handleChange}
+                          style={{ width: '70%' }}
+                          size='small'
+                          required
+                          error={!!errors?.city?.[0]}
+                          helperText={errors?.city?.[0] ? errors?.city[0] : ''}
+                        />
+                      </div>
+                      <div className='fieldSubContainer'>
+                        <div className='fieldTitle'>State</div>
+                        <TextField
+                          name='state'
+                          value={formData.state}
+                          onChange={handleChange}
+                          style={{ width: '70%' }}
+                          size='small'
+                          required
+                          error={!!errors?.state?.[0]}
+                          helperText={errors?.state?.[0] ? errors?.state[0] : ''}
+                        />
+                      </div>
+                    </div>
+                    <div className='fieldContainer2'>
+                      <div className='fieldSubContainer'>
+                        <div className='fieldTitle'>Postcode</div>
+                        <TextField
+                          name='postcode'
+                          value={formData.postcode}
+                          onChange={handleChange}
+                          style={{ width: '70%' }}
+                          size='small'
+                          required
+                          error={!!errors?.postcode?.[0]}
+                          helperText={errors?.postcode?.[0] ? errors?.postcode[0] : ''}
                         />
                       </div>
                       <div className='fieldSubContainer'>
@@ -485,21 +525,6 @@ function EditContact() {
                           </Select>
                           <FormHelperText>{errors?.country?.[0] ? errors?.country[0] : ''}</FormHelperText>
                         </FormControl>
-                        {/* <TextField
-                          name='country'
-                          // error={error && !!errors?.country?.[0]}
-                          value={formData.country}
-                          onChange={handleChange}
-                          // InputProps={{
-                          //   classes: {
-                          //     root: textFieldClasses.fieldHeight
-                          //   }
-                          // }}
-                          style={{ width: '70%' }}
-                          size='small'
-                          error={!!errors.country || !!errors?.country?.[0]}
-                          helperText={errors.country || errors?.country?.[0] || ''}
-                        /> */}
                       </div>
                     </div>
                   </Box>
@@ -523,21 +548,33 @@ function EditContact() {
                     autoComplete='off'
                   >
                     <div className='DescriptionDetail'>
-                      <div className='descriptionSubContainer'>
-                        <div className='descriptionTitle'>Description</div>
-                        <TextareaAutosize
-                          aria-label='minimum height'
-                          name='description'
-                          minRows={8}
-                          value={formData.description}
-                          onChange={handleChange}
-                          style={{ width: '80%', padding: '5px' }}
-                          placeholder='Add Description'
-                        // error={error && !!errors?.description?.[0]}
-                        // helperText={error && errors?.description?.[0] ? errors?.description[0] : ''}
-                        />
+                      <div className='descriptionTitle'>Description</div>
+                      <div style={{ width: '100%', marginBottom: '3%' }}>
+                        <div ref={quillRef} />
                       </div>
                     </div>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', mt: 1.5 }}>
+                      <Button
+                        className='header-button'
+                        onClick={emptyDescription}
+                        size='small'
+                        variant='contained'
+                        startIcon={<FaTimesCircle style={{ fill: 'white', width: '16px', marginLeft: '2px' }} />}
+                        sx={{ backgroundColor: '#2b5075', ':hover': { backgroundColor: '#1e3750' } }}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        className='header-button'
+                        onClick={() => setFormData({ ...formData, description: quillRef.current.firstChild.innerHTML })}
+                        variant='contained'
+                        size='small'
+                        startIcon={<FaCheckCircle style={{ fill: 'white', width: '16px', marginLeft: '2px' }} />}
+                        sx={{ ml: 1 }}
+                      >
+                        Save
+                      </Button>
+                    </Box>
                   </Box>
                 </AccordionDetails>
               </Accordion>

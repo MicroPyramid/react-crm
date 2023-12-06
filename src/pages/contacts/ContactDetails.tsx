@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react'
 import {
     Card,
@@ -16,10 +15,6 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { AntSwitch } from '../../styles/CssStyled'
 import { ContactUrl } from '../../services/ApiUrls'
 import { fetchData, Header } from '../../components/FetchData'
-// import { Appbar } from '../../../../components/CustomAppBar'
-// import { useRouter } from 'next/navigation'
-// import { ContactUrl } from '../../../../components/ApiUrls'
-// import { fetchData } from '../../../../components/FetchData'
 
 type response = {
     created_by: string;
@@ -60,7 +55,6 @@ export const formatDate = (dateString: any) => {
     return new Date(dateString).toLocaleDateString(undefined, options)
 }
 
-
 export default function ContactDetails() {
     const navigate = useNavigate()
     const { state } = useLocation()
@@ -75,7 +69,7 @@ export default function ContactDetails() {
     const getContactDetail = (id: any) => {
         fetchData(`${ContactUrl}/${id}/`, 'GET', null as any, Header)
             .then((res) => {
-                console.log(res, 'res');
+                // console.log(res, 'res');
                 if (!res.error) {
                     setContactDetails(res?.contact_obj)
                     setAddressDetails(res?.address_obj)
@@ -318,9 +312,9 @@ export default function ContactDetails() {
                                         Description
                                     </div>
                                 </div>
-                                <p style={{ fontSize: '16px', color: 'gray', padding: '20px' }}>
-                                    {contactDetails?.description || '----'}
-                                </p>
+                                <Box sx={{ p: '15px' }}>
+                                    {contactDetails?.description ? <div dangerouslySetInnerHTML={{ __html: contactDetails?.description }} /> : '---'}
+                                </Box>
                             </div>
                         </Card>
                     </Box>

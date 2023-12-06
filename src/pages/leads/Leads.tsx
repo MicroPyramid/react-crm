@@ -1,22 +1,23 @@
-import styled from '@emotion/styled';
-import { Avatar, AvatarGroup, Box, Button, Card, List, Stack, Tab, TablePagination, Tabs, Toolbar, Typography, Link, MenuItem, Select } from '@mui/material'
 import React, { SyntheticEvent, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+import { Avatar, AvatarGroup, Box, Button, Card, List, Stack, Tab, TablePagination, Tabs, Toolbar, Typography, Link, MenuItem, Select } from '@mui/material'
+import styled from '@emotion/styled';
+import { LeadUrl } from '../../services/ApiUrls';
+import { DeleteModal } from '../../components/DeleteModal';
+import { Label } from '../../components/Label';
+import { fetchData, Header } from '../../components/FetchData';
 import { Spinner } from '../../components/Spinner';
+import FormateTime from '../../components/FormateTime';
+import { getComparator, stableSort } from '../../components/Sorting';
+import { FaTrashAlt } from 'react-icons/fa';
+import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
+import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { FiPlus } from "@react-icons/all-files/fi/FiPlus";
 import { FiChevronLeft } from "@react-icons/all-files/fi/FiChevronLeft";
 import { FiChevronRight } from "@react-icons/all-files/fi/FiChevronRight";
 import { CustomTab, CustomToolbar, FabLeft, FabRight } from '../../styles/CssStyled';
-import { useNavigate } from 'react-router-dom';
-import { fetchData, Header } from '../../components/FetchData';
-import { getComparator, stableSort } from '../../components/Sorting';
-import { Label } from '../../components/Label';
-import { FaTrashAlt } from 'react-icons/fa';
-import { DialogModal } from './DeleteModal';
-import { LeadUrl } from '../../services/ApiUrls';
-import { DeleteModal } from '../../components/DeleteModal';
-import FormateTime from '../../components/FormateTime';
-import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
-import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
+import '../../styles/style.css'
+
 // import css from './css';
 // import emotionStyled from '@emotion/styled';
 // import { styled } from '@mui/system';
@@ -95,7 +96,7 @@ export const ToolbarNew = styled(Toolbar)({
 // interface LeadList {
 //   drawer: number;
 // }
-export default function LeadList(props: any) {
+export default function Leads(props: any) {
   // const {drawer}=props
   const navigate = useNavigate()
   const [tab, setTab] = useState('open');
@@ -127,50 +128,110 @@ export default function LeadList(props: any) {
   const [recordsPerPage, setRecordsPerPage] = useState<number>(10);
   const [totalPages, setTotalPages] = useState<number>(0);
 
+  const [openCurrentPage, setOpenCurrentPage] = useState<number>(1);
+  const [openRecordsPerPage, setOpenRecordsPerPage] = useState<number>(10);
+  const [openTotalPages, setOpenTotalPages] = useState<number>(0);
+  const [openLoading, setOpenLoading] = useState(true);
+
+
+  const [closedCurrentPage, setClosedCurrentPage] = useState<number>(1);
+  const [closedRecordsPerPage, setClosedRecordsPerPage] = useState<number>(10);
+  const [closedTotalPages, setClosedTotalPages] = useState<number>(0);
+  const [closedLoading, setClosedLoading] = useState(true);
+
   const [deleteLeadModal, setDeleteLeadModal] = useState(false)
   const [selectedId, setSelectedId] = useState('')
 
   useEffect(() => {
+    if (!!localStorage.getItem('org')) {
+      getLeads()
+    }
+  }, [!!localStorage.getItem('org')]);
+
+  useEffect(() => {
     getLeads()
-  }, [])
-
-  const getLeads = () => {
-    fetchData(`${LeadUrl}/`, 'GET', null as any, Header)
-      .then((res) => {
-        // console.log(res, 'leads')
-        if (!res.error) {
-          // if (initial) {
-          setOpenLeads(res?.open_leads?.open_leads)
-          setOpenLeadsCount(res?.open_leads?.leads_count)
-          setClosedLeads(res?.close_leads?.close_leads)
-          setClosedLeads(res?.close_leads?.leads_count)
-          setContacts(res?.contacts)
-          setStatus(res?.status)
-          setSource(res?.source)
-          setCompanies(res?.companies)
-          setTags(res?.tags)
-          setUsers(res?.users)
-          setCountries(res?.countries)
-          setIndustries(res?.industries)
-          setLoading(false)
-          // setLeadsList();
-          // setInitial(false)
-        }
-        // else {
-        //     // setContactList(Object.assign([], contacts, [data.contact_obj_list]))
-        //     setContactList(prevContactList => prevContactList.concat(data.contact_obj_list));
-        //     // setContactList(...contactList,data.contact_obj_list)
-        //     setLoading(false)
-        // }
-        // }
-      })
-
+  }, [openCurrentPage, openRecordsPerPage, closedCurrentPage, closedRecordsPerPage]);
+  const getLeads = async () => {
+    const Header2 = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: localStorage.getItem('Token'),
+      org: localStorage.getItem('org')
+    }
+    try {
+      const openOffset = (openCurrentPage - 1) * openRecordsPerPage;
+      const closeOffset = (closedCurrentPage - 1) * closedRecordsPerPage;
+      await fetchData(`${LeadUrl}/?offset=${tab === "open" ? openOffset : closeOffset}&limit=${tab === "open" ? openRecordsPerPage : closedRecordsPerPage}`, 'GET', null as any, Header2)
+        .then((res) => {
+          // console.log(res, 'leads')
+          if (!res.error) {
+            // if (initial) {
+            setOpenLeads(res?.open_leads?.open_leads)
+            setOpenLeadsCount(res?.open_leads?.leads_count)
+            setOpenTotalPages(Math.ceil(res?.open_leads?.leads_count / openRecordsPerPage));
+            setClosedLeads(res?.close_leads?.close_leads)
+            setClosedLeadsCount(res?.close_leads?.leads_count)
+            setClosedTotalPages(Math.ceil(res?.close_leads?.leads_count / closedRecordsPerPage));
+            setContacts(res?.contacts)
+            setStatus(res?.status)
+            setSource(res?.source)
+            setCompanies(res?.companies)
+            setTags(res?.tags)
+            setUsers(res?.users)
+            setCountries(res?.countries)
+            setIndustries(res?.industries)
+            setLoading(false)
+            // setLeadsList();
+            // setInitial(false)
+          }
+          // else {
+          //     // setContactList(Object.assign([], contacts, [data.contact_obj_list]))
+          //     setContactList(prevContactList => prevContactList.concat(data.contact_obj_list));
+          //     // setContactList(...contactList,data.contact_obj_list)
+          //     setLoading(false)
+          // }
+          // }
+        })
+    }
+    catch (error) {
+      console.error('Error fetching data:', error);
+    }
   }
 
   const handleChangeTab = (e: SyntheticEvent, val: any) => {
     setTab(val)
   }
+  const handleRecordsPerPage = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    if (tab == 'open') {
+      setOpenLoading(true)
+      setOpenRecordsPerPage(parseInt(event.target.value));
+      setOpenCurrentPage(1);
+    } else {
+      setClosedLoading(true)
+      setClosedRecordsPerPage(parseInt(event.target.value));
+      setClosedCurrentPage(1);
+    }
 
+  };
+  const handlePreviousPage = () => {
+    if (tab == 'open') {
+      setOpenLoading(true)
+      setOpenCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+    } else {
+      setClosedLoading(true)
+      setClosedCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+    }
+  };
+
+  const handleNextPage = () => {
+    if (tab == 'open') {
+      setOpenLoading(true)
+      setOpenCurrentPage((prevPage) => Math.min(prevPage + 1, openTotalPages));
+    } else {
+      setClosedLoading(true)
+      setClosedCurrentPage((prevPage) => Math.min(prevPage + 1, closedTotalPages));
+    }
+  };
   const onAddHandle = () => {
     if (!loading) {
       navigate('/app/leads/add-leads', {
@@ -264,8 +325,8 @@ export default function LeadList(props: any) {
 
         <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
           <Select
-            value={recordsPerPage}
-            onChange={(e: any) => setRecordsPerPage(e.target.value)}
+            value={tab === 'open' ? openRecordsPerPage : closedRecordsPerPage}
+            onChange={(e: any) => handleRecordsPerPage(e)}
             open={selectOpen}
             onOpen={() => setSelectOpen(true)}
             onClose={() => setSelectOpen(false)}
@@ -287,18 +348,15 @@ export default function LeadList(props: any) {
             ))}
           </Select>
           <Box sx={{ borderRadius: '7px', backgroundColor: 'white', height: '40px', minHeight: '40px', maxHeight: '40px', display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 1, p: '0px' }}>
-            <FabLeft>
-              <FiChevronLeft
-                //  onClick={previous}
-                style={{ height: '15px' }}
-              />
+            <FabLeft onClick={handlePreviousPage} disabled={tab === 'open' ? openCurrentPage === 1 : closedCurrentPage === 1}>
+              <FiChevronLeft style={{ height: '15px' }} />
             </FabLeft>
             <Typography sx={{ mt: 0, textTransform: 'lowercase', fontSize: '15px', color: '#1A3353', textAlign: 'center' }}>
-              0 to 1
+              {tab === 'open' ? `${openCurrentPage} to ${openTotalPages}` : `${closedCurrentPage} to ${closedTotalPages}`}
+
             </Typography>
-            <FabRight>
-              <FiChevronRight
-                style={{ height: '15px' }} />
+            <FabRight onClick={handleNextPage} disabled={tab === 'open' ? (openCurrentPage === openTotalPages) : (closedCurrentPage === closedTotalPages)}>
+              <FiChevronRight style={{ height: '15px' }} />
             </FabRight>
           </Box>
           <Button
@@ -467,7 +525,8 @@ export default function LeadList(props: any) {
                   </Box>
                 </Box>
               </Box>
-            )) : <Spinner />
+            )) :
+              <Spinner />
           }
         </Box>}
       {/* {loading &&

@@ -7,6 +7,12 @@ export const Header = {
   org: localStorage.getItem('org')
 }
 
+export const Header1 = {
+  Accept: 'application/json',
+  'Content-Type': 'application/json',
+  Authorization: localStorage.getItem('Token')
+}
+
 export function fetchData(url: any, method: any, data = '', header: any) {
   return fetch(`${SERVER}${url}`, {
     method,
