@@ -135,7 +135,9 @@ export function EditLead() {
     const { quill, quillRef } = useQuill();
     // const initialContentRef = useRef(null);
     const initialContentRef = useRef<string | null>(null);
+    const pageContainerRef = useRef<HTMLDivElement | null>(null);
 
+    const [hasInitialFocus, setHasInitialFocus] = useState(false);
 
     const autocompleteRef = useRef<any>(null);
     const [reset, setReset] = useState(false)
@@ -178,10 +180,30 @@ export function EditLead() {
         skype_ID: '',
         file: null
     })
+
+    useEffect(() => {
+        // Scroll to the top of the page when the component mounts
+        window.scrollTo(0, 0);
+        // Set focus to the page container after the Quill editor loads its content
+        if (quill && !hasInitialFocus) {
+            quill.on('editor-change', () => {
+                if (pageContainerRef.current) {
+                    pageContainerRef.current.focus();
+                    setHasInitialFocus(true); // Set the flag to true after the initial focus
+                }
+            });
+        }
+        // Cleanup: Remove event listener when the component unmounts
+        return () => {
+            if (quill) {
+                quill.off('editor-change');
+            }
+        };
+    }, [quill, hasInitialFocus]);
+
     useEffect(() => {
         setFormData(state?.value)
     }, [state?.id])
-
 
     useEffect(() => {
         if (reset) {
@@ -293,29 +315,13 @@ export function EditLead() {
             account_name: formData.account_name,
             phone: formData.phone,
             email: formData.email,
-            // lead_attachment: formData.lead_attachment,
             lead_attachment: formData.file || [],
-            // lead_attachment: [
-            //     "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-            //   ],
             opportunity_amount: formData.opportunity_amount,
-            // opportunity_amount: "7800535409.9",
             website: formData.website,
             description: formData.description,
-            // "website": "string",
-            // "description": "string",
             teams: formData.teams,
-            // teams: [
-            //     "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-            //   ],
             assigned_to: formData.assigned_to,
-            // assigned_to: [
-            //     "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-            //   ],
             contacts: formData.contacts,
-            // contacts: [
-            //     "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-            //   ],
             status: formData.status,
             source: formData.source,
             address_line: formData.address_line,
@@ -324,27 +330,11 @@ export function EditLead() {
             state: formData.state,
             postcode: formData.postcode,
             country: formData.country,
-            // status: "assigned",
-            // source: "call",
-            // address_line: "string",
-            // street: "string",
-            // city: "string",
-            // state: "string",
-            // postcode: "string",
-            // country: "GB",
-
             tags: formData.tags || [],
             company: formData.company || '',
             probability: formData.probability,
             industry: formData.industry,
             skype_ID: formData.skype_ID
-            // tags: [
-            //     "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-            // ],
-            // company: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-            // probability: 2147483647,
-            // industry: "ADVERTISING",
-            // skype_ID: "string"
         }
         // console.log(data, 'edit')
         fetchData(`${LeadUrl}/${state?.id}/`, 'PUT', JSON.stringify(data), Header)
@@ -411,18 +401,36 @@ export function EditLead() {
             quill.clipboard.dangerouslyPasteHTML(initialContentRef.current);
         }
     }
-
-    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = (event: any) => {
         const file = event.target.files?.[0] || null;
         if (file) {
+            setFormData((prevData) => ({
+                ...prevData,
+                lead_attachment: file.name,
+                file: prevData.file,
+            }));
+
             const reader = new FileReader();
             reader.onload = () => {
-                // setFormData({ ...formData, lead_attachment: reader.result as string });
-                setFormData({ ...formData, file: reader.result as string });
+                setFormData((prevData) => ({
+                    ...prevData,
+                    file: reader.result as string,
+                }));
             };
             reader.readAsDataURL(file);
         }
     };
+    // const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    //     const file = event.target.files?.[0] || null;
+    //     if (file) {
+    //         const reader = new FileReader();
+    //         reader.onload = () => {
+    //             // setFormData({ ...formData, lead_attachment: reader.result as string });
+    //             setFormData({ ...formData, file: reader.result as string });
+    //         };
+    //         reader.readAsDataURL(file);
+    //     }
+    // };
     const backbtnHandle = () => {
         navigate('/app/leads/lead-details', { state: { leadId: state?.id, detail: true } })
         // navigate('/app/leads')
@@ -436,13 +444,13 @@ export function EditLead() {
     return (
         <Box sx={{ mt: '60px' }}>
             <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} onCancel={onCancel} onSubmit={handleSubmit} />
-            <Box sx={{ mt: "120px" }}>
+            <Box sx={{ mt: "120px" }} >
                 <form onSubmit={handleSubmit}>
                     <div style={{ padding: '10px' }}>
                         <div className='leadContainer'>
-                            <Accordion defaultExpanded style={{ width: '98%' }}>
+                            <Accordion defaultExpanded style={{ width: '98%' }} >
                                 <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
-                                    <Typography className='accordion-header'>Account Information</Typography>
+                                    <Typography className='accordion-header'>Lead Information</Typography>
                                 </AccordionSummary>
                                 <Divider className='divider' />
                                 <AccordionDetails>
@@ -456,6 +464,8 @@ export function EditLead() {
                                             <div className='fieldSubContainer'>
                                                 <div className='fieldTitle'>Lead Name</div>
                                                 <TextField
+                                                    ref={pageContainerRef} tabIndex={-1}
+                                                    autoFocus
                                                     name='account_name'
                                                     value={formData.account_name || ''}
                                                     onChange={handleChange}
@@ -729,7 +739,7 @@ export function EditLead() {
                                                                             accept='image/*'
                                                                             id='icon-button-file'
                                                                             type='file'
-                                                                            name='account_attachment'
+                                                                            name='lead_attachment'
                                                                             onChange={(e: any) => {
                                                                                 //  handleChange(e); 
                                                                                 handleFileChange(e)
@@ -877,7 +887,7 @@ export function EditLead() {
                         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginTop: '20px' }}>
                             <Accordion defaultExpanded style={{ width: '98%' }}>
                                 <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
-                                    <Typography className='accordion-header'>Account Information</Typography>
+                                    <Typography className='accordion-header'>Contact</Typography>
                                 </AccordionSummary>
                                 <Divider className='divider' />
                                 <AccordionDetails>
@@ -966,7 +976,7 @@ export function EditLead() {
                         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginTop: '20px' }}>
                             <Accordion defaultExpanded style={{ width: '98%' }}>
                                 <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
-                                    <Typography className='accordion-header'>Account Information</Typography>
+                                    <Typography className='accordion-header'>Address</Typography>
                                 </AccordionSummary>
                                 <Divider className='divider' />
                                 <AccordionDetails>
@@ -1136,7 +1146,7 @@ export function EditLead() {
                         <div className='leadContainer'>
                             <Accordion defaultExpanded style={{ width: '98%' }}>
                                 <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
-                                    <Typography className='accordion-header'>Account Information</Typography>
+                                    <Typography className='accordion-header'>Description</Typography>
                                 </AccordionSummary>
                                 <Divider className='divider' />
                                 <AccordionDetails>
@@ -1148,7 +1158,7 @@ export function EditLead() {
                                     >
                                         <div className='DescriptionDetail'>
                                             <div className='descriptionTitle'>Description</div>
-                                            <div style={{ width: '100%', marginBottom: '3%' }}>
+                                            <div style={{ width: '100%', marginBottom: '3%' }} >
                                                 <div ref={quillRef} />
                                             </div>
                                         </div>

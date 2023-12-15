@@ -111,6 +111,12 @@ export default function Contacts() {
     //         .then((data) => { console.log(data, 'data') })
     // }
     const getContacts = async () => {
+        const Header = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('Token'),
+            org: localStorage.getItem('org')
+          }
         try {
             const offset = (currentPage - 1) * recordsPerPage;
             await fetchData(`${ContactUrl}/?offset=${offset}&limit=${recordsPerPage}`, 'GET', null as any, Header)
@@ -147,6 +153,12 @@ export default function Contacts() {
     }
 
     const DeleteItem = () => {
+        const Header = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('Token'),
+            org: localStorage.getItem('org')
+          }
         fetchData(`${ContactUrl}/${selectedId}/`, 'DELETE', null as any, Header)
             .then((res: any) => {
                 // console.log('delete:', res);

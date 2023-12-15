@@ -355,7 +355,7 @@ export function AddLeads() {
             <div className='leadContainer'>
               <Accordion defaultExpanded style={{ width: '98%' }}>
                 <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
-                  <Typography className='accordion-header'>Account Information</Typography>
+                  <Typography className='accordion-header'>Lead Information</Typography>
                 </AccordionSummary>
                 <Divider className='divider' />
                 <AccordionDetails>
@@ -789,7 +789,7 @@ export function AddLeads() {
             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginTop: '20px' }}>
               <Accordion defaultExpanded style={{ width: '98%' }}>
                 <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
-                  <Typography className='accordion-header'>Account Information</Typography>
+                  <Typography className='accordion-header'>Contact</Typography>
                 </AccordionSummary>
                 <Divider className='divider' />
                 <AccordionDetails>
@@ -878,7 +878,7 @@ export function AddLeads() {
             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginTop: '20px' }}>
               <Accordion defaultExpanded style={{ width: '98%' }}>
                 <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
-                  <Typography className='accordion-header'>Account Information</Typography>
+                  <Typography className='accordion-header'>Address</Typography>
                 </AccordionSummary>
                 <Divider className='divider' />
                 <AccordionDetails>
@@ -1047,7 +1047,7 @@ export function AddLeads() {
             <div className='leadContainer'>
               <Accordion defaultExpanded style={{ width: '98%' }}>
                 <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
-                  <Typography className='accordion-header'>Account Information</Typography>
+                  <Typography className='accordion-header'>Description</Typography>
                 </AccordionSummary>
                 <Divider className='divider' />
                 <AccordionDetails>

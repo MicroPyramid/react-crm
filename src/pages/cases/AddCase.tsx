@@ -23,7 +23,7 @@ import { useQuill } from 'react-quilljs';
 import 'quill/dist/quill.snow.css';
 import '../../styles/style.css'
 import { AccountsUrl, CasesUrl } from '../../services/ApiUrls'
-import { fetchData, Header } from '../../components/FetchData'
+import { fetchData } from '../../components/FetchData'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { FaCheckCircle, FaFileUpload, FaPlus, FaTimes, FaTimesCircle, FaUpload } from 'react-icons/fa'
 import { CustomPopupIcon, RequiredSelect, RequiredTextField } from '../../styles/CssStyled'
@@ -163,6 +163,12 @@ export function AddCase() {
         submitForm();
     }
     const submitForm = () => {
+        const Header = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('Token'),
+            org: localStorage.getItem('org')
+          }
         // console.log('Form data:', formData.lead_attachment,'sfs', formData.file);
         const data = {
             name: formData.name,

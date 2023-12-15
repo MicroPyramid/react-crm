@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import {
     Card,
     Link,
@@ -16,16 +16,21 @@ import {
     ListItemAvatar,
     ListItemText,
     Typography,
-    IconButton
+    IconButton,
+    Grid,
+    Popover,
+    ListItemIcon
 } from '@mui/material'
-import { Fa500Px, FaAccusoft, FaAd, FaAddressCard, FaEllipsisV, FaPlus, FaRegAddressCard, FaStar } from 'react-icons/fa'
+import { FaEllipsisV, FaPaperclip, FaPlus, FaRegAddressCard, FaStar, FaTimes } from 'react-icons/fa'
 import { CustomAppBar } from '../../components/CustomAppBar'
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { LeadUrl } from '../../services/ApiUrls'
-import { fetchData, Header } from '../../components/FetchData'
+import { fetchData } from '../../components/FetchData'
 import { Label } from '../../components/Label'
-import { AntSwitch, CustomSelectField, CustomSelectField1 } from '../../styles/CssStyled'
+import { AntSwitch, CustomInputBoxWrapper, CustomSelectField, CustomSelectField1, StyledListItemButton, StyledListItemText } from '../../styles/CssStyled'
 import FormateTime from '../../components/FormateTime'
+import { formatFileSize } from '../../components/FormatSize'
+import '../../styles/style.css'
 
 export const formatDate = (dateString: any) => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' }
@@ -91,7 +96,8 @@ function LeadDetails(props: any) {
             profile_pic: string;
         }
     }>>([]);
-    const [attachments, setAttachments] = useState([])
+    const [attachments, setAttachments] = useState<string[]>([]);
+    const [attachmentList, setAttachmentList] = useState<File[]>([]);
     const [tags, setTags] = useState([])
     const [countries, setCountries] = useState<string[][]>([])
     const [source, setSource] = useState([])
@@ -103,13 +109,22 @@ function LeadDetails(props: any) {
     const [comments, setComments] = useState([])
     const [commentList, setCommentList] = useState('Recent Last')
     const [note, setNote] = useState('')
+    const [selectedFile, setSelectedFile] = useState()
+    const [inputValue, setInputValue] = useState<string>('');
+    const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
+    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
     useEffect(() => {
         getLeadDetails(state.leadId)
     }, [state.leadId])
 
-
     const getLeadDetails = (id: any) => {
+        const Header = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('Token'),
+            org: localStorage.getItem('org')
+        }
         fetchData(`${LeadUrl}/${id}/`, 'GET', null as any, Header)
             .then((res) => {
                 if (!res.error) {
@@ -137,18 +152,29 @@ function LeadDetails(props: any) {
             })
     }
     const sendComment = () => {
+        const Header = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('Token'),
+            org: localStorage.getItem('org')
+        }
+        // const formData = new FormData();
+        // formData.append('inputValue', inputValue);
+        // attachedFiles.forEach((file, index) => {
+        //   formData.append(`file_${index}`, file);
+        // });
 
-        const data = { comment: note }
-
-        fetchData(`${LeadUrl}/comment/${state.leadId}/`, 'PUT', JSON.stringify(data), Header)
+        // const data = { comment: note }
+        // const data = { comment:  inputValue }
+        // const data = { comment: inputValue, attachedFiles }
+        const data = { Comment: inputValue || note, lead_attachment: attachments }
+        // fetchData(`${LeadUrl}/comment/${state.leadId}/`, 'PUT', JSON.stringify(data), Header)
+        fetchData(`${LeadUrl}/${state.leadId}/`, 'POST', JSON.stringify(data), Header)
             .then((res: any) => {
                 // console.log('Form data:', res);
                 if (!res.error) {
                     resetForm()
-                }
-                if (res.error) {
-                    // setError(true)
-                    // setErrors(res?.errors)
+                    getLeadDetails(state?.leadId)
                 }
             })
             .catch(() => {
@@ -160,7 +186,12 @@ function LeadDetails(props: any) {
     }
     const resetForm = () => {
         setNote('')
+        setInputValue('')
+        setAttachmentList([])
+        setAttachedFiles([])
+        setAttachments([])
     }
+
     const editHandle = () => {
         // navigate('/contacts/edit-contacts', { state: { value: contactDetails, address: newAddress } })
         let country: string[] | undefined;
@@ -208,6 +239,56 @@ function LeadDetails(props: any) {
         }
         )
     }
+
+    const handleAttachmentClick = () => {
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.addEventListener('change', handleFileInputChange);
+        fileInput.click();
+    };
+
+    const handleFileInputChange = (event: any) => {
+        const files = event.target.files;
+        if (files) {
+            setAttachedFiles((prevFiles: any) => [...prevFiles, ...Array.from(files)]);
+        }
+    };
+    const addAttachments = (e: any) => {
+        // console.log(e.target.files?.[0], 'e');
+        const files = e.target.files;
+        if (files) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                setAttachments((attachments: string[]) => [...(attachments || []), reader.result as string]);
+            };
+            reader.readAsDataURL(files[0]);
+        }
+        if (files) {
+            const filesArray = Array.from(files);
+            setAttachmentList((prevFiles: any) => [...prevFiles, ...filesArray]);
+        }
+    }
+
+
+    const handleClickFile = (event: React.MouseEvent<HTMLButtonElement>, pic: any) => {
+        setSelectedFile(pic)
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleCloseFile = () => {
+        setAnchorEl(null);
+    };
+
+    const deleteFile = () => {
+        setAttachmentList(prevItems => prevItems.filter((item, i) => i !== selectedFile));
+        setAttachments(prevItems => prevItems.filter((item, i) => i !== selectedFile));
+        handleCloseFile()
+    }
+
+    const open = Boolean(anchorEl);
+    const id = open ? 'simple-popover' : undefined;
+    // console.log(attachedFiles, 'dsfsd', attachmentList, 'aaaaa', attachments);
+
     const module = 'Leads'
     const crntPage = 'Lead Details'
     const backBtn = 'Back To Leads'
@@ -465,27 +546,39 @@ function LeadDetails(props: any) {
                                 <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a3353f0' }}>
                                     Attachments
                                 </div>
-                                {/* <div style={{ color: "#3E79F7", fontSize: "16px", fontWeight: "bold" }}> */}
                                 {/* Add Social #1E90FF */}
-                                <Button
-                                    type='submit'
-                                    variant='text'
-                                    size='small'
+                                <Button component="label" variant="text"
                                     startIcon={<FaPlus style={{ fill: '#3E79F7', width: '12px' }} />}
                                     style={{ textTransform: 'capitalize', fontWeight: 600, fontSize: '16px' }}
                                 >
+                                    <input type="file" style={{ display: 'none' }} onChange={(e: any) => addAttachments(e)} />
                                     Add Attachments
                                 </Button>
-                                {/* </div> */}
                             </div>
-
-                            <div style={{ padding: '20px', marginTop: '5%' }}>
+                            <div style={{ padding: '20px', marginTop: '2%', maxHeight: '500px', minHeight: '150px', overflowY: 'scroll' }}>
                                 {/* {lead && lead.lead_attachment} */}
-                                {attachments?.length ? attachments.map((pic: any, i: any) =>
+                                <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'wrap', alignContent: 'flex-start' }}>
+                                    {attachmentList?.length ? attachmentList.map((pic: any, i: any) =>
+                                        <Box key={i} sx={{ width: '45%', height: '35%', border: '0.5px solid #ccc', borderRadius: '3px', overflow: 'hidden', alignSelf: 'auto', flexShrink: 1, mr: 2.5, mb: 2 }}>
+                                            <img src={URL.createObjectURL(pic)} alt={pic?.name} style={{ width: '100%', height: '50%' }} />
+                                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                                <Box sx={{ ml: 1 }}>
+                                                    <Typography sx={{ overflow: 'hidden' }}>{pic?.name}</Typography><br /><Typography sx={{ color: 'gray' }}>{formatFileSize(pic?.size)}</Typography>
+                                                </Box>
+                                                <IconButton onClick={(e: any) => handleClickFile(e, i)}>
+                                                    <FaEllipsisV />
+                                                </IconButton>
+                                            </Box>
+                                        </Box>
+
+                                    ) : ''}
+                                    {/* {attachments?.length ? attachments.map((pic: any, i: any) => <img src={pic} />) : ''} */}
+                                </Box>
+                                {/* {attachments?.length ? attachments.map((pic: any, i: any) =>
                                     <Box key={i} sx={{ width: '100px', height: '100px', border: '0.5px solid gray', borderRadius: '5px' }}>
                                         <img src={pic} alt={pic} />
                                     </Box>
-                                ) : ''}
+                                ) : ''} */}
                             </div>
                         </Box>
                         <Box sx={{ borderRadius: '10px', mt: '15px', border: '1px solid #80808038', backgroundColor: 'white' }}>
@@ -516,7 +609,7 @@ function LeadDetails(props: any) {
                                     ))}
                                 </CustomSelectField1>
                             </div>
-                            <List>
+                            <List sx={{ maxWidth: '500px' }}>
                                 {comments?.length ? comments.map((val: any, i: any) =>
                                     <ListItem alignItems="flex-start">
                                         <ListItemAvatar>
@@ -532,18 +625,17 @@ function LeadDetails(props: any) {
                                                 <React.Fragment >
                                                     <Stack sx={{ mt: 3, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                                                         <Typography>
-                                                            {/* {val?.lead} */}
+                                                            {val?.lead}
                                                             test
                                                             &nbsp;-&nbsp;
-                                                            {/* {val?.commented_by} */}
+                                                            {val?.commented_by}
                                                             test
                                                             &nbsp;-&nbsp;<span style={{ textDecoration: 'underline' }}>reply</span>
                                                         </Typography>
                                                         <Typography sx={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>{FormateTime(val?.commented_on)}&nbsp;-&nbsp;test
-                                                            {/* {val?.commented_by} */}
+                                                            {val?.commented_by}
                                                         </Typography>
                                                     </Stack>
-
                                                 </React.Fragment>
                                             }
                                         />
@@ -594,50 +686,39 @@ function LeadDetails(props: any) {
                                 <TextField
                                     label='Add Note'
                                     id='fullWidth'
-                                    disabled
-                                    InputProps={{
-                                        style: {
-                                            //   height: '40px',
-                                            //   maxHeight: '40px'
-                                            borderRadius: '15px'
-                                        }
-                                    }}
+                                    value={note}
+                                    onChange={(e: any) => setNote(e.target.value)}
+                                    InputProps={{ style: { borderRadius: '10px' } }}
                                     sx={{ mb: '30px', width: '100%', borderRadius: '10px' }}
                                 // InputProps={{ disableUnderline: true }}
                                 />
-                                <TextField
-                                    label='Add Note'
-                                    id='fullWidth'
-                                    value={note}
-                                    onChange={(e: any) => setNote(e.target.value)}
-                                    // disabled
-                                    // disableFocusRipple
-                                    InputProps={{
-                                        style: {
-                                            height: '120px',
-                                            minHeight: '120px',
-                                            //   maxHeight: '40px'
-                                            borderRadius: '15px 15px 0px 0px'
-                                        }
-                                    }}
-                                    sx={{ width: '100%' }}
-                                // InputProps={{ disableUnderline: true }}
-                                />
-                                <div style={{
-                                    display: 'flex', justifyContent: 'space-between', paddingBottom: '10px', paddingTop: '9px', border: '0.1px solid lightgrey', borderTop: 'none',
-                                    borderRadius: '0px 0px 15px 15px',
-                                    width: '99.6%'
+                                <CustomInputBoxWrapper
+                                    aria-label='qwe'
+                                    // className='CustomInputBoxWrapper'
+                                    contentEditable="true"
+                                    onInput={(e: any) => setInputValue(e.currentTarget.innerText)}
+                                // onInput={(e: React.SyntheticEvent<HTMLDivElement>) => setInputValue(e.currentTarget.innerText)}
+                                // onInput={(e) => setInputValue(e.target.innerText)}
+                                >
+                                    {attachedFiles.length > 0 && (
+                                        <div>
+                                            {attachedFiles.map((file, index) => (
+                                                <div key={index}>
+                                                    <div>{file.name}</div>
+                                                    <img src={URL.createObjectURL(file)} alt={file.name} style={{ maxWidth: '100%', maxHeight: '100px', marginTop: '8px' }} />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </CustomInputBoxWrapper>
+                                <Box sx={{
+                                    pt: '10px', display: 'flex', justifyContent: 'space-between', border: '1px solid #ccc', borderTop: 'none', mt: '-5px',
+                                    borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px', pb: '10px'
                                 }}>
-                                    <div>
-                                        <Button component='label'>
-                                            <FaRegAddressCard style={{ fill: 'gray' }} />
-                                            <input
-                                                type='file'
-                                                hidden
-                                            />
-                                        </Button>
-                                    </div>
-                                    <div>
+                                    <Button component='label' onClick={handleAttachmentClick} sx={{ ml: '5px' }}>
+                                        <FaPaperclip style={{ fill: 'gray' }} />
+                                    </Button>
+                                    <Grid container justifyContent="flex-end">
                                         <Button
                                             variant='contained'
                                             size='small'
@@ -645,21 +726,64 @@ function LeadDetails(props: any) {
                                             disableFocusRipple
                                             disableRipple
                                             disableTouchRipple
-                                            // 'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning' | string
-                                            sx={{ backgroundColor: '#C0C0C0', marginRight: '3px', borderRadius: '10px', color: 'white', textTransform: 'none' }}
+                                            sx={{ backgroundColor: '#808080b5', borderRadius: '8px', color: 'white', textTransform: 'none', ml: '8px', '&:hover': { backgroundColor: '#C0C0C0' } }}
                                             onClick={resetForm}
                                         >
                                             Cancel
                                         </Button>
                                         <Button variant='contained' size='small'
-                                            sx={{ backgroundColor: '#1F51FF', marginRight: '10px', borderRadius: '10px', textTransform: 'none' }}
+                                            sx={{ backgroundColor: '#1976d2', borderRadius: '8px', textTransform: 'none', ml: '8px', mr: '12px' }}
                                             onClick={sendComment}
                                         >
                                             Send
                                         </Button>
+                                    </Grid>
+                                </Box>
+                                {/* {attachedFiles.length > 0 && (
+                                    <div>
+                                        <strong>Attached Files:</strong>
+                                        <ul>
+                                            {attachedFiles.map((file: any, index) => (
+                                                <li key={index}>{file.name}</li>
+                                            ))}
+                                        </ul>
                                     </div>
-                                </div>
-                                {/* <form>
+                                )} */}
+                            </div>
+                        </Box>
+                    </Box>
+                </Box>
+            </div>
+            <Popover
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right'
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right'
+                }}
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleCloseFile}
+            >
+                <List disablePadding>
+                    <ListItem disablePadding>
+                        <StyledListItemButton
+                            onClick={deleteFile}
+                        >
+                            <ListItemIcon > <FaTimes fill='#3e79f7' /></ListItemIcon>
+                            <StyledListItemText primary={'Remove'} sx={{ ml: '-20px', color: '#3e79f7' }} />
+                        </StyledListItemButton>
+                    </ListItem>
+                </List>
+            </Popover>
+        </Box>
+    )
+}
+export default LeadDetails;
+{/* <form>
                                     <div style={{
                                         border: '1px solid gray',
                                         padding: '10px',
@@ -694,12 +818,3 @@ function LeadDetails(props: any) {
                                         </div>
                                     </div>
                                 </form> */}
-                            </div>
-                        </Box>
-                    </Box>
-                </Box>
-            </div>
-        </Box>
-    )
-}
-export default LeadDetails;

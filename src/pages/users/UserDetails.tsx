@@ -61,6 +61,12 @@ export default function UserDetails() {
     // }, [state.contactId.id])
 
     const getUserDetail = (id: any) => {
+        const Header = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('Token'),
+            org: localStorage.getItem('org')
+          }
         fetchData(`${UserUrl}/${id}/`, 'GET', null as any, Header)
             .then((res) => {
                 console.log(res, 'res');
@@ -121,7 +127,7 @@ export default function UserDetails() {
     const module = 'Users'
     const crntPage = 'User Detail'
     const backBtn = 'Back To Users'
-    console.log(userDetails, 'user');
+    // console.log(userDetails, 'user');
 
     return (
         <Box sx={{ mt: '60px' }}>

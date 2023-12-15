@@ -12,7 +12,7 @@ import {
     Chip
 } from '@mui/material'
 
-import { fetchData, Header } from '../../components/FetchData'
+import { fetchData } from '../../components/FetchData'
 import { AccountsUrl } from '../../services/ApiUrls'
 import { Tags } from '../../components/Tags'
 import { CustomAppBar } from '../../components/CustomAppBar'
@@ -119,6 +119,12 @@ export const AccountDetails = (props: any) => {
     }, [state.accountId])
 
     const getAccountDetails = (id: any) => {
+        const Header = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('Token'),
+            org: localStorage.getItem('org')
+          }
         fetchData(`${AccountsUrl}/${id}/`, 'GET', null as any, Header)
             .then((res) => {
                 console.log(res, 'edd');

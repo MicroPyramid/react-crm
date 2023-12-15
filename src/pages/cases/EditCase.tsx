@@ -22,7 +22,7 @@ import {
 import { useQuill } from 'react-quilljs';
 import 'quill/dist/quill.snow.css';
 import { CasesUrl } from '../../services/ApiUrls'
-import { fetchData, Header } from '../../components/FetchData'
+import { fetchData } from '../../components/FetchData'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { FaCheckCircle, FaPlus, FaTimes, FaTimesCircle, FaUpload } from 'react-icons/fa'
 import { CustomPopupIcon, RequiredTextField } from '../../styles/CssStyled'
@@ -65,6 +65,9 @@ export function EditCase() {
     const { state } = useLocation()
     const { quill, quillRef } = useQuill();
     const initialContentRef = useRef<string | null>(null);
+    const pageContainerRef = useRef<HTMLDivElement | null>(null);
+
+    const [hasInitialFocus, setHasInitialFocus] = useState(false);
 
     const autocompleteRef = useRef<any>(null);
     const [error, setError] = useState(false)
@@ -96,6 +99,25 @@ export function EditCase() {
         description: '',
         file: null
     })
+    useEffect(() => {
+        // Scroll to the top of the page when the component mounts
+        window.scrollTo(0, 0);
+        // Set focus to the page container after the Quill editor loads its content
+        if (quill && !hasInitialFocus) {
+            quill.on('editor-change', () => {
+                if (pageContainerRef.current) {
+                    pageContainerRef.current.focus();
+                    setHasInitialFocus(true); // Set the flag to true after the initial focus
+                }
+            });
+        }
+        // Cleanup: Remove event listener when the component unmounts
+        return () => {
+            if (quill) {
+                quill.off('editor-change');
+            }
+        };
+    }, [quill, hasInitialFocus]);
 
     useEffect(() => {
         setFormData(state?.value)
@@ -194,6 +216,12 @@ export function EditCase() {
         submitForm();
     }
     const submitForm = () => {
+        const Header = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('Token'),
+            org: localStorage.getItem('org')
+        }
         // console.log('Form data:', formData.lead_attachment,'sfs', formData.file);
         const data = {
             name: formData.name,
@@ -236,7 +264,7 @@ export function EditCase() {
     const crntPage = 'Add Case'
     const backBtn = state?.edit ? 'Back to Cases' : 'Back to CaseDetails'
 
-    console.log(state, 'caseedit')
+    // console.log(state, 'caseedit')
     return (
         <Box sx={{ mt: '60px' }}>
             <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} onCancel={onCancel} onSubmit={handleSubmit} />
@@ -255,6 +283,7 @@ export function EditCase() {
                                             <div className='fieldSubContainer'>
                                                 <div className='fieldTitle'>Name</div>
                                                 <RequiredTextField
+                                                    ref={pageContainerRef} tabIndex={-1}
                                                     name='name'
                                                     value={formData.name}
                                                     onChange={handleChange}

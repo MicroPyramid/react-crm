@@ -14,7 +14,7 @@ import { CustomAppBar } from '../../components/CustomAppBar'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { AntSwitch } from '../../styles/CssStyled'
 import { ContactUrl } from '../../services/ApiUrls'
-import { fetchData, Header } from '../../components/FetchData'
+import { fetchData } from '../../components/FetchData'
 
 type response = {
     created_by: string;
@@ -67,6 +67,12 @@ export default function ContactDetails() {
     }, [state.contactId.id])
 
     const getContactDetail = (id: any) => {
+        const Header = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('Token'),
+            org: localStorage.getItem('org')
+          }
         fetchData(`${ContactUrl}/${id}/`, 'GET', null as any, Header)
             .then((res) => {
                 // console.log(res, 'res');

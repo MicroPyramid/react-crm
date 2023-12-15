@@ -134,6 +134,12 @@ export function AddUsers() {
     };
 
     const submitForm = () => {
+        const Header = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('Token'),
+            org: localStorage.getItem('org')
+          }
         // console.log('Form data:', data);
 
         const data = {
@@ -201,24 +207,6 @@ export function AddUsers() {
     const crntPage = 'Add Users'
     const backBtn = 'Back To Users'
 
-    const inputStyles = {
-        display: 'none',
-    };
-    const customArrowStyles = {
-        '&::after': {
-            content: '""',
-            position: 'absolute',
-            top: '50%',
-            right: '8px', // Adjust the right position based on your design
-            width: '0',
-            height: '0',
-            borderTop: '6px solid transparent',
-            borderBottom: '6px solid transparent',
-            borderLeft: '6px solid #888', // Set the desired grey color
-            transform: 'translateY(-50%)',
-            pointerEvents: 'none',
-        },
-    };
     // console.log(formData.profile_pic, 'formData.profile_pic')
     return (
         <Box sx={{ mt: '60px' }}>

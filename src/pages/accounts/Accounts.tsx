@@ -8,7 +8,7 @@ import { FiChevronUp } from "@react-icons/all-files/fi/FiChevronUp";
 import { CustomTab, CustomToolbar, FabLeft, FabRight } from '../../styles/CssStyled';
 import { getComparator, stableSort } from '../../components/Sorting';
 import { FaAd, FaEdit, FaTrashAlt } from 'react-icons/fa';
-import { fetchData, Header } from '../../components/FetchData';
+import { fetchData } from '../../components/FetchData';
 import { AccountsUrl } from '../../services/ApiUrls';
 import { useNavigate } from 'react-router-dom';
 import { DeleteModal } from '../../components/DeleteModal';
@@ -193,6 +193,12 @@ export default function Accounts() {
     }
 
     const getAccounts = async () => {
+        const Header = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('Token'),
+            org: localStorage.getItem('org')
+          }
         try {
             const openOffset = (openCurrentPage - 1) * openRecordsPerPage;
             const closeOffset = (closedCurrentPage - 1) * closedRecordsPerPage;
@@ -280,6 +286,12 @@ export default function Accounts() {
     }
 
     const onDelete = (id: any) => {
+        const Header = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('Token'),
+            org: localStorage.getItem('org')
+          }
         fetchData(`${AccountsUrl}/${id}/`, 'delete', null as any, Header)
             .then((data) => {
                 if (!data.error) {
@@ -317,6 +329,12 @@ export default function Accounts() {
         setSelectedId([])
     }
     const deleteItem = () => {
+        const Header = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('Token'),
+            org: localStorage.getItem('org')
+          }
         fetchData(`${AccountsUrl}/${selectedId}/`, 'DELETE', null as any, Header)
             .then((res: any) => {
                 console.log('delete:', res);
@@ -378,6 +396,12 @@ export default function Accounts() {
     };
 
     const getAccountDetail = (id: any) => {
+        const Header = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('Token'),
+            org: localStorage.getItem('org')
+          }
         fetchData(`${AccountsUrl}/${id}/`, 'GET', null as any, Header)
             .then((res) => {
                 console.log(res, 'resDetail');
