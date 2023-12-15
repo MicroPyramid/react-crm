@@ -65,6 +65,9 @@ function EditContact() {
   const { quill, quillRef } = useQuill();
   // const initialContentRef = useRef(null);
   const initialContentRef = useRef<string | null>(null);
+  const pageContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const [hasInitialFocus, setHasInitialFocus] = useState(false);
 
   const [reset, setReset] = useState(false)
   const [error, setError] = useState(false)
@@ -96,6 +99,25 @@ function EditContact() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [countrySelectOpen, setCountrySelectOpen] = useState(false)
 
+  useEffect(() => {
+    // Scroll to the top of the page when the component mounts
+    window.scrollTo(0, 0);
+    // Set focus to the page container after the Quill editor loads its content
+    if (quill && !hasInitialFocus) {
+      quill.on('editor-change', () => {
+        if (pageContainerRef.current) {
+          pageContainerRef.current.focus();
+          setHasInitialFocus(true); // Set the flag to true after the initial focus
+        }
+      });
+    }
+    // Cleanup: Remove event listener when the component unmounts
+    return () => {
+      if (quill) {
+        quill.off('editor-change');
+      }
+    };
+  }, [quill, hasInitialFocus]);
 
   useEffect(() => {
     setFormData(state?.value)
@@ -159,6 +181,12 @@ function EditContact() {
   };
 
   const submitForm = () => {
+    const Header = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: localStorage.getItem('Token'),
+      org: localStorage.getItem('org')
+    }
     // console.log('Form data:', data);
     const data = {
       salutation: formData.salutation,
@@ -239,6 +267,7 @@ function EditContact() {
                       <div className='fieldSubContainer'>
                         <div className='fieldTitle'>Salutation</div>
                         <TextField
+                          ref={pageContainerRef} tabIndex={-1}
                           name='salutation'
                           className="custom-textfield"
                           value={formData.salutation}
@@ -585,7 +614,7 @@ function EditContact() {
                 defaultExpanded
                 style={{ width: '98%' }}>
                 <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
-                  <Typography className='accordion-header'>Account Information</Typography>
+                  <Typography className='accordion-header'>Socials</Typography>
                 </AccordionSummary>
                 <Divider className='divider' />
                 <AccordionDetails>

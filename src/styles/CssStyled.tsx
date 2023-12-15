@@ -277,3 +277,15 @@ export const CustomPopupIcon = styled(IconButton)`
     background-color: whitesmoke;
   }
 `;
+export const CustomInputBoxWrapper = styled('div')({
+  // width: '200px',
+  borderBottom:'none',
+  height: '150px',
+  borderTopLeftRadius:'10px',
+  borderTopRightRadius:'10px',
+  border: '1px solid #ccc',
+  overflowY: 'auto',
+  padding: '8px',
+  outline: 'none',
+  position: 'relative',
+});

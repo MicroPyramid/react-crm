@@ -23,7 +23,7 @@ import {
 import { useQuill } from 'react-quilljs';
 import 'quill/dist/quill.snow.css';
 import { OpportunityUrl } from '../../services/ApiUrls'
-import { fetchData, Header } from '../../components/FetchData'
+import { fetchData } from '../../components/FetchData'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { FaCheckCircle, FaPlus, FaTimes, FaTimesCircle, FaUpload } from 'react-icons/fa'
 import { CustomPopupIcon, RequiredSelect, RequiredTextField } from '../../styles/CssStyled'
@@ -181,6 +181,12 @@ export function AddOpportunity() {
         submitForm();
     }
     const submitForm = () => {
+        const Header = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('Token'),
+            org: localStorage.getItem('org')
+          }
         // console.log('Form data:', formData.lead_attachment,'sfs', formData.file);
         const data = {
 
@@ -263,7 +269,7 @@ export function AddOpportunity() {
                         <div className='leadContainer'>
                             <Accordion defaultExpanded style={{ width: '98%' }}>
                                 <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
-                                    <Typography className='accordion-header'>Account Information</Typography>
+                                    <Typography className='accordion-header'>Opportunity Information</Typography>
                                 </AccordionSummary>
                                 <Divider className='divider' />
                                 <AccordionDetails>

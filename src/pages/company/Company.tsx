@@ -5,7 +5,7 @@ import { FiChevronLeft } from "@react-icons/all-files/fi/FiChevronLeft";
 import { FiChevronRight } from "@react-icons/all-files/fi/FiChevronRight";
 import { getComparator, stableSort } from '../../components/Sorting';
 import { Spinner } from '../../components/Spinner';
-import { fetchData, Header } from '../../components/FetchData';
+import { fetchData } from '../../components/FetchData';
 import { CompaniesUrl, CompanyUrl, ContactUrl } from '../../services/ApiUrls';
 import { AntSwitch, CustomTab, CustomToolbar, FabLeft, FabRight, StyledTableCell, StyledTableRow } from '../../styles/CssStyled';
 import { useNavigate } from 'react-router-dom';
@@ -79,6 +79,12 @@ export default function Company() {
     }
 
     const getCompany = () => {
+        const Header = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('Token'),
+            org: localStorage.getItem('org')
+          }
         fetchData(`${CompaniesUrl}`, 'GET', null as any, Header)
             .then((data) => {
                 if (!data.error) {
@@ -97,6 +103,12 @@ export default function Company() {
     }
 
     const DeleteItem = () => {
+        const Header = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('Token'),
+            org: localStorage.getItem('org')
+          }
         fetchData(`${CompanyUrl}/${selectedId}`, 'DELETE', null as any, Header)
             .then((res: any) => {
                 console.log('delete:', res);

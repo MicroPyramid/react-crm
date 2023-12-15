@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import { LeadUrl } from '../../services/ApiUrls';
 import { DeleteModal } from '../../components/DeleteModal';
 import { Label } from '../../components/Label';
-import { fetchData, Header } from '../../components/FetchData';
+import { fetchData } from '../../components/FetchData';
 import { Spinner } from '../../components/Spinner';
 import FormateTime from '../../components/FormateTime';
 import { getComparator, stableSort } from '../../components/Sorting';
@@ -152,7 +152,7 @@ export default function Leads(props: any) {
     getLeads()
   }, [openCurrentPage, openRecordsPerPage, closedCurrentPage, closedRecordsPerPage]);
   const getLeads = async () => {
-    const Header2 = {
+    const Header = {
       Accept: 'application/json',
       'Content-Type': 'application/json',
       Authorization: localStorage.getItem('Token'),
@@ -161,7 +161,7 @@ export default function Leads(props: any) {
     try {
       const openOffset = (openCurrentPage - 1) * openRecordsPerPage;
       const closeOffset = (closedCurrentPage - 1) * closedRecordsPerPage;
-      await fetchData(`${LeadUrl}/?offset=${tab === "open" ? openOffset : closeOffset}&limit=${tab === "open" ? openRecordsPerPage : closedRecordsPerPage}`, 'GET', null as any, Header2)
+      await fetchData(`${LeadUrl}/?offset=${tab === "open" ? openOffset : closeOffset}&limit=${tab === "open" ? openRecordsPerPage : closedRecordsPerPage}`, 'GET', null as any, Header)
         .then((res) => {
           // console.log(res, 'leads')
           if (!res.error) {
@@ -261,6 +261,12 @@ export default function Leads(props: any) {
   const modalTitle = 'Delete Lead'
 
   const deleteItem = () => {
+    const Header = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: localStorage.getItem('Token'),
+      org: localStorage.getItem('org')
+    }
     fetchData(`${LeadUrl}/${selectedId}/`, 'DELETE', null as any, Header)
       .then((res: any) => {
         // console.log('delete:', res);

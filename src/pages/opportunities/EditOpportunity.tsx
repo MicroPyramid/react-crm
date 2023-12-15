@@ -21,8 +21,8 @@ import {
 } from '@mui/material'
 import { useQuill } from 'react-quilljs';
 import 'quill/dist/quill.snow.css';
-import { AccountsUrl, OpportunityUrl } from '../../services/ApiUrls'
-import { fetchData, Header } from '../../components/FetchData'
+import { OpportunityUrl } from '../../services/ApiUrls'
+import { fetchData } from '../../components/FetchData'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { FaCheckCircle, FaFileUpload, FaPlus, FaTimes, FaTimesCircle, FaUpload } from 'react-icons/fa'
 import { CustomPopupIcon, RequiredSelect, RequiredTextField } from '../../styles/CssStyled'
@@ -72,6 +72,9 @@ export function EditOpportunity() {
     const { state } = useLocation()
     const { quill, quillRef } = useQuill();
     const initialContentRef = useRef<string | null>(null);
+    const pageContainerRef = useRef<HTMLDivElement | null>(null);
+
+    const [hasInitialFocus, setHasInitialFocus] = useState(false);
 
     const autocompleteRef = useRef<any>(null);
     const [error, setError] = useState(false)
@@ -109,6 +112,26 @@ export function EditOpportunity() {
     })
 
     useEffect(() => {
+        // Scroll to the top of the page when the component mounts
+        window.scrollTo(0, 0);
+        // Set focus to the page container after the Quill editor loads its content
+        if (quill && !hasInitialFocus) {
+            quill.on('editor-change', () => {
+                if (pageContainerRef.current) {
+                    pageContainerRef.current.focus();
+                    setHasInitialFocus(true); // Set the flag to true after the initial focus
+                }
+            });
+        }
+        // Cleanup: Remove event listener when the component unmounts
+        return () => {
+            if (quill) {
+                quill.off('editor-change');
+            }
+        };
+    }, [quill, hasInitialFocus]);
+
+    useEffect(() => {
         setFormData(state?.value)
     }, [state?.id])
 
@@ -117,7 +140,7 @@ export function EditOpportunity() {
             setFormData(state?.value)
             if (quill && initialContentRef.current !== null) {
                 quill.clipboard.dangerouslyPasteHTML(initialContentRef.current);
-              }
+            }
         }
         return () => {
             setReset(false)
@@ -126,11 +149,11 @@ export function EditOpportunity() {
 
     useEffect(() => {
         if (quill && initialContentRef.current === null) {
-          // Save the initial state (HTML content) of the Quill editor only if not already saved
-          initialContentRef.current = formData.description;
-          quill.clipboard.dangerouslyPasteHTML(formData.description);
+            // Save the initial state (HTML content) of the Quill editor only if not already saved
+            initialContentRef.current = formData.description;
+            quill.clipboard.dangerouslyPasteHTML(formData.description);
         }
-      }, [quill, formData.description]);
+    }, [quill, formData.description]);
 
 
     const backbtnHandle = () => {
@@ -192,14 +215,20 @@ export function EditOpportunity() {
     const emptyDescription = () => {
         setFormData({ ...formData, description: '' })
         if (quill) {
-          quill.clipboard.dangerouslyPasteHTML('');
+            quill.clipboard.dangerouslyPasteHTML('');
         }
-      };
+    };
     const handleSubmit = (e: any) => {
         e.preventDefault();
         submitForm();
     }
     const submitForm = () => {
+        const Header = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('Token'),
+            org: localStorage.getItem('org')
+        }
         // console.log('Form data:', formData.lead_attachment,'sfs', formData.file);
         const data = {
             name: formData.name,
@@ -281,7 +310,7 @@ export function EditOpportunity() {
                         <div className='leadContainer'>
                             <Accordion defaultExpanded style={{ width: '98%' }}>
                                 <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
-                                    <Typography className='accordion-header'>Account Information</Typography>
+                                    <Typography className='accordion-header'>Opportunity Information</Typography>
                                 </AccordionSummary>
                                 <Divider className='divider' />
                                 <AccordionDetails>
@@ -290,6 +319,7 @@ export function EditOpportunity() {
                                             <div className='fieldSubContainer'>
                                                 <div className='fieldTitle'>Name</div>
                                                 <TextField
+                                                    ref={pageContainerRef} tabIndex={-1}
                                                     name='account_name'
                                                     value={formData.name}
                                                     onChange={handleChange}

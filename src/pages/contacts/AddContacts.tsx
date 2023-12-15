@@ -176,7 +176,13 @@ function AddContacts() {
   };
 
   const submitForm = () => {
-    console.log(formData.description, 'des')
+    const Header = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: localStorage.getItem('Token'),
+      org: localStorage.getItem('org')
+    }
+    // console.log(formData.description, 'des')
     const data = {
       salutation: formData.salutation,
       first_name: formData.first_name,
@@ -663,7 +669,7 @@ function AddContacts() {
                 defaultExpanded
                 style={{ width: '98%' }}>
                 <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
-                  <Typography className='accordion-header'>Account Information</Typography>
+                  <Typography className='accordion-header'>Socials</Typography>
                 </AccordionSummary>
                 <Divider className='divider' />
                 <AccordionDetails>

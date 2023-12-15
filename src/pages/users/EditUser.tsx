@@ -21,7 +21,7 @@ import {
     FormHelperText
 } from '@mui/material'
 import { UserUrl } from '../../services/ApiUrls'
-import { fetchData, Header } from '../../components/FetchData'
+import { fetchData } from '../../components/FetchData'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { FaArrowDown, FaTimes, FaUpload } from 'react-icons/fa'
 import { AntSwitch, RequiredTextField } from '../../styles/CssStyled'
@@ -173,6 +173,12 @@ export function EditUser() {
     //         })
     // }
     const submitForm = () => {
+        const Header = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('Token'),
+            org: localStorage.getItem('org')
+          }
         // console.log('Form data:', data);
         const data = {
             email: formData.email,

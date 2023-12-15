@@ -11,8 +11,7 @@ import {
     Button,
     Chip
 } from '@mui/material'
-
-import { fetchData, Header } from '../../components/FetchData'
+import { fetchData } from '../../components/FetchData'
 import { AccountsUrl, CasesUrl } from '../../services/ApiUrls'
 import { Tags } from '../../components/Tags'
 import { CustomAppBar } from '../../components/CustomAppBar'
@@ -110,6 +109,12 @@ export const CaseDetails = (props: any) => {
     }, [state?.caseId])
 
     const getCaseDetails = (id: any) => {
+        const Header = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('Token'),
+            org: localStorage.getItem('org')
+          }
         fetchData(`${CasesUrl}/${id}/`, 'GET', null as any, Header)
             .then((res) => {
                 // console.log(res, 'case');
@@ -177,7 +182,7 @@ export const CaseDetails = (props: any) => {
     const module = 'Cases'
     const crntPage = 'Case Details'
     const backBtn = 'Back to Cases'
-    console.log(state,'detail');
+    // console.log(state,'detail');
 
     return (
         <Box sx={{ mt: '60px' }}>

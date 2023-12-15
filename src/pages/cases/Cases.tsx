@@ -6,7 +6,7 @@ import { FiChevronLeft } from "@react-icons/all-files/fi/FiChevronLeft";
 import { FiChevronRight } from "@react-icons/all-files/fi/FiChevronRight";
 import { CustomTab, CustomToolbar, FabLeft, FabRight, StyledTableCell, StyledTableRow } from '../../styles/CssStyled';
 import { useNavigate } from 'react-router-dom';
-import { fetchData, Header } from '../../components/FetchData';
+import { fetchData } from '../../components/FetchData';
 import { getComparator, stableSort } from '../../components/Sorting';
 import { Label } from '../../components/Label';
 import { FaTrashAlt } from 'react-icons/fa';
@@ -113,6 +113,12 @@ export default function Cases(props: any) {
   }, [currentPage, recordsPerPage]);
 
   const getCases = async () => {
+    const Header = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: localStorage.getItem('Token'),
+      org: localStorage.getItem('org')
+    }
     try {
       const offset = (currentPage - 1) * recordsPerPage;
       await fetchData(`${CasesUrl}/?offset=${offset}&limit=${recordsPerPage}`, 'GET', null as any, Header)
@@ -189,6 +195,12 @@ export default function Cases(props: any) {
   }
 
   const deleteItem = () => {
+    const Header = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: localStorage.getItem('Token'),
+      org: localStorage.getItem('org')
+    }
     fetchData(`${CasesUrl}/${selectedId}/`, 'DELETE', null as any, Header)
       .then((res: any) => {
         console.log('delete:', res);

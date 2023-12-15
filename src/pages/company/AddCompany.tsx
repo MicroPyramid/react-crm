@@ -41,6 +41,12 @@ function AddCompany() {
     };
 
     const submitForm = () => {
+        const Header = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('Token'),
+            org: localStorage.getItem('org')
+          }
         // console.log('Form data:', data);
         const data = { name: formData.name }
         fetchData(`${CompaniesUrl}`, 'POST', JSON.stringify(data), Header)
@@ -86,7 +92,7 @@ function AddCompany() {
                                 defaultExpanded
                             >
                                 <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
-                                    <Typography className='accordion-header'>Account Information</Typography>
+                                    <Typography className='accordion-header'>Company Information</Typography>
                                 </AccordionSummary>
                                 <Divider className='divider' />
                                 <AccordionDetails>
